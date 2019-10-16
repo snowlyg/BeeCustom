@@ -7,7 +7,7 @@ BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `La
 1. 基于 `Beego` ，使用官方的 orm、cache、session、logs 等模块，感谢原作者提供了如此简单易用的框架;
 
 # 前端框架
-1. 基于 Layui；
+1. 基于 Layui
 
 
 # 安装方法
@@ -16,10 +16,29 @@ BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `La
 
 1. 安装 `golang` 环境
 
-2. 安装本系统
+2. 安装 `BeeCustom`
+
 ```
 git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
 
+```
+ 
+3.加载依赖管理包 使用 gopm 管理包
+
+ ``` 
+ 
+  go get -v -u github.com/gpmgo/gopm
+  
+
+  // 拉取依赖到缓存目录
+  gopm get 
+
+  // 拉取依赖到缓存目录
+  gopm build
+
+  //运行
+  ./BeeCustom
+  
 ```
 
 4. 修改配置文件 conf/app.conf
