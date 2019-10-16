@@ -50,10 +50,8 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 
 	//默认排序
 	sortorder := "Id"
-	switch params.Sort {
-
-	case "Id":
-		sortorder = "Id"
+	if len(params.Sort) > 0 {
+		sortorder = params.Sort
 	}
 
 	if params.Order == "desc" {
@@ -61,17 +59,14 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 	}
 
 	query = query.Filter("username__istartswith", params.UserNameLike)
-	query = query.Filter("realname__istartswith", params.RealNameLike)
+	query = query.Filter("realname__istartswith", params.UserNameLike)
 
-	if len(params.Mobile) > 0 {
-		query = query.Filter("mobile", params.Mobile)
-	}
 	if len(params.SearchStatus) > 0 {
 		query = query.Filter("status", params.SearchStatus)
 	}
 
 	total, _ := query.Count()
-	_, _ = query.OrderBy(sortorder).Limit(params.Limit, params.Offset).All(&data)
+	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).All(&data)
 
 	return data, total
 }

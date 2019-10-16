@@ -23,10 +23,16 @@
             elem: '#user_lists'
             , autoSort: false
             , skin: 'line'
-            , url: '@{{ urlfor "BackendUserController.DataGrid" }}' + "?sortedBy=desc&orderBy=CreatedAt"
+            , method: 'post'
+            , where: {
+                order:'desc',
+                sort:'CreatedAt'
+            }
+            ,contentType:'application/json'
+            , url: '@{{ urlfor "BackendUserController.DataGrid" }}'
             , request: {
-                pageName: 'Offset' //页码的参数名称，默认：page
-                , limitName: 'Limit' //每页数据量的参数名，默认：limit
+                pageName: 'offset' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
             }
             , parseData: function (res) {
                 return {
@@ -35,7 +41,8 @@
                 };
             }
             , cols: [[
-                {field: 'RealName', title: '姓名', sort: true, style: 'color: rgb(27, 135, 255);'}
+                {field: 'RoleName', title: '真实姓名', sort: true, style: 'color: rgb(27, 135, 255);'}
+                {field: 'UserName', title: '用户名', sort: true, style: 'color: rgb(27, 135, 255);'}
                 , {field: 'Email', title: '邮箱', sort: true}
                 , {
                     field: 'RoleIds', title: '角色', templet: function (data) {
@@ -74,7 +81,7 @@
             if (eCode == 13) {
                 table.reload('user_lists', {
                     where: {
-                        search: $(this).val()
+                        UserNameLike: $(this).val(),
                     },
                     page: {
                         curr: 1
@@ -86,7 +93,7 @@
         form.on('select(status)', function (data) {
             table.reload('user_lists', {
                 where: {
-                    search: data.value ? `SearchStatus:${data.value}` : ''
+                    SearchStatus: data.value ? `${data.value}` : ''
                 }
             });
         });

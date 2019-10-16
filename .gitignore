@@ -23,13 +23,13 @@ _testmain.go
 *.test
 .log
 /.idea
-/sdrms.exe~
-sdrms
+
 /logs/*.log
 /debug
 /sdrms
 
 BeeCustom.exe
+BeeCustom
 /.vendor
 
 

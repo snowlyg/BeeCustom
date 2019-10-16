@@ -35,7 +35,7 @@ func init() {
 	//后台用户路由
 	beego.Router("/backenduser/index", &controllers.BackendUserController{}, "*:Index")
 	beego.Router("/backenduser/create", &controllers.BackendUserController{}, "Get,Post:Create")
-	beego.Router("/backenduser/datagrid", &controllers.BackendUserController{}, "Get:DataGrid")
+	beego.Router("/backenduser/datagrid", &controllers.BackendUserController{}, "Post:DataGrid")
 	beego.Router("/backenduser/edit/?:id", &controllers.BackendUserController{}, "Get,Post:Edit")
 	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Post:Delete")
 

@@ -45,9 +45,10 @@ func (c *BackendUserController) Index() {
 	c.Data["canDelete"] = c.checkActionAuthor("BackendUserController", "Delete")
 }
 func (c *BackendUserController) DataGrid() {
-	//直接反序化获取json格式的requestbody里的值（要求配置文件里 copyrequestbody=true）
+	//直接获取参数 getDataGridData()
 	var params models.BackendUserQueryParam
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
 	//获取数据列表和总数
 	data, total := models.BackendUserPageList(&params)
 	//定义返回的数据结构
