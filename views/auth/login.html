@@ -1,0 +1,429 @@
+<header class="custom-header header_top" id="custom-header">
+  <div class="layui-container-index login">
+    <div class="layui-row">
+      <div class="layui-col-md5">
+        <div class="header">
+          <img width="72" src="/static/images/logo_top.png" class="logo" id="logo">
+          <span class="title">广东东华报关服务有限公司</span>
+        </div>
+      </div>
+      <div class="layui-col-md4 layui-col-md-offset3">
+        <div class="header">
+          <i class="iconfont icon-phone-in-talk"></i>
+          <span class="phone">0769-87510025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="index_xian"></div>
+</header>
+<main class="custom-main" id="Login">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide"><img src="/static/images/banner1.png" class="carousel_img"></div>
+      <div class="swiper-slide"><img src="/static/images/banner2.png" class="carousel_img"></div>
+      <div class="swiper-slide"><img src="/static/images/banner3.png" class="carousel_img"></div>
+      <div class="swiper-slide"><img src="/static/images/banner4.jpg" class="carousel_img"></div>
+    </div>
+    <!-- 如果需要分页器 -->
+    <div class="swiper-pagination"></div>
+
+    <!-- 如果需要导航按钮 -->
+    <div class="swiper-button-prev swiper_btn"></div>
+    <div class="swiper-button-next swiper_btn"></div>
+    <div class="banner_title">
+      <p class="title">跨易通智慧关务管理系统</p>
+      <p class="desc">以高效快速通关的管理为核心理念，为企业提供专业、易用和安全的报关服务，提升中小微企业报关效率。</p>
+    </div>
+  </div>
+  <div class="custom-main-login">
+    <div class="layui-tab layui-tab-brief">
+      <ul class="layui-tab-title">
+        <li class="layui-this">账号登录</li>
+        <li class=""></li>
+      </ul>
+      <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+          <form method="POST">
+            <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+              <div class="layui-form-item">
+                <label class="layadmin-user-login-icon iconfont icon-account"></label>
+                <input type="text" name="UserName" placeholder="用户名" class="layui-input">
+              </div>
+              <div class="layui-form-item">
+                <label class="layadmin-user-login-icon iconfont icon-lock"></label>
+                <input type="password" name="UserPwd"  lay-verify="password" lay-verType="tips" placeholder="密码" class="layui-input">
+              </div>
+              <div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid login_btn" lay-submit  lay-filter="login_submit" type="button" >登 录</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<div class="layui-desc">
+  <div class="layui-container-index">
+    <div class="layui-col-md4 index-desc-li">
+      <div><i class="iconfont icon-identified"></i></div>
+      <span>高效通关，省心省力</span>
+    </div>
+    <div class="layui-col-md4 index-desc-li">
+      <div><i class="iconfont icon-crystal"></i></div>
+      <span>双A资质，保驾护航</span>
+    </div>
+    <div class="layui-col-md4 index-desc-li">
+      <div><i class="iconfont icon--vip"></i></div>
+      <span>五星服务，高枕无忧</span>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+
+<div class="layui-news">
+  <div class="layui-container-index">
+    <div class="layui-row layui-col-space30">
+      <div class="layui-col-md8">
+        <div class="news-title">
+          <p>新闻资讯<span>及时更新最新海关政策动态</span></p>
+          <a href="javascript:void(0)" lay-data="1" class="tab-news">知识库</a>
+          <a href="javascript:void(0)" lay-data="2" class="tab-news show">关务头条</a>
+        </div>
+        <ul class="news-ul" id="news-ul-2"></ul>
+        <ul class="news-ul" id="news-ul-1" style="display: none;">
+        </ul>
+      </div>
+      <div class="layui-col-md4">
+        <div class="news-title">
+          <p>查询工具<span>及时更新最新海关政策动态</span></p>
+        </div>
+        <div class="layui-search-content">
+          <div class="layui-col-md6 tab-search show" lay-data="key1">
+            <img src="/static/images/text.svg">
+            申报要素查询
+          </div>
+          <div class="layui-col-md6 tab-search" lay-data="key2">
+            <img src="/static/images/manage.svg">
+            商检编码查询
+          </div>
+
+          <div class="clear"></div>
+          <div class="height-20"></div>
+          <form class="layui-form index_seach_form" action="">
+            <div class="layui-form-item">
+              <input type="text" name="key" lay-verify="required" autocomplete="off"
+                     placeholder="输入商品名称或商品编码" class="layui-input" id="search_input">
+            </div>
+            <div class="layui-form-item">
+              <p class="form-desc-p">提示：支持商品名称模糊搜索，如"led","灯"；</p>
+            </div>
+            <button class="layui-btn index_seach_btn" lay-submit="" lay-filter="search">搜索</button>
+          </form>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+<div class="layui-service">
+  <div class="layui-container-index">
+    <div class="height-20"></div>
+    <div class="news-title">
+      <p>服务介绍<span>五星客户服务标准</span></p>
+    </div>
+    <div class="pc-bg-container">
+      <div class="home-market-section">
+        <div class="section-inner">
+          <div class="swiper-container-news swiper-container-horizontal">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class=" layui-row">
+                  <a href="#" class="layui-col-md4">
+                    <div class="inner-content">
+                      <img src="/static/images/ordered-record.svg">
+                      <h3>代理企业商品归类</h3>
+                      <div class="xian"></div>
+                      <p>被评为全国优秀报关企业，实现网络化和本地化相结合的优质、迅捷、低成本的专业报关服务。</p>
+                      <div class="more"><i class="layui-icon layui-icon-add-1"></i></div>
+                    </div>
+                  </a>
+                  <a href="#" class="layui-col-md4">
+                    <div class="inner-content">
+                      <img src="/static/images/smart-contracts.svg">
+                      <h3>代理企业报关报检</h3>
+                      <div class="xian"></div>
+                      <p>被评为全国优秀报关企业，实现网络化和本地化相结合的优质、迅捷、低成本的专业报关服务。</p>
+                      <div class="more"><i class="layui-icon layui-icon-add-1"></i></div>
+                    </div>
+                  </a>
+                  <a href="#" class="layui-col-md4">
+                    <div class="inner-content">
+                      <img src="/static/images/ledger.svg">
+                      <h3>代理加工贸易手册</h3>
+                      <div class="xian"></div>
+                      <p>被评为全国优秀报关企业，实现网络化和本地化相结合的优质、迅捷、低成本的专业报关服务。</p>
+                      <div class="more"><i class="layui-icon layui-icon-add-1"></i></div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class=" layui-row layui-col-space30">
+                  <a href="#" class="layui-col-md4">
+                    <div class="inner-content">
+                      <img src="/static/images/encrypted.svg">
+                      <h3>代理原产地申请</h3>
+                      <div class="xian"></div>
+                      <p>被评为全国优秀报关企业，实现网络化和本地化相结合的优质、迅捷、低成本的专业报关服务。</p>
+                      <div class="more"><i class="layui-icon layui-icon-add-1"></i></div>
+                    </div>
+                  </a>
+                  <a href="#" class="layui-col-md4">
+                    <div class="inner-content">
+                      <img src="/static/images/blockchain.svg">
+                      <h3>代理企业设备进出口</h3>
+                      <div class="xian"></div>
+                      <p>被评为全国优秀报关企业，实现网络化和本地化相结合的优质、迅捷、低成本的专业报关服务。</p>
+                      <div class="more"><i class="layui-icon layui-icon-add-1"></i></div>
+                    </div>
+                  </a>
+                  <a href="#" class="layui-col-md4">
+                    <div class="inner-content">
+                      <img src="/static/images/white-paper.svg">
+                      <h3>代理企业进出口各项证书办理</h3>
+                      <div class="xian"></div>
+                      <p>被评为全国优秀报关企业，实现网络化和本地化相结合的优质、迅捷、低成本的专业报关服务。</p>
+                      <div class="more"><i class="layui-icon layui-icon-add-1"></i></div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swoper-button-hover swiper-news-button-prev">
+            <i class="iconfont icon-keyboardarrowleft"></i>
+          </div>
+          <div class="swoper-button-hover swiper-news-button-next">
+            <i class="iconfont icon-keyboardarrowright"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="layui-advantage">
+  <div class="layui-container-index">
+    <div class="layui-col-md6">
+      <img src="/static/images/layui-advantage.png">
+    </div>
+    <div class="layui-col-md6">
+      <h1>为什么要选择东华？</h1>
+      <p>
+        广东东华报关服务有限公司的目标是专业帮客户解决问，东华报关凭借自主开发的供应链信息管理系统，对进出口环节进行计划、协调、控制和优化，快速响应客户需求，为客户提供量身定做的通关方案，打造标准化，流程化的跟踪服务。</p>
+      <ul>
+        <li class="li-zi"><i class="iconfont icon-zan li-zi"></i><span>价格优势  性价比高</span></li>
+        <div class="clear"></div>
+        <li class="li-green"><i class="iconfont icon-zyfw li-green"></i><span>资历丰富  操作规范</span></li>
+        <div class="clear"></div>
+        <li class="li-red"><i class="iconfont icon-77 li-red"></i><span>通关顺利  查验概率低</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="layui-info">
+  <div class="layui-container">
+    <div class="height-20"></div>
+    <div class="news-title">
+      <p>我们的优势<span>提供有竞争力的解决方案</span></p>
+    </div>
+    <div class="clear"></div>
+    <ul class="info-ul">
+      <li class="layui-col-md6">
+        <div class="info-li-kuang">
+          <div class="info-left-img"><i></i><img src="/static/images/info1.png"></div>
+          <div class="info-right">
+            <h3>区位优势</h3>
+            <p>被评为全国优秀报关企业，实现网络化和本地化相结合的优质、迅捷、低成本的专业化报关服务</p>
+            <a href="#" class="more">查看更多 ></a>
+          </div>
+        </div>
+      </li>
+      <li class="layui-col-md6">
+        <div class="info-li-kuang">
+          <div class="info-left-img"><i></i><img src="/static/images/info2.png"></div>
+          <div class="info-right">
+            <h3>模式优势</h3>
+            <p>专业进口，信誉良好，上万条海关价格数据保障提升通关效率。</p>
+            <a href="#" class="more">查看更多 ></a>
+          </div>
+        </div>
+      </li>
+      <li class="layui-col-md6">
+        <div class="info-li-kuang">
+          <div class="info-left-img"><i></i><img src="/static/images/info2.png"></div>
+          <div class="info-right">
+            <h3>经验优势</h3>
+            <p>20年报关行业经验，满足客户各种需求，保障客户获得最快的报关咨询！</p>
+            <a href="#" class="more">查看更多 ></a>
+          </div>
+        </div>
+      </li>
+      <li class="layui-col-md6">
+        <div class="info-li-kuang">
+          <div class="info-left-img"><i></i><img src="/static/images/info2.png"></div>
+          <div class="info-right">
+            <h3>服务优势</h3>
+            <p>专人跟踪服务，将货物交给东华是您最放心的选择！</p>
+            <a href="#" class="more">查看更多 ></a>
+          </div>
+        </div>
+      </li>
+      <li class="clear"></li>
+    </ul>
+  </div>
+</div>
+<div class="layui-about">
+  <div class="layui-container">
+    <div class="content">
+      <div class="layui-col-md8">
+        <div class="about_kuang">
+          <h2>关于我们</h2>
+          <p class="desc">About Us</p>
+          <p>
+            广东东华报关服务有限公司（简称：东华报关）创办于2004年，是东华供应链旗下经政府部门批准正式成立的专业报关服务公司，海关注册编码：4419986507。2009年和2015年东华报关先后成为广东黄埔报关协会和中国报关协会的副会长单位，并获得全国优秀报关企业、AEO高级认证企业等荣誉资质。</p>
+          <p>
+            东华报关以“重信誉、高效率、平等互利、精诚合作”为经营宗旨，为众企业代理货物进出口报关、报检、国际货运等服务，经过十多年的积累和革新，已经建立一个完整的进出口报关、报检、运输等配套服务为一体的现代化通关物流操作平台。</p>
+          <p>
+            东华报关的客户报关资料全部实行电子化管理，便于客户随时随地查询。东华报关以稳健的工作作风和高效的团队效率，得到客户的一致好评。从2004年成立至今，先后服务过500多家国内外知名企业，典型客户如谷崧集团、舒尔曼集团、明安集团等</p>
+        </div>
+      </div>
+
+      <div class="layui-col-md4">
+        <div class="about_right">
+          <h2>荣誉墙</h2>
+          <p class="desc">Honor Wall</p>
+          <div class="about_swoper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <img src="/static/images/card1.png">
+                <p>广东黄埔报关协会副会长单位</p>
+              </div>
+              <div class="swiper-slide">
+                <img src="/static/images/card2.png">
+                <p>连续两届被评为“全国优秀报关企业”</p>
+              </div>
+              <div class="swiper-slide">
+                <img src="/static/images/card3.png">
+                <p>东莞唯一两届评为“全国优秀报关员”</p>
+              </div>
+              <div class="swiper-slide">
+                <img src="/static/images/card4.png">
+                <p>预归类服务单证资质</p>
+              </div>
+              <div class="swiper-slide">
+                <img src="/static/images/card5.png">
+                <p>2016年通关海关高级AOE认证</p>
+              </div>
+              <div class="swiper-slide">
+                <img src="/static/images/card6.png">
+                <p>中国报关协会副会长单位</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+<div class="height-75"></div>
+<div class="height-75"></div>
+<div class="layui-people">
+  <div class="layui-container-index">
+    <div class="layui-people-kuang">
+      <p class="p1">500<i>+</i></p>
+      <p class="p2">先后服务过企业</p>
+      <p class="p3">100亿<i>+</i></p>
+      <p class="p4">累计服务企业进出口通关贸易金额</p>
+      <p class="p5">15<i>+</i></p>
+      <p class="p6">年通关经验</p>
+      <p class="p7">7*24</p>
+      <p class="p8">小时在线咨询</p>
+    </div>
+    <div class="blue_bg"></div>
+  </div>
+</div>
+<div class="layui-partner">
+  <div class="layui-container">
+    <div class="height-20"></div>
+    <div class="news-title">
+      <p>合作伙伴<span>用心做事，细心服务</span></p>
+    </div>
+    <div class="clear"></div>
+    <ul class="partner-ul">
+      <li><img src="/static/images/partner/1.png"></li>
+      <li><img src="/static/images/partner/2.png"></li>
+      <li><img src="/static/images/partner/3.png"></li>
+      <li><img src="/static/images/partner/4.png"></li>
+      <li><img src="/static/images/partner/5.png"></li>
+      <li><img src="/static/images/partner/6.png"></li>
+      <li><img src="/static/images/partner/7.png"></li>
+      <li><img src="/static/images/partner/8.png"></li>
+      <li><img src="/static/images/partner/9.png"></li>
+      <li><img src="/static/images/partner/10.png"></li>
+      <li><img src="/static/images/partner/11.png"></li>
+      <li><img src="/static/images/partner/12.png"></li>
+      <li><img src="/static/images/partner/13.png"></li>
+      <li><img src="/static/images/partner/14.png"></li>
+      <li><img src="/static/images/partner/15.png"></li>
+      <li><img src="/static/images/partner/16.png"></li>
+      <li><img src="/static/images/partner/17.png"></li>
+      <li><img src="/static/images/partner/18.png"></li>
+      <li><img src="/static/images/partner/19.png"></li>
+      <li><img src="/static/images/partner/20.png"></li>
+      <li><img src="/static/images/partner/21.png"></li>
+      <li><img src="/static/images/partner/22.png"></li>
+      <li><img src="/static/images/partner/23.png"></li>
+      <li><img src="/static/images/partner/24.png"></li>
+      <li><img src="/static/images/partner/25.png"></li>
+      <li><img src="/static/images/partner/26.png"></li>
+      <li><img src="/static/images/partner/27.png"></li>
+      <li><img src="/static/images/partner/28.png"></li>
+    </ul>
+    <div class="clear"></div>
+  </div>
+</div>
+<div class="layui-together">
+  <h2>我们可以这样合作</h2>
+  <p class="desc"><i class="iconfont icon-jiantou_xia"></i></p>
+  <div class="layui-container-index">
+    <ul class="togethter-ul">
+      <li class="i_p_1"><div class="icon-partner"></div><p>在线申请</p></li>
+      <li class="i_p_2"><div class="icon-partner"></div><p>指定销售经理</p></li>
+      <li class="i_p_3"><div class="icon-partner"></div><p>签约</p></li>
+      <li class="i_p_4"><div class="icon-partner"></div><p>系统对接</p></li>
+      <li class="i_p_5"><div class="icon-partner"></div><p>下单服务</p></li>
+      <li class="i_p_6"><div class="icon-partner"></div><p>结算</p></li>
+      <li class="i_p_7"><div class="icon-partner"></div><p>服务评价</p></li>
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <line x1="0" y1="0" x2="1200" y2="0" style="stroke :rgb(255,255,255);stroke-width:4"stroke-dasharray="10,5" />
+      </svg>
+      <div class="circle4">
+        <i class="iconfont icon-keyboardarrowright"></i>
+      </div>
+    </ul>
+  </div>
+</div>
+<div class="lsyui-expect">
+  <div class="layui-container-index">
+    <div class="layui-col-md6 expect_left"></div>
+    <div class="layui-col-md6">
+      <h2>期待与你合作</h2>
+      <p>提供有竞争力的解决方案，打造东华五星级客服体系</p>
+      <a href="#" class="layui-btn layui-btn-normal expect-btn">联系我们</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+      课程管理
+      <small id="pageSmallTitle">添加课程</small>
+  </h1>
+  <ol class="breadcrumb">
+      <li>
+          <a href="{{urlfor "HomeController.Index"}}">
+              <i class="fa fa-dashboard"></i> 首页</a>
+      </li>
+      <li class="active">课程管理</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section class="content container-fluid">
+    <!-- 页面内容开始 -->
+    <div class="row">
+      <div class="col-md-8">
+        <div class="box box-primary">
+          <div class="box-header with-border">
+              <h3 class="box-title">课程基本信息</h3>
+          </div>
+          <div class="box-body">
+            <!-- form start -->
+            <form class="form-horizontal margin-top-20" id="thisForm">
+                <input type="hidden" Name="Id" id="Id" value="{{.m.Id}}">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">名称</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="Name" class="form-control" placeholder="字母汉字" value="{{.m.Name}}"  maxlength="32" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">短名称</label>
+                  <div class="col-sm-8">
+                      <input type="text" name="ShortName" class="form-control" placeholder="字母汉字" value="{{.m.ShortName}}"  maxlength="8" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">有效期</label>
+                  <div class="col-sm-8">
+                      <input type="text" name="EffTimeRange" id="EffTimeRange" class="form-control" placeholder="" 
+                        value="{{.m.StartTime}} - {{.m.EndTime}}" required>
+                      <input type="hidden" name="StartTime" id="StartTime" >
+                      <input type="hidden" name="EndTime" id="EndTime" >
+                  </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">价格</label>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-addon">¥</div>
+                        <input type="text" name="Price" class="form-control" placeholder="数字，最多两位小数" value="{{.m.Price}}" max="999999" onchange="toFixed(this)" required>                       
+                      </div>                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">实际价格</label>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-addon">¥</div>
+                        <input type="text" name="RealPrice" class="form-control" placeholder="数字，最多两位小数" value="{{.m.RealPrice}}" max="999999" onchange="toFixed(this)" required>                          
+                      </div>                         
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">顺序</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="Seq" class="form-control" placeholder="非负整数" value="{{.m.Seq}}" max="999999" maxlength="6" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">课程封面</label>
+                    <div class="col-sm-8">
+                      <div class="fileinput {{if .hasImg}}fileinput-exists{{else}}fileinput-new{{end}} display-block" data-provides="fileinput">
+                        <div class="fileinput-new thumbnail">
+                            <img src="/static/sdtheme/img/no-image.png" alt="">
+                        </div>
+                        <div class="fileinput-preview fileinput-exists thumbnail">
+                            <img src="{{.m.Img}}">
+                        </div>
+                        <div>
+                            <span class="btn btn-file">
+                                <span class="fileinput-new"> 选择图片 </span>
+                                <span class="fileinput-exists"> 更换 </span>
+                                <input name="fileImg" id="inputImg" type="file">
+                            </span>
+                            <a href="javascript:;" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"> 移除 </a>
+                        </div>
+                      </div>
+                      <input name="Img" id="Img" type="hidden" value="{{.m.Img}}" required>
+                    </div>
+                </div>
+            </form>
+            <!-- form end -->
+          </div>
+          <div class="box-footer align-center">
+            <button type="button" class="btn btn-primary" onclick="formSubmit()">保存</button>
+            <button type="button" class="btn btn-success" id="saveAndgoon" onclick="formSubmit(1)">保存并继续添加</button>
+            <button type="button" class="btn btn-default" onclick="returnList()">返回</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">       
+        <div class="alert alert-info" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          这个页面演示当需要填写的字段比较多时，怎么组织页面
+        </div>
+      </div>
+    </div>
+    <!-- 页面内容结束 -->
+  </section>
+  <!-- /.content -->

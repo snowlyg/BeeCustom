@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>{{.pageTitle}}</title>
+
+    <link rel="stylesheet" href="/static/customAdmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet/less" type="text/css" href="/static/customAdmin/style/admin.less" media="all">
+</head>
+<body class="layui-layout-body">
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <!-- 头部区域 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                    <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                        <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                        <i class="layui-icon layui-icon-refresh-3"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="theme">
+                        <i class="layui-icon layui-icon-theme"></i>
+                    </a>
+                </li>
+
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;">
+                        <cite>{{.backenduser.RealName}}</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd class="text-center"><a class="edit_password">修改密码</a></dd>
+                        <dd style="text-align: center;">
+                            <a href="{{urlfor "HomeController.Logout" }}"
+                               onclick="event.preventDefault();document.getElementById('logout-form').submit();">退 出</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <div class="layui-logo">
+                    <img width="28" src="/static/images/index_logo.png">
+                    <span>跨易通管理系统</span>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
+                    lay-filter="layadmin-system-side-menu">
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="个人中心" id="个人中心"><i
+                                    class="layui-icon iconfont icon-localshipping"></i><cite>个人中心</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/control" id="工作台">工作台</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/enterprise/my" id="我的企业">我的企业</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/info/edit" id="我的信息">我的信息</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="清单申报" id="清单申报"><i
+                                    class="layui-icon iconfont icon-localshipping"></i><cite>清单申报</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/annotation/i" id="进口清单">进口清单</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/annotation/e" id="出口清单">出口清单</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/annotation/recycle" id="回收站">回收站</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="货物申报" id="货物申报"><i
+                                    class="layui-icon iconfont icon-localshipping"></i><cite>货物申报</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/order/i" id="进口报关整合申报">进口报关整合申报</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/order/e" id="出口报关整合申报">出口报关整合申报</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/order/recycle" id="回收站">回收站</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="财务管理" id="财务管理"><i
+                                    class="layui-icon iconfont icon-caiwutouzi"></i><cite>财务管理</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/finance" id="应收登记">应收登记</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/statement" id="对账单">对账单</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/agreement" id="合同及价格管理">合同及价格管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/finance_parm" id="基本参数">基本参数</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="基础数据" id="基础数据"><i
+                                    class="layui-icon iconfont icon-assignment"></i><cite>基础数据</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/clearance" id="通关参数">通关参数</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/ciq" id="商检编码管理">商检编码管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/hs_code" id="商品编码管理">商品编码管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/template" id="初始值模版">初始值模版</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/manual" id="无纸化化手册">无纸化化手册</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/account" id="电子账册">电子账册</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/two_manual" id="金关二期手册">金关二期手册</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/two_account" id="金关二期账册">金关二期账册</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="客户管理" id="客户管理"><i
+                                    class="layui-icon iconfont icon-contactmail"></i><cite>客户管理</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/company" id="企业客户管理">企业客户管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="物流管理" id="物流管理"><i
+                                    class="layui-icon iconfont icon-huowu"></i><cite>物流管理</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/car" id="车辆管理">车辆管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="内容管理" id="内容管理"><i
+                                    class="layui-icon iconfont icon-language"></i><cite>内容管理</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/article" id="知识库管理">知识库管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/news" id="关务头条管理">关务头条管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="报表中心" id="报表中心"><i
+                                    class="layui-icon iconfont icon-chart-scatterplot-hexbin"></i><cite>报表中心</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/report/comeAndout" id="进口数据统计">进口数据统计</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="系统管理" id="系统管理"><i
+                                    class="layui-icon iconfont icon-settings"></i><cite>系统管理</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="//cusdecsys.com/user" id="账号管理">账号管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/role" id="角色管理">角色管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/perm" id="权限管理">权限管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/enterprise" id="运营商管理">运营商管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/record" id="系统操作日志">系统操作日志</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/xml_file" id="回执列表">回执列表</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/front/perm" id="客户端-权限管理">客户端-权限管理</a></dd>
+                        </dl>
+                    </li>
+                    <span class="layui-nav-bar" style="top: 364px; height: 0px; opacity: 0;"></span></ul>
+            </div>
+        </div>
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;"></a>
+                        <dl class="layui-nav-child layui-anim-fadein">
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li lay-id="{{urlfor "HomeController.Control" }}" lay-attr="{{urlfor "HomeController.Control" }}"
+                        class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe src="{{urlfor "HomeController.Control" }}" frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+
+    <script type="text/html" id="edit_password_template">
+        <form class="layui-form edit_password_form">
+            <div class="layui-row layui-form-item">
+                <label class="layui-form-label"><i class="red margin-right-4">*</i>密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" lay-verify="password" lay-verType="tips"
+                           placeholder="8~16个字符，区分大小写" autocomplete="off" class="layui-input"
+                           maxlength="16">
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <label class="layui-form-label"><i class="red margin-right-4">*</i>确认密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password_confirmation" lay-verify="password_confirmation"
+                           lay-verType="tips"
+                           placeholder="8~16个字符，区分大小写" autocomplete="off" class="layui-input"
+                           maxlength="16">
+                </div>
+            </div>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" id="edit_password_save" lay-submit
+                        lay-filter="edit_password_save" type="button">
+                    提交
+                </button>
+            </div>
+        </form>
+    </script>
+</div>
+
+<script src="/static/js/less.min.js" data-env="proion"></script>
+<script src="/static/customAdmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'AutoComplete'], async () => {
+        const {$, form, layer, admin} = layui;
+        let edit_password_index;
+        $("body").on("click", ".edit_password", function () {
+            edit_password_index = layer.open({
+                type: 1,
+                title: '修改密码',
+                shadeClose: true,
+                area: admin.screen() < 2 ? ['80%', '300px'] : ['550px', '280px'],
+                content: $('#edit_password_template').html()
+            });
+        });
+
+        await form.verify({
+            password_confirmation: function (value, item) {
+                if (!(/^[\S]{8,16}$/.test(value))) {
+                    return '密码必须8到16位，且不能出现空格';
+                } else if ($("input[name='password']").val() !== value) {
+                    return '密码不一致';
+                }
+            }
+            , password: [
+                /^[\S]{8,16}$/
+                , '密码必须8到16位，且不能出现空格'
+            ]
+        });
+
+        form.on('submit(edit_password_save)', async (data) => {
+            layer.load(2);
+            try {
+                const item = await admin.post(`/user/change_pwd`, data.field);
+                if (item.status) {
+                    layer.close(edit_password_index)
+                }
+            } catch (e) {
+                console.log(e)
+            }
+            layer.closeAll('loading');
+        });
+    });
+
+</script>
+</body>
+</html>
