@@ -8,14 +8,6 @@ import (
 
 func init() {
 
-	//课程路由
-	beego.Router("/course/index", &controllers.CourseController{}, "*:Index")
-	beego.Router("/course/datagrid", &controllers.CourseController{}, "Get,Post:DataGrid")
-	beego.Router("/course/edit/?:id", &controllers.CourseController{}, "Get,Post:Edit")
-	beego.Router("/course/delete", &controllers.CourseController{}, "Post:Delete")
-	beego.Router("/course/updateseq", &controllers.CourseController{}, "Post:UpdateSeq")
-	beego.Router("/course/uploadimage", &controllers.CourseController{}, "Post:UploadImage")
-
 	//用户角色路由
 	beego.Router("/role/index", &controllers.RoleController{}, "*:Index")
 	beego.Router("/role/datagrid", &controllers.RoleController{}, "Get,Post:DataGrid")
@@ -42,9 +34,11 @@ func init() {
 
 	//后台用户路由
 	beego.Router("/backenduser/index", &controllers.BackendUserController{}, "*:Index")
-	beego.Router("/backenduser/datagrid", &controllers.BackendUserController{}, "POST:DataGrid")
+	beego.Router("/backenduser/create", &controllers.BackendUserController{}, "Get,Post:Create")
+	beego.Router("/backenduser/datagrid", &controllers.BackendUserController{}, "Get:DataGrid")
 	beego.Router("/backenduser/edit/?:id", &controllers.BackendUserController{}, "Get,Post:Edit")
-	beego.Router("/backenduser/delete", &controllers.BackendUserController{}, "Post:Delete")
+	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Post:Delete")
+
 	//后台用户中心
 	beego.Router("/usercenter/profile", &controllers.UserCenterController{}, "Get:Profile")
 	beego.Router("/usercenter/basicinfosave", &controllers.UserCenterController{}, "Post:BasicInfoSave")

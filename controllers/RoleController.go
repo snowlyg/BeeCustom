@@ -47,7 +47,7 @@ func (c *RoleController) Index() {
 func (c *RoleController) DataGrid() {
 	//直接反序化获取json格式的requestbody里的值
 	var params models.RoleQueryParam
-	json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 	//获取数据列表和总数
 	data, total := models.RolePageList(&params)
 	//定义返回的数据结构

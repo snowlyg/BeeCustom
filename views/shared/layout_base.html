@@ -7,7 +7,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
-    <title>{{.pageTitle}}</title>
+    <title>@{{.pageTitle}}</title>
 
     <link rel="stylesheet" href="/static/customAdmin/layui/css/layui.css" media="all">
     <link rel="stylesheet/less" type="text/css" href="/static/customAdmin/style/admin.less" media="all">
@@ -38,13 +38,12 @@
 
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;">
-                        <cite>{{.backenduser.RealName}}</cite>
+                        <cite>@{{.backenduser.RealName}}</cite>
                     </a>
                     <dl class="layui-nav-child">
                         <dd class="text-center"><a class="edit_password">修改密码</a></dd>
                         <dd style="text-align: center;">
-                            <a href="{{urlfor "HomeController.Logout" }}"
-                               onclick="event.preventDefault();document.getElementById('logout-form').submit();">退 出</a>
+                            <a href="@{{urlfor "HomeController.Logout" }}">退 出</a>
                         </dd>
                     </dl>
                 </li>
@@ -145,13 +144,10 @@
                                     class="layui-icon iconfont icon-settings"></i><cite>系统管理</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="//cusdecsys.com/user" id="账号管理">账号管理</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/role" id="角色管理">角色管理</a></dd>
+                            <dd><a lay-href='@{{ urlfor "BackendUserController.Index" }}' id="账号管理">账号管理</a></dd>
+                            <dd><a lay-href='@{{ urlfor "RoleController.Index" }}' id="角色管理">角色管理</a></dd>
                             <dd><a lay-href="//cusdecsys.com/perm" id="权限管理">权限管理</a></dd>
                             <dd><a lay-href="//cusdecsys.com/enterprise" id="运营商管理">运营商管理</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/record" id="系统操作日志">系统操作日志</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/xml_file" id="回执列表">回执列表</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/front/perm" id="客户端-权限管理">客户端-权限管理</a></dd>
                         </dl>
                     </li>
                     <span class="layui-nav-bar" style="top: 364px; height: 0px; opacity: 0;"></span></ul>
@@ -175,7 +171,7 @@
             </div>
             <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="{{urlfor "HomeController.Control" }}" lay-attr="{{urlfor "HomeController.Control" }}"
+                    <li lay-id='@{{ urlfor "HomeController.Control" }}' lay-attr='@{{ urlfor "HomeController.Control" }}'
                         class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
                 </ul>
             </div>
@@ -184,7 +180,7 @@
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe src="{{urlfor "HomeController.Control" }}" frameborder="0" class="layadmin-iframe"></iframe>
+                <iframe src='@{{ urlfor "HomeController.Control" }}' frameborder="0" class="layadmin-iframe"></iframe>
             </div>
         </div>
 
@@ -243,15 +239,15 @@
 
         await form.verify({
             password_confirmation: function (value, item) {
-                if (!(/^[\S]{8,16}$/.test(value))) {
-                    return '密码必须8到16位，且不能出现空格';
+                if (!(/^[\S]{6,16}$/.test(value))) {
+                    return '密码必须6到16位，且不能出现空格';
                 } else if ($("input[name='password']").val() !== value) {
                     return '密码不一致';
                 }
             }
             , password: [
                 /^[\S]{8,16}$/
-                , '密码必须8到16位，且不能出现空格'
+                , '密码必须6到16位，且不能出现空格'
             ]
         });
 

@@ -5,15 +5,15 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>{{.pageTitle}}</title>
+    <title>@{{ .pageTitle }}</title>
     <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> 
-    {{template "auth/globalcss.html"}}
-    {{.headcssjs}}
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @{{ template "auth/globalcss.html"}}
+    @{{ .headcssjs }}
 </head>
 <body>
-{{.LayoutContent}}    
-{{template "auth/globaljs.html"}}
-{{.footerjs}}
+@{{ .LayoutContent }}
+@{{ template "auth/globaljs.html" }}
+@{{ .footerjs}}
 </body>
 </html>

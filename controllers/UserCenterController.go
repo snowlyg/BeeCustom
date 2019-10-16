@@ -25,9 +25,10 @@ func (c *UserCenterController) Profile() {
 	m, err := models.BackendUserOne(Id)
 	if m == nil || err != nil {
 		c.pageError("数据无效，请刷新后重试")
+	} else {
+		c.Data["hasAvatar"] = len(m.Avatar) > 0
+		utils.LogDebug(m.Avatar)
 	}
-	c.Data["hasAvatar"] = len(m.Avatar) > 0
-	utils.LogDebug(m.Avatar)
 	c.Data["m"] = m
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -53,7 +54,7 @@ func (c *UserCenterController) BasicInfoSave() {
 	if _, err := o.Update(oM); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
 	} else {
-		c.setBackendUser2Session(Id)
+		_ = c.setBackendUser2Session(Id)
 		c.jsonResult(enums.JRCodeSucc, "保存成功", m.Id)
 	}
 }
@@ -81,7 +82,7 @@ func (c *UserCenterController) PasswordSave() {
 	if _, err := o.Update(oM); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "保存失败", oM.Id)
 	} else {
-		c.setBackendUser2Session(Id)
+		_ = c.setBackendUser2Session(Id)
 		c.jsonResult(enums.JRCodeSucc, "保存成功", oM.Id)
 	}
 }
@@ -96,7 +97,7 @@ func (c *UserCenterController) UploadImage() {
 		defer f.Close()
 		filePath := "static/upload/" + h.Filename
 		// 保存位置在 static/upload, 没有文件夹要先创建
-		c.SaveToFile("fileImageUrl", filePath)
+		_ = c.SaveToFile("fileImageUrl", filePath)
 		c.jsonResult(enums.JRCodeSucc, "上传成功", "/"+filePath)
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "上传失败", "")

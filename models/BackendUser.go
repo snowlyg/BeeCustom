@@ -30,13 +30,13 @@ type BackendUser struct {
 	Email              string                `orm:"size(256)"`
 	Avatar             string                `orm:"size(256)"`
 	ICCode             string                `orm:"column(i_c_code);size(255);null"`
-	CreatedAt          time.Time             `orm:"column(created_at);type(timestamp);null"`
-	UpdatedAt          time.Time             `orm:"column(updated_at);type(timestamp);null"`
 	Chapter            string                `orm:"column(chapter);size(255);null" description:"签章"`
 	EnterpriseId       string                `orm:"column(enterprise_id);size(255);null" description:"关联企业ID"`
 	RoleIds            []int                 `orm:"-" form:"RoleIds"`
 	RoleBackendUserRel []*RoleBackendUserRel `orm:"reverse(many)"` // 设置一对多的反向关系
 	ResourceUrlForList []string              `orm:"-"`
+	CreatedAt          time.Time             `orm:"column(created_at);type(timestamp);null"`
+	UpdatedAt          time.Time             `orm:"column(updated_at);type(timestamp);null"`
 	IsSuper            bool
 	Status             int
 	//CreateCourses      []*Course             `rom:"reverse(many)"` // 设置一对多的反向关系
@@ -45,26 +45,34 @@ type BackendUser struct {
 // BackendUserPageList 获取分页数据
 func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) {
 	query := orm.NewOrm().QueryTable(BackendUserTBName())
+
 	data := make([]*BackendUser, 0)
+
 	//默认排序
 	sortorder := "Id"
 	switch params.Sort {
+
 	case "Id":
 		sortorder = "Id"
 	}
+
 	if params.Order == "desc" {
 		sortorder = "-" + sortorder
 	}
+
 	query = query.Filter("username__istartswith", params.UserNameLike)
 	query = query.Filter("realname__istartswith", params.RealNameLike)
+
 	if len(params.Mobile) > 0 {
 		query = query.Filter("mobile", params.Mobile)
 	}
 	if len(params.SearchStatus) > 0 {
 		query = query.Filter("status", params.SearchStatus)
 	}
+
 	total, _ := query.Count()
 	_, _ = query.OrderBy(sortorder).Limit(params.Limit, params.Offset).All(&data)
+
 	return data, total
 }
 

@@ -199,7 +199,7 @@ func (c *ResourceController) Select() {
 		case 1:
 			{
 				role := models.Role{Id: destval}
-				o.LoadRelated(&role, "RoleResourceRel")
+				_, _ = o.LoadRelated(&role, "RoleResourceRel")
 				for _, item := range role.RoleResourceRel {
 					selectedIds = append(selectedIds, strconv.Itoa(item.Resource.Id))
 				}

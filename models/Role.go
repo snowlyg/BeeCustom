@@ -41,7 +41,7 @@ func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
 	}
 	query = query.Filter("name__istartswith", params.NameLike)
 	total, _ := query.Count()
-	query.OrderBy(sortorder).Limit(params.Limit, params.Offset).All(&data)
+	_, _ = query.OrderBy(sortorder).Limit(params.Limit, params.Offset).All(&data)
 	return data, total
 }
 

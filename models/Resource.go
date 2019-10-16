@@ -46,7 +46,7 @@ func ResourceTreeGrid() []*Resource {
 	o := orm.NewOrm()
 	query := o.QueryTable(ResourceTBName()).OrderBy("seq", "id")
 	list := make([]*Resource, 0)
-	query.All(&list)
+	_, _ = query.All(&list)
 	return resourceList2TreeGrid(list)
 }
 
@@ -95,7 +95,7 @@ func ResourceTreeGridByUserId(backuserid, maxrtype int) []*Resource {
 	if user.IsSuper == true {
 		//如果是管理员，则查出所有的
 		sql = fmt.Sprintf(`SELECT id,name,parent_id,rtype,icon,seq,url_for FROM %s Where rtype <= ? Order By seq asc,Id asc`, ResourceTBName())
-		o.Raw(sql, maxrtype).QueryRows(&list)
+		_, _ = o.Raw(sql, maxrtype).QueryRows(&list)
 	} else {
 		//联查多张表，找出某用户有权管理的
 		sql = fmt.Sprintf(`SELECT DISTINCT T0.resource_id,T2.id,T2.name,T2.parent_id,T2.rtype,T2.icon,T2.seq,T2.url_for
@@ -103,10 +103,10 @@ func ResourceTreeGridByUserId(backuserid, maxrtype int) []*Resource {
 		INNER JOIN %s AS T1 ON T0.role_id = T1.role_id
 		INNER JOIN %s AS T2 ON T2.id = T0.resource_id
 		WHERE T1.backend_user_id = ? and T2.rtype <= ?  Order By T2.seq asc,T2.id asc`, RoleResourceRelTBName(), RoleBackendUserRelTBName(), ResourceTBName())
-		o.Raw(sql, backuserid, maxrtype).QueryRows(&list)
+		_, _ = o.Raw(sql, backuserid, maxrtype).QueryRows(&list)
 	}
 	result := resourceList2TreeGrid(list)
-	utils.SetCache(cachekey, result, 30)
+	_ = utils.SetCache(cachekey, result, 30)
 	return result
 }
 

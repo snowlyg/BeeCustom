@@ -15,6 +15,7 @@ import (
 
 type BackendUserController struct {
 	BaseController
+	Roles []*models.Role //当前用户信息
 }
 
 func (c *BackendUserController) Prepare() {
@@ -26,6 +27,9 @@ func (c *BackendUserController) Prepare() {
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
 	//c.checkLogin()
 
+	var params = models.RoleQueryParam{}
+	c.Roles = models.RoleDataList(&params)
+
 }
 func (c *BackendUserController) Index() {
 	//是否显示更多查询条件的按钮弃用，前端自动判断
@@ -35,7 +39,6 @@ func (c *BackendUserController) Index() {
 	//页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["headcssjs"] = "backenduser/index_headcssjs.html"
 	c.LayoutSections["footerjs"] = "backenduser/index_footerjs.html"
 	//页面里按钮权限控制
 	c.Data["canEdit"] = c.checkActionAuthor("BackendUserController", "Edit")
@@ -56,11 +59,25 @@ func (c *BackendUserController) DataGrid() {
 }
 
 // Edit 添加 编辑 页面
+func (c *BackendUserController) Create() {
+	//如果是Post请求，则由Save处理
+	if c.Ctx.Request.Method == "POST" {
+		c.Save()
+	}
+
+	c.Data["Roles"] = c.Roles
+	c.setTpl()
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "backenduser/create_footerjs.html"
+}
+
+// Edit 添加 编辑 页面
 func (c *BackendUserController) Edit() {
 	//如果是Post请求，则由Save处理
 	if c.Ctx.Request.Method == "POST" {
 		c.Save()
 	}
+
 	Id, _ := c.GetInt(":id", 0)
 	m := &models.BackendUser{}
 	var err error
@@ -70,7 +87,7 @@ func (c *BackendUserController) Edit() {
 			c.pageError("数据无效，请刷新后重试")
 		}
 		o := orm.NewOrm()
-		o.LoadRelated(m, "RoleBackendUserRel")
+		_, _ = o.LoadRelated(m, "RoleBackendUserRel")
 	} else {
 		//添加用户时默认状态为启用
 		m.Status = enums.Enabled
@@ -81,11 +98,16 @@ func (c *BackendUserController) Edit() {
 	for _, item := range m.RoleBackendUserRel {
 		roleIds = append(roleIds, strconv.Itoa(item.Role.Id))
 	}
+
 	c.Data["roles"] = strings.Join(roleIds, ",")
-	c.setTpl("backenduser/edit.html", "shared/layout_pullbox.html")
+	c.Data["Roles"] = c.Roles
+
+	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/edit_footerjs.html"
+
 }
+
 func (c *BackendUserController) Save() {
 	m := models.BackendUser{}
 	o := orm.NewOrm()

@@ -8,22 +8,17 @@
             , admin = layui.admin
             , formSelects = layui.formSelects
             , $ = layui.$;
-
         await form.verify({
 
-            password: [
+           password: [
                 /^[\S]{6,16}$/
                 , '密码必须6到16位，且不能出现空格'
             ]
         });
 
         form.on('submit(user_submit)', async (data) => {
-            if (!data.field.password) {
-                delete data.field.password
-            }
-
-            await admin.post(`/backenduser/edit/`+'@{{ .m.Id }}', data.field);
+            // data.field.role_name = data.field.role_name.split(',');
+            await admin.post(`/backenduser/create/`, data.field);
         })
-
     });
 </script>

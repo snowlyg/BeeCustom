@@ -23,7 +23,7 @@
         });
 
         form.on('submit(login_submit)', async (data) => {
-            await admin.post('{{ urlfor "HomeController.DoLogin"}}', data.field,'{{ urlfor "HomeController.Index"}}');
+            await admin.post('@{{ urlfor "HomeController.DoLogin"}}', data.field,'@{{ urlfor "HomeController.Index"}}');
         })
 
     });

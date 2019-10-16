@@ -1,60 +1,26 @@
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>
-        资源管理
-        <small>管理后台左侧菜单、按钮等需要加入到权限控制的资源</small>
-    </h1>
-    <ol class="breadcrumb">
-            <li>
-                <a href="{{urlfor "HomeController.Index"}}">
-                    <i class="fa fa-dashboard"></i> 首页</a>
-            </li>
-            <li class="active">资源管理</li>
-        </ol>
-</section>
-<!-- Content Header (Page header) -->
-<section class="content container-fluid">
-    <!-- 页面内容开始 -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box box-solid">
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="btn-group">
-                                {{ if .canEdit}}
-                                <button class="btn btn-info" href="javascript:;" onclick="EditFun()">
-                                    <i class="fa fa-plus"></i> 添加</button> 
-                                {{end}}
-                            </div>
-                        </div>
-                        <div class="col-md-6 align-right">
-                            <div class="btn-group">
-                                <button class="btn btn-warning treegridexpend" data-target="#treeGrid" >
-                                    <i class="fa fa-expand"></i> 全部展开</button>
-                                <button class="btn btn-primary treegridcollapse" data-target="#treeGrid" >
-                                    <i class="fa fa-compress"></i> 全部收缩
-                                </button>
-                            </div>
-                        </div>
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body" id="perm_list_id">
+            <div class="layui-row custom-tool">
+                <div class="layui-col-md6">
+                    @can('perm.create')
+                    <span class="custom-new_btn" lay-href='@{{ urlfor "ResourceControler.Create" }}' lay-text="新建权限" id="perm_new">+新建</span>
+                    @endcan
+                </div>
+                <div class="layui-col-md3 layui-col-md-offset3">
+                    <div class="custom-tool-right">
+                        <label class="custom-tool-right-search iconfont icon-search"></label>
+                        <input type="text" name="perm_search" id="perm_search"
+                               placeholder="搜索权限名称/路由" class="custom-tool-right-input layui-input">
                     </div>
-                    <table id="treeGrid" class="table  table-bordered table-hover margin-top-10">
-                        <thead>                          
-                            <th>名称</th>
-                            <th class="align-center">图标</th>
-                            <th class="align-center">类别</th>
-                            <th>地址</th>
-                            <th class="align-center">顺序</th>
-                            <th style="width:120px;">操作</th>
-                        </thead>
-                        <tbody>                            
-                        </tbody>
-                    </table>
                 </div>
             </div>
-
+            <table class="layui-hide" id="perm_lists" lay-filter="perm_lists"></table>
         </div>
     </div>
-    <!-- 页面内容结束 -->
-</section>
-<!-- /.content -->
+</div>
+
+<script type="text/html" id="perm_toolbar">
+    <a class="custom-edit" lay-event="edit">编辑</a>
+    <a class="custom-delete" lay-event="del">删除</a>
+</script>

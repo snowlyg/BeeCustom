@@ -14,7 +14,6 @@ BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `La
 
 本系统基于 `beego` 开发，默认使用 `mysql` 数据库，缓存 `redis` 
 
-
 1. 安装 `golang` 环境
 
 2. 安装本系统
@@ -46,3 +45,7 @@ bee run
  ```
  go get github.com/gomodule/redigo/redis
  ```
+
+# 参考项目
+ - [lhtzbj12/sdrms](https://gitee.com/lhtzbj12/sdrms/tree/master)
+
