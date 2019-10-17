@@ -33,6 +33,9 @@
             , request: {
                 pageName: 'offset' //页码的参数名称，默认：page
                 , limitName: 'limit' //每页数据量的参数名，默认：limit
+            },response:{
+                statusName : 'code',
+                statusCode : 0,
             }
             , parseData: function (res) {
                 return {
@@ -97,7 +100,7 @@
             const data = obj.data;
             if (obj.event === 'del') {
                 layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                    await admin.delete(`、backenduser/delete/${data.Id}`, obj);
+                    await admin.delete(`/backenduser/delete/${data.Id}`);
                     layer.close(index);
                     table.reload('user_lists');
                 });

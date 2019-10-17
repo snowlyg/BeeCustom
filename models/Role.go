@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 // TableName 设置表名
@@ -22,26 +23,31 @@ type Role struct {
 	Seq             int
 	RoleResourceRel []*RoleResourceRel `orm:"reverse(many)" json:"-"` // 设置一对多的反向关系
 	BackendUsers    []*BackendUser     `orm:"reverse(many)"`          //设置一对多关系
+	CreatedAt       time.Time          `orm:"column(created_at);type(timestamp);null"`
+	UpdatedAt       time.Time          `orm:"column(updated_at);type(timestamp);null"`
 }
 
 // RolePageList 获取分页数据
 func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
+
 	query := orm.NewOrm().QueryTable(RoleTBName())
 	data := make([]*Role, 0)
+
 	//默认排序
 	sortorder := "Id"
-	switch params.Sort {
-	case "Id":
-		sortorder = "Id"
-	case "Seq":
-		sortorder = "Seq"
+	if len(params.Sort) > 0 {
+		sortorder = params.Sort
 	}
+
 	if params.Order == "desc" {
 		sortorder = "-" + sortorder
 	}
+
 	query = query.Filter("name__istartswith", params.NameLike)
+
 	total, _ := query.Count()
-	_, _ = query.OrderBy(sortorder).Limit(params.Limit, params.Offset).RelatedSel().All(&data)
+	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).All(&data)
+
 	return data, total
 }
 
@@ -52,13 +58,6 @@ func RoleDataList(params *RoleQueryParam) []*Role {
 	params.Order = "asc"
 	data, _ := RolePageList(params)
 	return data
-}
-
-// RoleBatchDelete 批量删除
-func RoleBatchDelete(ids []int) (int64, error) {
-	query := orm.NewOrm().QueryTable(RoleTBName())
-	num, err := query.Filter("id__in", ids).Delete()
-	return num, err
 }
 
 // RoleOne 获取单条

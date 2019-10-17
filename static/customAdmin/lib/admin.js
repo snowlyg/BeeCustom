@@ -945,10 +945,7 @@ layui.define('view', function (exports) {
                 return new Promise(async (resolve, reject) => {
                     let ajax_abort = $.ajax({
                         url: url,
-                        type: 'POST',
-                        data: {
-                            _method: 'DELETE'
-                        },
+                        type: 'DELETE',
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {

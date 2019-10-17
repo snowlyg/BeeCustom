@@ -68,8 +68,8 @@
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>是否超级管理员：</label>
                         <div class="layui-input-block">
                             <select name="IsSuper" lay-verify="required" lay-vertype="tips">
-                                <option value="false">否</option>
-                                <option value="true">是</option>
+                                <option @{{if eq .m.IsSuper "1"}}  selected  @{{ end }}  value="1">是</option>
+                                <option @{{if eq .m.IsSuper "0"}} selected @{{ end }} value="0">否</option>
                             </select>
                         </div>
                     </div>
@@ -79,8 +79,8 @@
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>状态：</label>
                         <div class="layui-input-block">
                             <select name="Status" lay-verify="required" lay-vertype="tips">
-                                <option value="0">禁用</option>
-                                <option value="1">启用</option>
+                                <option @{{if eq .m.Status "1"}}  selected  @{{ end }}  value="1">启用</option>
+                                <option @{{if eq .m.Status "0"}} selected @{{ end }} value="0">禁用</option>
                             </select>
                         </div>
                     </div>

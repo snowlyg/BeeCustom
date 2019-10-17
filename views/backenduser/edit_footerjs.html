@@ -18,7 +18,7 @@
                 delete data.field.password
             }
 
-            await admin.post(`/backenduser/edit/`+'@{{ .m.Id }}', data.field);
+            await admin.patch(`/backenduser/update/`+"@{{ .m.Id }}", data.field);
         })
 
     });

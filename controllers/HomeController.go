@@ -15,7 +15,7 @@ type HomeController struct {
 func (c *HomeController) Index() {
 	//判断是否登录
 	c.checkLogin()
-	c.setTpl("home/index.html","shared/layout_base.html")
+	c.setTpl("home/index.html", "shared/layout_base.html")
 }
 
 func (c *HomeController) Control() {
@@ -30,7 +30,7 @@ func (c *HomeController) Page404() {
 
 func (c *HomeController) Error() {
 	c.Data["error"] = c.GetString(":error")
-	c.setTpl("home/error.html", "shared/layout_pullbox.html")
+	c.setTpl("home/error.html", "shared/layout_app.html")
 }
 
 func (c *HomeController) Login() {
@@ -71,7 +71,7 @@ func (c *HomeController) DataReset() {
 	if ok, err := models.DataReset(); ok {
 		c.jsonResult(enums.JRCodeSucc, "初始化成功", "")
 	} else {
-		c.jsonResult(enums.JRCodeFailed, "初始化失败,可能原因:"+ err.Error(), "")
+		c.jsonResult(enums.JRCodeFailed, "初始化失败,可能原因:"+err.Error(), "")
 	}
 
 }

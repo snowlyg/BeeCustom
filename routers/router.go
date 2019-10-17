@@ -10,9 +10,12 @@ func init() {
 
 	//用户角色路由
 	beego.Router("/role/index", &controllers.RoleController{}, "*:Index")
-	beego.Router("/role/datagrid", &controllers.RoleController{}, "Get,Post:DataGrid")
-	beego.Router("/role/edit/?:id", &controllers.RoleController{}, "Get,Post:Edit")
-	beego.Router("/role/delete", &controllers.RoleController{}, "Post:Delete")
+	beego.Router("/role/create", &controllers.RoleController{}, "Get:Create")
+	beego.Router("/role/store", &controllers.RoleController{}, "Post:Store")
+	beego.Router("/role/datagrid", &controllers.RoleController{}, "Post:DataGrid")
+	beego.Router("/role/edit/?:id", &controllers.RoleController{}, "Get:Edit")
+	beego.Router("/role/update/?:id", &controllers.RoleController{}, "Patch:Update")
+	beego.Router("/role/delete/?:id", &controllers.RoleController{}, "Delete:Delete")
 	beego.Router("/role/datalist", &controllers.RoleController{}, "Post:DataList")
 	beego.Router("/role/allocate", &controllers.RoleController{}, "Post:Allocate")
 	beego.Router("/role/updateseq", &controllers.RoleController{}, "Post:UpdateSeq")
@@ -20,9 +23,9 @@ func init() {
 	//资源路由
 	beego.Router("/resource/index", &controllers.ResourceController{}, "*:Index")
 	beego.Router("/resource/treegrid", &controllers.ResourceController{}, "POST:TreeGrid")
-	beego.Router("/resource/edit/?:id", &controllers.ResourceController{}, "Get,Post:Edit")
+	beego.Router("/resource/edit/?:id", &controllers.ResourceController{}, "POST:Edit")
 	beego.Router("/resource/parent", &controllers.ResourceController{}, "Post:ParentTreeGrid")
-	beego.Router("/resource/delete", &controllers.ResourceController{}, "Post:Delete")
+	beego.Router("/resource/delete", &controllers.ResourceController{}, "Delete:Delete")
 	//快速修改顺序
 	beego.Router("/resource/updateseq", &controllers.ResourceController{}, "Post:UpdateSeq")
 
@@ -34,10 +37,12 @@ func init() {
 
 	//后台用户路由
 	beego.Router("/backenduser/index", &controllers.BackendUserController{}, "*:Index")
-	beego.Router("/backenduser/create", &controllers.BackendUserController{}, "Get,Post:Create")
+	beego.Router("/backenduser/create", &controllers.BackendUserController{}, "Get:Create")
+	beego.Router("/backenduser/store", &controllers.BackendUserController{}, "Post:Store")
 	beego.Router("/backenduser/datagrid", &controllers.BackendUserController{}, "Post:DataGrid")
-	beego.Router("/backenduser/edit/?:id", &controllers.BackendUserController{}, "Get,Post:Edit")
-	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Post:Delete")
+	beego.Router("/backenduser/edit/?:id", &controllers.BackendUserController{}, "Get:Edit")
+	beego.Router("/backenduser/update/?:id", &controllers.BackendUserController{}, "Patch:Update")
+	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Delete:Delete")
 
 	//后台用户中心
 	beego.Router("/usercenter/profile", &controllers.UserCenterController{}, "Get:Profile")

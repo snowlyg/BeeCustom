@@ -6,7 +6,9 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>角色名称：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="Name" value="@{{ .m.Name }}"  lay-verify="required"  lay-verType="tips"  placeholder="为角色起个好听的名字吧，字符不限" autocomplete="off" class="layui-input">
+                            <input type="text" name="Name"  lay-verify="required" lay-verType="tips"
+                                   placeholder="为角色起个好听的名字吧，字符不限" autocomplete="off" class="layui-input"  />
+
                         </div>
                     </div>
                 </div>
@@ -19,6 +21,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn custom-create_btn" lay-submit lay-filter="role_submit" type="button">

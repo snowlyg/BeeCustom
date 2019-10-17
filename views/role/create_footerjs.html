@@ -1,0 +1,23 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin', 'layuiXtree'], async () => {
+        const form = layui.form , admin = layui.admin , layuiXtree = layui.layuiXtree;
+
+        {{/*const permission_data = await admin.get("@{{ urlfor "RoleController.PermList" }}");*/}}
+        {{/*const permission = new layuiXtree({*/}}
+        {{/*    elem: 'permission'*/}}
+        {{/*    , form: form*/}}
+        {{/*    , data: permission_data*/}}
+        {{/*    , isopen: false*/}}
+        {{/*    , ckall: true*/}}
+        {{/*});*/}}
+
+        form.on('submit(role_submit)', async (data) => {
+            // data.field.permission_names = permission.GetChecked();
+            await admin.post("@{{ urlfor "RoleController.Store" }}", data.field);
+        })
+    });
+</script>

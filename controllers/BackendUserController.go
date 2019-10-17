@@ -3,8 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
+	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -63,12 +63,8 @@ func (c *BackendUserController) DataGrid() {
 	c.ServeJSON()
 }
 
-// Edit 添加 编辑 页面
+// Create 添加 新建 页面
 func (c *BackendUserController) Create() {
-	//如果是Post请求，则由Save处理
-	if c.Ctx.Request.Method == "POST" {
-		c.Save()
-	}
 
 	c.Data["Roles"] = c.Roles
 	c.setTpl()
@@ -76,12 +72,13 @@ func (c *BackendUserController) Create() {
 	c.LayoutSections["footerjs"] = "backenduser/create_footerjs.html"
 }
 
+// Store 添加 新建 页面
+func (c *BackendUserController) Store() {
+	c.Save(0)
+}
+
 // Edit 添加 编辑 页面
 func (c *BackendUserController) Edit() {
-	//如果是Post请求，则由Save处理
-	if c.Ctx.Request.Method == "POST" {
-		c.Save()
-	}
 
 	Id, _ := c.GetInt(":id", 0)
 	m := &models.BackendUser{}
@@ -104,9 +101,17 @@ func (c *BackendUserController) Edit() {
 
 }
 
+// Update 添加 编辑 页面
+func (c *BackendUserController) Update() {
+	Id, _ := c.GetInt(":id", 0)
+	c.Save(Id)
+}
+
 //保存数据
-func (c *BackendUserController) Save() {
-	m := models.BackendUser{}
+func (c *BackendUserController) Save(id int) {
+	m := models.BackendUser{
+		Id: id,
+	}
 	o := orm.NewOrm()
 	var err error
 
@@ -118,8 +123,19 @@ func (c *BackendUserController) Save() {
 	if m.Id == 0 {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
+		m.CreatedAt = time.Now()
+		m.UpdatedAt = time.Now()
+
+		if oR, err := models.RoleOne(m.RoleId); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
+		} else {
+			m.Role = oR
+		}
+
 		if _, err := o.Insert(&m); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
+		} else {
+			c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
 		}
 
 	} else {
@@ -128,6 +144,8 @@ func (c *BackendUserController) Save() {
 			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
 		} else {
 			m.UserPwd = strings.TrimSpace(m.UserPwd)
+			m.CreatedAt = oM.CreatedAt
+			m.UpdatedAt = time.Now()
 			if len(m.UserPwd) == 0 {
 				//如果密码为空则不修改
 				m.UserPwd = oM.UserPwd
@@ -138,50 +156,29 @@ func (c *BackendUserController) Save() {
 			m.Avatar = oM.Avatar
 		}
 
+		if oR, err := models.RoleOne(m.RoleId); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
+		} else {
+			m.Role = oR
+		}
+
 		if _, err := o.Update(&m); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
-		}
-	}
-
-	//添加关系
-	if m.RoleId != 0 {
-
-		m2m := o.QueryM2M(&m, "Roles")
-
-		if _, err := m2m.Clear(); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "删除历史关系失败", m.Id)
-		}
-
-		roles := make([]*models.Role, 0)
-		if _, err := o.QueryTable(models.RoleTBName()).Filter("id__in", m.RoleId).All(&roles); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "删除历史关系失败", m.Id)
-		}
-
-		if _, err := m2m.Add(roles); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "增加除历史关系失败", m.Id)
 		} else {
-			c.jsonResult(enums.JRCodeSucc, "保存成功", m.Id)
+			c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 		}
-
-	} else {
-		c.jsonResult(enums.JRCodeSucc, "保存成功", m.Id)
 	}
 
 }
 
 //删除
 func (c *BackendUserController) Delete() {
-	strs := c.GetString("ids")
-	ids := make([]int, 0, len(strs))
-	for _, str := range strings.Split(strs, ",") {
-		if id, err := strconv.Atoi(str); err == nil {
-			ids = append(ids, id)
-		}
-	}
-	query := orm.NewOrm().QueryTable(models.BackendUserTBName())
-	if num, err := query.Filter("id__in", ids).Delete(); err == nil {
-		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), 0)
+	id, _ := c.GetInt(":id")
+
+	o := orm.NewOrm()
+	if num, err := o.Delete(&models.BackendUser{Id: id}); err == nil {
+		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
-		c.jsonResult(enums.JRCodeFailed, "删除失败", 0)
+		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
 }
