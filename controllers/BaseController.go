@@ -59,17 +59,17 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 			return true
 		}
 		//遍历用户所负责的资源列表
-		for i, _ := range v.ResourceUrlForList {
-			urlfor := strings.TrimSpace(v.ResourceUrlForList[i])
-			if len(urlfor) == 0 {
-				continue
-			}
-			// TestController.Get,:last,xie,:first,asta
-			strs := strings.Split(urlfor, ",")
-			if len(strs) > 0 && strs[0] == (ctrlName+"."+ActName) {
-				return true
-			}
-		}
+		//for i, _ := range v.ResourceUrlForList {
+		//	urlfor := strings.TrimSpace(v.ResourceUrlForList[i])
+		//	if len(urlfor) == 0 {
+		//		continue
+		//	}
+		//	// TestController.Get,:last,xie,:first,asta
+		//	strs := strings.Split(urlfor, ",")
+		//	if len(strs) > 0 && strs[0] == (ctrlName+"."+ActName) {
+		//		return true
+		//	}
+		//}
 	}
 	return false
 }
@@ -116,12 +116,12 @@ func (c *BaseController) setBackendUser2Session(userId int) error {
 	if err != nil {
 		return err
 	}
-	//获取这个用户能获取到的所有资源列表
-	resourceList := models.ResourceTreeGridByUserId(userId, 1000)
+	////获取这个用户能获取到的所有资源列表
+	//resourceList := models.ResourceTreeGridByUserId(userId, 1000)
 
-	for _, item := range resourceList {
-		m.ResourceUrlForList = append(m.ResourceUrlForList, strings.TrimSpace(item.UrlFor))
-	}
+	//for _, item := range resourceList {
+	//	m.ResourceUrlForList = append(m.ResourceUrlForList, strings.TrimSpace(item.UrlFor))
+	//}
 
 	c.SetSession("backenduser", *m)
 	return nil

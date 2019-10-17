@@ -25,7 +25,7 @@
     });
   }
 }(function (modelName) {
-  var version = '0.1.8';
+  var version = '0.2.0';
   var $ = layui.$;
   var form = layui.form;
   var layer = layui.layer;
@@ -114,14 +114,9 @@
       }).join(',')
       , function (event) {
         layui.stope(event);
-        // return;
         close();
-        // var titleElem = $(this);
         var triggerElem = $(this);
         var titleElem = triggerElem;
-        // if (!titleElem.parent().hasClass('layui-form-selected') && !titleElem.parent().hasClass('xm-form-select')) {
-        //   return;
-        // }
         var dlElem = typeof options.dlElem === 'function' ? options.dlElem(triggerElem) : titleElem.next();
         // var selectElem = titleElem.parent().prev();
         var selectElem = titleElem.parent().prev();
@@ -136,7 +131,11 @@
           } else {
             topTemp += parseFloat(dlElem.css('top'));
           }
-          // console.log(topTemp, leftTemp);
+          if (topTemp + dlElem.outerHeight() > window.top.innerHeight && !selectupFlag) {
+            // 出现原始的form表单判断向下弹出，但是最终弹出超出窗口下边界的情形的处理
+            selectupFlag = true;
+            topTemp -= (dlElem.outerHeight() + (2 * parseFloat(dlElem.css('top')) - titleElem.outerHeight()));
+          }
           return {
             top: topTemp,
             left: leftTemp
@@ -226,7 +225,7 @@
 
   // 内置初始化layui的select的效果，目前还不够晚上不提供给外部注册一些其他有类似问题的组件的处理
   render('layuiSelect', {
-    triggerElem: '.layui-select-title', // 触发的选择器
+    triggerElem: 'div:not(.layui-select-disabled)>.layui-select-title', // 触发的选择器
     success: function (index, layero) {
       // layui 的select是单选点击一个的时候就关闭layer
       layero.find('dl dd').click(function () {

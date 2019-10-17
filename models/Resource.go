@@ -102,7 +102,7 @@ func ResourceTreeGridByUserId(backuserid, maxrtype int) []*Resource {
 		FROM %s AS T0
 		INNER JOIN %s AS T1 ON T0.role_id = T1.role_id
 		INNER JOIN %s AS T2 ON T2.id = T0.resource_id
-		WHERE T1.backend_user_id = ? and T2.rtype <= ?  Order By T2.seq asc,T2.id asc`, RoleResourceRelTBName(), RoleBackendUserRelTBName(), ResourceTBName())
+		WHERE T1.backend_user_id = ? and T2.rtype <= ?  Order By T2.seq asc,T2.id asc`, RoleResourceRelTBName(), ResourceTBName())
 		_, _ = o.Raw(sql, backuserid, maxrtype).QueryRows(&list)
 	}
 	result := resourceList2TreeGrid(list)

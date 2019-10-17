@@ -17,11 +17,11 @@ type RoleQueryParam struct {
 
 // Role 用户角色 实体类
 type Role struct {
-	Id                 int    `form:"Id"`
-	Name               string `form:"Name"`
-	Seq                int
-	RoleResourceRel    []*RoleResourceRel    `orm:"reverse(many)" json:"-"` // 设置一对多的反向关系
-	RoleBackendUserRel []*RoleBackendUserRel `orm:"reverse(many)" json:"-"` // 设置一对多的反向关系
+	Id              int    `form:"Id"`
+	Name            string `form:"Name"`
+	Seq             int
+	RoleResourceRel []*RoleResourceRel `orm:"reverse(many)" json:"-"` // 设置一对多的反向关系
+	BackendUsers    []*BackendUser     `orm:"reverse(many)"`          //设置一对多关系
 }
 
 // RolePageList 获取分页数据
@@ -41,7 +41,7 @@ func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
 	}
 	query = query.Filter("name__istartswith", params.NameLike)
 	total, _ := query.Count()
-	_, _ = query.OrderBy(sortorder).Limit(params.Limit, params.Offset).All(&data)
+	_, _ = query.OrderBy(sortorder).Limit(params.Limit, params.Offset).RelatedSel().All(&data)
 	return data, total
 }
 

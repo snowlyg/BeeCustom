@@ -2,12 +2,14 @@
 .layui-table-view .layui-disabled.layui-form-checkbox.layui-form-checked[lay-skin="primary"] i:hover {
   background-color: lightgray !important;
   color: #fff !important;
+  border-color: lightgray !important;
 }
 
 .layui-table-view .layui-disabled.layui-form-checkbox[lay-skin="primary"] i,
 .layui-table-view .layui-disabled.layui-form-checkbox[lay-skin="primary"] i:hover {
   background-color: lightgray !important;
   color: lightgray !important;
+  border-color: lightgray !important;
 }
 
 .layui-table-view.layui-table-none-overflow .layui-table-header .layui-table {
@@ -22,7 +24,7 @@
   display: none;
 }
 
-#layui-tablePlug-col-filter+ div {
+#layui-tablePlug-col-filter + div {
   margin: 0;
 }
 
@@ -87,13 +89,14 @@ tr.layui-tablePlug-data-temp {
   line-height: 38px;
   height: 38px;
 }
+
 .layui-table-view table[lay-size="sm"] tr.layui-table-hover.layui-tablePlug-data-temp .close_temp:before {
   line-height: 18px;
   height: 18px;
 }
 
-/* 让固定列区域在鼠标移入的时候支持滚动*/
-.layui-table-fixed .layui-table-body:hover {
+/* 让固定列区域在鼠标移入的时候支持滚动 - 开始 */
+.layui-table-fixed.layui-table-fixed-scroll .layui-table-body:hover {
   overflow-y: auto;
 }
 
@@ -101,15 +104,19 @@ tr.layui-tablePlug-data-temp {
   right: 0 !important;
 }
 
-.layui-table-fixed-l:hover {
-  overflow: hidden;
+.layui-table-fixed-l.layui-table-fixed-scroll:hover {
+  overflow-x: hidden;
 }
+
+/* 让固定列区域在鼠标移入的时候支持滚动 - 结束 */
+
 
 /* 表格翻转样式 - 开始 */
 .layui-table-view.vertical {
   height: auto !important;
   position: relative;
 }
+
 .layui-table-view.vertical table {
   -webkit-writing-mode: vertical-lr;
   -moz-writing-mode: vertical-lr;
@@ -117,8 +124,8 @@ tr.layui-tablePlug-data-temp {
   writing-mode: vertical-lr;
 }
 
-.layui-table-view.vertical table th>div.layui-table-cell,
-.layui-table-view.vertical table td>div.layui-table-cell {
+.layui-table-view.vertical table th > div.layui-table-cell,
+.layui-table-view.vertical table td > div.layui-table-cell {
   -webkit-writing-mode: horizontal-tb;
   -moz-writing-mode: horizontal-tb;
   -ms-writing-mode: lr-tb;
@@ -141,7 +148,7 @@ tr.layui-tablePlug-data-temp {
 
 .layui-table-view.vertical .layui-table-box > .layui-table-main {
   height: auto !important;
-  margin-right: 160px;
+  /*margin-right: 160px;*/
 }
 
 .layui-table-view.vertical .layui-table-box > .layui-table-header {
@@ -155,4 +162,5 @@ tr.layui-tablePlug-data-temp {
   border-left-width: 1px;
   display: grid;
 }
+
 /* 表格翻转样式 - 结束 */

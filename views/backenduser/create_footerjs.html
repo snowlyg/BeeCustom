@@ -4,12 +4,8 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'form', 'admin', 'formSelects'], async () => {
-        const form = layui.form
-            , admin = layui.admin
-            , formSelects = layui.formSelects
-            , $ = layui.$;
+        const form = layui.form , admin = layui.admin;
         await form.verify({
-
            password: [
                 /^[\S]{6,16}$/
                 , '密码必须6到16位，且不能出现空格'

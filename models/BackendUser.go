@@ -23,30 +23,29 @@ type BackendUserQueryParam struct {
 // BackendUser 实体类
 type BackendUser struct {
 	Id                 int
-	RealName           string                `orm:"size(32)"`
-	UserName           string                `orm:"size(24)"`
-	UserPwd            string                `json:"-"`
-	Mobile             string                `orm:"size(16)"`
-	Email              string                `orm:"size(256)"`
-	Avatar             string                `orm:"size(256)"`
-	ICCode             string                `orm:"column(i_c_code);size(255);null"`
-	Chapter            string                `orm:"column(chapter);size(255);null" description:"签章"`
-	EnterpriseId       string                `orm:"column(enterprise_id);size(255);null" description:"关联企业ID"`
-	RoleIds            []int                 `orm:"-" form:"RoleIds"`
-	RoleBackendUserRel []*RoleBackendUserRel `orm:"reverse(many)"` // 设置一对多的反向关系
-	ResourceUrlForList []string              `orm:"-"`
-	CreatedAt          time.Time             `orm:"column(created_at);type(timestamp);null"`
-	UpdatedAt          time.Time             `orm:"column(updated_at);type(timestamp);null"`
+	RealName           string    `orm:"size(32)"`
+	UserName           string    `orm:"size(24)"`
+	UserPwd            string    `json:"-"`
+	Mobile             string    `orm:"size(16)"`
+	Email              string    `orm:"size(256)"`
+	Avatar             string    `orm:"size(256)"`
+	ICCode             string    `orm:"column(i_c_code);size(255);null"`
+	Chapter            string    `orm:"column(chapter);size(255);null" description:"签章"`
+	EnterpriseId       string    `orm:"column(enterprise_id);size(255);null" description:"关联企业ID"`
+	RoleId             int       `orm:"-" form:"RoleId"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	Role               *Role     `orm:"rel(fk)"`         // fk 的反向关系
+	ResourceUrlForList []string  `orm:"-"`
+	CreatedAt          time.Time `orm:"column(created_at);type(timestamp);null"`
+	UpdatedAt          time.Time `orm:"column(updated_at);type(timestamp);null"`
 	IsSuper            bool
 	Status             int
-	//CreateCourses      []*Course             `rom:"reverse(many)"` // 设置一对多的反向关系
 }
 
 // BackendUserPageList 获取分页数据
 func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) {
 	query := orm.NewOrm().QueryTable(BackendUserTBName())
 
-	data := make([]*BackendUser, 0)
+	datas := make([]*BackendUser, 0)
 
 	//默认排序
 	sortorder := "Id"
@@ -66,19 +65,21 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 	}
 
 	total, _ := query.Count()
-	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).All(&data)
+	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).RelatedSel().All(&datas)
 
-	return data, total
+	return datas, total
 }
 
 // BackendUserOne 根据id获取单条
 func BackendUserOne(id int) (*BackendUser, error) {
 	o := orm.NewOrm()
 	m := BackendUser{Id: id}
-	err := o.Read(&m)
+
+	err := o.QueryTable(BackendUserTBName()).RelatedSel().One(&m)
 	if err != nil {
 		return nil, err
 	}
+
 	return &m, nil
 }
 

@@ -36,26 +36,21 @@
             }
             , parseData: function (res) {
                 return {
+                    "code": res.code,
                     "count": res.total,
                     "data": res.rows
                 };
             }
             , cols: [[
-                {field: 'RoleName', title: '真实姓名', sort: true, style: 'color: rgb(27, 135, 255);'}
+                {field: 'RealName', title: '真实姓名', sort: true, style: 'color: rgb(27, 135, 255);'}
                 ,{field: 'UserName', title: '用户名', sort: true, style: 'color: rgb(27, 135, 255);'}
                 , {field: 'Email', title: '邮箱', sort: true}
-                , {
-                    field: 'RoleIds', title: '角色', templet: function (data) {
-                        // let arr = [];
-                        // for (let item of data.roles) {
-                        //     arr.push(item.display_name)
-                        // }
-                        // return `<span>${arr.join('、')}</span>`
+                , {field: 'RoleId', title: '角色', templet: function (data) {
+                        return `<span>${data.Role.Name}</span>`
                     }
                 }
                 , {field: 'Mobile', title: '手机', sort: true}
-                , {
-                    field: 'Status', title: '状态', sort: true, templet: function (data) {
+                , {field: 'Status', title: '状态', sort: true, templet: function (data) {
                         return data.Status ? `<span class="green">正常</span>` : `<span class="red">禁用</span>`
                     }
                 }

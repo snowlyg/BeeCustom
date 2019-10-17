@@ -44,6 +44,8 @@ func (c *BackendUserController) Index() {
 	c.Data["canEdit"] = c.checkActionAuthor("BackendUserController", "Edit")
 	c.Data["canDelete"] = c.checkActionAuthor("BackendUserController", "Delete")
 }
+
+//列表数据
 func (c *BackendUserController) DataGrid() {
 	//直接获取参数 getDataGridData()
 	var params models.BackendUserQueryParam
@@ -55,7 +57,9 @@ func (c *BackendUserController) DataGrid() {
 	result := make(map[string]interface{})
 	result["total"] = total
 	result["rows"] = data
+	result["code"] = 0
 	c.Data["json"] = result
+
 	c.ServeJSON()
 }
 
@@ -87,47 +91,39 @@ func (c *BackendUserController) Edit() {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
-		o := orm.NewOrm()
-		_, _ = o.LoadRelated(m, "RoleBackendUserRel")
+
 	} else {
 		//添加用户时默认状态为启用
 		m.Status = enums.Enabled
 	}
 	c.Data["m"] = m
-	//获取关联的roleId列表
-	var roleIds []string
-	for _, item := range m.RoleBackendUserRel {
-		roleIds = append(roleIds, strconv.Itoa(item.Role.Id))
-	}
-
-	c.Data["roles"] = strings.Join(roleIds, ",")
 	c.Data["Roles"] = c.Roles
-
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/edit_footerjs.html"
 
 }
 
+//保存数据
 func (c *BackendUserController) Save() {
 	m := models.BackendUser{}
 	o := orm.NewOrm()
 	var err error
+
 	//获取form里的值
 	if err = c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
-	//删除已关联的历史数据
-	if _, err := o.QueryTable(models.RoleBackendUserRelTBName()).Filter("backenduser__id", m.Id).Delete(); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "删除历史关系失败", "")
-	}
+
 	if m.Id == 0 {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
 		if _, err := o.Insert(&m); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
 		}
+
 	} else {
+
 		if oM, err := models.BackendUserOne(m.Id); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
 		} else {
@@ -141,28 +137,39 @@ func (c *BackendUserController) Save() {
 			//本页面不修改头像和密码，直接将值附给新m
 			m.Avatar = oM.Avatar
 		}
+
 		if _, err := o.Update(&m); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
 		}
 	}
+
 	//添加关系
-	var relations []models.RoleBackendUserRel
-	for _, roleId := range m.RoleIds {
-		r := models.Role{Id: roleId}
-		relation := models.RoleBackendUserRel{BackendUser: &m, Role: &r}
-		relations = append(relations, relation)
-	}
-	if len(relations) > 0 {
-		//批量添加
-		if _, err := o.InsertMulti(len(relations), relations); err == nil {
-			c.jsonResult(enums.JRCodeSucc, "保存成功", m.Id)
-		} else {
-			c.jsonResult(enums.JRCodeFailed, "保存失败", m.Id)
+	if m.RoleId != 0 {
+
+		m2m := o.QueryM2M(&m, "Roles")
+
+		if _, err := m2m.Clear(); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "删除历史关系失败", m.Id)
 		}
+
+		roles := make([]*models.Role, 0)
+		if _, err := o.QueryTable(models.RoleTBName()).Filter("id__in", m.RoleId).All(&roles); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "删除历史关系失败", m.Id)
+		}
+
+		if _, err := m2m.Add(roles); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "增加除历史关系失败", m.Id)
+		} else {
+			c.jsonResult(enums.JRCodeSucc, "保存成功", m.Id)
+		}
+
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "保存成功", m.Id)
 	}
+
 }
+
+//删除
 func (c *BackendUserController) Delete() {
 	strs := c.GetString("ids")
 	ids := make([]int, 0, len(strs))
