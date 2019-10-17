@@ -31,5 +31,6 @@ _testmain.go
 BeeCustom.exe
 BeeCustom
 /.vendor
+app.conf
 
 
