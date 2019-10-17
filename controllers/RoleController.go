@@ -133,6 +133,12 @@ func (c *RoleController) Save(id int) {
 		}
 
 	} else {
+		if oR, err := models.RoleOne(m.Id); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
+		} else {
+			m.CreatedAt = oR.CreatedAt
+		}
+
 		m.UpdatedAt = time.Now()
 		if _, err = o.Update(&m); err == nil {
 			c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
