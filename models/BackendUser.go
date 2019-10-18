@@ -73,10 +73,18 @@ func BackendUserOne(id int) (*BackendUser, error) {
 	m := BackendUser{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 
 	o := orm.NewOrm()
-	err := o.QueryTable(BackendUserTBName()).RelatedSel().One(&m)
-	if err != nil {
+	if err := o.QueryTable(BackendUserTBName()).RelatedSel().One(&m); err != nil {
 		return nil, err
 	}
+
+	mr := m.Role
+	// 获取关系字段，o.LoadRelated(v, "Roles") 这是关键
+	// 查找该用户所属的角色
+	if _, err := o.LoadRelated(mr, "Resources"); err != nil {
+		return nil, err
+	}
+
+	m.Role = mr
 
 	return &m, nil
 }

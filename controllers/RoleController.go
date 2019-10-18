@@ -22,6 +22,7 @@ func (c *RoleController) Prepare() {
 	c.BaseController.Prepare()
 
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
+	//"DataGrid", "DataList", "UpdateSeq" 不用检查权限
 	c.checkAuthor("DataGrid", "DataList", "UpdateSeq")
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
@@ -30,9 +31,6 @@ func (c *RoleController) Prepare() {
 
 //Index 角色管理首页
 func (c *RoleController) Index() {
-
-	//将页面左边菜单的某项激活
-	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
 
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)

@@ -20,7 +20,8 @@ func (c *ResourceController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的少数Action需要权限控制，则将验证放到需要控制的Action里
-	//c.checkAuthor("TreeGrid", "UserMenuTree", "ParentTreeGrid", "Select")
+	//"TreeGrid", "UserMenuTree", "ParentTreeGrid", "Select" 不用检查权限
+	c.checkAuthor("TreeGrid", "UserMenuTree", "ParentTreeGrid", "Select")
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//这里注释了权限控制，因此这里需要登录验证
 	c.checkLogin()
@@ -28,8 +29,6 @@ func (c *ResourceController) Prepare() {
 
 func (c *ResourceController) Index() {
 
-	//需要权限控制
-	c.checkAuthor()
 	//将页面左边菜单的某项激活
 	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
 	c.setTpl()
@@ -43,7 +42,7 @@ func (c *ResourceController) Index() {
 
 // Create 添加 新建 页面
 func (c *ResourceController) Create() {
-	c.checkAuthor()
+
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/create_footerjs.html"
@@ -51,7 +50,7 @@ func (c *ResourceController) Create() {
 
 // Store 添加 新建 页面
 func (c *ResourceController) Store() {
-	c.checkAuthor()
+
 	c.Save(0)
 }
 
@@ -120,8 +119,6 @@ func (c *ResourceController) UrlFor2Link(src []*models.Resource) {
 
 //Edit 资源编辑页面
 func (c *ResourceController) Edit() {
-	//需要权限控制
-	c.checkAuthor()
 
 	Id, _ := c.GetInt(":id", 0)
 	m := models.Resource{BaseModel: models.BaseModel{Id: Id}, Seq: 100}
@@ -142,8 +139,7 @@ func (c *ResourceController) Edit() {
 
 //Update 添加、编辑角色界面
 func (c *ResourceController) Update() {
-	//需要权限控制
-	c.checkAuthor()
+
 	id, _ := c.GetInt(":id", 0)
 
 	c.Save(id)
@@ -178,8 +174,7 @@ func (c *ResourceController) Save(id int) {
 
 // Delete 删除
 func (c *ResourceController) Delete() {
-	//需要权限控制
-	c.checkAuthor()
+
 	Id, _ := c.GetInt(":id", 0)
 	if Id == 0 {
 		c.jsonResult(enums.JRCodeFailed, "选择的数据无效", 0)

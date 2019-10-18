@@ -46,33 +46,38 @@ func (c *BaseController) checkLogin() {
 
 // 判断某 Controller.Action 当前用户是否有权访问
 func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
+
 	if c.curUser.Id == 0 {
 		return false
 	}
+
 	//从session获取用户信息
 	user := c.GetSession("backenduser")
 
 	//类型断言
-	v, ok := user.(models.BackendUser)
+	bu, ok := user.(models.BackendUser)
 	if ok {
 		//如果是超级管理员，则直接通过
-		if v.IsSuper == true {
-			return true
+		//if bu.IsSuper == true {
+		//	return true
+		//}
+
+		if len(bu.Role.Resources) == 0 {
+			return false
 		}
 
 		//遍历用户所负责的资源列表
-		for i, _ := range v.ResourceUrlForList {
-			urlfor := strings.TrimSpace(v.ResourceUrlForList[i])
+		for _, resource := range bu.Role.Resources {
+			urlfor := resource.UrlFor
 			if len(urlfor) == 0 {
 				continue
 			}
 
-			// TestController.Get,:last,xie,:first,asta
-			strs := strings.Split(urlfor, ",")
-			if len(strs) > 0 && strs[0] == (ctrlName+"."+ActName) {
+			if len(urlfor) > 0 && urlfor == (ctrlName+"."+ActName) {
 				return true
 			}
 		}
+
 	}
 	return false
 }
@@ -94,7 +99,6 @@ func (c *BaseController) checkAuthor(ignores ...string) {
 	}
 
 	hasAuthor := c.checkActionAuthor(c.controllerName, c.actionName)
-
 	if !hasAuthor {
 		utils.LogDebug(fmt.Sprintf("author control: path=%s.%s userid=%v  无权访问", c.controllerName, c.actionName, c.curUser.Id))
 		//如果没有权限
@@ -154,6 +158,7 @@ func (c *BaseController) setTpl(template ...string) {
 	c.Layout = layout
 	c.TplName = tplName
 }
+
 func (c *BaseController) jsonResult(status enums.JsonResultCode, msg string, obj interface{}) {
 	r := &models.JsonResult{status, msg, obj}
 	c.Data["json"] = r
