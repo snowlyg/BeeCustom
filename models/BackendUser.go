@@ -22,21 +22,19 @@ type BackendUserQueryParam struct {
 
 // BackendUser 实体类
 type BackendUser struct {
-	Id                 int
-	RealName           string    `orm:"size(32)"`
-	UserName           string    `orm:"size(24)"`
-	UserPwd            string    `json:"-"`
-	Mobile             string    `orm:"size(16)"`
-	Email              string    `orm:"size(256)"`
-	Avatar             string    `orm:"size(256)"`
-	ICCode             string    `orm:"column(i_c_code);size(255);null"`
-	Chapter            string    `orm:"column(chapter);size(255);null" description:"签章"`
-	EnterpriseId       string    `orm:"-" form:"EnterpriseId"`
-	RoleId             int       `orm:"-" form:"RoleId"` //关联管理会自动生成 role_id 字段，此处不生成字段
-	Role               *Role     `orm:"rel(fk)"`         // fk 的反向关系
-	ResourceUrlForList []string  `orm:"-"`
-	CreatedAt          time.Time `orm:"column(created_at);type(timestamp);null"`
-	UpdatedAt          time.Time `orm:"column(updated_at);type(timestamp);null"`
+	BaseModel
+	RealName           string   `orm:"size(32)"`
+	UserName           string   `orm:"size(24)"`
+	UserPwd            string   `json:"-"`
+	Mobile             string   `orm:"size(16)"`
+	Email              string   `orm:"size(256)"`
+	Avatar             string   `orm:"size(256)"`
+	ICCode             string   `orm:"column(i_c_code);size(255);null"`
+	Chapter            string   `orm:"column(chapter);size(255);null" description:"签章"`
+	EnterpriseId       string   `orm:"-" form:"EnterpriseId"`
+	RoleId             int      `orm:"-" form:"RoleId"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	Role               *Role    `orm:"rel(fk)"`         // fk 的反向关系
+	ResourceUrlForList []string `orm:"-"`
 	IsSuper            bool
 	Status             int
 }
@@ -71,9 +69,10 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 
 // BackendUserOne 根据id获取单条
 func BackendUserOne(id int) (*BackendUser, error) {
-	o := orm.NewOrm()
-	m := BackendUser{Id: id}
 
+	m := BackendUser{BaseModel: BaseModel{id, time.Now(), time.Now()}}
+
+	o := orm.NewOrm()
 	err := o.QueryTable(BackendUserTBName()).RelatedSel().One(&m)
 	if err != nil {
 		return nil, err

@@ -9,13 +9,17 @@ import (
 )
 
 func DataReset() (bool, error) {
+
 	f, err := os.Open("datareset.sql")
 	if err != nil {
 		return false, err
 	}
+
 	defer f.Close()
+
 	o := orm.NewOrm()
 	buf := bufio.NewReader(f)
+
 	for {
 		line, err := buf.ReadString(';')
 		if err != nil {
@@ -28,5 +32,6 @@ func DataReset() (bool, error) {
 		if err != nil {
 			return false, err
 		}
+
 	}
 }

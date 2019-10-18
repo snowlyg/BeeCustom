@@ -109,9 +109,7 @@ func (c *BackendUserController) Update() {
 
 //保存数据
 func (c *BackendUserController) Save(id int) {
-	m := models.BackendUser{
-		Id: id,
-	}
+	m := models.BackendUser{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
 	o := orm.NewOrm()
 	var err error
 
@@ -123,8 +121,6 @@ func (c *BackendUserController) Save(id int) {
 	if m.Id == 0 {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
-		m.CreatedAt = time.Now()
-		m.UpdatedAt = time.Now()
 
 		if oR, err := models.RoleOne(m.RoleId); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
@@ -145,7 +141,7 @@ func (c *BackendUserController) Save(id int) {
 		} else {
 			m.UserPwd = strings.TrimSpace(m.UserPwd)
 			m.CreatedAt = oM.CreatedAt
-			m.UpdatedAt = time.Now()
+
 			if len(m.UserPwd) == 0 {
 				//如果密码为空则不修改
 				m.UserPwd = oM.UserPwd
@@ -176,7 +172,7 @@ func (c *BackendUserController) Delete() {
 	id, _ := c.GetInt(":id")
 
 	o := orm.NewOrm()
-	if num, err := o.Delete(&models.BackendUser{Id: id}); err == nil {
+	if num, err := o.Delete(&models.BackendUser{BaseModel: models.BaseModel{Id: id}}); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)

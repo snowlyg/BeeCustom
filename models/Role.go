@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/astaxie/beego/orm"
 	"time"
+
+	"github.com/astaxie/beego/orm"
 )
 
 // TableName 设置表名
@@ -18,13 +19,12 @@ type RoleQueryParam struct {
 
 // Role 用户角色 实体类
 type Role struct {
-	Id              int    `form:"Id"`
-	Name            string `form:"Name"`
-	Seq             int
-	RoleResourceRel []*RoleResourceRel `orm:"reverse(many)" json:"-"` // 设置一对多的反向关系
-	BackendUsers    []*BackendUser     `orm:"reverse(many)"`          //设置一对多关系
-	CreatedAt       time.Time          `orm:"column(created_at);type(timestamp);null"`
-	UpdatedAt       time.Time          `orm:"column(updated_at);type(timestamp);null"`
+	BaseModel
+
+	Name         string `form:"Name"`
+	Seq          int
+	Resources    []*Resource    `orm:"rel(m2m)"`      // 设置一对多的反向关系
+	BackendUsers []*BackendUser `orm:"reverse(many)"` //设置一对多关系
 }
 
 // RolePageList 获取分页数据
@@ -62,8 +62,9 @@ func RoleDataList(params *RoleQueryParam) []*Role {
 
 // RoleOne 获取单条
 func RoleOne(id int) (*Role, error) {
+	m := Role{BaseModel: BaseModel{id, time.Now(), time.Now()}}
+
 	o := orm.NewOrm()
-	m := Role{Id: id}
 	err := o.Read(&m)
 	if err != nil {
 		return nil, err

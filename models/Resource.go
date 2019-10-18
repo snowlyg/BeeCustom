@@ -2,11 +2,18 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	"BeeCustom/utils"
 
 	"github.com/astaxie/beego/orm"
 )
+
+// ResourceQueryParam 用于搜索的类
+type ResourceQueryParam struct {
+	BaseQueryParam
+	NameLike string
+}
 
 // TableName 设置表名
 func (a *Resource) TableName() string {
@@ -15,25 +22,28 @@ func (a *Resource) TableName() string {
 
 // Resource 权限控制资源表
 type Resource struct {
-	Id              int
-	Name            string    `orm:"size(64)"`
-	Parent          *Resource `orm:"null;rel(fk)"` // RelForeignKey relation
-	Rtype           int
-	Seq             int
-	Sons            []*Resource        `orm:"reverse(many)"` // fk 的反向关系
-	SonNum          int                `orm:"-"`
-	Icon            string             `orm:"size(32)"`
-	LinkUrl         string             `orm:"-"`
-	UrlFor          string             `orm:"size(256)" Json:"-"`
-	HtmlDisabled    int                `orm:"-"`             //在html里应用时是否可用
-	Level           int                `orm:"-"`             //第几级，从0开始
-	RoleResourceRel []*RoleResourceRel `orm:"reverse(many)"` // 设置一对多的反向关系
+	BaseModel
+
+	Name         string    `orm:"size(64)"`
+	Parent       *Resource `orm:"null;rel(fk)"` // RelForeignKey relation
+	Rtype        int
+	Seq          int
+	Sons         []*Resource `orm:"reverse(many)"` // fk 的反向关系
+	SonNum       int         `orm:"-"`
+	Icon         string      `orm:"size(32)"`
+	LinkUrl      string      `orm:"-"`
+	UrlFor       string      `orm:"size(256)" Json:"-"`
+	HtmlDisabled int         `orm:"-"`             //在html里应用时是否可用
+	Level        int         `orm:"-"`             //第几级，从0开始
+	Roles        []*Role     `orm:"reverse(many)"` // 设置一对多的反向关系
 }
 
 // ResourceOne 获取单条
 func ResourceOne(id int) (*Resource, error) {
+
+	m := Resource{BaseModel: BaseModel{id, time.Now(), time.Now()}}
+
 	o := orm.NewOrm()
-	m := Resource{Id: id}
 	err := o.Read(&m)
 	if err != nil {
 		return nil, err
@@ -42,42 +52,57 @@ func ResourceOne(id int) (*Resource, error) {
 }
 
 // ResourceTreeGrid 获取treegrid顺序的列表
-func ResourceTreeGrid() []*Resource {
-	o := orm.NewOrm()
-	query := o.QueryTable(ResourceTBName()).OrderBy("seq", "id")
-	list := make([]*Resource, 0)
-	_, _ = query.All(&list)
-	return resourceList2TreeGrid(list)
+func ResourceTreeGrid(params *ResourceQueryParam) ([]*Resource, int64) {
+	query := orm.NewOrm().QueryTable(ResourceTBName())
+	data := make([]*Resource, 0)
+
+	//默认排序
+	sortorder := "Id"
+	if len(params.Sort) > 0 {
+		sortorder = params.Sort
+	}
+
+	if params.Order == "desc" {
+		sortorder = "-" + sortorder
+	}
+
+	query = query.Filter("name__istartswith", params.NameLike)
+
+	total, _ := query.Count()
+	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).All(&data)
+
+	return data, total
+
 }
 
 // ResourceTreeGrid4Parent 获取可以成为某个节点父节点的列表
-func ResourceTreeGrid4Parent(id int) []*Resource {
-	tree := ResourceTreeGrid()
-	if id == 0 {
-		return tree
-	}
-	var index = -1
-	//找出当前节点所在索引
-	for i, _ := range tree {
-		if tree[i].Id == id {
-			index = i
-			break
-		}
-	}
-	if index == -1 {
-		return tree
-	} else {
-		tree[index].HtmlDisabled = 1
-		for _, item := range tree[index+1:] {
-			if item.Level > tree[index].Level {
-				item.HtmlDisabled = 1
-			} else {
-				break
-			}
-		}
-	}
-	return tree
-}
+//func ResourceTreeGrid4Parent(id int) []*Resource {
+//tree := ResourceTreeGrid()
+//if id == 0 {
+//	return tree
+//}
+//var index = -1
+////找出当前节点所在索引
+//for i, _ := range tree {
+//	if tree[i].Id == id {
+//		index = i
+//		break
+//	}
+//}
+//if index == -1 {
+//	return tree
+//} else {
+//	tree[index].HtmlDisabled = 1
+//	for _, item := range tree[index+1:] {
+//		if item.Level > tree[index].Level {
+//			item.HtmlDisabled = 1
+//		} else {
+//			break
+//		}
+//	}
+//}
+//return tree
+//}
 
 // ResourceTreeGridByUserId 根据用户获取有权管理的资源列表，并整理成teegrid格式
 func ResourceTreeGridByUserId(backuserid, maxrtype int) []*Resource {

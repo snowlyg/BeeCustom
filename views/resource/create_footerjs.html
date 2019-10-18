@@ -1,0 +1,12 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin'], function () {
+        const admin = layui.admin , form = layui.form;
+        form.on('submit(perm_submit)', async (data) => {
+            await admin.post('@{{ urlfor "ResourceController.Store"  }}', data.field);
+        })
+    });
+</script>

@@ -2,14 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
-
-	"fmt"
-	"strconv"
-	"strings"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -23,11 +20,12 @@ type RoleController struct {
 func (c *RoleController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
+
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
 	c.checkAuthor("DataGrid", "DataList", "UpdateSeq")
+
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
-	//权限控制里会进行登录验证，因此这里不用再作登录验证
-	//c.checkLogin()
+	//c.checkLogin()//权限控制里会进行登录验证，因此这里不用再作登录验证
 }
 
 //Index 角色管理首页
@@ -89,7 +87,7 @@ func (c *RoleController) DataList() {
 //Edit 添加、编辑角色界面
 func (c *RoleController) Edit() {
 	Id, _ := c.GetInt(":id", 0)
-	m := models.Role{Id: Id, Seq: 100}
+	m := models.Role{BaseModel: models.BaseModel{Id: Id}, Seq: 100}
 	if Id > 0 {
 		o := orm.NewOrm()
 		err := o.Read(&m)
@@ -113,9 +111,7 @@ func (c *RoleController) Update() {
 //Save 添加、编辑页面 保存
 func (c *RoleController) Save(id int) {
 	var err error
-	m := models.Role{
-		Id: id,
-	}
+	m := models.Role{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
 
 	//获取form里的值
 	if err = c.ParseForm(&m); err != nil {
@@ -124,8 +120,6 @@ func (c *RoleController) Save(id int) {
 
 	o := orm.NewOrm()
 	if m.Id == 0 {
-		m.CreatedAt = time.Now()
-		m.UpdatedAt = time.Now()
 		if _, err = o.Insert(&m); err == nil {
 			c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
 		} else {
@@ -133,8 +127,6 @@ func (c *RoleController) Save(id int) {
 		}
 
 	} else {
-
-		m.UpdatedAt = time.Now()
 		if _, err = o.Update(&m, "Name", "UpdatedAt"); err == nil {
 			c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 		} else {
@@ -150,7 +142,7 @@ func (c *RoleController) Delete() {
 	id, _ := c.GetInt(":id")
 
 	o := orm.NewOrm()
-	if num, err := o.Delete(&models.Role{Id: id}); err == nil {
+	if num, err := o.Delete(&models.Role{BaseModel: models.BaseModel{Id: id}}); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", id)
@@ -159,32 +151,36 @@ func (c *RoleController) Delete() {
 
 //Allocate 给角色分配资源界面
 func (c *RoleController) Allocate() {
+
 	roleId, _ := c.GetInt("id", 0)
-	strs := c.GetString("ids")
+	//strs := c.GetString("ids")
 
 	o := orm.NewOrm()
-	m := models.Role{Id: roleId}
+	m := models.Role{BaseModel: models.BaseModel{Id: roleId}}
 	if err := o.Read(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
 	}
+
 	//删除已关联的历史数据
 	if _, err := o.QueryTable(models.RoleResourceRelTBName()).Filter("role__id", m.Id).Delete(); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除历史关系失败", m.Id)
 	}
-	var relations []models.RoleResourceRel
-	for _, str := range strings.Split(strs, ",") {
-		if id, err := strconv.Atoi(str); err == nil {
-			r := models.Resource{Id: id}
-			relation := models.RoleResourceRel{Role: &m, Resource: &r}
-			relations = append(relations, relation)
-		}
-	}
-	if len(relations) > 0 {
-		//批量添加
-		if _, err := o.InsertMulti(len(relations), relations); err == nil {
-			c.jsonResult(enums.JRCodeSucc, "保存成功", "")
-		}
-	}
+
+	//var relations []models.RoleResourceRel
+	//for _, str := range strings.Split(strs, ",") {
+	//	if id, err := strconv.Atoi(str); err == nil {
+	//		r := models.Resource{Id: id}
+	//		relation := models.RoleResourceRel{Role: &m, Resource: &r}
+	//		relations = append(relations, relation)
+	//	}
+	//}
+
+	//if len(relations) > 0 {
+	//	//批量添加
+	//	if _, err := o.InsertMulti(len(relations), relations); err == nil {
+	//		c.jsonResult(enums.JRCodeSucc, "保存成功", "")
+	//	}
+	//}
 
 	c.jsonResult(0, "保存失败", "")
 }

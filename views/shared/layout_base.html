@@ -144,10 +144,10 @@
                                     class="layui-icon iconfont icon-settings"></i><cite>系统管理</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href='@{{ urlfor "BackendUserController.Index" }}' id="账号管理">账号管理</a></dd>
-                            <dd><a lay-href='@{{ urlfor "RoleController.Index" }}' id="角色管理">角色管理</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/perm" id="权限管理">权限管理</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/enterprise" id="运营商管理">运营商管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "BackendUserController.Index" }}" >账号管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "RoleController.Index" }}" >角色管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "ResourceController.Index" }}" >权限管理</a></dd>
+                            <dd><a lay-href="//cusdecsys.com/enterprise" >运营商管理</a></dd>
                         </dl>
                     </li>
                     <span class="layui-nav-bar" style="top: 364px; height: 0px; opacity: 0;"></span></ul>
@@ -171,7 +171,7 @@
             </div>
             <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id='@{{ urlfor "RoleController.Index" }}' lay-attr='@{{ urlfor "RoleController.Index" }}'
+                    <li lay-id='@{{ urlfor "ResourceController.Index" }}' lay-attr='@{{ urlfor "ResourceController.Index" }}'
                         class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
                 </ul>
             </div>
@@ -180,7 +180,7 @@
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe src='@{{ urlfor "RoleController.Index" }}' frameborder="0" class="layadmin-iframe"></iframe>
+                <iframe src='@{{ urlfor "ResourceController.Index" }}' frameborder="0" class="layadmin-iframe"></iframe>
             </div>
         </div>
 

@@ -4,29 +4,40 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'table', 'admin'], function () {
-        const table = layui.table
-            , admin = layui.admin
-            , $ = layui.$;
+        const table = layui.table , admin = layui.admin , $ = layui.$;
+
         table.render({
             elem: '#perm_lists'
             , autoSort: false
             , skin: 'line'
-            , url: '@{{ urlfor "ResourceControler.Index" }}' + "?sortedBy=desc&orderBy=created_at"
+            , method: 'post'
+            , where: {
+                order:'desc',
+                sort:'CreatedAt'
+            }
+            ,contentType:'application/json'
+            , url: '@{{ urlfor "ResourceController.TreeGrid" }}'
             , request: {
-                pageName: 'Offset' //页码的参数名称，默认：page
-                , limitName: 'Limit' //每页数据量的参数名，默认：limit
+                pageName: 'offset' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            },response:{
+                statusName : 'code',
+                statusCode : 0,
             }
             , parseData: function (res) {
                 return {
+                    "code": res.code,
                     "count": res.total,
                     "data": res.rows
                 };
             }
             , cols: [[
-                {field: 'display_name', title: '权限名称', sort: true, style: 'color: rgb(27, 135, 255);'}
-                , {field: 'name', title: '路由', sort: true}
-                , {field: 'creator', title: '创建人', sort: true}
-                , {field: 'created_at', title: '创建时间', sort: true}
+                 {field: 'Name', title: '名称', sort: true}
+                , {field: 'Icon', title: '图标', sort: true,templet: function (data) {
+                        return `<i class="layui-icon iconfont icon-${data.Icon}" ></i>`
+                    }}
+                , {field: 'UrlFor', title: '路由', sort: true}
+                , {field: 'CreatedAt', title: '创建时间', sort: true}
                 , {title: '操作', toolbar: '#perm_toolbar', width: 150}
             ]]
             , page: true
@@ -48,7 +59,7 @@
             if (eCode == 13) {
                 table.reload('perm_lists', {
                     where: {
-                        search: $(this).val()
+                        NameLike: $(this).val()
                     },
                     page: {
                         curr: 1
@@ -61,14 +72,14 @@
             const data = obj.data;
             if (obj.event === 'del') {
                 layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                    await admin.delete(`/perm/${data.id}`, obj);
+                    await admin.delete(`/resource/delete/${data.Id}`, obj);
                     layer.close(index);
                     table.reload('perm_lists');
                 });
             } else if (obj.event === 'edit') {
                 const topLayui = parent === self ? layui : top.layui
-                    , href = `/perm/${data.id}/edit/#/id=${data.id}`
-                    , text = `编辑权限：${data.display_name}`;
+                    , href = `/resource/edit/${data.Id}`
+                    , text = `编辑权限：${data.Name}`;
                 topLayui.index.openTabsPage(href, text);
             }
         });

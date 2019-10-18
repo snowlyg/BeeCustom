@@ -51,6 +51,7 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 	}
 	//从session获取用户信息
 	user := c.GetSession("backenduser")
+
 	//类型断言
 	v, ok := user.(models.BackendUser)
 	if ok {
@@ -58,18 +59,20 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 		if v.IsSuper == true {
 			return true
 		}
+
 		//遍历用户所负责的资源列表
-		//for i, _ := range v.ResourceUrlForList {
-		//	urlfor := strings.TrimSpace(v.ResourceUrlForList[i])
-		//	if len(urlfor) == 0 {
-		//		continue
-		//	}
-		//	// TestController.Get,:last,xie,:first,asta
-		//	strs := strings.Split(urlfor, ",")
-		//	if len(strs) > 0 && strs[0] == (ctrlName+"."+ActName) {
-		//		return true
-		//	}
-		//}
+		for i, _ := range v.ResourceUrlForList {
+			urlfor := strings.TrimSpace(v.ResourceUrlForList[i])
+			if len(urlfor) == 0 {
+				continue
+			}
+
+			// TestController.Get,:last,xie,:first,asta
+			strs := strings.Split(urlfor, ",")
+			if len(strs) > 0 && strs[0] == (ctrlName+"."+ActName) {
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -79,15 +82,19 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 // 会调用checkLogin
 // 传入的参数为忽略权限控制的Action
 func (c *BaseController) checkAuthor(ignores ...string) {
+
 	//先判断是否登录
 	c.checkLogin()
+
 	//如果Action在忽略列表里，则直接通用
 	for _, ignore := range ignores {
 		if ignore == c.actionName {
 			return
 		}
 	}
+
 	hasAuthor := c.checkActionAuthor(c.controllerName, c.actionName)
+
 	if !hasAuthor {
 		utils.LogDebug(fmt.Sprintf("author control: path=%s.%s userid=%v  无权访问", c.controllerName, c.actionName, c.curUser.Id))
 		//如果没有权限

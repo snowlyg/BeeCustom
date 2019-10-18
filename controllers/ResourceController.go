@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
+	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -24,7 +25,9 @@ func (c *ResourceController) Prepare() {
 	//这里注释了权限控制，因此这里需要登录验证
 	c.checkLogin()
 }
+
 func (c *ResourceController) Index() {
+
 	//需要权限控制
 	c.checkAuthor()
 	//将页面左边菜单的某项激活
@@ -35,14 +38,39 @@ func (c *ResourceController) Index() {
 	//页面里按钮权限控制
 	c.Data["canEdit"] = c.checkActionAuthor("ResourceController", "Edit")
 	c.Data["canDelete"] = c.checkActionAuthor("ResourceController", "Delete")
+
+}
+
+// Create 添加 新建 页面
+func (c *ResourceController) Create() {
+	c.checkAuthor()
+	c.setTpl()
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "resource/create_footerjs.html"
+}
+
+// Store 添加 新建 页面
+func (c *ResourceController) Store() {
+	c.checkAuthor()
+	c.Save(0)
 }
 
 //TreeGrid 获取所有资源的列表
 func (c *ResourceController) TreeGrid() {
-	tree := models.ResourceTreeGrid()
-	//转换UrlFor 2 LinkUrl
-	c.UrlFor2Link(tree)
-	c.jsonResult(enums.JRCodeSucc, "", tree)
+	//直接反序化获取json格式的requestbody里的值
+	var params models.ResourceQueryParam
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, total := models.ResourceTreeGrid(&params)
+
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = total
+	result["rows"] = data
+	result["code"] = 0
+	c.Data["json"] = result
+	c.ServeJSON()
 }
 
 //UserMenuTree 获取用户有权管理的菜单、区域列表
@@ -56,13 +84,13 @@ func (c *ResourceController) UserMenuTree() {
 }
 
 //ParentTreeGrid 获取可以成为某节点的父节点列表
-func (c *ResourceController) ParentTreeGrid() {
-	Id, _ := c.GetInt("id", 0)
-	tree := models.ResourceTreeGrid4Parent(Id)
-	//转换UrlFor 2 LinkUrl
-	c.UrlFor2Link(tree)
-	c.jsonResult(enums.JRCodeSucc, "", tree)
-}
+//func (c *ResourceController) ParentTreeGrid() {
+//	Id, _ := c.GetInt("id", 0)
+//	tree := models.ResourceTreeGrid4Parent(Id)
+//	//转换UrlFor 2 LinkUrl
+//	c.UrlFor2Link(tree)
+//	c.jsonResult(enums.JRCodeSucc, "", tree)
+//}
 
 // UrlFor2LinkOne 使用URLFor方法，将资源表里的UrlFor值转成LinkUrl
 func (c *ResourceController) UrlFor2LinkOne(urlfor string) string {
@@ -94,62 +122,44 @@ func (c *ResourceController) UrlFor2Link(src []*models.Resource) {
 func (c *ResourceController) Edit() {
 	//需要权限控制
 	c.checkAuthor()
-	//如果是POST请求，则由Save处理
-	if c.Ctx.Request.Method == "POST" {
-		c.Save()
-	}
+
 	Id, _ := c.GetInt(":id", 0)
-	m := &models.Resource{}
-	var err error
-	if Id == 0 {
-		m.Seq = 100
-	} else {
-		m, err = models.ResourceOne(Id)
+	m := models.Resource{BaseModel: models.BaseModel{Id: Id}, Seq: 100}
+	if Id > 0 {
+		o := orm.NewOrm()
+		err := o.Read(&m)
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
-	if m.Parent != nil {
-		c.Data["parent"] = m.Parent.Id
-	} else {
-		c.Data["parent"] = 0
-	}
-	//获取可以成为当前节点的父节点的列表
-	c.Data["parents"] = models.ResourceTreeGrid4Parent(Id)
-	//转换地址
-	m.LinkUrl = c.UrlFor2LinkOne(m.UrlFor)
-	c.Data["m"] = m
-	if m.Parent != nil {
-		c.Data["parent"] = m.Parent.Id
-	} else {
-		c.Data["parent"] = 0
-	}
 
-	c.setTpl("resource/edit.html", "shared/layout_app.html")
+	c.Data["m"] = m
+
+	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/edit_footerjs.html"
 }
 
+//Update 添加、编辑角色界面
+func (c *ResourceController) Update() {
+	//需要权限控制
+	c.checkAuthor()
+	id, _ := c.GetInt(":id", 0)
+
+	c.Save(id)
+}
+
 //Save 资源添加编辑 保存
-func (c *ResourceController) Save() {
+func (c *ResourceController) Save(id int) {
 	var err error
-	o := orm.NewOrm()
-	parent := &models.Resource{}
-	m := models.Resource{}
-	parentId, _ := c.GetInt("Parent", 0)
+	m := models.Resource{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
+
 	//获取form里的值
 	if err = c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
-	//获取父节点
-	if parentId > 0 {
-		parent, err = models.ResourceOne(parentId)
-		if err == nil && parent != nil {
-			m.Parent = parent
-		} else {
-			c.jsonResult(enums.JRCodeFailed, "父节点无效", "")
-		}
-	}
+
+	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err = o.Insert(&m); err == nil {
 			c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
@@ -158,12 +168,11 @@ func (c *ResourceController) Save() {
 		}
 
 	} else {
-		if _, err = o.Update(&m); err == nil {
+		if _, err = o.Update(&m, "Name", "Parent", "Rtype", "Seq", "Seq", "Sons", "Sons", "Icon", "UrlFor", "Roles", "UpdatedAt"); err == nil {
 			c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 		} else {
 			c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
 		}
-
 	}
 }
 
@@ -171,7 +180,7 @@ func (c *ResourceController) Save() {
 func (c *ResourceController) Delete() {
 	//需要权限控制
 	c.checkAuthor()
-	Id, _ := c.GetInt("Id", 0)
+	Id, _ := c.GetInt(":id", 0)
 	if Id == 0 {
 		c.jsonResult(enums.JRCodeFailed, "选择的数据无效", 0)
 	}
@@ -185,31 +194,31 @@ func (c *ResourceController) Delete() {
 
 // Select 通用选择面板
 func (c *ResourceController) Select() {
-	//获取调用者的类别 1表示 角色
-	desttype, _ := c.GetInt("desttype", 0)
-	//获取调用者的值
-	destval, _ := c.GetInt("destval", 0)
-	//返回的资源列表
-	var selectedIds []string
-	o := orm.NewOrm()
-	if desttype > 0 && destval > 0 {
-		//如果都大于0,则获取已选择的值，例如：角色，就是获取某个角色已关联的资源列表
-		switch desttype {
-		case 1:
-			{
-				role := models.Role{Id: destval}
-				_, _ = o.LoadRelated(&role, "RoleResourceRel")
-				for _, item := range role.RoleResourceRel {
-					selectedIds = append(selectedIds, strconv.Itoa(item.Resource.Id))
-				}
-			}
-		}
-	}
-	c.Data["selectedIds"] = strings.Join(selectedIds, ",")
-	c.setTpl("resource/select.html", "shared/layout_app.html")
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["headcssjs"] = "resource/select_headcssjs.html"
-	c.LayoutSections["footerjs"] = "resource/select_footerjs.html"
+	////获取调用者的类别 1表示 角色
+	//desttype, _ := c.GetInt("desttype", 0)
+	////获取调用者的值
+	//destval, _ := c.GetInt("destval", 0)
+	////返回的资源列表
+	//var selectedIds []string
+	//o := orm.NewOrm()
+	//if desttype > 0 && destval > 0 {
+	//	//如果都大于0,则获取已选择的值，例如：角色，就是获取某个角色已关联的资源列表
+	//	switch desttype {
+	//	case 1:
+	//		{
+	//			role := models.Role{Id: destval}
+	//			_, _ = o.LoadRelated(&role, "RoleResourceRel")
+	//			for _, item := range role.RoleResourceRel {
+	//				selectedIds = append(selectedIds, strconv.Itoa(item.Resource.Id))
+	//			}
+	//		}
+	//	}
+	//}
+	//c.Data["selectedIds"] = strings.Join(selectedIds, ",")
+	//c.setTpl("resource/select.html", "shared/layout_app.html")
+	//c.LayoutSections = make(map[string]string)
+	//c.LayoutSections["headcssjs"] = "resource/select_headcssjs.html"
+	//c.LayoutSections["footerjs"] = "resource/select_footerjs.html"
 }
 
 //CheckUrlFor 填写UrlFor时进行验证

@@ -61,12 +61,14 @@ func (c *HomeController) DoLogin() {
 	}
 }
 
+//
 func (c *HomeController) Logout() {
 	user := models.BackendUser{}
 	c.SetSession("backenduser", user)
 	c.pageLogin()
 }
 
+//初始化数据
 func (c *HomeController) DataReset() {
 	if ok, err := models.DataReset(); ok {
 		c.jsonResult(enums.JRCodeSucc, "初始化成功", "")

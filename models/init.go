@@ -7,7 +7,7 @@ import (
 
 // init 初始化
 func init() {
-	orm.RegisterModel(new(BackendUser), new(Resource), new(Role), new(RoleResourceRel))
+	orm.RegisterModel(new(BackendUser), new(Resource), new(Role))
 }
 
 // TableName 下面是统一的表名管理
