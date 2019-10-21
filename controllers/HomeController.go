@@ -35,8 +35,6 @@ func (c *HomeController) Error() {
 
 func (c *HomeController) Login() {
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["headcssjs"] = "auth/login_headcssjs.html"
-	c.LayoutSections["footerjs"] = "auth/login_footerjs.html"
 	c.setTpl("auth/login.html", "auth/layout_base.html")
 }
 

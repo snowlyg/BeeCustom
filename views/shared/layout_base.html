@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="/static/customAdmin/layui/css/layui.css" media="all">
     <link rel="stylesheet/less" type="text/css" href="/static/customAdmin/style/admin.less" media="all">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1467689_pww9k03uhaq.css" media="all">
 </head>
 <body class="layui-layout-body">
 <div id="LAY_app">
@@ -61,7 +62,7 @@
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
                     lay-filter="layadmin-system-side-menu">
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="个人中心" id="个人中心"><i
-                                    class="layui-icon iconfont icon-localshipping"></i><cite>个人中心</cite><span
+                                    class="layui-icon iconfont iconaccount"></i><cite>个人中心</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
                             <dd><a lay-href="//cusdecsys.com/control" id="工作台">工作台</a></dd>
@@ -70,7 +71,7 @@
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="清单申报" id="清单申报"><i
-                                    class="layui-icon iconfont icon-localshipping"></i><cite>清单申报</cite><span
+                                    class="layui-icon iconfont iconfeatured-play-list"></i><cite>清单申报</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
                             <dd><a lay-href="//cusdecsys.com/annotation/i" id="进口清单">进口清单</a></dd>
@@ -79,7 +80,7 @@
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="货物申报" id="货物申报"><i
-                                    class="layui-icon iconfont icon-localshipping"></i><cite>货物申报</cite><span
+                                    class="layui-icon iconfont iconlocalshipping"></i><cite>货物申报</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
                             <dd><a lay-href="//cusdecsys.com/order/i" id="进口报关整合申报">进口报关整合申报</a></dd>
@@ -87,61 +88,27 @@
                             <dd><a lay-href="//cusdecsys.com/order/recycle" id="回收站">回收站</a></dd>
                         </dl>
                     </li>
-                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="财务管理" id="财务管理"><i
-                                    class="layui-icon iconfont icon-caiwutouzi"></i><cite>财务管理</cite><span
-                                    class="layui-nav-more"></span></a>
-                        <dl class="layui-nav-child">
-                            <dd><a lay-href="//cusdecsys.com/finance" id="应收登记">应收登记</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/statement" id="对账单">对账单</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/agreement" id="合同及价格管理">合同及价格管理</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/finance_parm" id="基本参数">基本参数</a></dd>
-                        </dl>
-                    </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="基础数据" id="基础数据"><i
-                                    class="layui-icon iconfont icon-assignment"></i><cite>基础数据</cite><span
+                                    class="layui-icon iconfont iconassignment"></i><cite>基础数据</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
                             <dd><a lay-href="//cusdecsys.com/clearance" id="通关参数">通关参数</a></dd>
                             <dd><a lay-href="//cusdecsys.com/ciq" id="商检编码管理">商检编码管理</a></dd>
                             <dd><a lay-href="//cusdecsys.com/hs_code" id="商品编码管理">商品编码管理</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/template" id="初始值模版">初始值模版</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/manual" id="无纸化化手册">无纸化化手册</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/account" id="电子账册">电子账册</a></dd>
                             <dd><a lay-href="//cusdecsys.com/two_manual" id="金关二期手册">金关二期手册</a></dd>
                             <dd><a lay-href="//cusdecsys.com/two_account" id="金关二期账册">金关二期账册</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="客户管理" id="客户管理"><i
-                                    class="layui-icon iconfont icon-contactmail"></i><cite>客户管理</cite><span
+                                    class="layui-icon iconfont iconcontactmail"></i><cite>客户管理</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
                             <dd><a lay-href="//cusdecsys.com/company" id="企业客户管理">企业客户管理</a></dd>
                         </dl>
                     </li>
-                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="物流管理" id="物流管理"><i
-                                    class="layui-icon iconfont icon-huowu"></i><cite>物流管理</cite><span
-                                    class="layui-nav-more"></span></a>
-                        <dl class="layui-nav-child">
-                            <dd><a lay-href="//cusdecsys.com/car" id="车辆管理">车辆管理</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="内容管理" id="内容管理"><i
-                                    class="layui-icon iconfont icon-language"></i><cite>内容管理</cite><span
-                                    class="layui-nav-more"></span></a>
-                        <dl class="layui-nav-child">
-                            <dd><a lay-href="//cusdecsys.com/article" id="知识库管理">知识库管理</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/news" id="关务头条管理">关务头条管理</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="报表中心" id="报表中心"><i
-                                    class="layui-icon iconfont icon-chart-scatterplot-hexbin"></i><cite>报表中心</cite><span
-                                    class="layui-nav-more"></span></a>
-                        <dl class="layui-nav-child">
-                            <dd><a lay-href="//cusdecsys.com/report/comeAndout" id="进口数据统计">进口数据统计</a></dd>
-                        </dl>
-                    </li>
+
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="系统管理" id="系统管理"><i
-                                    class="layui-icon iconfont icon-settings"></i><cite>系统管理</cite><span
+                                    class="layui-icon iconfont iconsettings"></i><cite>系统管理</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
                             <dd><a lay-href="@{{ urlfor "BackendUserController.Index" }}" >账号管理</a></dd>
