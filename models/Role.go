@@ -98,7 +98,7 @@ func RoleSave(m *Role, permIds string) (*Role, error) {
 		}
 	}
 
-	m2m := o.QueryM2M(&m, "Resources")
+	m2m := o.QueryM2M(m, "Resources")
 	if _, err := m2m.Clear(); err != nil {
 		return nil, err
 	}

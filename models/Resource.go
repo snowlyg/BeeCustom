@@ -195,7 +195,7 @@ func ResourceSave(m *Resource) (*Resource, error) {
 //删除
 func ResourceDelete(id int64) (num int64, err error) {
 	m := NewResource(id)
-	if num, err := BaseDelete(m); err != nil {
+	if num, err := BaseDelete(&m); err != nil {
 		return num, err
 	} else {
 		return num, nil
