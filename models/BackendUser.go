@@ -68,7 +68,7 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 }
 
 // BackendUserOne 根据id获取单条
-func BackendUserOne(id int) (*BackendUser, error) {
+func BackendUserOne(id int64) (*BackendUser, error) {
 
 	m := BackendUser{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 

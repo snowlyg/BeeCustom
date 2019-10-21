@@ -4,21 +4,21 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'form', 'admin', 'layuiXtree'], async () => {
-        const form = layui.form , admin = layui.admin , router = layui.router() , layuiXtree = layui.layuiXtree , $ = layui.$;
-        // const data_role = await admin.get(`/role/${router.search.id}/edit_perm_lists`);
+        const form = layui.form , admin = layui.admin  , layuiXtree = layui.layuiXtree;
 
-        // $("input[name='name']").val(data_role.name);
+        const perms = await admin.get(`/role/perm_lists/` + "@{{.m.Id}}");
 
-        // const permission = new layuiXtree({
-        //     elem: 'permission'
-        //     , form: form
-        //     , data: data_role.perm_data
-        //     , isopen: false
-        //     , ckall: true
-        // });
+        const permission = new layuiXtree({
+            elem: 'permission'
+            , form: form
+            , data: perms.obj.data
+            , isopen: false
+            , ckall: true
+        });
 
         form.on('submit(role_submit)', async (data) => {
-            await admin.patch(`/role/update/`+ "@{{.m.Id}}", data.field)
+            data.field.perm_ids = permission.GetChecked();
+            await admin.patch(`/role/update/`, data.field)
         })
     });
 </script>

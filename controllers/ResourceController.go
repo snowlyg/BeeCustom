@@ -82,15 +82,6 @@ func (c *ResourceController) UserMenuTree() {
 	c.jsonResult(enums.JRCodeSucc, "", tree)
 }
 
-//ParentTreeGrid 获取可以成为某节点的父节点列表
-//func (c *ResourceController) ParentTreeGrid() {
-//	Id, _ := c.GetInt("id", 0)
-//	tree := models.ResourceTreeGrid4Parent(Id)
-//	//转换UrlFor 2 LinkUrl
-//	c.UrlFor2Link(tree)
-//	c.jsonResult(enums.JRCodeSucc, "", tree)
-//}
-
 // UrlFor2LinkOne 使用URLFor方法，将资源表里的UrlFor值转成LinkUrl
 func (c *ResourceController) UrlFor2LinkOne(urlfor string) string {
 	if len(urlfor) == 0 {
@@ -120,8 +111,8 @@ func (c *ResourceController) UrlFor2Link(src []*models.Resource) {
 //Edit 资源编辑页面
 func (c *ResourceController) Edit() {
 
-	Id, _ := c.GetInt(":id", 0)
-	m := models.Resource{BaseModel: models.BaseModel{Id: Id}, Seq: 100}
+	Id, _ := c.GetInt64(":id", 0)
+	m := models.Resource{BaseModel: models.BaseModel{Id: Id}}
 	if Id > 0 {
 		o := orm.NewOrm()
 		err := o.Read(&m)
@@ -140,13 +131,13 @@ func (c *ResourceController) Edit() {
 //Update 添加、编辑角色界面
 func (c *ResourceController) Update() {
 
-	id, _ := c.GetInt(":id", 0)
+	id, _ := c.GetInt64(":id", 0)
 
 	c.Save(id)
 }
 
 //Save 资源添加编辑 保存
-func (c *ResourceController) Save(id int) {
+func (c *ResourceController) Save(id int64) {
 	var err error
 	m := models.Resource{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
 
@@ -224,20 +215,5 @@ func (c *ResourceController) CheckUrlFor() {
 		c.jsonResult(enums.JRCodeSucc, "解析成功", link)
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "解析失败", link)
-	}
-}
-func (c *ResourceController) UpdateSeq() {
-
-	Id, _ := c.GetInt("pk", 0)
-	oM, err := models.ResourceOne(Id)
-	if err != nil || oM == nil {
-		c.jsonResult(enums.JRCodeFailed, "选择的数据无效", 0)
-	}
-	value, _ := c.GetInt("value", 0)
-	oM.Seq = value
-	if _, err := orm.NewOrm().Update(oM); err == nil {
-		c.jsonResult(enums.JRCodeSucc, "修改成功", oM.Id)
-	} else {
-		c.jsonResult(enums.JRCodeFailed, "修改失败", oM.Id)
 	}
 }

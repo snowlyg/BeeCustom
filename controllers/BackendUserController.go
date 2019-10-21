@@ -15,7 +15,6 @@ import (
 
 type BackendUserController struct {
 	BaseController
-	Roles []*models.Role //当前用户信息
 }
 
 func (c *BackendUserController) Prepare() {
@@ -28,9 +27,6 @@ func (c *BackendUserController) Prepare() {
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
 	//c.checkLogin()
-
-	var params = models.RoleQueryParam{}
-	c.Roles = models.RoleDataList(&params)
 
 }
 func (c *BackendUserController) Index() {
@@ -69,7 +65,10 @@ func (c *BackendUserController) DataGrid() {
 // Create 添加 新建 页面
 func (c *BackendUserController) Create() {
 
-	c.Data["Roles"] = c.Roles
+	params := models.RoleQueryParam{}
+	roles := models.RoleDataList(&params)
+
+	c.Data["roles"] = roles
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/create_footerjs.html"
@@ -83,7 +82,7 @@ func (c *BackendUserController) Store() {
 // Edit 添加 编辑 页面
 func (c *BackendUserController) Edit() {
 
-	Id, _ := c.GetInt(":id", 0)
+	Id, _ := c.GetInt64(":id", 0)
 	m := &models.BackendUser{}
 	var err error
 	if Id > 0 {
@@ -96,8 +95,12 @@ func (c *BackendUserController) Edit() {
 		//添加用户时默认状态为启用
 		m.Status = enums.Enabled
 	}
+
+	var params = models.RoleQueryParam{}
+	roles := models.RoleDataList(&params)
+
 	c.Data["m"] = m
-	c.Data["Roles"] = c.Roles
+	c.Data["roles"] = roles
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/edit_footerjs.html"
@@ -106,12 +109,12 @@ func (c *BackendUserController) Edit() {
 
 // Update 添加 编辑 页面
 func (c *BackendUserController) Update() {
-	Id, _ := c.GetInt(":id", 0)
+	Id, _ := c.GetInt64(":id", 0)
 	c.Save(Id)
 }
 
 //保存数据
-func (c *BackendUserController) Save(id int) {
+func (c *BackendUserController) Save(id int64) {
 	m := models.BackendUser{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
 	o := orm.NewOrm()
 	var err error
@@ -125,7 +128,7 @@ func (c *BackendUserController) Save(id int) {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
 
-		if oR, err := models.RoleOne(m.RoleId); err != nil {
+		if oR, err := models.RoleOne(int64(m.RoleId)); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
 		} else {
 			m.Role = oR
@@ -155,7 +158,7 @@ func (c *BackendUserController) Save(id int) {
 			m.Avatar = oM.Avatar
 		}
 
-		if oR, err := models.RoleOne(m.RoleId); err != nil {
+		if oR, err := models.RoleOne(int64(m.RoleId)); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
 		} else {
 			m.Role = oR
@@ -172,7 +175,7 @@ func (c *BackendUserController) Save(id int) {
 
 //删除
 func (c *BackendUserController) Delete() {
-	id, _ := c.GetInt(":id")
+	id, _ := c.GetInt64(":id")
 
 	o := orm.NewOrm()
 	if num, err := o.Delete(&models.BackendUser{BaseModel: models.BaseModel{Id: id}}); err == nil {

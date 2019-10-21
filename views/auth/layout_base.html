@@ -22,9 +22,7 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'login','form','admin'], async () => {
-        const form = layui.form
-            , admin = layui.admin
-            , $ = layui.$;
+        const form = layui.form , admin = layui.admin  , $ = layui.$;
 
         await form.verify({
             password_confirmation: function (value, item) {

@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/astaxie/beego/orm"
 )
 
@@ -21,8 +19,7 @@ type RoleQueryParam struct {
 type Role struct {
 	BaseModel
 
-	Name         string `form:"Name"`
-	Seq          int
+	Name         string         `form:"Name"`
 	Resources    []*Resource    `orm:"rel(m2m)"`      // 设置一对多的反向关系
 	BackendUsers []*BackendUser `orm:"reverse(many)"` //设置一对多关系
 }
@@ -54,20 +51,66 @@ func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
 // RoleDataList 获取角色列表
 func RoleDataList(params *RoleQueryParam) []*Role {
 	params.Limit = -1
-	params.Sort = "Seq"
+	params.Sort = "Id"
 	params.Order = "asc"
 	data, _ := RolePageList(params)
 	return data
 }
 
 // RoleOne 获取单条
-func RoleOne(id int) (*Role, error) {
-	m := Role{BaseModel: BaseModel{id, time.Now(), time.Now()}}
+func RoleOne(id int64) (*Role, error) {
+	m := Role{BaseModel: BaseModel{Id: id}}
 
 	o := orm.NewOrm()
 	err := o.Read(&m)
 	if err != nil {
 		return nil, err
 	}
+
+	// 获取关系字段，o.LoadRelated(v, "Roles") 这是关键
+	// 查找该用户所属的角色
+	if _, err := o.LoadRelated(&m, "Resources"); err != nil {
+		return nil, err
+	}
+
 	return &m, nil
+}
+
+//Save 添加、编辑页面 保存
+func RoleSave(m *Role, perm_ids string) (*Role, error) {
+
+	o := orm.NewOrm()
+	if m.Id == 0 {
+		if _, err := o.Insert(m); err != nil {
+			return nil, err
+		}
+
+	} else {
+		if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
+			return nil, err
+		}
+	}
+
+	m2m := o.QueryM2M(&m, "Resources")
+	if _, err := m2m.Clear(); err != nil {
+		return nil, err
+	}
+
+	if _, err := m2m.Add(); err != nil {
+		return nil, err
+	}
+
+	return m, nil
+
+}
+
+//删除
+func RoleDelete(id int64) (num int64, err error) {
+
+	if num, err := BaseDelete(&Role{BaseModel: BaseModel{Id: id}}); err != nil {
+		return num, err
+	} else {
+		return num, nil
+	}
+
 }

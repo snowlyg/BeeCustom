@@ -20,6 +20,7 @@ func init() {
 	//用户角色路由
 	beego.Router("/role/index", &controllers.RoleController{}, "*:Index")
 	beego.Router("/role/create", &controllers.RoleController{}, "Get:Create")
+	beego.Router("/role/perm_lists/?:id", &controllers.RoleController{}, "Get:PermLists")
 	beego.Router("/role/store", &controllers.RoleController{}, "Post:Store")
 	beego.Router("/role/datagrid", &controllers.RoleController{}, "Post:DataGrid")
 	beego.Router("/role/edit/?:id", &controllers.RoleController{}, "Get:Edit")
@@ -27,7 +28,6 @@ func init() {
 	beego.Router("/role/delete/?:id", &controllers.RoleController{}, "Delete:Delete")
 	beego.Router("/role/datalist", &controllers.RoleController{}, "Post:DataList")
 	beego.Router("/role/allocate", &controllers.RoleController{}, "Post:Allocate")
-	beego.Router("/role/updateseq", &controllers.RoleController{}, "Post:UpdateSeq")
 
 	//资源路由
 	beego.Router("/resource/index", &controllers.ResourceController{}, "*:Index")
@@ -36,22 +36,13 @@ func init() {
 	beego.Router("/resource/treegrid", &controllers.ResourceController{}, "POST:TreeGrid")
 	beego.Router("/resource/edit/?:id", &controllers.ResourceController{}, "GET:Edit")
 	beego.Router("/resource/update/?:id", &controllers.ResourceController{}, "PATCH:Update")
-	//beego.Router("/resource/parent", &controllers.ResourceController{}, "Post:ParentTreeGrid")
 	beego.Router("/resource/delete/?:id", &controllers.ResourceController{}, "Delete:Delete")
-	//快速修改顺序
-	//beego.Router("/resource/updateseq", &controllers.ResourceController{}, "Post:UpdateSeq")
 
 	//通用选择面板
 	//beego.Router("/resource/select", &controllers.ResourceController{}, "Get:Select")
 	//用户有权管理的菜单列表（包括区域）
 	//beego.Router("/resource/usermenutree", &controllers.ResourceController{}, "POST:UserMenuTree")
 	//beego.Router("/resource/checkurlfor", &controllers.ResourceController{}, "POST:CheckUrlFor")
-
-	//后台用户中心
-	beego.Router("/usercenter/profile", &controllers.UserCenterController{}, "Get:Profile")
-	beego.Router("/usercenter/basicinfosave", &controllers.UserCenterController{}, "Post:BasicInfoSave")
-	beego.Router("/usercenter/uploadimage", &controllers.UserCenterController{}, "Post:UploadImage")
-	beego.Router("/usercenter/passwordsave", &controllers.UserCenterController{}, "Post:PasswordSave")
 
 	beego.Router("/home/control", &controllers.HomeController{}, "*:Control")
 	beego.Router("/home/login", &controllers.HomeController{}, "*:Login")

@@ -85,7 +85,7 @@
                         <div class="layui-input-block">
                             <select name="RoleId"  lay-verify="required"  lay-vertype="tips">
                                 <option value="">选择角色</option>
-                                @{{ range .Roles }}
+                                @{{ range .roles }}
                                     <option value="@{{ .Id }}">@{{ .Name }}</option>
                                 @{{ end }}
                             </select>

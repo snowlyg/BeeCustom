@@ -7,9 +7,19 @@ import (
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
-
 	"github.com/astaxie/beego/orm"
 )
+
+type PermList struct {
+	Title   string      `json:"title"`
+	Value   string      `json:"value"`
+	Checked bool        `json:"checked"`
+	Data    []*PermList `json:"data"`
+}
+
+type PermTreeList struct {
+	Data []*PermList `json:"data"`
+}
 
 //RoleController 角色管理
 type RoleController struct {
@@ -51,7 +61,18 @@ func (c *RoleController) Create() {
 
 // Store 添加 新建 页面
 func (c *RoleController) Store() {
-	c.Save(0)
+	m := &models.Role{BaseModel: models.BaseModel{CreatedAt: time.Now(), UpdatedAt: time.Now()}}
+	//获取form里的值
+	if err := c.ParseForm(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+	}
+
+	_, err := models.RoleSave(m)
+	if err == nil {
+		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
+	} else {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
+	}
 }
 
 // DataGrid 角色管理首页 表格获取数据
@@ -82,18 +103,49 @@ func (c *RoleController) DataList() {
 	c.jsonResult(enums.JRCodeSucc, "", data)
 }
 
+//PermLists 权限列表
+func (c *RoleController) PermLists() {
+	ptl := PermTreeList{}
+	//直接反序化获取json格式的requestbody里的值
+	var params = models.ResourceQueryParam{}
+	//获取数据列表和总数
+	datas := models.ResourceDataList(&params)
+	for _, v := range datas {
+
+		pl := &PermList{v.Name, v.UrlFor, false, nil}
+		if v.Parent == nil {
+			if v.Sons != nil {
+				for _, sv := range v.Sons {
+					pls := &PermList{sv.Name, sv.UrlFor, false, nil}
+
+					pl.Data = append(pl.Data, pls)
+				}
+			}
+
+			ptl.Data = append(ptl.Data, pl)
+		}
+
+	}
+
+	//定义返回的数据结构
+	c.jsonResult(enums.JRCodeSucc, "", ptl)
+}
+
 //Edit 添加、编辑角色界面
 func (c *RoleController) Edit() {
-	Id, _ := c.GetInt(":id", 0)
-	m := models.Role{BaseModel: models.BaseModel{Id: Id}, Seq: 100}
+
+	Id, _ := c.GetInt64(":id", 0)
+	//m := models.Role{BaseModel: models.BaseModel{Id: Id}}
 	if Id > 0 {
-		o := orm.NewOrm()
-		err := o.Read(&m)
+
+		m, err := models.RoleOne(Id)
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
+
+		c.Data["m"] = m
 	}
-	c.Data["m"] = m
+
 	c.setTpl("role/edit.html", "shared/layout_app.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "role/edit_footerjs.html"
@@ -101,35 +153,21 @@ func (c *RoleController) Edit() {
 
 //Update 添加、编辑角色界面
 func (c *RoleController) Update() {
-	id, _ := c.GetInt(":id", 0)
+	id, _ := c.GetInt64(":id", 0)
+	perm_ids := c.GetString(":perm_ids")
 
-	c.Save(id)
-}
-
-//Save 添加、编辑页面 保存
-func (c *RoleController) Save(id int) {
-	var err error
-	m := models.Role{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
+	m := &models.Role{BaseModel: models.BaseModel{Id: id, CreatedAt: time.Now(), UpdatedAt: time.Now()}}
 
 	//获取form里的值
-	if err = c.ParseForm(&m); err != nil {
+	if err := c.ParseForm(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	o := orm.NewOrm()
-	if m.Id == 0 {
-		if _, err = o.Insert(&m); err == nil {
-			c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
-		} else {
-			c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
-		}
-
+	_, err := models.RoleSave(m, perm_ids)
+	if err == nil {
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 	} else {
-		if _, err = o.Update(&m, "Name", "UpdatedAt"); err == nil {
-			c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
-		} else {
-			c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
-		}
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
 	}
 
 }
@@ -137,20 +175,20 @@ func (c *RoleController) Save(id int) {
 //Delete 批量删除
 func (c *RoleController) Delete() {
 
-	id, _ := c.GetInt(":id")
+	id, _ := c.GetInt64(":id")
 
-	o := orm.NewOrm()
-	if num, err := o.Delete(&models.Role{BaseModel: models.BaseModel{Id: id}}); err == nil {
+	if num, err := models.RoleDelete(id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", id)
 	}
+
 }
 
 //Allocate 给角色分配资源界面
 func (c *RoleController) Allocate() {
 
-	roleId, _ := c.GetInt("id", 0)
+	roleId, _ := c.GetInt64("id", 0)
 	//strs := c.GetString("ids")
 
 	o := orm.NewOrm()
@@ -181,22 +219,4 @@ func (c *RoleController) Allocate() {
 	//}
 
 	c.jsonResult(0, "保存失败", "")
-}
-
-func (c *RoleController) UpdateSeq() {
-
-	Id, _ := c.GetInt("pk", 0)
-	oM, err := models.RoleOne(Id)
-	if err != nil || oM == nil {
-		c.jsonResult(enums.JRCodeFailed, "选择的数据无效", Id)
-	}
-	value, _ := c.GetInt("value", 0)
-	oM.Seq = value
-	o := orm.NewOrm()
-	if _, err := o.Update(oM); err == nil {
-		c.jsonResult(enums.JRCodeSucc, "修改成功", oM.Id)
-	} else {
-		c.jsonResult(enums.JRCodeFailed, "修改失败", oM.Id)
-	}
-
 }

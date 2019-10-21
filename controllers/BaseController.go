@@ -58,9 +58,9 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 	bu, ok := user.(models.BackendUser)
 	if ok {
 		//如果是超级管理员，则直接通过
-		//if bu.IsSuper == true {
-		//	return true
-		//}
+		if bu.IsSuper == true {
+			return true
+		}
 
 		if len(bu.Role.Resources) == 0 {
 			return false
@@ -122,17 +122,11 @@ func (c *BaseController) adapterUserInfo() {
 }
 
 //SetBackendUser2Session 获取用户信息（包括资源UrlFor）保存至Session
-func (c *BaseController) setBackendUser2Session(userId int) error {
+func (c *BaseController) setBackendUser2Session(userId int64) error {
 	m, err := models.BackendUserOne(userId)
 	if err != nil {
 		return err
 	}
-	////获取这个用户能获取到的所有资源列表
-	//resourceList := models.ResourceTreeGridByUserId(userId, 1000)
-
-	//for _, item := range resourceList {
-	//	m.ResourceUrlForList = append(m.ResourceUrlForList, strings.TrimSpace(item.UrlFor))
-	//}
 
 	c.SetSession("backenduser", *m)
 	return nil
