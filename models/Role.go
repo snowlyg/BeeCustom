@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 // TableName 设置表名
@@ -24,42 +25,48 @@ type Role struct {
 	BackendUsers []*BackendUser `orm:"reverse(many)"` //设置一对多关系
 }
 
+//初始化角色
+func NewRole(id int64) Role {
+	m := Role{BaseModel: BaseModel{Id: id, CreatedAt: time.Now(), UpdatedAt: time.Now()}}
+
+	return m
+}
+
 // RolePageList 获取分页数据
 func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
 
 	query := orm.NewOrm().QueryTable(RoleTBName())
 	data := make([]*Role, 0)
 
-	//默认排序
-	sortorder := "Id"
-	if len(params.Sort) > 0 {
-		sortorder = params.Sort
+	if len(params.NameLike) > 0 {
+		query = query.Filter("name__istartswith", params.NameLike)
 	}
 
-	if params.Order == "desc" {
-		sortorder = "-" + sortorder
-	}
-
-	query = query.Filter("name__istartswith", params.NameLike)
+	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
 
 	total, _ := query.Count()
-	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).All(&data)
+	_, _ = query.All(&data)
 
 	return data, total
 }
 
+//查询参数
+func NewRoleQueryParam() RoleQueryParam {
+
+	rqp := RoleQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc", Offset: 0}}
+
+	return rqp
+}
+
 // RoleDataList 获取角色列表
 func RoleDataList(params *RoleQueryParam) []*Role {
-	params.Limit = -1
-	params.Sort = "Id"
-	params.Order = "asc"
 	data, _ := RolePageList(params)
 	return data
 }
 
 // RoleOne 获取单条
 func RoleOne(id int64) (*Role, error) {
-	m := Role{BaseModel: BaseModel{Id: id}}
+	m := NewRole(id)
 
 	o := orm.NewOrm()
 	err := o.Read(&m)
@@ -77,7 +84,7 @@ func RoleOne(id int64) (*Role, error) {
 }
 
 //Save 添加、编辑页面 保存
-func RoleSave(m *Role, perm_ids string) (*Role, error) {
+func RoleSave(m *Role, permIds string) (*Role, error) {
 
 	o := orm.NewOrm()
 	if m.Id == 0 {
@@ -96,21 +103,28 @@ func RoleSave(m *Role, perm_ids string) (*Role, error) {
 		return nil, err
 	}
 
-	if _, err := m2m.Add(); err != nil {
-		return nil, err
+	for _, permId := range permIds {
+		s, err := ResourceOne(int64(permId))
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = m2m.Add(s)
+		if err != nil {
+			return nil, err
+		}
+
 	}
 
 	return m, nil
-
 }
 
 //删除
 func RoleDelete(id int64) (num int64, err error) {
-
-	if num, err := BaseDelete(&Role{BaseModel: BaseModel{Id: id}}); err != nil {
+	m := NewRole(id)
+	if num, err := BaseDelete(&m); err != nil {
 		return num, err
 	} else {
 		return num, nil
 	}
-
 }

@@ -1,16 +1,10 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
-	"strings"
-	"time"
-
 	"BeeCustom/enums"
 	"BeeCustom/models"
-	"BeeCustom/utils"
-
-	"github.com/astaxie/beego/orm"
+	"encoding/json"
+	"fmt"
 )
 
 type BackendUserController struct {
@@ -47,8 +41,8 @@ func (c *BackendUserController) Index() {
 //列表数据
 func (c *BackendUserController) DataGrid() {
 	//直接获取参数 getDataGridData()
-	var params models.BackendUserQueryParam
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+	params := models.NewBackendUserQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, params)
 
 	//获取数据列表和总数
 	data, total := models.BackendUserPageList(&params)
@@ -65,7 +59,7 @@ func (c *BackendUserController) DataGrid() {
 // Create 添加 新建 页面
 func (c *BackendUserController) Create() {
 
-	params := models.RoleQueryParam{}
+	params := models.NewRoleQueryParam()
 	roles := models.RoleDataList(&params)
 
 	c.Data["roles"] = roles
@@ -76,30 +70,40 @@ func (c *BackendUserController) Create() {
 
 // Store 添加 新建 页面
 func (c *BackendUserController) Store() {
-	c.Save(0)
+	m := models.NewBackendUser(0)
+
+	//获取form里的值
+	if err := c.ParseForm(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+	}
+
+	if _, err := models.BackendUserSave(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
+	} else {
+		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
+	}
 }
 
 // Edit 添加 编辑 页面
 func (c *BackendUserController) Edit() {
 
 	Id, _ := c.GetInt64(":id", 0)
-	m := &models.BackendUser{}
-	var err error
+
 	if Id > 0 {
-		m, err = models.BackendUserOne(Id)
+		m, err := models.BackendUserOne(Id)
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
 
-	} else {
+		c.Data["m"] = m
 		//添加用户时默认状态为启用
 		m.Status = enums.Enabled
+
 	}
 
-	var params = models.RoleQueryParam{}
+	params := models.NewRoleQueryParam()
 	roles := models.RoleDataList(&params)
 
-	c.Data["m"] = m
 	c.Data["roles"] = roles
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -109,76 +113,27 @@ func (c *BackendUserController) Edit() {
 
 // Update 添加 编辑 页面
 func (c *BackendUserController) Update() {
-	Id, _ := c.GetInt64(":id", 0)
-	c.Save(Id)
-}
 
-//保存数据
-func (c *BackendUserController) Save(id int64) {
-	m := models.BackendUser{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
-	o := orm.NewOrm()
-	var err error
+	Id, _ := c.GetInt64(":id", 0)
+	m := models.NewBackendUser(Id)
 
 	//获取form里的值
-	if err = c.ParseForm(&m); err != nil {
+	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	if m.Id == 0 {
-		//对密码进行加密
-		m.UserPwd = utils.String2md5(m.UserPwd)
-
-		if oR, err := models.RoleOne(int64(m.RoleId)); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
-		} else {
-			m.Role = oR
-		}
-
-		if _, err := o.Insert(&m); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
-		} else {
-			c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
-		}
-
+	if _, err := models.BackendUserSave(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
 	} else {
-
-		if oM, err := models.BackendUserOne(m.Id); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
-		} else {
-			m.UserPwd = strings.TrimSpace(m.UserPwd)
-			m.CreatedAt = oM.CreatedAt
-
-			if len(m.UserPwd) == 0 {
-				//如果密码为空则不修改
-				m.UserPwd = oM.UserPwd
-			} else {
-				m.UserPwd = utils.String2md5(m.UserPwd)
-			}
-			//本页面不修改头像和密码，直接将值附给新m
-			m.Avatar = oM.Avatar
-		}
-
-		if oR, err := models.RoleOne(int64(m.RoleId)); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
-		} else {
-			m.Role = oR
-		}
-
-		if _, err := o.Update(&m); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
-		} else {
-			c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
-		}
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 	}
-
 }
 
 //删除
 func (c *BackendUserController) Delete() {
 	id, _ := c.GetInt64(":id")
 
-	o := orm.NewOrm()
-	if num, err := o.Delete(&models.BackendUser{BaseModel: models.BaseModel{Id: id}}); err == nil {
+	if num, err := models.BackendUserDelete(id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)

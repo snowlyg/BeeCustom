@@ -1,15 +1,11 @@
 package controllers
 
 import (
+	"BeeCustom/enums"
+	"BeeCustom/models"
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
-
-	"BeeCustom/enums"
-	"BeeCustom/models"
-
-	"github.com/astaxie/beego/orm"
 )
 
 type ResourceController struct {
@@ -43,6 +39,15 @@ func (c *ResourceController) Index() {
 // Create 添加 新建 页面
 func (c *ResourceController) Create() {
 
+	//直接反序化获取json格式的requestbody里的值
+	params := models.NewResourceQueryParam()
+	params.IsParent = true
+
+	//获取数据列表和总数
+	data, _ := models.ResourceTreeGrid(&params)
+
+	c.Data["parent_perms"] = data
+
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/create_footerjs.html"
@@ -51,14 +56,25 @@ func (c *ResourceController) Create() {
 // Store 添加 新建 页面
 func (c *ResourceController) Store() {
 
-	c.Save(0)
+	m := models.NewResource(0)
+
+	//获取form里的值
+	if err := c.ParseForm(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+	}
+
+	if _, err := models.ResourceSave(&m); err == nil {
+		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
+	} else {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
+	}
 }
 
 //TreeGrid 获取所有资源的列表
 func (c *ResourceController) TreeGrid() {
 	//直接反序化获取json格式的requestbody里的值
-	var params models.ResourceQueryParam
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+	params := models.NewResourceQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, params)
 
 	//获取数据列表和总数
 	data, total := models.ResourceTreeGrid(&params)
@@ -70,16 +86,6 @@ func (c *ResourceController) TreeGrid() {
 	result["code"] = 0
 	c.Data["json"] = result
 	c.ServeJSON()
-}
-
-//UserMenuTree 获取用户有权管理的菜单、区域列表
-func (c *ResourceController) UserMenuTree() {
-	userid := c.curUser.Id
-	//获取用户有权管理的菜单列表（包括区域）
-	tree := models.ResourceTreeGridByUserId(userid, 1)
-	//转换UrlFor 2 LinkUrl
-	c.UrlFor2Link(tree)
-	c.jsonResult(enums.JRCodeSucc, "", tree)
 }
 
 // UrlFor2LinkOne 使用URLFor方法，将资源表里的UrlFor值转成LinkUrl
@@ -111,17 +117,24 @@ func (c *ResourceController) UrlFor2Link(src []*models.Resource) {
 //Edit 资源编辑页面
 func (c *ResourceController) Edit() {
 
+	//直接反序化获取json格式的requestbody里的值
+	params := models.NewResourceQueryParam()
+	params.IsParent = true
+
+	//获取数据列表和总数
+	data, _ := models.ResourceTreeGrid(&params)
+
+	c.Data["parent_perms"] = data
+
 	Id, _ := c.GetInt64(":id", 0)
-	m := models.Resource{BaseModel: models.BaseModel{Id: Id}}
+
 	if Id > 0 {
-		o := orm.NewOrm()
-		err := o.Read(&m)
+		m, err := models.ResourceOne(Id)
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
+		c.Data["m"] = m
 	}
-
-	c.Data["m"] = m
 
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -132,79 +145,33 @@ func (c *ResourceController) Edit() {
 func (c *ResourceController) Update() {
 
 	id, _ := c.GetInt64(":id", 0)
-
-	c.Save(id)
-}
-
-//Save 资源添加编辑 保存
-func (c *ResourceController) Save(id int64) {
-	var err error
-	m := models.Resource{BaseModel: models.BaseModel{id, time.Now(), time.Now()}}
+	m := models.NewResource(id)
 
 	//获取form里的值
-	if err = c.ParseForm(&m); err != nil {
+	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	o := orm.NewOrm()
-	if m.Id == 0 {
-		if _, err = o.Insert(&m); err == nil {
-			c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
-		} else {
-			c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
-		}
-
+	if _, err := models.ResourceSave(&m); err == nil {
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 	} else {
-		if _, err = o.Update(&m, "Name", "Parent", "Rtype", "Seq", "Seq", "Sons", "Sons", "Icon", "UrlFor", "Roles", "UpdatedAt"); err == nil {
-			c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
-		} else {
-			c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
-		}
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
 	}
 }
 
 // Delete 删除
 func (c *ResourceController) Delete() {
 
-	Id, _ := c.GetInt(":id", 0)
+	Id, _ := c.GetInt64(":id", 0)
 	if Id == 0 {
 		c.jsonResult(enums.JRCodeFailed, "选择的数据无效", 0)
 	}
-	query := orm.NewOrm().QueryTable(models.ResourceTBName())
-	if _, err := query.Filter("id", Id).Delete(); err == nil {
+
+	if _, err := models.ResourceDelete(Id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("删除成功"), 0)
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", 0)
 	}
-}
-
-// Select 通用选择面板
-func (c *ResourceController) Select() {
-	////获取调用者的类别 1表示 角色
-	//desttype, _ := c.GetInt("desttype", 0)
-	////获取调用者的值
-	//destval, _ := c.GetInt("destval", 0)
-	////返回的资源列表
-	//var selectedIds []string
-	//o := orm.NewOrm()
-	//if desttype > 0 && destval > 0 {
-	//	//如果都大于0,则获取已选择的值，例如：角色，就是获取某个角色已关联的资源列表
-	//	switch desttype {
-	//	case 1:
-	//		{
-	//			role := models.Role{Id: destval}
-	//			_, _ = o.LoadRelated(&role, "RoleResourceRel")
-	//			for _, item := range role.RoleResourceRel {
-	//				selectedIds = append(selectedIds, strconv.Itoa(item.Resource.Id))
-	//			}
-	//		}
-	//	}
-	//}
-	//c.Data["selectedIds"] = strings.Join(selectedIds, ",")
-	//c.setTpl("resource/select.html", "shared/layout_app.html")
-	//c.LayoutSections = make(map[string]string)
-	//c.LayoutSections["headcssjs"] = "resource/select_headcssjs.html"
-	//c.LayoutSections["footerjs"] = "resource/select_footerjs.html"
 }
 
 //CheckUrlFor 填写UrlFor时进行验证

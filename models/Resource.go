@@ -13,6 +13,7 @@ import (
 type ResourceQueryParam struct {
 	BaseQueryParam
 	NameLike string
+	IsParent bool
 }
 
 // TableName 设置表名
@@ -37,10 +38,24 @@ type Resource struct {
 	Roles        []*Role     `orm:"reverse(many)"` // 设置一对多的反向关系
 }
 
+func NewResource(id int64) Resource {
+	m := Resource{BaseModel: BaseModel{id, time.Now(), time.Now()}}
+
+	return m
+}
+
+//查询参数
+func NewResourceQueryParam() ResourceQueryParam {
+
+	rqp := ResourceQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
+
+	return rqp
+}
+
 // ResourceOne 获取单条
 func ResourceOne(id int64) (*Resource, error) {
 
-	m := Resource{BaseModel: BaseModel{id, time.Now(), time.Now()}}
+	m := NewResource(id)
 
 	o := orm.NewOrm()
 	err := o.Read(&m)
@@ -56,20 +71,17 @@ func ResourceTreeGrid(params *ResourceQueryParam) ([]*Resource, int64) {
 	query := o.QueryTable(ResourceTBName())
 	datas := make([]*Resource, 0)
 
-	//默认排序
-	sortorder := "Id"
-	if len(params.Sort) > 0 {
-		sortorder = params.Sort
+	if params.IsParent {
+		query = query.Filter("parent_id", nil)
 	}
 
-	if params.Order == "desc" {
-		sortorder = "-" + sortorder
+	if len(params.NameLike) > 0 {
+		query = query.Filter("name__istartswith", params.NameLike)
 	}
-
-	query = query.Filter("name__istartswith", params.NameLike)
 
 	total, _ := query.Count()
-	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).RelatedSel().All(&datas)
+	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
+	_, _ = query.All(&datas)
 
 	//关联子权
 	for _, v := range datas {
@@ -160,4 +172,33 @@ func ResourceTreeGridByUserId(backuserid, maxrtype int64) []*Resource {
 	_ = utils.SetCache(cachekey, list, 30)
 
 	return list
+}
+
+//Save 添加、编辑页面 保存
+func ResourceSave(m *Resource) (*Resource, error) {
+
+	o := orm.NewOrm()
+	if m.Id == 0 {
+		if _, err := o.Insert(m); err != nil {
+			return nil, err
+		}
+
+	} else {
+		if _, err := o.Update(m, "Name", "Parent", "Rtype", "Sons", "Sons", "Icon", "UrlFor", "Roles", "UpdatedAt"); err != nil {
+			return nil, err
+		}
+	}
+
+	return m, nil
+}
+
+//删除
+func ResourceDelete(id int64) (num int64, err error) {
+	m := NewResource(id)
+	if num, err := BaseDelete(m); err != nil {
+		return num, err
+	} else {
+		return num, nil
+	}
+
 }

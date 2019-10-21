@@ -1,9 +1,9 @@
 package models
 
 import (
-	"time"
-
+	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
+	"strings"
 )
 
 // TableName 设置BackendUser表名
@@ -39,21 +39,25 @@ type BackendUser struct {
 	Status             int
 }
 
+func NewBackendUser(id int64) BackendUser {
+	m := BackendUser{BaseModel: BaseModel{Id: id}}
+	return m
+}
+
+//查询参数
+func NewBackendUserQueryParam() BackendUserQueryParam {
+
+	rqp := BackendUserQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
+
+	return rqp
+}
+
 // BackendUserPageList 获取分页数据
 func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) {
+
 	query := orm.NewOrm().QueryTable(BackendUserTBName())
 
 	datas := make([]*BackendUser, 0)
-
-	//默认排序
-	sortorder := "Id"
-	if len(params.Sort) > 0 {
-		sortorder = params.Sort
-	}
-
-	if params.Order == "desc" {
-		sortorder = "-" + sortorder
-	}
 
 	query = query.Filter("username__istartswith", params.UserNameLike)
 
@@ -62,7 +66,8 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 	}
 
 	total, _ := query.Count()
-	_, _ = query.OrderBy(sortorder).Limit(params.Limit, (params.Offset-1)*params.Limit).RelatedSel().All(&datas)
+	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
+	_, _ = query.All(&datas)
 
 	return datas, total
 }
@@ -70,7 +75,7 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 // BackendUserOne 根据id获取单条
 func BackendUserOne(id int64) (*BackendUser, error) {
 
-	m := BackendUser{BaseModel: BaseModel{id, time.Now(), time.Now()}}
+	m := NewBackendUser(id)
 
 	o := orm.NewOrm()
 	if err := o.QueryTable(BackendUserTBName()).RelatedSel().One(&m); err != nil {
@@ -91,10 +96,72 @@ func BackendUserOne(id int64) (*BackendUser, error) {
 
 // BackendUserOneByUserName 根据用户名密码获取单条
 func BackendUserOneByUserName(username, userpwd string) (*BackendUser, error) {
-	m := BackendUser{}
+	m := NewBackendUser(0)
 	err := orm.NewOrm().QueryTable(BackendUserTBName()).Filter("username", username).Filter("userpwd", userpwd).One(&m)
 	if err != nil {
 		return nil, err
 	}
 	return &m, nil
+}
+
+//Save 添加、编辑页面 保存
+func BackendUserSave(m *BackendUser) (*BackendUser, error) {
+
+	o := orm.NewOrm()
+	if m.Id == 0 {
+
+		//对密码进行加密
+		m.UserPwd = utils.String2md5(m.UserPwd)
+
+		if oR, err := RoleOne(int64(m.RoleId)); err != nil {
+			return nil, err
+		} else {
+			m.Role = oR
+		}
+
+		if _, err := o.Insert(m); err != nil {
+			return nil, err
+		}
+
+	} else {
+
+		if oM, err := BackendUserOne(m.Id); err != nil {
+			return nil, err
+		} else {
+			m.UserPwd = strings.TrimSpace(m.UserPwd)
+			m.CreatedAt = oM.CreatedAt
+
+			if len(m.UserPwd) == 0 {
+				//如果密码为空则不修改
+				m.UserPwd = oM.UserPwd
+			} else {
+				m.UserPwd = utils.String2md5(m.UserPwd)
+			}
+			//本页面不修改头像和密码，直接将值附给新m
+			m.Avatar = oM.Avatar
+		}
+
+		if oR, err := RoleOne(int64(m.RoleId)); err != nil {
+			return nil, err
+		} else {
+			m.Role = oR
+		}
+
+		if _, err := o.Update(m); err != nil {
+			return nil, err
+		}
+	}
+
+	return m, nil
+}
+
+//删除
+func BackendUserDelete(id int64) (num int64, err error) {
+
+	m := NewBackendUser(id)
+	if num, err := BaseDelete(&m); err != nil {
+		return num, err
+	} else {
+		return num, nil
+	}
 }

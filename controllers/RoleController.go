@@ -1,12 +1,11 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
-	"time"
-
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/utils"
+	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -61,13 +60,18 @@ func (c *RoleController) Create() {
 
 // Store 添加 新建 页面
 func (c *RoleController) Store() {
-	m := &models.Role{BaseModel: models.BaseModel{CreatedAt: time.Now(), UpdatedAt: time.Now()}}
+	m := models.NewRole(0)
+
 	//获取form里的值
-	if err := c.ParseForm(m); err != nil {
+	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	_, err := models.RoleSave(m)
+	perm_ids := c.GetString("perm_ids")
+
+	utils.LogDebug(perm_ids)
+
+	_, err := models.RoleSave(&m, perm_ids)
 	if err == nil {
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
 	} else {
@@ -79,8 +83,8 @@ func (c *RoleController) Store() {
 func (c *RoleController) DataGrid() {
 
 	//直接反序化获取json格式的requestbody里的值
-	var params models.RoleQueryParam
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+	params := models.NewRoleQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, params)
 
 	//获取数据列表和总数
 	data, total := models.RolePageList(&params)
@@ -96,7 +100,7 @@ func (c *RoleController) DataGrid() {
 
 //DataList 角色列表
 func (c *RoleController) DataList() {
-	var params = models.RoleQueryParam{}
+	params := models.NewRoleQueryParam()
 	//获取数据列表和总数
 	data := models.RoleDataList(&params)
 	//定义返回的数据结构
@@ -107,7 +111,7 @@ func (c *RoleController) DataList() {
 func (c *RoleController) PermLists() {
 	ptl := PermTreeList{}
 	//直接反序化获取json格式的requestbody里的值
-	var params = models.ResourceQueryParam{}
+	params := models.NewResourceQueryParam()
 	//获取数据列表和总数
 	datas := models.ResourceDataList(&params)
 	for _, v := range datas {
@@ -135,7 +139,6 @@ func (c *RoleController) PermLists() {
 func (c *RoleController) Edit() {
 
 	Id, _ := c.GetInt64(":id", 0)
-	//m := models.Role{BaseModel: models.BaseModel{Id: Id}}
 	if Id > 0 {
 
 		m, err := models.RoleOne(Id)
@@ -154,16 +157,16 @@ func (c *RoleController) Edit() {
 //Update 添加、编辑角色界面
 func (c *RoleController) Update() {
 	id, _ := c.GetInt64(":id", 0)
-	perm_ids := c.GetString(":perm_ids")
+	permIds := c.GetString(":perm_ids")
 
-	m := &models.Role{BaseModel: models.BaseModel{Id: id, CreatedAt: time.Now(), UpdatedAt: time.Now()}}
+	m := models.NewRole(id)
 
 	//获取form里的值
-	if err := c.ParseForm(m); err != nil {
+	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	_, err := models.RoleSave(m, perm_ids)
+	_, err := models.RoleSave(&m, permIds)
 	if err == nil {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 	} else {
@@ -189,10 +192,9 @@ func (c *RoleController) Delete() {
 func (c *RoleController) Allocate() {
 
 	roleId, _ := c.GetInt64("id", 0)
-	//strs := c.GetString("ids")
 
 	o := orm.NewOrm()
-	m := models.Role{BaseModel: models.BaseModel{Id: roleId}}
+	m := models.NewRole(roleId)
 	if err := o.Read(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
 	}
