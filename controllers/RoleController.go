@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"BeeCustom/enums"
-	"BeeCustom/models"
-	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
+	"strconv"
+
+	"BeeCustom/enums"
+	"BeeCustom/models"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -67,11 +68,9 @@ func (c *RoleController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	perm_ids := c.GetString("perm_ids")
+	permIds := c.GetString("perm_ids")
 
-	utils.LogDebug(perm_ids)
-
-	_, err := models.RoleSave(&m, perm_ids)
+	_, err := models.RoleSave(&m, permIds)
 	if err == nil {
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
 	} else {
@@ -84,7 +83,7 @@ func (c *RoleController) DataGrid() {
 
 	//直接反序化获取json格式的requestbody里的值
 	params := models.NewRoleQueryParam()
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, params)
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
 	//获取数据列表和总数
 	data, total := models.RolePageList(&params)
@@ -109,30 +108,68 @@ func (c *RoleController) DataList() {
 
 //PermLists 权限列表
 func (c *RoleController) PermLists() {
-	ptl := PermTreeList{}
+
+	var ptl PermTreeList
+	var m *models.Role
+	var err error
+
+	Id, _ := c.GetInt64(":id", 0)
+	if Id > 0 {
+		m, err = models.RoleOne(Id)
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
 	//直接反序化获取json格式的requestbody里的值
 	params := models.NewResourceQueryParam()
+	params.IsParent = true
 	//获取数据列表和总数
 	datas := models.ResourceDataList(&params)
+
 	for _, v := range datas {
-
-		pl := &PermList{v.Name, v.UrlFor, false, nil}
-		if v.Parent == nil {
-			if v.Sons != nil {
-				for _, sv := range v.Sons {
-					pls := &PermList{sv.Name, sv.UrlFor, false, nil}
-
-					pl.Data = append(pl.Data, pls)
-				}
-			}
-
-			ptl.Data = append(ptl.Data, pl)
-		}
-
+		getSonsPerms(&ptl, v, m) //生成子权限树结构
 	}
 
 	//定义返回的数据结构
 	c.jsonResult(enums.JRCodeSucc, "", ptl)
+}
+
+//生成子权限树结构
+func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
+
+	pl := PermList{}
+
+	pl.Title = v.Name
+	pl.Value = strconv.FormatInt(v.Id, 10)
+	pl.Checked = getChecked(v, m) //是否有权限
+
+	if v.Sons != nil {
+		for _, sv := range v.Sons {
+			pls := PermList{}
+
+			pls.Title = sv.Name
+			pls.Value = strconv.FormatInt(sv.Id, 10)
+			pls.Checked = getChecked(v, m) //是否有权限
+
+			pl.Data = append(pl.Data, &pls)
+
+		}
+	}
+
+	ptl.Data = append(ptl.Data, &pl)
+}
+
+//是否有权限
+func getChecked(v *models.Resource, m *models.Role) bool {
+	if m != nil && m.Resources != nil {
+		for _, rv := range m.Resources {
+			if rv != nil && rv.Id == v.Id {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
 //Edit 添加、编辑角色界面
@@ -156,8 +193,14 @@ func (c *RoleController) Edit() {
 
 //Update 添加、编辑角色界面
 func (c *RoleController) Update() {
+
 	id, _ := c.GetInt64(":id", 0)
-	permIds := c.GetString(":perm_ids")
+	ResourceIds := c.GetString("ResourceIds")
+
+	//获取form里的值
+	if id == 0 {
+		c.jsonResult(enums.JRCodeFailed, "参数错误", id)
+	}
 
 	m := models.NewRole(id)
 
@@ -166,7 +209,7 @@ func (c *RoleController) Update() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	_, err := models.RoleSave(&m, permIds)
+	_, err := models.RoleUpdate(&m, &ResourceIds)
 	if err == nil {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
 	} else {

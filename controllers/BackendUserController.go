@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"BeeCustom/enums"
-	"BeeCustom/models"
 	"encoding/json"
 	"fmt"
+
+	"BeeCustom/enums"
+	"BeeCustom/models"
 )
 
 type BackendUserController struct {
@@ -42,7 +43,7 @@ func (c *BackendUserController) Index() {
 func (c *BackendUserController) DataGrid() {
 	//直接获取参数 getDataGridData()
 	params := models.NewBackendUserQueryParam()
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, params)
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
 	//获取数据列表和总数
 	data, total := models.BackendUserPageList(&params)
@@ -89,17 +90,18 @@ func (c *BackendUserController) Edit() {
 
 	Id, _ := c.GetInt64(":id", 0)
 
-	if Id > 0 {
-		m, err := models.BackendUserOne(Id)
+	m, err := models.BackendUserOne(Id)
+	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
 
-		c.Data["m"] = m
 		//添加用户时默认状态为启用
 		m.Status = enums.Enabled
 
 	}
+
+	c.Data["m"] = m
 
 	params := models.NewRoleQueryParam()
 	roles := models.RoleDataList(&params)

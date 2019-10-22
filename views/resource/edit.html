@@ -33,12 +33,12 @@
 
                 <div class="layui-row layui-col-space10 layui-form-item">
                     <div class="layui-col-md6">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>选择父级：</label>
+                        <label class="layui-form-label">选择父级：</label>
                         <div class="layui-input-block">
-                            <select name="ParentId"  lay-verify="required"  lay-vertype="tips">
+                            <select name="ParentId"  lay-verify=""  lay-vertype="tips">
                                 <option value="">选择父级</option>
                                 @{{ range .parent_perms }}
-                                    @{{if eq $.m.ParentId .Id }}
+                                    @{{if eq  $.m.Parent.Id .Id  }}
                                         <option selected value="@{{ .Id }}">@{{ .Name }}</option>
                                     @{{ else }}
                                         <option value="@{{ .Id }}">@{{ .Name }}</option>

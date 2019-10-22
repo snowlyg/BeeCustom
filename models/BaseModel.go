@@ -12,6 +12,7 @@ type BaseModel struct {
 	UpdatedAt time.Time `orm:"column(updated_at);type(timestamp);null"`
 }
 
+//默认列表数据
 func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64) orm.QuerySeter {
 
 	//默认排序
@@ -26,11 +27,11 @@ func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64
 
 	query.OrderBy(sortorder)
 
-	if limit == -1 {
-		query = query.Limit(limit, (offset-1)*limit).RelatedSel()
+	if limit != -1 {
+		query = query.Limit(limit, (offset-1)*limit)
 	}
 
-	return query
+	return query.RelatedSel()
 }
 
 //删除

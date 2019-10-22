@@ -17,8 +17,8 @@
         });
 
         form.on('submit(role_submit)', async (data) => {
-            data.field.perm_ids = permission.GetChecked();
-            await admin.patch(`/role/update/`, data.field)
+            data.field.ResourceIds = permission.GetChecked().toString();
+            await admin.patch(`/role/update/`+ "@{{ .m.Id }}", data.field)
         })
     });
 </script>

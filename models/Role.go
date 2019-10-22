@@ -1,8 +1,11 @@
 package models
 
 import (
-	"github.com/astaxie/beego/orm"
+	"strconv"
+	"strings"
 	"time"
+
+	"github.com/astaxie/beego/orm"
 )
 
 // TableName 设置表名
@@ -20,16 +23,14 @@ type RoleQueryParam struct {
 type Role struct {
 	BaseModel
 
-	Name         string         `form:"Name"`
+	Name         string         `orm:"size(32)" form:"Name"`
 	Resources    []*Resource    `orm:"rel(m2m)"`      // 设置一对多的反向关系
 	BackendUsers []*BackendUser `orm:"reverse(many)"` //设置一对多关系
 }
 
 //初始化角色
 func NewRole(id int64) Role {
-	m := Role{BaseModel: BaseModel{Id: id, CreatedAt: time.Now(), UpdatedAt: time.Now()}}
-
-	return m
+	return Role{BaseModel: BaseModel{Id: id, CreatedAt: time.Now(), UpdatedAt: time.Now()}}
 }
 
 // RolePageList 获取分页数据
@@ -84,18 +85,12 @@ func RoleOne(id int64) (*Role, error) {
 }
 
 //Save 添加、编辑页面 保存
-func RoleSave(m *Role, permIds string) (*Role, error) {
+func RoleSave(m *Role, ResourceIds string) (*Role, error) {
 
 	o := orm.NewOrm()
-	if m.Id == 0 {
-		if _, err := o.Insert(m); err != nil {
-			return nil, err
-		}
 
-	} else {
-		if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
-			return nil, err
-		}
+	if _, err := o.Insert(m); err != nil {
+		return nil, err
 	}
 
 	m2m := o.QueryM2M(m, "Resources")
@@ -103,7 +98,7 @@ func RoleSave(m *Role, permIds string) (*Role, error) {
 		return nil, err
 	}
 
-	for _, permId := range permIds {
+	for _, permId := range ResourceIds {
 		s, err := ResourceOne(int64(permId))
 		if err != nil {
 			return nil, err
@@ -114,6 +109,38 @@ func RoleSave(m *Role, permIds string) (*Role, error) {
 			return nil, err
 		}
 
+	}
+
+	return m, nil
+}
+
+//Save 添加、编辑页面 保存
+func RoleUpdate(m *Role, ResourceIds *string) (*Role, error) {
+
+	o := orm.NewOrm()
+	if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
+		return nil, err
+	}
+
+	m2m := o.QueryM2M(m, "Resources")
+	if _, err := m2m.Clear(); err != nil {
+		return nil, err
+	}
+
+	if len(*ResourceIds) > 0 {
+		ResourceIds := strings.Split(*ResourceIds, ",")
+		for _, permId := range ResourceIds {
+			permId, err := strconv.ParseInt(permId, 10, 64)
+			s, err := ResourceOne(permId)
+			if err != nil {
+				return nil, err
+			}
+
+			_, err = m2m.Add(s)
+			if err != nil {
+				return nil, err
+			}
+		}
 	}
 
 	return m, nil

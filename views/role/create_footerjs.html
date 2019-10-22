@@ -6,7 +6,7 @@
     }).use(['index', 'form', 'admin', 'layuiXtree'], async () => {
         const form = layui.form, admin = layui.admin, layuiXtree = layui.layuiXtree;
 
-        const perms = await admin.get(`/role/perm_lists/` + "@{{.m.Id}}");
+        const perms = await admin.get(`/role/perm_lists/0`);
 
         const permission =  new layuiXtree({
             elem: 'permission'
@@ -17,7 +17,7 @@
         });
 
         form.on('submit(role_submit)', async (data) => {
-            data.field.perm_ids = permission.GetChecked();
+            data.field.ResourceIds = permission.GetChecked().toString();
             await admin.post("@{{ urlfor "RoleController.Store" }}", data.field);
         })
     });

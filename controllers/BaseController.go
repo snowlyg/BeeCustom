@@ -62,7 +62,7 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 			return true
 		}
 
-		if len(bu.Role.Resources) == 0 {
+		if bu.Role.Resources == nil {
 			return false
 		}
 

@@ -1,11 +1,13 @@
 package controllers
 
 import (
-	"BeeCustom/enums"
-	"BeeCustom/models"
 	"encoding/json"
 	"fmt"
 	"strings"
+
+	"BeeCustom/enums"
+	"BeeCustom/models"
+	"BeeCustom/utils"
 )
 
 type ResourceController struct {
@@ -74,7 +76,7 @@ func (c *ResourceController) Store() {
 func (c *ResourceController) TreeGrid() {
 	//直接反序化获取json格式的requestbody里的值
 	params := models.NewResourceQueryParam()
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, params)
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
 	//获取数据列表和总数
 	data, total := models.ResourceTreeGrid(&params)
@@ -131,6 +133,7 @@ func (c *ResourceController) Edit() {
 	if Id > 0 {
 		m, err := models.ResourceOne(Id)
 		if err != nil {
+			utils.LogDebug(fmt.Sprintf("数据无效出错：%v", err))
 			c.pageError("数据无效，请刷新后重试")
 		}
 		c.Data["m"] = m

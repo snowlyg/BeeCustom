@@ -32,7 +32,7 @@ type BackendUser struct {
 	ICCode             string   `orm:"column(i_c_code);size(255);null"`
 	Chapter            string   `orm:"column(chapter);size(255);null" description:"签章"`
 	EnterpriseId       string   `orm:"-" form:"EnterpriseId"`
-	RoleId             int      `orm:"-" form:"RoleId"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	RoleId             int64    `orm:"-" form:"RoleId"` //关联管理会自动生成 role_id 字段，此处不生成字段
 	Role               *Role    `orm:"rel(fk)"`         // fk 的反向关系
 	ResourceUrlForList []string `orm:"-"`
 	IsSuper            bool
@@ -75,10 +75,10 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 // BackendUserOne 根据id获取单条
 func BackendUserOne(id int64) (*BackendUser, error) {
 
-	m := NewBackendUser(id)
+	m := NewBackendUser(0)
 
 	o := orm.NewOrm()
-	if err := o.QueryTable(BackendUserTBName()).RelatedSel().One(&m); err != nil {
+	if err := o.QueryTable(BackendUserTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
 		return nil, err
 	}
 
@@ -113,7 +113,7 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
 
-		if oR, err := RoleOne(int64(m.RoleId)); err != nil {
+		if oR, err := RoleOne(m.RoleId); err != nil {
 			return nil, err
 		} else {
 			m.Role = oR
@@ -141,7 +141,7 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 			m.Avatar = oM.Avatar
 		}
 
-		if oR, err := RoleOne(int64(m.RoleId)); err != nil {
+		if oR, err := RoleOne(m.RoleId); err != nil {
 			return nil, err
 		} else {
 			m.Role = oR
