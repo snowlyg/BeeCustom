@@ -40,25 +40,18 @@ type BackendUser struct {
 }
 
 func NewBackendUser(id int64) BackendUser {
-	m := BackendUser{BaseModel: BaseModel{Id: id}}
-	return m
+	return BackendUser{BaseModel: BaseModel{Id: id}}
 }
 
 //查询参数
 func NewBackendUserQueryParam() BackendUserQueryParam {
-
-	rqp := BackendUserQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
-
-	return rqp
+	return BackendUserQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
 
 // BackendUserPageList 获取分页数据
 func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) {
-
 	query := orm.NewOrm().QueryTable(BackendUserTBName())
-
 	datas := make([]*BackendUser, 0)
-
 	query = query.Filter("username__istartswith", params.UserNameLike)
 
 	if len(params.SearchStatus) > 0 {
@@ -74,9 +67,7 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 
 // BackendUserOne 根据id获取单条
 func BackendUserOne(id int64) (*BackendUser, error) {
-
 	m := NewBackendUser(0)
-
 	o := orm.NewOrm()
 	if err := o.QueryTable(BackendUserTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
 		return nil, err
@@ -106,13 +97,10 @@ func BackendUserOneByUserName(username, userpwd string) (*BackendUser, error) {
 
 //Save 添加、编辑页面 保存
 func BackendUserSave(m *BackendUser) (*BackendUser, error) {
-
 	o := orm.NewOrm()
 	if m.Id == 0 {
-
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
-
 		if oR, err := RoleOne(m.RoleId); err != nil {
 			return nil, err
 		} else {
@@ -122,9 +110,7 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 		if _, err := o.Insert(m); err != nil {
 			return nil, err
 		}
-
 	} else {
-
 		if oM, err := BackendUserOne(m.Id); err != nil {
 			return nil, err
 		} else {
@@ -157,7 +143,6 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 
 //删除
 func BackendUserDelete(id int64) (num int64, err error) {
-
 	m := NewBackendUser(id)
 	if num, err := BaseDelete(&m); err != nil {
 		return num, err

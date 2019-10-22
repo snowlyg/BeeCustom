@@ -46,24 +46,17 @@ func (c *BaseController) checkLogin() {
 
 // 判断某 Controller.Action 当前用户是否有权访问
 func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
-
 	if c.curUser.Id == 0 {
 		return false
 	}
-
 	//从session获取用户信息
 	user := c.GetSession("backenduser")
-
 	//类型断言
 	bu, ok := user.(models.BackendUser)
 	if ok {
 		//如果是超级管理员，则直接通过
-		if bu.IsSuper == true {
+		if bu.IsSuper {
 			return true
-		}
-
-		if bu.Role.Resources == nil {
-			return false
 		}
 
 		//遍历用户所负责的资源列表
@@ -72,13 +65,12 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 			if len(urlfor) == 0 {
 				continue
 			}
-
 			if len(urlfor) > 0 && urlfor == (ctrlName+"."+ActName) {
 				return true
 			}
 		}
-
 	}
+
 	return false
 }
 
@@ -87,10 +79,8 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 // 会调用checkLogin
 // 传入的参数为忽略权限控制的Action
 func (c *BaseController) checkAuthor(ignores ...string) {
-
 	//先判断是否登录
 	c.checkLogin()
-
 	//如果Action在忽略列表里，则直接通用
 	for _, ignore := range ignores {
 		if ignore == c.actionName {

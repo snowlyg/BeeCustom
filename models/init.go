@@ -30,8 +30,3 @@ func ResourceTBName() string {
 func RoleTBName() string {
 	return TableName("roles")
 }
-
-// RoleResourceRelTBName 角色与资源多对多关系表
-func RoleResourceRelTBName() string {
-	return TableName("role_resource_rel")
-}

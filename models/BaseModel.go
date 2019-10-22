@@ -14,7 +14,6 @@ type BaseModel struct {
 
 //默认列表数据
 func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64) orm.QuerySeter {
-
 	//默认排序
 	sortorder := "Id"
 	if len(sort) > 0 {
@@ -36,12 +35,10 @@ func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64
 
 //删除
 func BaseDelete(m interface{}) (num int64, err error) {
-
 	o := orm.NewOrm()
 	if num, err := o.Delete(m); err != nil {
 		return num, err
 	} else {
 		return num, nil
 	}
-
 }

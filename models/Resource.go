@@ -40,24 +40,17 @@ type Resource struct {
 }
 
 func NewResource(id int64) Resource {
-	m := Resource{BaseModel: BaseModel{id, time.Now(), time.Now()}}
-
-	return m
+	return Resource{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
 //查询参数
 func NewResourceQueryParam() ResourceQueryParam {
-
-	rqp := ResourceQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
-
-	return rqp
+	return ResourceQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
 
 // ResourceOne 获取单条
 func ResourceOne(id int64) (*Resource, error) {
-
 	m := NewResource(id)
-
 	o := orm.NewOrm()
 	err := o.Read(&m)
 	if err != nil {
@@ -69,7 +62,6 @@ func ResourceOne(id int64) (*Resource, error) {
 	}
 
 	pr := NewResource(0)
-
 	if m.Parent != nil && m.Parent.Id > 0 {
 		pr.Id = m.Parent.Id
 		if err := o.Read(&pr); err != nil {
@@ -78,7 +70,6 @@ func ResourceOne(id int64) (*Resource, error) {
 	}
 
 	m.Parent = &pr
-
 	return &m, nil
 }
 
@@ -111,7 +102,6 @@ func ResourceTreeGrid(params *ResourceQueryParam) ([]*Resource, int64) {
 	}
 
 	return datas, total
-
 }
 
 // ResourceDataList 获取角色列表
@@ -119,7 +109,6 @@ func ResourceDataList(params *ResourceQueryParam) []*Resource {
 	params.Limit = -1
 	params.Sort = "Id"
 	params.Order = "asc"
-
 	data, _ := ResourceTreeGrid(params)
 
 	return data
@@ -127,9 +116,7 @@ func ResourceDataList(params *ResourceQueryParam) []*Resource {
 
 //Save 添加、编辑页面 保存
 func ResourceSave(m *Resource) (*Resource, error) {
-
 	o := orm.NewOrm()
-
 	if m.Id != 0 {
 		if pr, err := ResourceOne(m.ParentId); err != nil {
 			return nil, err
@@ -142,13 +129,11 @@ func ResourceSave(m *Resource) (*Resource, error) {
 		if _, err := o.Insert(m); err != nil {
 			return nil, err
 		}
-
 	} else {
 		if _, err := o.Update(m, "Name", "Parent", "Rtype", "Sons", "Sons", "Icon", "UrlFor", "Roles", "UpdatedAt"); err != nil {
 			return nil, err
 		}
 	}
-
 	return m, nil
 }
 
@@ -160,5 +145,4 @@ func ResourceDelete(id int64) (num int64, err error) {
 	} else {
 		return num, nil
 	}
-
 }

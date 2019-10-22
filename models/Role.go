@@ -35,10 +35,8 @@ func NewRole(id int64) Role {
 
 // RolePageList 获取分页数据
 func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
-
 	query := orm.NewOrm().QueryTable(RoleTBName())
 	data := make([]*Role, 0)
-
 	if len(params.NameLike) > 0 {
 		query = query.Filter("name__istartswith", params.NameLike)
 	}
@@ -53,10 +51,7 @@ func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
 
 //查询参数
 func NewRoleQueryParam() RoleQueryParam {
-
-	rqp := RoleQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc", Offset: 0}}
-
-	return rqp
+	return RoleQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc", Offset: 0}}
 }
 
 // RoleDataList 获取角色列表
@@ -67,9 +62,8 @@ func RoleDataList(params *RoleQueryParam) []*Role {
 
 // RoleOne 获取单条
 func RoleOne(id int64) (*Role, error) {
-	m := NewRole(id)
-
 	o := orm.NewOrm()
+	m := NewRole(id)
 	err := o.Read(&m)
 	if err != nil {
 		return nil, err
@@ -80,15 +74,12 @@ func RoleOne(id int64) (*Role, error) {
 	if _, err := o.LoadRelated(&m, "Resources"); err != nil {
 		return nil, err
 	}
-
 	return &m, nil
 }
 
 //Save 添加、编辑页面 保存
 func RoleSave(m *Role, ResourceIds string) (*Role, error) {
-
 	o := orm.NewOrm()
-
 	if _, err := o.Insert(m); err != nil {
 		return nil, err
 	}
@@ -108,15 +99,12 @@ func RoleSave(m *Role, ResourceIds string) (*Role, error) {
 		if err != nil {
 			return nil, err
 		}
-
 	}
-
 	return m, nil
 }
 
 //Save 添加、编辑页面 保存
 func RoleUpdate(m *Role, ResourceIds *string) (*Role, error) {
-
 	o := orm.NewOrm()
 	if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
 		return nil, err

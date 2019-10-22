@@ -26,7 +26,6 @@ func (c *ResourceController) Prepare() {
 }
 
 func (c *ResourceController) Index() {
-
 	//将页面左边菜单的某项激活
 	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
 	c.setTpl()
@@ -35,21 +34,17 @@ func (c *ResourceController) Index() {
 	//页面里按钮权限控制
 	c.Data["canEdit"] = c.checkActionAuthor("ResourceController", "Edit")
 	c.Data["canDelete"] = c.checkActionAuthor("ResourceController", "Delete")
-
 }
 
 // Create 添加 新建 页面
 func (c *ResourceController) Create() {
-
 	//直接反序化获取json格式的requestbody里的值
 	params := models.NewResourceQueryParam()
 	params.IsParent = true
 
 	//获取数据列表和总数
 	data, _ := models.ResourceTreeGrid(&params)
-
 	c.Data["parent_perms"] = data
-
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/create_footerjs.html"
@@ -57,7 +52,6 @@ func (c *ResourceController) Create() {
 
 // Store 添加 新建 页面
 func (c *ResourceController) Store() {
-
 	m := models.NewResource(0)
 
 	//获取form里的值
@@ -80,7 +74,6 @@ func (c *ResourceController) TreeGrid() {
 
 	//获取数据列表和总数
 	data, total := models.ResourceTreeGrid(&params)
-
 	//定义返回的数据结构
 	result := make(map[string]interface{})
 	result["total"] = total
@@ -97,6 +90,7 @@ func (c *ResourceController) UrlFor2LinkOne(urlfor string) string {
 	}
 	// ResourceController.Edit,:id,1
 	strs := strings.Split(urlfor, ",")
+
 	if len(strs) == 1 {
 		return c.URLFor(strs[0])
 	} else if len(strs) > 1 {
@@ -118,18 +112,15 @@ func (c *ResourceController) UrlFor2Link(src []*models.Resource) {
 
 //Edit 资源编辑页面
 func (c *ResourceController) Edit() {
-
 	//直接反序化获取json格式的requestbody里的值
 	params := models.NewResourceQueryParam()
 	params.IsParent = true
 
 	//获取数据列表和总数
 	data, _ := models.ResourceTreeGrid(&params)
-
 	c.Data["parent_perms"] = data
 
 	Id, _ := c.GetInt64(":id", 0)
-
 	if Id > 0 {
 		m, err := models.ResourceOne(Id)
 		if err != nil {
@@ -146,7 +137,6 @@ func (c *ResourceController) Edit() {
 
 //Update 添加、编辑角色界面
 func (c *ResourceController) Update() {
-
 	id, _ := c.GetInt64(":id", 0)
 	m := models.NewResource(id)
 
@@ -164,7 +154,6 @@ func (c *ResourceController) Update() {
 
 // Delete 删除
 func (c *ResourceController) Delete() {
-
 	Id, _ := c.GetInt64(":id", 0)
 	if Id == 0 {
 		c.jsonResult(enums.JRCodeFailed, "选择的数据无效", 0)

@@ -7,7 +7,6 @@ import (
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
-	"github.com/astaxie/beego/orm"
 )
 
 type PermList struct {
@@ -41,7 +40,6 @@ func (c *RoleController) Prepare() {
 
 //Index 角色管理首页
 func (c *RoleController) Index() {
-
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "role/index_footerjs.html"
@@ -80,7 +78,6 @@ func (c *RoleController) Store() {
 
 // DataGrid 角色管理首页 表格获取数据
 func (c *RoleController) DataGrid() {
-
 	//直接反序化获取json格式的requestbody里的值
 	params := models.NewRoleQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
@@ -108,7 +105,6 @@ func (c *RoleController) DataList() {
 
 //PermLists 权限列表
 func (c *RoleController) PermLists() {
-
 	var ptl PermTreeList
 	var m *models.Role
 	var err error
@@ -136,9 +132,7 @@ func (c *RoleController) PermLists() {
 
 //生成子权限树结构
 func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
-
 	pl := PermList{}
-
 	pl.Title = v.Name
 	pl.Value = strconv.FormatInt(v.Id, 10)
 	pl.Checked = getChecked(v, m) //是否有权限
@@ -174,7 +168,6 @@ func getChecked(v *models.Resource, m *models.Role) bool {
 
 //Edit 添加、编辑角色界面
 func (c *RoleController) Edit() {
-
 	Id, _ := c.GetInt64(":id", 0)
 	if Id > 0 {
 
@@ -215,53 +208,14 @@ func (c *RoleController) Update() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
 	}
-
 }
 
 //Delete 批量删除
 func (c *RoleController) Delete() {
-
 	id, _ := c.GetInt64(":id")
-
 	if num, err := models.RoleDelete(id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", id)
 	}
-
-}
-
-//Allocate 给角色分配资源界面
-func (c *RoleController) Allocate() {
-
-	roleId, _ := c.GetInt64("id", 0)
-
-	o := orm.NewOrm()
-	m := models.NewRole(roleId)
-	if err := o.Read(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "数据无效，请刷新后重试", m.Id)
-	}
-
-	//删除已关联的历史数据
-	if _, err := o.QueryTable(models.RoleResourceRelTBName()).Filter("role__id", m.Id).Delete(); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "删除历史关系失败", m.Id)
-	}
-
-	//var relations []models.RoleResourceRel
-	//for _, str := range strings.Split(strs, ",") {
-	//	if id, err := strconv.Atoi(str); err == nil {
-	//		r := models.Resource{Id: id}
-	//		relation := models.RoleResourceRel{Role: &m, Resource: &r}
-	//		relations = append(relations, relation)
-	//	}
-	//}
-
-	//if len(relations) > 0 {
-	//	//批量添加
-	//	if _, err := o.InsertMulti(len(relations), relations); err == nil {
-	//		c.jsonResult(enums.JRCodeSucc, "保存成功", "")
-	//	}
-	//}
-
-	c.jsonResult(0, "保存失败", "")
 }
