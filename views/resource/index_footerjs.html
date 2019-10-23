@@ -5,7 +5,7 @@
         index: 'lib/index'
     }).use(['index', 'table', 'admin'], function () {
         const table = layui.table , admin = layui.admin , $ = layui.$;
-
+        const _xsrf = $('meta[name=_xsrf]').attr('content');
         table.render({
             elem: '#perm_lists'
             , autoSort: false

@@ -34,6 +34,7 @@ func (c *ResourceController) Index() {
 	//页面里按钮权限控制
 	c.Data["canEdit"] = c.checkActionAuthor("ResourceController", "Edit")
 	c.Data["canDelete"] = c.checkActionAuthor("ResourceController", "Delete")
+	c.GetXSRFToken()
 }
 
 // Create 添加 新建 页面
@@ -48,6 +49,7 @@ func (c *ResourceController) Create() {
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/create_footerjs.html"
+	c.GetXSRFToken()
 }
 
 // Store 添加 新建 页面
@@ -133,6 +135,7 @@ func (c *ResourceController) Edit() {
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/edit_footerjs.html"
+	c.GetXSRFToken()
 }
 
 //Update 添加、编辑角色界面

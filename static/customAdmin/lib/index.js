@@ -67,7 +67,7 @@ layui.extend({
     //ajax 请求头部
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-Xsrftoken': $('meta[name=_xsrf]').attr('content')
         }
     });
 
@@ -85,42 +85,7 @@ layui.extend({
 
     view().autoRender();
 
-    //WebSocket实时通信
-    // if($("#is_websocket").val() == '1') {
-    //     const ws = new WebSocket($("#ws_url").val());
-    //
-    //     ws.onopen = function (event) {
-    //         console.log("Send Text WS was opened.");
-    //     };
-    //     ws.onmessage = async function (event) {
-    //         if(event.data != 'Welcome to LaravelS') {
-    //             const data = event.data.split('-');
-    //             for (let item of data) {
-    //                 if($("#is_type").val() == 'order') {
-    //                     admin.all_complete_data[item] = [];
-    //                 } else {
-    //                     admin.annotations_complete_data[item] = [];
-    //                 }
-    //                 layui.data(item, null);
-    //             }
-    //             try {
-    //                 if($("#is_type").val() == 'order') {
-    //                     await admin.order_i_auto(admin.auto_fn);
-    //                 } else {
-    //                     await admin.annotations_auto(admin.auto_fn);
-    //                 }
-    //             } catch (err) {
-    //                 console.log(err)
-    //             }
-    //         }
-    //     };
-    //     ws.onerror = function (event) {
-    //         console.log("Send Text fired an error");
-    //     };
-    //     ws.onclose = function (event) {
-    //         console.log("WebSocket instance closed.");
-    //     };
-    // }
+
     //复核修改错误内容改变颜色
     $("body").on("change", ".is_check_fail", function(){
         console.log(1);

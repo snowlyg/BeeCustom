@@ -48,6 +48,7 @@ func (c *RoleController) Index() {
 	c.Data["canEdit"] = c.checkActionAuthor("RoleController", "Edit")
 	c.Data["canDelete"] = c.checkActionAuthor("RoleController", "Delete")
 	c.Data["canAllocate"] = c.checkActionAuthor("RoleController", "Allocate")
+	c.GetXSRFToken()
 }
 
 // Create 添加 新建 页面
@@ -55,6 +56,7 @@ func (c *RoleController) Create() {
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "role/create_footerjs.html"
+	c.GetXSRFToken()
 }
 
 // Store 添加 新建 页面
@@ -182,6 +184,7 @@ func (c *RoleController) Edit() {
 	c.setTpl("role/edit.html", "shared/layout_app.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "role/edit_footerjs.html"
+	c.GetXSRFToken()
 }
 
 //Update 添加、编辑角色界面

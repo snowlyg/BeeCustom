@@ -37,6 +37,7 @@ func (c *BackendUserController) Index() {
 	//页面里按钮权限控制
 	c.Data["canEdit"] = c.checkActionAuthor("BackendUserController", "Edit")
 	c.Data["canDelete"] = c.checkActionAuthor("BackendUserController", "Delete")
+	c.GetXSRFToken()
 }
 
 //列表数据
@@ -66,6 +67,7 @@ func (c *BackendUserController) Create() {
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/create_footerjs.html"
+	c.GetXSRFToken()
 }
 
 // Store 添加 新建 页面
@@ -104,6 +106,7 @@ func (c *BackendUserController) Edit() {
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/edit_footerjs.html"
+	c.GetXSRFToken()
 
 }
 

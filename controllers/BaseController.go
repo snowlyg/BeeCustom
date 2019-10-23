@@ -25,6 +25,10 @@ func (c *BaseController) Prepare() {
 	c.adapterUserInfo()
 }
 
+func (c *BaseController) GetXSRFToken() {
+	c.Data["xsrf_token"] = c.XSRFToken()
+}
+
 // checkLogin判断用户是否登录，未登录则跳转至登录页面
 // 一定要在BaseController.Prepare()后执行
 func (c *BaseController) checkLogin() {

@@ -19,6 +19,10 @@
 </div>
 
 <script type="text/html" id="perm_toolbar">
+    @{{if .canEdit }}
     <a class="custom-edit" lay-event="edit">编辑</a>
+    @{{end}}
+    @{{if .canDelete }}
     <a class="custom-delete" lay-event="del">删除</a>
+    @{{end}}
 </script>

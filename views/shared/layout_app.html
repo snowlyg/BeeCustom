@@ -3,8 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="renderer" content="webkit">
+        <meta name="_xsrf" content="@{{.xsrf_token}}" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <title>@{{ .pageTitle }}</title>
+        <title>BeeCustomBaseApp</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         @{{template "shared/app/globalcss.html" }}

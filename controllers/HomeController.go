@@ -36,6 +36,7 @@ func (c *HomeController) Error() {
 func (c *HomeController) Login() {
 	c.LayoutSections = make(map[string]string)
 	c.setTpl("auth/login.html", "auth/layout_base.html")
+	c.GetXSRFToken()
 }
 
 func (c *HomeController) DoLogin() {

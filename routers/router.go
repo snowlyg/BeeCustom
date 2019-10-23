@@ -27,7 +27,6 @@ func init() {
 	beego.Router("/role/update/?:id", &controllers.RoleController{}, "Patch:Update")
 	beego.Router("/role/delete/?:id", &controllers.RoleController{}, "Delete:Delete")
 	beego.Router("/role/datalist", &controllers.RoleController{}, "Post:DataList")
-	beego.Router("/role/allocate", &controllers.RoleController{}, "Post:Allocate")
 
 	//资源路由
 	beego.Router("/resource/index", &controllers.ResourceController{}, "*:Index")
