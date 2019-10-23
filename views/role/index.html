@@ -3,8 +3,9 @@
         <div class="layui-card-body">
             <div class="layui-row custom-tool">
                 <div class="layui-col-md6">
+                    @{{if .canCreate}}
                    <span class="custom-new_btn" lay-href="@{{ urlfor "RoleController.Create" }}" lay-text="新建角色" >+新建</span>
-
+                    @{{end}}
                 </div>
                 <div class="layui-col-md3 layui-col-md-offset3">
                     <div class="custom-tool-right">
@@ -18,6 +19,11 @@
     </div>
 </div>
 <script type="text/html" id="role_toolbar">
+    @{{if .canEdit}}
     <a class="custom-edit" lay-event="edit">编辑</a>
+    @{{end}}
+    @{{if .canDelete}}
     <a class="custom-delete" lay-event="del">删除</a>
+    @{{end}}
+
 </script>

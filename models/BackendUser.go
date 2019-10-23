@@ -1,13 +1,14 @@
 package models
 
 import (
+	"strings"
+
 	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
-	"strings"
 )
 
 // TableName 设置BackendUser表名
-func (a *BackendUser) TableName() string {
+func (u *BackendUser) TableName() string {
 	return BackendUserTBName()
 }
 
@@ -23,20 +24,19 @@ type BackendUserQueryParam struct {
 // BackendUser 实体类
 type BackendUser struct {
 	BaseModel
-	RealName           string   `orm:"size(32)"`
-	UserName           string   `orm:"size(24)"`
-	UserPwd            string   `json:"-"`
-	Mobile             string   `orm:"size(16)"`
-	Email              string   `orm:"size(256)"`
-	Avatar             string   `orm:"size(256)"`
-	ICCode             string   `orm:"column(i_c_code);size(255);null"`
-	Chapter            string   `orm:"column(chapter);size(255);null" description:"签章"`
-	EnterpriseId       string   `orm:"-" form:"EnterpriseId"`
-	RoleId             int64    `orm:"-" form:"RoleId"` //关联管理会自动生成 role_id 字段，此处不生成字段
-	Role               *Role    `orm:"rel(fk)"`         // fk 的反向关系
-	ResourceUrlForList []string `orm:"-"`
-	IsSuper            bool
-	Status             int
+	RealName     string `orm:"size(32)" valid:"Required;MaxSize(32)"`
+	UserName     string `orm:"size(24)" valid:"Required;MaxSize(24)"`
+	UserPwd      string `json:"-" valid:"Required"`
+	Mobile       string `orm:"size(16)" valid:"Required;Mobile"`
+	Email        string `orm:"size(256)" valid:"Required;Email"`
+	Avatar       string `orm:"size(256)"`
+	ICCode       string `orm:"column(i_c_code);size(255);null"`
+	Chapter      string `orm:"column(chapter);size(255);null" description:"签章"`
+	EnterpriseId string `orm:"-" form:"EnterpriseId"`
+	RoleId       int64  `orm:"-" form:"RoleId"`          //关联管理会自动生成 role_id 字段，此处不生成字段
+	Role         *Role  `orm:"rel(fk)" valid:"Required"` // fk 的反向关系
+	IsSuper      bool   `valid:"Required"`
+	Status       bool   `valid:"Required"`
 }
 
 func NewBackendUser(id int64) BackendUser {

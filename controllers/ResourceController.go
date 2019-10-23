@@ -32,8 +32,7 @@ func (c *ResourceController) Index() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/index_footerjs.html"
 	//页面里按钮权限控制
-	c.Data["canEdit"] = c.checkActionAuthor("ResourceController", "Edit")
-	c.Data["canDelete"] = c.checkActionAuthor("ResourceController", "Delete")
+	c.getActionData("ResourceController", "Edit", "Delete", "Create")
 	c.GetXSRFToken()
 }
 

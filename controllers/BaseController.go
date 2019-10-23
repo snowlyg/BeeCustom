@@ -7,6 +7,7 @@ import (
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/utils"
+	"github.com/astaxie/beego/validation"
 
 	"github.com/astaxie/beego"
 )
@@ -59,9 +60,9 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 	bu, ok := user.(models.BackendUser)
 	if ok {
 		//如果是超级管理员，则直接通过
-		if bu.IsSuper {
-			return true
-		}
+		//if bu.IsSuper {
+		//	return true
+		//}
 
 		//遍历用户所负责的资源列表
 		for _, resource := range bu.Role.Resources {
@@ -76,6 +77,13 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 	}
 
 	return false
+}
+
+// 判断某 Controller.Action 当前用户是否有权访问
+func (c *BaseController) getActionData(actionNames ...string) {
+	for _, v := range actionNames {
+		c.Data["can"+v] = c.checkActionAuthor(c.controllerName, v)
+	}
 }
 
 // checkLogin判断用户是否有权访问某地址，无权则会跳转到错误页面
@@ -172,4 +180,19 @@ func (c *BaseController) pageLogin() {
 	url := c.URLFor("HomeController.Login")
 	c.Redirect(url, 302)
 	c.StopRun()
+}
+
+// 验证提交数据
+func (c *BaseController) validData(m interface{}) error {
+	valid := validation.Validation{}
+	b, err := valid.Valid(&m)
+	if err != nil {
+		return err
+	}
+
+	if !b {
+		return valid.Errors[0]
+	}
+
+	return nil
 }

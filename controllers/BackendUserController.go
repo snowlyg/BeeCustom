@@ -35,8 +35,7 @@ func (c *BackendUserController) Index() {
 	c.LayoutSections["footerjs"] = "backenduser/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.Data["canEdit"] = c.checkActionAuthor("BackendUserController", "Edit")
-	c.Data["canDelete"] = c.checkActionAuthor("BackendUserController", "Delete")
+	c.getActionData("BackendUserController", "Edit", "Delete", "Create")
 	c.GetXSRFToken()
 }
 
@@ -78,6 +77,10 @@ func (c *BackendUserController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
+	if err := c.validData(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "表单数据验证失败", m.Id)
+	}
+
 	if _, err := models.BackendUserSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
 	} else {
@@ -98,7 +101,6 @@ func (c *BackendUserController) Edit() {
 	}
 
 	c.Data["m"] = m
-	c.Data["m"] = m
 	params := models.NewRoleQueryParam()
 	roles := models.RoleDataList(&params)
 	c.Data["roles"] = roles
@@ -107,16 +109,42 @@ func (c *BackendUserController) Edit() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/edit_footerjs.html"
 	c.GetXSRFToken()
+}
 
+// 禁用 启用
+func (c *BackendUserController) Freeze() {
+	Id, _ := c.GetInt64(":id", 0)
+	m, err := models.BackendUserOne(Id)
+	if m != nil && Id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+		m.Status = !m.Status
+	}
+
+	if err := c.validData(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "表单数据验证失败", m.Id)
+	}
+
+	if _, err := models.BackendUserSave(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
+	} else {
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
+	}
 }
 
 // Update 添加 编辑 页面
 func (c *BackendUserController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
 	m := models.NewBackendUser(Id)
+
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+	}
+
+	if err := c.validData(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "表单数据验证失败", m.Id)
 	}
 
 	if _, err := models.BackendUserSave(&m); err != nil {

@@ -10,7 +10,7 @@ const (
 )
 
 const (
-	Deleted = iota - 1
-	Disabled
-	Enabled
+	Deleted  = -1
+	Disabled = false
+	Enabled  = true
 )

@@ -45,9 +45,7 @@ func (c *RoleController) Index() {
 	c.LayoutSections["footerjs"] = "role/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.Data["canEdit"] = c.checkActionAuthor("RoleController", "Edit")
-	c.Data["canDelete"] = c.checkActionAuthor("RoleController", "Delete")
-	c.Data["canAllocate"] = c.checkActionAuthor("RoleController", "Allocate")
+	c.getActionData("RoleController", "Edit", "Delete", "Create")
 	c.GetXSRFToken()
 }
 

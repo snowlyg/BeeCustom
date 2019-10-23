@@ -14,6 +14,7 @@ func init() {
 	beego.Router("/backenduser/store", &controllers.BackendUserController{}, "Post:Store")
 	beego.Router("/backenduser/datagrid", &controllers.BackendUserController{}, "Post:DataGrid")
 	beego.Router("/backenduser/edit/?:id", &controllers.BackendUserController{}, "Get:Edit")
+	beego.Router("/backenduser/freeze/?:id", &controllers.BackendUserController{}, "Get:Freeze")
 	beego.Router("/backenduser/update/?:id", &controllers.BackendUserController{}, "Patch:Update")
 	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Delete:Delete")
 

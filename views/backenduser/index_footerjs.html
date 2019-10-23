@@ -2,12 +2,13 @@
     @{{ if .canEdit }}
         <a class="custom-edit" lay-event="edit">编辑</a>
     @{{ end }}
-
-    {{# if(d.Status){ }}
-        <a class="custom-freeze" lay-event="freeze">禁用</a>
-    {{#  } else { }}
-        <a class="custom-unfreeze" lay-event="unfreeze">启用</a>
-    {{#  } }}
+    @{{ if .canFreeze }}
+        {{# if(d.Status){ }}
+            <a class="custom-freeze" lay-event="freeze">禁用</a>
+        {{#  } else { }}
+            <a class="custom-unfreeze" lay-event="unfreeze">启用</a>
+        {{#  } }}
+    @{{ end }}
     @{{ if .canDelete }}
         <a class="custom-delete" lay-event="del">删除</a>
     @{{ end }}

@@ -89,13 +89,13 @@
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>状态：</label>
                         <div class="layui-input-block">
                             <select name="Status" lay-verify="required" lay-vertype="tips">
-                                @{{ if eq .m.Status 1 }}
+                                @{{ if eq .m.Status true }}
                                     <option   selected    value="1">启用</option>
                                 @{{ else}}
                                     <option  value="1">启用</option>
                                 @{{ end }}
 
-                                @{{ if eq .m.Status 0 }}
+                                @{{ if eq .m.Status false }}
                                     <option  selected  value="1">禁用</option>
                                 @{{ else }}
                                     <option  value="0">禁用</option>

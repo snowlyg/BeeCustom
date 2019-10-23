@@ -3,7 +3,9 @@
         <div class="layui-card-body" id="perm_list_id">
             <div class="layui-row custom-tool">
                 <div class="layui-col-md6">
+                    @{{if .canCreate}}
                     <span class="custom-new_btn" lay-href=@{{ urlfor "ResourceController.Create" }} lay-text="新建权限" id="perm_new">新建</span>
+                    @{{end }}
                 </div>
                 <div class="layui-col-md3 layui-col-md-offset3">
                     <div class="custom-tool-right">

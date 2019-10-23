@@ -3,7 +3,9 @@
         <div class="layui-card-body">
             <div class="layui-row custom-tool">
                 <div class="layui-col-md6">
+                    @{{if .canCreate}}
                     <span class="custom-new_btn" lay-href='@{{ urlfor "BackendUserController.Create" }}' lay-text="新建账号"  id="user_new">+新建</span>
+                    @{{end}}
                 </div>
                 <div class="layui-col-md3 layui-col-md-offset3">
                     <div class="custom-tool-right">
