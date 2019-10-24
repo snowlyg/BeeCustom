@@ -3,7 +3,7 @@
         <a class="custom-edit" lay-event="edit">编辑</a>
     @{{ end }}
     @{{ if .canFreeze }}
-        {{# if(d.Status){ }}
+        {{# if(d.Status == "1"){ }}
             <a class="custom-freeze" lay-event="freeze">禁用</a>
         {{#  } else { }}
             <a class="custom-unfreeze" lay-event="unfreeze">启用</a>
@@ -117,13 +117,13 @@
                 topLayui.index.openTabsPage(href, text);
             } else if (obj.event === 'freeze') {
                 layer.confirm('真的禁用么？', {title: '提示'}, async (index) => {
-                    await admin.get(`/backenduser/frozen/${data.Id}`);
+                    await admin.get(`/backenduser/freeze/${data.Id}`,true);
                     layer.close(index);
                     table.reload('user_lists');
                 });
             } else if (obj.event === 'unfreeze') {
                 layer.confirm('真的启用么？', {title: '提示'}, async (index) => {
-                    await admin.get(`/backenduser/frozen/${data.Id}`);
+                    await admin.get(`/backenduser/freeze/${data.Id}`,true);
                     layer.close(index);
                     table.reload('user_lists');
                 });

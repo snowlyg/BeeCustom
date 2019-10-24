@@ -32,7 +32,7 @@ func (c *ResourceController) Index() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/index_footerjs.html"
 	//页面里按钮权限控制
-	c.getActionData("ResourceController", "Edit", "Delete", "Create")
+	c.getActionData("Edit", "Delete", "Create")
 	c.GetXSRFToken()
 }
 
@@ -57,13 +57,13 @@ func (c *ResourceController) Store() {
 
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
 	if _, err := models.ResourceSave(&m); err == nil {
-		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
+		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	} else {
-		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 }
 
@@ -144,13 +144,13 @@ func (c *ResourceController) Update() {
 
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
 	if _, err := models.ResourceSave(&m); err == nil {
-		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	} else {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
 }
 

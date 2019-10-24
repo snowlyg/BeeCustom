@@ -117,7 +117,7 @@ func ResourceDataList(params *ResourceQueryParam) []*Resource {
 //Save 添加、编辑页面 保存
 func ResourceSave(m *Resource) (*Resource, error) {
 	o := orm.NewOrm()
-	if m.Id != 0 {
+	if m.ParentId != 0 {
 		if pr, err := ResourceOne(m.ParentId); err != nil {
 			return nil, err
 		} else {

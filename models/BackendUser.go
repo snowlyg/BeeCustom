@@ -26,14 +26,14 @@ type BackendUser struct {
 	BaseModel
 	RealName string `orm:"size(32)" valid:"Required;MaxSize(32)"`
 	UserName string `orm:"size(24)" valid:"Required;MaxSize(24)"`
-	UserPwd  string `json:"-" valid:"Required"`
+	UserPwd  string `orm:"size(256)" valid:"Required"`
 	Mobile   string `orm:"size(16)" valid:"Required;Mobile"`
 	Email    string `orm:"size(256)" valid:"Required;Email"`
 	Avatar   string `orm:"size(256)"`
 	ICCode   string `orm:"column(i_c_code);size(255);null"`
 	Chapter  string `orm:"column(chapter);size(255);null" description:"签章"`
-	RoleId   int64  `orm:"-" form:"RoleId"`          //关联管理会自动生成 role_id 字段，此处不生成字段
-	Role     *Role  `orm:"rel(fk)" valid:"Required"` // fk 的反向关系
+	RoleId   int64  `orm:"-" form:"RoleId" valid:"Required"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	Role     *Role  `orm:"rel(fk)"`                          // fk 的反向关系
 	IsSuper  bool   `valid:"Required"`
 	Status   bool   `valid:"Required"`
 }
@@ -135,6 +135,16 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 		if _, err := o.Update(m); err != nil {
 			return nil, err
 		}
+	}
+
+	return m, nil
+}
+
+//Save 添加、编辑页面 保存
+func BackendUserFreeze(m *BackendUser) (*BackendUser, error) {
+	o := orm.NewOrm()
+	if _, err := o.Update(m, "Status"); err != nil {
+		return nil, err
 	}
 
 	return m, nil

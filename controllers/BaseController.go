@@ -215,12 +215,15 @@ func (c *BaseController) validRequestData(m interface{}) {
 	b, err := valid.Valid(m)
 
 	if !b {
-		errMsg = strings.Split(valid.Errors[0].Key, ".")[0] + ":" + valid.Errors[0].Message
+		if len(valid.Errors) > 0 {
+			errMsg = strings.Split(valid.Errors[0].Key, ".")[0] + ":" + valid.Errors[0].Message
+		}
 	}
 
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "表单数据验证错误", nil)
+		utils.LogDebug(fmt.Sprintf("表单数据验证错误:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "表单数据验证错误", m)
 	} else if len(errMsg) > 0 {
-		c.jsonResult(enums.JRCodeFailed, errMsg, nil)
+		c.jsonResult(enums.JRCodeFailed, errMsg, m)
 	}
 }

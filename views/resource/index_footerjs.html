@@ -4,7 +4,7 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'table', 'admin'], function () {
-        const table = layui.table , admin = layui.admin , $ = layui.$;
+        const table = layui.table, admin = layui.admin, $ = layui.$;
         const _xsrf = $('meta[name=_xsrf]').attr('content');
         table.render({
             elem: '#perm_lists'
@@ -12,17 +12,17 @@
             , skin: 'line'
             , method: 'post'
             , where: {
-                order:'desc',
-                sort:'CreatedAt'
+                order: 'desc',
+                sort: 'CreatedAt'
             }
-            ,contentType:'application/json'
+            , contentType: 'application/json'
             , url: '@{{ urlfor "ResourceController.TreeGrid" }}'
             , request: {
                 pageName: 'offset' //页码的参数名称，默认：page
                 , limitName: 'limit' //每页数据量的参数名，默认：limit
-            },response:{
-                statusName : 'code',
-                statusCode : 0,
+            }, response: {
+                statusName: 'code',
+                statusCode: 0,
             }
             , parseData: function (res) {
                 return {
@@ -32,10 +32,20 @@
                 };
             }
             , cols: [[
-                 {field: 'Name', title: '名称', sort: true}
-                , {field: 'Icon', title: '图标', sort: true,templet: function (data) {
+                {field: 'Name', title: '名称',sort: true}
+                , {
+                    field: 'Icon', title: '图标', sort: true,  templet: function (data) {
                         return `<i class="layui-icon iconfont icon-${data.Icon}" ></i>`
-                    }}
+                    }
+                }, {
+                    field: 'Parent', title: '父级', sort: true,templet: function (data) {
+                        if(data.Parent){
+                            return data.Parent.Name
+                        }else{
+                            return ''
+                        }
+                    }
+                }
                 , {field: 'UrlFor', title: '路由', sort: true}
                 , {field: 'CreatedAt', title: '创建时间', sort: true}
                 , {title: '操作', toolbar: '#perm_toolbar', width: 150}

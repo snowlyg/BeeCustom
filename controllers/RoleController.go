@@ -45,7 +45,7 @@ func (c *RoleController) Index() {
 	c.LayoutSections["footerjs"] = "role/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("RoleController", "Edit", "Delete", "Create")
+	c.getActionData("Edit", "Delete", "Create")
 	c.GetXSRFToken()
 }
 
@@ -63,16 +63,16 @@ func (c *RoleController) Store() {
 
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
 	permIds := c.GetString("perm_ids")
 
 	_, err := models.RoleSave(&m, permIds)
 	if err == nil {
-		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
+		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	} else {
-		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 }
 
@@ -200,14 +200,14 @@ func (c *RoleController) Update() {
 
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
-	_, err := models.RoleUpdate(&m, &ResourceIds)
+	_, err := models.RoleUpdate(&m, ResourceIds)
 	if err == nil {
-		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	} else {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
 }
 

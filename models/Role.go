@@ -104,7 +104,7 @@ func RoleSave(m *Role, ResourceIds string) (*Role, error) {
 }
 
 //Save 添加、编辑页面 保存
-func RoleUpdate(m *Role, ResourceIds *string) (*Role, error) {
+func RoleUpdate(m *Role, ResourceIds string) (*Role, error) {
 	o := orm.NewOrm()
 	if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
 		return nil, err
@@ -115,8 +115,8 @@ func RoleUpdate(m *Role, ResourceIds *string) (*Role, error) {
 		return nil, err
 	}
 
-	if len(*ResourceIds) > 0 {
-		ResourceIds := strings.Split(*ResourceIds, ",")
+	if len(ResourceIds) > 0 {
+		ResourceIds := strings.Split(ResourceIds, ",")
 		for _, permId := range ResourceIds {
 			permId, err := strconv.ParseInt(permId, 10, 64)
 			s, err := ResourceOne(permId)

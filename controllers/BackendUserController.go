@@ -35,7 +35,8 @@ func (c *BackendUserController) Index() {
 	c.LayoutSections["footerjs"] = "backenduser/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("BackendUserController", "Edit", "Delete", "Create")
+	c.getActionData("Edit", "Delete", "Create", "Freeze")
+
 	c.GetXSRFToken()
 }
 
@@ -74,15 +75,15 @@ func (c *BackendUserController) Store() {
 	m := models.NewBackendUser(0)
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
 	c.validRequestData(m)
 
 	if _, err := models.BackendUserSave(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
-		c.jsonResult(enums.JRCodeSucc, "添加成功", m.Id)
+		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
 
@@ -120,12 +121,10 @@ func (c *BackendUserController) Freeze() {
 		m.Status = !m.Status
 	}
 
-	c.validRequestData(&m)
-
-	if _, err := models.BackendUserSave(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
+	if _, err := models.BackendUserFreeze(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
-		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
+		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 	}
 }
 
@@ -136,15 +135,15 @@ func (c *BackendUserController) Update() {
 
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
 	c.validRequestData(m)
 
 	if _, err := models.BackendUserSave(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
-		c.jsonResult(enums.JRCodeSucc, "编辑成功", m.Id)
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	}
 }
 
