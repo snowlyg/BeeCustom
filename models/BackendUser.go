@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"strings"
 
 	"BeeCustom/utils"
@@ -72,14 +73,22 @@ func BackendUserOne(id int64) (*BackendUser, error) {
 		return nil, err
 	}
 
-	mr := m.Role
-	// 获取关系字段，o.LoadRelated(v, "Roles") 这是关键
-	// 查找该用户所属的角色
-	if _, err := o.LoadRelated(mr, "Resources"); err != nil {
-		return nil, err
+	if m.Role != nil {
+		mr := m.Role
+		// 获取关系字段，o.LoadRelated(v, "Roles") 这是关键
+		// 查找该用户所属的角色
+		if _, err := o.LoadRelated(mr, "Resources"); err != nil {
+			return nil, err
+		}
+
+		m.Role = mr
+	} else {
+		return &m, errors.New("用户获取失败")
 	}
 
-	m.Role = mr
+	if &m == nil {
+		return &m, errors.New("用户获取失败")
+	}
 
 	return &m, nil
 }

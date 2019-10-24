@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strings"
 
 	"BeeCustom/enums"
@@ -61,7 +62,11 @@ func (c *HomeController) DoLogin() {
 			c.jsonResult(enums.JRCodeFailed, "用户被禁用，请联系管理员", "")
 		}
 		//保存用户信息到session
-		_ = c.setBackendUser2Session(user.Id)
+		if err = c.setBackendUser2Session(user.Id); err != nil {
+			utils.LogDebug(fmt.Sprintf("用户sessions失败:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "用户sessions失败", "")
+		}
+
 		//获取用户信息
 		c.jsonResult(enums.JRCodeSucc, "登录成功", "")
 	} else {

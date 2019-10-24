@@ -45,7 +45,17 @@ git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
 
  需要配置 `mysql` 和 `redis` 的参数
  
-5. 运行
+5. session 使用 redis 管理,新建 session 表
+```
+ CREATE TABLE `session` (
+        `session_key` char(64) NOT NULL,
+        `session_data` blob,
+        `session_expiry` int(11) unsigned NOT NULL,
+        PRIMARY KEY (`session_key`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+```
+ 
+ 运行
 在 BeeCustom 目录使用 `beego` 官方提供的命令运行
 ```
 bee run 
@@ -65,6 +75,15 @@ bee run
  go get github.com/gomodule/redigo/redis
  ```
 
+启动报错 `beego runtime error: invalid memory address or nil pointer dereference`
+没有开启 session 
+```
+beego.BConfig.WebConfig.Session.SessionOn = true
+```
+或者在 `app.conf` 添加
+```
+sessionon = true
+```
 # 参考项目
  - [lhtzbj12/sdrms](https://gitee.com/lhtzbj12/sdrms/tree/master)
 

@@ -2,6 +2,9 @@ appname = BeeCustom
 httpport = 8080
 runmode = dev
 #Session参数
+sessionon = true
+sessionprovider = redis
+sessionproviderconfig = "127.0.0.1:6379"
 sessionname = rmsbackusersessionid
 #sessioncookielifetime = 100 cookie的有效期（秒），默认是session,即会话结束则过期
 #开启监控
