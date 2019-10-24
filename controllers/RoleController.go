@@ -66,6 +66,8 @@ func (c *RoleController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
+	c.validRequestData(m)
+
 	permIds := c.GetString("perm_ids")
 
 	_, err := models.RoleSave(&m, permIds)
@@ -202,6 +204,8 @@ func (c *RoleController) Update() {
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
+
+	c.validRequestData(m)
 
 	_, err := models.RoleUpdate(&m, ResourceIds)
 	if err == nil {

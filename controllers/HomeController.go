@@ -6,6 +6,7 @@ import (
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/utils"
+	"BeeCustom/validations"
 )
 
 type HomeController struct {
@@ -42,11 +43,19 @@ func (c *HomeController) Login() {
 func (c *HomeController) DoLogin() {
 	username := strings.TrimSpace(c.GetString("UserName"))
 	userpwd := strings.TrimSpace(c.GetString("UserPwd"))
+
+	errMsg := validations.LoginValid(username, userpwd)
+	if len(errMsg) > 0 {
+		c.jsonResult(enums.JRCodeFailed, errMsg, "")
+	}
+
 	if len(username) == 0 || len(userpwd) == 0 {
 		c.jsonResult(enums.JRCodeFailed, "用户名和密码不正确", "")
 	}
+
 	userpwd = utils.String2md5(userpwd)
 	user, err := models.BackendUserOneByUserName(username, userpwd)
+
 	if user != nil && err == nil {
 		if user.Status == enums.Disabled {
 			c.jsonResult(enums.JRCodeFailed, "用户被禁用，请联系管理员", "")

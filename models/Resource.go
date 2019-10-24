@@ -25,15 +25,15 @@ func (a *Resource) TableName() string {
 type Resource struct {
 	BaseModel
 
-	Name         string `orm:"size(64)"`
 	Rtype        int
 	SonNum       int         `orm:"-"`
-	Icon         string      `orm:"size(32)"`
+	Name         string      `orm:"size(64)" valid:"Required;MaxSize(64)"`
+	Icon         string      `orm:"size(32)" valid:"MaxSize(32)"`
 	LinkUrl      string      `orm:"-"`
-	UrlFor       string      `orm:"size(256)" Json:"-"`
+	UrlFor       string      `orm:"size(256)" Json:"-" valid:"Required;MaxSize(255)"`
 	HtmlDisabled int         `orm:"-"`                 //在html里应用时是否可用
 	Level        int         `orm:"-"`                 //第几级，从0开始
-	ParentId     int64       `orm:"-" form:"ParentId"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	ParentId     int64       `orm:"-" form:"ParentId"` //关联管理会自动生成 ParentId 字段，此处不生成字段
 	Parent       *Resource   `orm:"null;rel(fk)"`      // RelForeignKey relation
 	Sons         []*Resource `orm:"reverse(many)"`     // fk 的反向关系
 	Roles        []*Role     `orm:"reverse(many)"`     // 设置一对多的反向关系

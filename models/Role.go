@@ -23,7 +23,7 @@ type RoleQueryParam struct {
 type Role struct {
 	BaseModel
 
-	Name         string         `orm:"size(32)" form:"Name"`
+	Name         string         `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
 	Resources    []*Resource    `orm:"rel(m2m)"`      // 设置一对多的反向关系
 	BackendUsers []*BackendUser `orm:"reverse(many)"` //设置一对多关系
 }
@@ -78,7 +78,7 @@ func RoleOne(id int64) (*Role, error) {
 }
 
 //Save 添加、编辑页面 保存
-func RoleSave(m *Role, ResourceIds string) (*Role, error) {
+func RoleSave(m *Role, permIds string) (*Role, error) {
 	o := orm.NewOrm()
 	if _, err := o.Insert(m); err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func RoleSave(m *Role, ResourceIds string) (*Role, error) {
 		return nil, err
 	}
 
-	for _, permId := range ResourceIds {
+	for _, permId := range permIds {
 		s, err := ResourceOne(int64(permId))
 		if err != nil {
 			return nil, err
@@ -104,7 +104,7 @@ func RoleSave(m *Role, ResourceIds string) (*Role, error) {
 }
 
 //Save 添加、编辑页面 保存
-func RoleUpdate(m *Role, ResourceIds string) (*Role, error) {
+func RoleUpdate(m *Role, permIds string) (*Role, error) {
 	o := orm.NewOrm()
 	if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
 		return nil, err
@@ -115,9 +115,9 @@ func RoleUpdate(m *Role, ResourceIds string) (*Role, error) {
 		return nil, err
 	}
 
-	if len(ResourceIds) > 0 {
-		ResourceIds := strings.Split(ResourceIds, ",")
-		for _, permId := range ResourceIds {
+	if len(permIds) > 0 {
+		permIds := strings.Split(permIds, ",")
+		for _, permId := range permIds {
 			permId, err := strconv.ParseInt(permId, 10, 64)
 			s, err := ResourceOne(permId)
 			if err != nil {

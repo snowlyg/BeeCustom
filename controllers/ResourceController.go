@@ -60,6 +60,8 @@ func (c *ResourceController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
+	c.validRequestData(m)
+
 	if _, err := models.ResourceSave(&m); err == nil {
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	} else {
@@ -146,6 +148,8 @@ func (c *ResourceController) Update() {
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
+
+	c.validRequestData(m)
 
 	if _, err := models.ResourceSave(&m); err == nil {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
