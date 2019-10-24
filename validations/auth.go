@@ -9,8 +9,10 @@ import (
 func LoginValid(UserName, UserPwd string) string {
 
 	valid := validation.Validation{}
+	validation.MessageTmpls = GetMessageTmpls()
+
 	valid.Required(UserName, "用户名")
-	valid.MinSize(UserName, 6, "用户名")
+	valid.MinSize(UserName, 5, "用户名")
 	valid.MaxSize(UserName, 24, "用户名")
 
 	valid.Required(UserPwd, "密码")
