@@ -16,8 +16,8 @@ func (c *BackendUserController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
-	//"DataGrid" 不用检查权限
-	c.checkAuthor("DataGrid")
+	//默认认证 "Index", "Create", "Edit", "Delete"
+	c.checkAuthor("Freeze")
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -77,9 +77,7 @@ func (c *BackendUserController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	if err := c.validData(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "表单数据验证失败", m.Id)
-	}
+	c.validRequestData(m)
 
 	if _, err := models.BackendUserSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m.Id)
@@ -122,9 +120,7 @@ func (c *BackendUserController) Freeze() {
 		m.Status = !m.Status
 	}
 
-	if err := c.validData(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "表单数据验证失败", m.Id)
-	}
+	c.validRequestData(&m)
 
 	if _, err := models.BackendUserSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)
@@ -143,9 +139,7 @@ func (c *BackendUserController) Update() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m.Id)
 	}
 
-	if err := c.validData(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "表单数据验证失败", m.Id)
-	}
+	c.validRequestData(m)
 
 	if _, err := models.BackendUserSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m.Id)

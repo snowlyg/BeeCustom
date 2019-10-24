@@ -7,7 +7,7 @@
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>姓名：</label>
                         <div class="layui-input-block">
                             <input type="text" name="RealName" lay-verify="required" lay-verType="tips"
-                                   placeholder="输入使用者的姓名，不超过5个字符" autocomplete="off" class="layui-input" maxlength="5">
+                                   placeholder="输入使用者的姓名，不超过32个字符" autocomplete="off" class="layui-input" maxlength="32">
                         </div>
                     </div>
                 </div>
@@ -16,7 +16,7 @@
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>用户名：</label>
                         <div class="layui-input-block">
                             <input type="text" name="UserName" lay-verify="required" lay-verType="tips"
-                                   placeholder="输入使用者的姓名，不超过5个字符" autocomplete="off" class="layui-input" maxlength="5">
+                                   placeholder="输入使用者的姓名，不超过24个字符" autocomplete="off" class="layui-input" maxlength="24" >
                         </div>
                     </div>
                 </div>
@@ -73,8 +73,8 @@
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>状态：</label>
                         <div class="layui-input-block">
                             <select name="Status" lay-verify="required" lay-vertype="tips">
-                                <option value="0">禁用</option>
                                 <option value="1">启用</option>
+                                <option value="0">禁用</option>
                             </select>
                         </div>
                     </div>
@@ -88,18 +88,6 @@
                                 @{{ range .roles }}
                                     <option value="@{{ .Id }}">@{{ .Name }}</option>
                                 @{{ end }}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md6">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>选择所属单位：</label>
-                        <div class="layui-input-block">
-                            <select name="EnterpriseId" lay-verify="" lay-vertype="tips">
-                                <option value="">请选择所属单位</option>
-                                <option value=""></option>
                             </select>
                         </div>
                     </div>

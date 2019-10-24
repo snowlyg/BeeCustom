@@ -63,7 +63,7 @@ func (c *HomeController) DoLogin() {
 //
 func (c *HomeController) Logout() {
 	user := models.NewBackendUser(0)
-	c.SetSession("backenduser", &user)
+	c.SetSession("backenduser", user)
 	c.pageLogin()
 }
 

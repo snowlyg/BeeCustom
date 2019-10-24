@@ -1,14 +1,18 @@
 package sysinit
 
 import (
+	"encoding/gob"
+
+	"BeeCustom/models"
 	"BeeCustom/utils"
 
-	"github.com/astaxie/beego"
+	_ "github.com/astaxie/beego/session/redis"
 )
 
 func init() {
-	//启用Session
-	beego.BConfig.WebConfig.Session.SessionOn = true
+
+	gob.Register(models.BackendUser{})
+
 	//初始化日志
 	utils.InitLogs()
 	//初始化缓存

@@ -90,28 +90,30 @@ func (c *BaseController) getActionData(actionNames ...string) {
 //一定要在BaseController.Prepare()后执行
 // 会调用checkLogin
 // 传入的参数为忽略权限控制的Action
-func (c *BaseController) checkAuthor(ignores ...string) {
+func (c *BaseController) checkAuthor(actionNames ...string) {
 	//先判断是否登录
 	c.checkLogin()
+	dActionNames := append(actionNames, "Index", "Create", "Edit", "Delete") //默认需要验证的权限
 	//如果Action在忽略列表里，则直接通用
-	for _, ignore := range ignores {
-		if ignore == c.actionName {
+	for _, actionName := range dActionNames {
+		if actionName == c.actionName {
+			hasAuthor := c.checkActionAuthor(c.controllerName, c.actionName)
+			if !hasAuthor {
+				utils.LogDebug(fmt.Sprintf("author control: path=%s.%s userid=%v  无权访问", c.controllerName, c.actionName, c.curUser.Id))
+				//如果没有权限
+				if !hasAuthor {
+					if c.Ctx.Input.IsAjax() {
+						c.jsonResult(enums.JRCode401, "无权访问", "")
+					} else {
+						c.pageError("无权访问")
+					}
+				}
+			}
+		} else {
 			return
 		}
 	}
 
-	hasAuthor := c.checkActionAuthor(c.controllerName, c.actionName)
-	if !hasAuthor {
-		utils.LogDebug(fmt.Sprintf("author control: path=%s.%s userid=%v  无权访问", c.controllerName, c.actionName, c.curUser.Id))
-		//如果没有权限
-		if !hasAuthor {
-			if c.Ctx.Input.IsAjax() {
-				c.jsonResult(enums.JRCode401, "无权访问", "")
-			} else {
-				c.pageError("无权访问")
-			}
-		}
-	}
 }
 
 //从session里取用户信息
@@ -183,16 +185,42 @@ func (c *BaseController) pageLogin() {
 }
 
 // 验证提交数据
-func (c *BaseController) validData(m interface{}) error {
-	valid := validation.Validation{}
-	b, err := valid.Valid(&m)
-	if err != nil {
-		return err
+func (c *BaseController) validRequestData(m interface{}) {
+	var errMsg string
+
+	validation.MessageTmpls = map[string]string{
+		"Required":     "不能为空",
+		"Min":          "最小为 %d",
+		"Max":          "最大为 %d",
+		"Range":        "范围在 %d 至 %d",
+		"MinSize":      "最小长度为 %d",
+		"MaxSize":      "最大长度为 %d",
+		"Length":       "长度必须是 %d",
+		"Alpha":        "必须是有效的字母字符",
+		"Numeric":      "必须是有效的数字字符",
+		"AlphaNumeric": "必须是有效的字母或数字字符",
+		"Match":        "必须匹配格式 %s",
+		"NoMatch":      "必须不匹配格式 %s",
+		"AlphaDash":    "必须是有效的字母或数字或破折号(-_)字符",
+		"Email":        "必须是有效的邮件地址",
+		"IP":           "必须是有效的IP地址",
+		"Base64":       "必须是有效的base64字符",
+		"Mobile":       "必须是有效手机号码",
+		"Tel":          "必须是有效电话号码",
+		"Phone":        "必须是有效的电话号码或者手机号码",
+		"ZipCode":      "必须是有效的邮政编码",
 	}
+
+	valid := validation.Validation{}
+	b, err := valid.Valid(m)
 
 	if !b {
-		return valid.Errors[0]
+		errMsg = strings.Split(valid.Errors[0].Key, ".")[0] + ":" + valid.Errors[0].Message
 	}
 
-	return nil
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "表单数据验证错误", nil)
+	} else if len(errMsg) > 0 {
+		c.jsonResult(enums.JRCodeFailed, errMsg, nil)
+	}
 }

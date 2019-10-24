@@ -8,8 +8,8 @@
                         <div class="layui-input-block">
                             <input type="text" name="RealName"  lay-verify="required"
                                    lay-verType="tips"
-                                   placeholder="输入使用者的姓名，不超过5个字符" autocomplete="off" class="layui-input"
-                                   value="@{{ .m.RealName }}" maxlength="5">
+                                   placeholder="输入使用者的姓名，不超过32个字符" autocomplete="off" class="layui-input"
+                                   value="@{{ .m.RealName }}" maxlength="32">
                         </div>
                     </div>
                 </div>
@@ -19,8 +19,8 @@
                         <div class="layui-input-block">
                             <input type="text" name="UserName"  lay-verify="required"
                                    lay-verType="tips"
-                                   placeholder="输入使用者的姓名，不超过5个字符" autocomplete="off" class="layui-input"
-                                   value="@{{ .m.UserName }}" maxlength="5">
+                                   placeholder="输入使用者的姓名，不超过24个字符" autocomplete="off" class="layui-input"
+                                   value="@{{ .m.UserName }}" maxlength="24">
                         </div>
                     </div>
                 </div>
@@ -118,17 +118,6 @@
                                         <option value="@{{ .Id }}">@{{ .Name }}</option>
                                     @{{ end }}
                                 @{{ end }}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md6">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>选择所属单位：</label>
-                        <div class="layui-input-block" id="enterprise_id">
-                            <select name="enterprise_id" lay-verify="" lay-vertype="tips">
-                                <option value="">请选择所属单位</option>
-                                <option selected value=""></option>
                             </select>
                         </div>
                     </div>
