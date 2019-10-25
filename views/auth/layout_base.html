@@ -40,7 +40,13 @@
         });
 
         form.on('submit(login_submit)', async (data) => {
-            await admin.post('@{{ urlfor "HomeController.DoLogin"}}', data.field,'@{{ urlfor "HomeController.Index"}}');
+           const res = await admin.post('@{{ urlfor "HomeController.DoLogin"}}', data.field,'@{{ urlfor "HomeController.Index"}}');
+            if (res.status) {
+                setTimeout(() => {
+                    parent.location.reload();
+                }, 2000)
+            }
+
         })
 
     });
