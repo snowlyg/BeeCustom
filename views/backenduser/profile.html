@@ -1,0 +1,73 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-home-card-title"><span class="title-name">我的信息</span></div>
+            <div class="layui-home-card-body">
+                <div class="info-cont">
+                    <form class="layui-form" lay-filter="info">
+                        <div class="info-item">
+                            <label class="info-form-label"><i class="red margin-right-4">*</i>姓名</label>
+                            <div class="info-input-block">
+                                <label>
+                                    <input type="text" name="RealName"  autocomplete="off" placeholder="请输入姓名" class="layui-input" value="@{{.m.RealName}}">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-form-label"><i class="red margin-right-4">*</i>姓名</label>
+                            <div class="info-input-block">
+                                <label>
+                                    <input type="text" name="UserName"  autocomplete="off" placeholder="请输入姓名" class="layui-input" value="@{{.m.UserName}}">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="info-form-label"><i class="red margin-right-4">*</i>电话</label>
+                            <div class="info-input-block">
+                                <label>
+                                    <input type="text" name="Mobile"  autocomplete="off" placeholder="请输入电话" class="layui-input" value="@{{.m.Mobile}}">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="info-form-label"><i class="red margin-right-4">*</i>邮箱</label>
+                            <div class="info-input-block">
+                                <label>
+                                    <input type="text" name="Email"  autocomplete="off" placeholder="请输入邮箱" class="layui-input" value="@{{.m.Email}}">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="info-form-label">IC卡号</label>
+                            <div class="info-input-block">
+                                <label>
+                                    <input type="text" name="ICCode"  autocomplete="off" placeholder="请输入IC卡号" class="layui-input" value="@{{.m.ICCode}}">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="info-form-label">签章</label>
+                            <div class="info-input-block">
+                                <div class="layui-btn layui-btn-normal" lay-filter="chapter" id="chapter">选择文件</div>
+                                <p class="info-desc">只能上传png文件，且不超过500kb</p>
+                                <img  id="chapter_img" class="chapter_img" src="@{{.m.Chapter}}" alt="">
+                                <input type="hidden" value="@{{.m.Chapter}}" name="Chapter" id="chapter_input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="info-form-label">角色</label>
+                            <div class="info-input-block">
+                                <label>
+                                    <input type="text" name="RoleId"  autocomplete="off" disabled="" class="layui-input" value="@{{.m.Role.Name}}">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-form-item info-submit">
+                            <button type="button" lay-submit="" class="layui-btn layui-btn-normal" lay-filter="update">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

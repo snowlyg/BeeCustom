@@ -27,7 +27,7 @@ type BackendUser struct {
 	BaseModel
 	RealName string `orm:"size(32)" valid:"Required;MaxSize(32)"`
 	UserName string `orm:"size(24)" valid:"Required;MaxSize(24)"`
-	UserPwd  string `orm:"size(256)" valid:"Required"`
+	UserPwd  string `orm:"size(256)"`
 	Mobile   string `orm:"size(16)" valid:"Required;Mobile"`
 	Email    string `orm:"size(256)" valid:"Required;Email"`
 	Avatar   string `orm:"size(256)"`

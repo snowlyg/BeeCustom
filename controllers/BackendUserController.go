@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"encoding/json"
+	"fmt"
+	"github.com/astaxie/beego/validation"
 )
 
 type BackendUserController struct {
@@ -80,6 +80,19 @@ func (c *BackendUserController) Store() {
 
 	c.validRequestData(m)
 
+	valid := validation.Validation{}
+	valid.Required(m.UserPwd, "密码")
+	valid.MinSize(m.UserPwd, 6, "密码")
+	valid.MaxSize(m.UserPwd, 18, "密码")
+
+	if valid.HasErrors() {
+		// 如果有错误信息，证明验证没通过
+		// 打印错误信息
+		for _, err := range valid.Errors {
+			c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
+		}
+	}
+
 	if _, err := models.BackendUserSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
@@ -140,6 +153,20 @@ func (c *BackendUserController) Update() {
 
 	c.validRequestData(m)
 
+	valid := validation.Validation{}
+	if len(m.UserPwd) > 0 {
+		valid.MinSize(m.UserPwd, 6, "密码")
+		valid.MaxSize(m.UserPwd, 18, "密码")
+	}
+
+	if valid.HasErrors() {
+		// 如果有错误信息，证明验证没通过
+		// 打印错误信息
+		for _, err := range valid.Errors {
+			c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
+		}
+	}
+
 	if _, err := models.BackendUserSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
@@ -155,4 +182,27 @@ func (c *BackendUserController) Delete() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
+}
+
+// Edit 添加 编辑 页面
+func (c *BackendUserController) Profile() {
+
+	m, err := models.BackendUserOne(c.curUser.Id)
+	if m != nil && c.curUser.Id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+		//添加用户时默认状态为启用
+		m.Status = enums.Enabled
+	}
+
+	c.Data["m"] = m
+	params := models.NewRoleQueryParam()
+	roles := models.RoleDataList(&params)
+	c.Data["roles"] = roles
+
+	c.setTpl()
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "backenduser/profile_footerjs.html"
+	c.GetXSRFToken()
 }

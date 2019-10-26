@@ -1,0 +1,55 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin','upload'], async () => {
+        const form = layui.form, admin = layui.admin, upload = layui.upload, $ = layui.$;
+
+        await form.verify({
+            password_confirmation: function (value, item) {
+                if (!(/^[\S]{8,16}$/.test(value))) {
+                    return '密码必须8到16位，且不能出现空格';
+                } else if ($("input[name='password']").val() !== value) {
+                    return '密码不一致';
+                }
+            }
+            , password: [
+                /^[\S]{8,16}$/
+                , '密码必须8到16位，且不能出现空格'
+            ]
+        });
+
+        const uploadInst = upload.render({
+            elem: '#chapter'
+            , field: 'image'
+            , acceptMime: 'image/png'
+            , url: '/image/upload'
+            , before: function (obj) {
+                /*obj.preview(function(index, file, result){
+                    $('#chapter_img').attr('src', result);
+                });*/
+            }
+            , done: function (res) {
+                if (res.status) {
+                    $('#chapter_img').attr('src', res.url);
+                    $('#chapter_input').val(res.url);
+                } else {
+                    layer.msg(res.msg)
+                }
+            }
+            , error: function () {
+                const demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+        form.on('submit(update)',async function(data){
+            data.field.RoleId = "@{{ .m.Role.Id }}";
+            await admin.patch(`/backenduser/update/` + "@{{ .m.Id }}", data.field);
+        });
+    });
+</script>

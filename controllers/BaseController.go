@@ -190,8 +190,8 @@ func (c *BaseController) validRequestData(m interface{}) {
 	var errMsg string
 
 	validation.MessageTmpls = validations.GetMessageTmpls()
-
 	valid := validation.Validation{}
+
 	b, err := valid.Valid(m)
 
 	if !b {
@@ -206,4 +206,5 @@ func (c *BaseController) validRequestData(m interface{}) {
 	} else if len(errMsg) > 0 {
 		c.jsonResult(enums.JRCodeFailed, errMsg, m)
 	}
+
 }

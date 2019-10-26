@@ -66,8 +66,7 @@
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
                             <dd><a lay-href="//cusdecsys.com/control" id="工作台">工作台</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/enterprise/my" id="我的企业">我的企业</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/info/edit" id="我的信息">我的信息</a></dd>
+                            <dd><a lay-href="@{{ urlfor "BackendUserController.Profile" }}" id="我的信息">我的信息</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="清单申报" id="清单申报"><i

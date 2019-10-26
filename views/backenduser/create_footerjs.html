@@ -13,7 +13,6 @@
         });
 
         form.on('submit(user_submit)', async (data) => {
-            // data.field.role_name = data.field.role_name.split(',');
             await admin.post("@{{ urlfor "BackendUserController.Store" }}", data.field);
         })
     });

@@ -17,6 +17,7 @@ func init() {
 	beego.Router("/backenduser/freeze/?:id", &controllers.BackendUserController{}, "Get:Freeze")
 	beego.Router("/backenduser/update/?:id", &controllers.BackendUserController{}, "Patch:Update")
 	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Delete:Delete")
+	beego.Router("/backenduser/profile", &controllers.BackendUserController{}, "Get:Profile")
 
 	//用户角色路由
 	beego.Router("/role/index", &controllers.RoleController{}, "*:Index")
