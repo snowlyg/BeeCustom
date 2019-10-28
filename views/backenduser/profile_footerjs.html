@@ -22,9 +22,9 @@
 
         const uploadInst = upload.render({
             elem: '#chapter'
-            , field: 'image'
+            , field: 'filename'
             , acceptMime: 'image/png'
-            , url: '/image/upload'
+            , url: '/file/upload'
             , before: function (obj) {
                 /*obj.preview(function(index, file, result){
                     $('#chapter_img').attr('src', result);
@@ -32,8 +32,8 @@
             }
             , done: function (res) {
                 if (res.status) {
-                    $('#chapter_img').attr('src', res.url);
-                    $('#chapter_input').val(res.url);
+                    $('#chapter_img').attr('src', res.obj);
+                    $('#chapter_input').val(res.obj);
                 } else {
                     layer.msg(res.msg)
                 }

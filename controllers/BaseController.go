@@ -61,9 +61,9 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 	bu, ok := user.(models.BackendUser)
 	if ok {
 		//如果是超级管理员，则直接通过
-		//if bu.IsSuper {
-		//	return true
-		//}
+		if bu.IsSuper {
+			return true
+		}
 
 		//遍历用户所负责的资源列表
 		for _, resource := range bu.Role.Resources {
