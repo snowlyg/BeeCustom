@@ -8,6 +8,15 @@ import (
 
 func init() {
 
+	//基础参数
+	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
+	beego.Router("/clearance/create", &controllers.ClearanceController{}, "Get:Create")
+	beego.Router("/clearance/store", &controllers.ClearanceController{}, "Post:Store")
+	beego.Router("/clearance/datagrid", &controllers.ClearanceController{}, "Post:DataGrid")
+	beego.Router("/clearance/edit/?:id", &controllers.ClearanceController{}, "Get:Edit")
+	beego.Router("/clearance/update/?:id", &controllers.ClearanceController{}, "Patch:Update")
+	beego.Router("/clearance/delete/?:id", &controllers.ClearanceController{}, "Delete:Delete")
+
 	//文件上传
 	beego.Router("/file/upload", &controllers.FileController{}, "Post:Upload")
 

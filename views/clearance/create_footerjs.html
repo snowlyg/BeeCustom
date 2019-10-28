@@ -1,0 +1,22 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin'], function () {
+        const admin = layui.admin
+            , form = layui.form
+            , router = layui.router();
+        form.on('submit(clearance_submit)', async (data) => {
+            data.field.type = router.search.type;
+            const clearance_new = await admin.post("{{ urlfor "ClearanceController.Store" }}", data.field);
+            if(clearance_new.status) {
+                const index = parent.layer.getFrameIndex(window.name);
+                setTimeout(() => {
+                    parent.layui.table.reload('clearance_lists');
+                    parent.layer.close(index);
+                }, 2000);
+            }
+        })
+    });
+</script>

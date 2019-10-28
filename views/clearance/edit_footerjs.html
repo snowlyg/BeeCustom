@@ -1,0 +1,19 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin'], function () {
+        const admin = layui.admin  , form = layui.form ;
+        form.on('submit(clearance_submit)', async (data) => {
+            const clearance_edit = await admin.patch(`/clearance/` +@{{ .m.Id}}, data.field);
+            if(clearance_edit.status) {
+                const index = parent.layer.getFrameIndex(window.name);
+                setTimeout(() => {
+                    parent.layui.table.reload('clearance_lists');
+                    parent.layer.close(index);
+                }, 2000);
+            }
+        })
+    });
+</script>

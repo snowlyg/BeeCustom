@@ -1,0 +1,73 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form">
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>海关编码：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="customs_code" id="CustomsCode" lay-verify="required"  lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">商检编码：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="InspectionCode"  placeholder="请输入" autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>中文名称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Name" lay-verify="required"
+                                   lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">中文简称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ShortName" placeholder="请输入" autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">英文名称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EnName" placeholder="请输入" autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">英文简称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ShortEnName"  placeholder="请输入" autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">备注：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Remark" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="clearance_submit"
+                                type="button">
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

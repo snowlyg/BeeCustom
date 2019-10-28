@@ -7,7 +7,7 @@ import (
 
 // init 初始化
 func init() {
-	orm.RegisterModel(new(BackendUser), new(Resource), new(Role))
+	orm.RegisterModel(new(BackendUser), new(Resource), new(Role), new(Clearance))
 }
 
 // TableName 下面是统一的表名管理
@@ -29,4 +29,9 @@ func ResourceTBName() string {
 // RoleTBName 获取 Role 对应的表名称
 func RoleTBName() string {
 	return TableName("roles")
+}
+
+// ClearanceTBName 获取 Clearance 对应的表名称
+func ClearanceTBName() string {
+	return TableName("clearances")
 }
