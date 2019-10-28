@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"BeeCustom/enums"
+	"BeeCustom/utils"
+	"fmt"
 	"github.com/satori/go.uuid"
 )
 
@@ -40,11 +42,15 @@ func (c *FileController) Upload() {
 	var fileNamePath string
 	if h != nil {
 		fileNamePath = "static/upload/" + uid.String() + "_" + h.Filename
-		_ = c.SaveToFile("uploadname", fileNamePath) // 保存位置在 static/upload, 没有文件夹要先创建
+		err = c.SaveToFile("filename", fileNamePath) // 保存位置在 static/upload, 没有文件夹要先创建
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("图片保存失败:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "图片保存失败", nil)
+		}
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
 	}
 
-	c.jsonResult(enums.JRCodeSucc, "添加成功", fileNamePath)
+	c.jsonResult(enums.JRCodeSucc, "添加成功", "/"+fileNamePath)
 
 }
