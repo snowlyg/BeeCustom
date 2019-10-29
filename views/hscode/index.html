@@ -1,0 +1,64 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-row custom-tool">
+                <div class="layui-col-md6">
+                    <span class="custom-new_btn" id="hs_code_upload">导入</span>
+                    <span class="custom-update" id="update_time">最近更新：@{{ .lastUpdateTime }}</span>
+                </div>
+                <div class="layui-col-md3 layui-col-md-offset3">
+                    <div class="custom-tool-right">
+                        <label class="custom-tool-right-search iconfont icon-search"></label>
+                        <input type="text" name="hs_code_search" id="hs_code_search" placeholder="搜索商品编码/名称" class="custom-tool-right-input layui-input">
+                    </div>
+                </div>
+            </div>
+            <table class="layui-hide" id="hs_code_lists" lay-filter="hs_code_lists"></table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="hs_code_toolbar">
+    <a class="custom-show" lay-event="show">申报要素</a>
+</script>
+
+<script type="text/html" id="hs_code_open">
+    <div class="custom-hs_code_show">
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-md3 custom-hs_code_show-left">
+                商品编码：
+            </div>
+            <div class="layui-col-md9 custom-hs_code_show-right">
+                {{ d.Code }}
+            </div>
+        </div>
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-md3 custom-hs_code_show-left">
+                商品名称：
+            </div>
+            <div class="layui-col-md9 custom-hs_code_show-right">
+                {{ d.Name }}
+            </div>
+        </div>
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-md3 custom-hs_code_show-left">
+                申报要素：
+            </div>
+            <div class="layui-col-md9 custom-hs_code_show-right">
+                {{# layui.each(d.Declaration, function(index, item){ }}
+                <div class="declaration">
+                    {{ item }}
+                </div>
+                {{# }); }}
+
+                {{# if(d.Declaration.length === 0){ }}
+                <div class="declaration">
+                    无数据
+                </div>
+                {{# } }}
+
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="hs_code_show"></script>

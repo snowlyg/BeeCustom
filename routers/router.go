@@ -8,6 +8,10 @@ import (
 
 func init() {
 
+	//商品编码管理
+	beego.Router("/hs_code/index", &controllers.HsCodeController{}, "*:Index")
+	beego.Router("/hs_code/datagrid", &controllers.HsCodeController{}, "Post:DataGrid")
+
 	//商检编码管理
 	beego.Router("/ciq/index", &controllers.CiqController{}, "*:Index")
 	beego.Router("/ciq/datagrid", &controllers.CiqController{}, "Post:DataGrid")

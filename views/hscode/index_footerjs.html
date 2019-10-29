@@ -1,0 +1,125 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table', 'admin', 'form', 'upload', 'laytpl'], async () => {
+        const table = layui.table, admin = layui.admin, upload = layui.upload, laytpl = layui.laytpl, $ = layui.$;
+
+        const upload_hs_code = upload.render({
+            elem: '#hs_code_upload'
+            , url: '/hs_code/import'
+            , accept: 'file'
+            , field: 'hs_code_file'
+            , before: function (obj) {
+                layer.load(2);
+            }
+            , done: function (res) {
+                layer.msg(res.msg, {
+                    offset: '15px'
+                    , icon: 1
+                    , time: 2000
+                    , id: 'Message'
+                });
+                layer.closeAll('loading');
+                table.reload('hs_code_lists');
+            }
+            , error: function () {
+                layer.closeAll('loading');
+            }
+        });
+
+        table.render({
+            elem: '#hs_code_lists'
+            , autoSort: false
+            , skin: 'line'
+            , method: 'post'
+            , where: {
+                order: 'desc',
+                sort: 'CreatedAt'
+            }
+            , contentType: 'application/json'
+            , url: '@{{ urlfor "HsCodeController.DataGrid" }}'
+            , request: {
+                pageName: 'offset' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            }, response: {
+                statusName: 'code',
+                statusCode: 0,
+            }, parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "count": res.total,
+                    "data": res.rows
+                };
+            }
+            , toolbar: true
+            , defaultToolbar: ['filter']
+            , colFilterRecord: 'local'
+            , cols: [[
+                {field: 'Code', title: '编码', sort: true, style: 'color: rgb(27, 135, 255);'}
+                , {field: 'Name', title: '名称', sort: true}
+                , {field: 'License', title: '许可证代码', sort: true}
+                , {field: 'GeneralRate', title: '普通税率', sort: true}
+                , {field: 'OfferRate', title: '优惠税率', sort: true}
+                , {field: 'ExportRate', title: '出口税率', sort: true}
+                , {field: 'TaxRate', title: '消费税率', sort: true}
+                , {field: 'ConsumeRate', title: '增值税率', sort: true}
+                , {field: 'Unit1', title: '第一法定单位', sort: true}
+                , {field: 'Unit2', title: '第二法定单位', sort: true}
+                , {field: 'Remark', title: '备注', sort: true}
+                , {title: '操作', toolbar: '#hs_code_toolbar', width: 100}
+            ]]
+            , page: true
+            , limit: 10
+        });
+
+        table.on('sort(hs_code_lists)', function (obj) {
+            table.reload('hs_code_lists', {
+                initSort: obj
+                , where: {
+                    orderBy: obj.field
+                    , sortedBy: obj.type
+                }
+            });
+        });
+
+        $("#hs_code_search").on('keydown', function (e) {
+            let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+            if (eCode === 13) {
+                table.reload('hs_code_lists', {
+                    where: {
+                        NameLike: $(this).val()
+                    },
+                    page: {
+                        curr: 1
+                    }
+                });
+            }
+        });
+
+        table.on('tool(hs_code_lists)', function (obj) {
+            const data = obj.data;
+            if (data.Declaration) {
+                data.Declaration = data.Declaration.split(";");
+                data.Declaration.pop();
+            } else {
+                data.Declaration = [];
+            }
+            if (obj.event === 'show') {
+
+                laytpl($("#hs_code_open").html()).render(data, (html) => {
+                    $("#hs_code_show").html(html)
+                });
+
+                layer.open({
+                    type: 1,
+                    title: '查看商品申报要素',
+                    shadeClose: true,
+                    area: admin.screen() < 2 ? ['80%', '300px'] : ['700px', '500px'],
+                    content: $('#hs_code_show').html()
+                });
+            }
+        });
+    });
+</script>

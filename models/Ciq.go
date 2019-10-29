@@ -50,8 +50,7 @@ func CiqPageList(params *CiqQueryParam) ([]*Ciq, int64) {
 	if len(params.NameLike) > 0 {
 		cond := orm.NewCondition()
 		cond1 := cond.And("name__istartswith", params.NameLike).
-			Or("hs__istartswith", params.NameLike).
-			Or("name__istartswith", params.NameLike)
+			Or("hs__istartswith", params.NameLike)
 		query = query.SetCond(cond1)
 	}
 
