@@ -110,7 +110,7 @@
             if (eCode === 13) {
                 table.reload('company_lists', {
                     where: {
-                        search: $(this).val()
+                        NameLike: $(this).val()
                     },
                     page: {
                         curr: 1
@@ -123,19 +123,14 @@
             const data = obj.data;
             if (obj.event === 'del') {
                 layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                    await admin.delete(`/company/${data.id}`, obj);
+                    await admin.delete(`/company/delete/${data.Id}`, obj);
                     layer.close(index);
                     table.reload('company_lists');
                 });
             } else if (obj.event === 'edit') {
                 const topLayui = parent === self ? layui : top.layui
-                    , href = `/company/${data.id}/edit/#/id=${data.id}`
+                    , href = `/company/edit/${data.Id}`
                     , text = `编辑客户：${data.name}`;
-                topLayui.index.openTabsPage(href, text);
-            } else if (obj.event === 'show') {
-                const topLayui = parent === self ? layui : top.layui
-                    , href = `/company/${data.id}/#/id=${data.id}`
-                    , text = `客户信息：${data.name}`;
                 topLayui.index.openTabsPage(href, text);
             }
         });

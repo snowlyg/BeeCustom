@@ -16,14 +16,17 @@ func init() {
 	beego.Router("/company/edit/?:id", &controllers.CompanyController{}, "Get:Edit")
 	beego.Router("/company/update/?:id", &controllers.CompanyController{}, "Patch:Update")
 	beego.Router("/company/delete/?:id", &controllers.CompanyController{}, "Delete:Delete")
+	beego.Router("/company/import", &controllers.CompanyController{}, "Post:Import")
 
 	//商品编码管理
 	beego.Router("/hs_code/index", &controllers.HsCodeController{}, "*:Index")
 	beego.Router("/hs_code/datagrid", &controllers.HsCodeController{}, "Post:DataGrid")
+	beego.Router("/hs_code/import", &controllers.HsCodeController{}, "Post:Import")
 
 	//商检编码管理
 	beego.Router("/ciq/index", &controllers.CiqController{}, "*:Index")
 	beego.Router("/ciq/datagrid", &controllers.CiqController{}, "Post:DataGrid")
+	beego.Router("/ciq/import", &controllers.CiqController{}, "Post:Import")
 
 	//基础参数
 	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
@@ -33,6 +36,7 @@ func init() {
 	beego.Router("/clearance/edit/?:id", &controllers.ClearanceController{}, "Get:Edit")
 	beego.Router("/clearance/update/?:id", &controllers.ClearanceController{}, "Patch:Update")
 	beego.Router("/clearance/delete/?:id", &controllers.ClearanceController{}, "Delete:Delete")
+	beego.Router("/clearance/import", &controllers.ClearanceController{}, "Post:Import")
 
 	//文件上传
 	beego.Router("/file/upload", &controllers.FileController{}, "Post:Upload")

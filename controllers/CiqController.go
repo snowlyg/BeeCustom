@@ -37,13 +37,31 @@ func (c *CiqController) Index() {
 	c.LayoutSections["footerjs"] = "ciq/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("Edit")
+	c.getActionData("Import")
 
 	c.GetXSRFToken()
 }
 
 //列表数据
 func (c *CiqController) DataGrid() {
+	//直接获取参数 getDataGridData()
+	params := models.NewCiqQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, total := models.CiqPageList(&params)
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = total
+	result["rows"] = data
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
+//导入
+func (c *CiqController) Import() {
 	//直接获取参数 getDataGridData()
 	params := models.NewCiqQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)

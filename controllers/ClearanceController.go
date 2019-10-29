@@ -42,7 +42,7 @@ func (c *ClearanceController) Index() {
 	c.LayoutSections["footerjs"] = "clearance/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create", "Freeze")
+	c.getActionData("Edit", "Delete", "Create", "Import")
 
 	c.GetXSRFToken()
 }
@@ -132,6 +132,17 @@ func (c *ClearanceController) Update() {
 
 //删除
 func (c *ClearanceController) Delete() {
+	id, _ := c.GetInt64(":id")
+	if num, err := models.ClearanceDelete(id); err == nil {
+		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
+		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
+	} else {
+		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
+	}
+}
+
+//导入
+func (c *ClearanceController) Import() {
 	id, _ := c.GetInt64(":id")
 	if num, err := models.ClearanceDelete(id); err == nil {
 		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
