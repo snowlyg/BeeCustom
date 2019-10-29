@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -46,11 +47,13 @@ func SetCache(key string, value interface{}, timeout int) error {
 			cc = nil
 		}
 	}()
+
 	timeouts := time.Duration(timeout) * time.Second
 	err = cc.Put(key, data, timeouts)
 	if err != nil {
 		LogError(err)
 		LogError("SetCache失败，key:" + key)
+		LogDebug(fmt.Sprintf("SetCache失败，timeouts:%v", timeouts))
 		return err
 	} else {
 		return nil

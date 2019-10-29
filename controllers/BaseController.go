@@ -208,3 +208,18 @@ func (c *BaseController) validRequestData(m interface{}) {
 	}
 
 }
+
+func (c *BaseController) GetLastUpdteTime(index string) string {
+	var lastUpdteTime string
+	_ = utils.GetCache(index, &lastUpdteTime)
+	if len(lastUpdteTime) == 0 {
+		lastUpdteTime = "超过一个月时间未更新"
+		_ = utils.SetCache(index, lastUpdteTime, 2592000)
+	}
+
+	return lastUpdteTime
+}
+
+func (c *BaseController) SetLastUpdteTime(index, value string) {
+	_ = utils.SetCache(index, value, 2592000)
+}

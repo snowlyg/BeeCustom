@@ -41,10 +41,9 @@
 
         form.on('submit(login_submit)', async (data) => {
            const res = await admin.post('@{{ urlfor "HomeController.DoLogin"}}', data.field,'@{{ urlfor "HomeController.Index"}}');
-            if (res.status) {
-                setTimeout(() => {
-                    parent.location.reload();
-                }, 2000)
+            console.log(res)
+            if (res.status == 1) {
+                parent.location.href = '@{{ urlfor "HomeController.Index"}}';
             }
 
         })

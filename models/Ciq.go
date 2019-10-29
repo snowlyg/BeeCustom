@@ -15,11 +15,8 @@ func (u *Ciq) TableName() string {
 // CiqQueryParam 用于查询的类
 type CiqQueryParam struct {
 	BaseQueryParam
-	Type            string //模糊查询
-	NameLike        string //模糊查询
-	CustomsCodeLike string //模糊查询
-	ShortNameLike   string //模糊查询
-	EnNameLike      string //模糊查询
+
+	NameLike string //模糊查询
 }
 
 // Ciq 实体类
@@ -51,21 +48,10 @@ func CiqPageList(params *CiqQueryParam) ([]*Ciq, int64) {
 	datas := make([]*Ciq, 0)
 
 	if len(params.NameLike) > 0 {
-		query = query.Filter("name__istartswith", params.NameLike)
-	}
-
-	clearanceType := "0"
-	if len(params.Type) > 0 {
-		clearanceType = params.Type
-	}
-	query = query.Filter("type", clearanceType)
-
-	if len(params.CustomsCodeLike) > 0 {
 		cond := orm.NewCondition()
-		cond1 := cond.And("customs_code__istartswith", params.CustomsCodeLike).
-			Or("name__istartswith", params.CustomsCodeLike).
-			Or("short_name__istartswith", params.CustomsCodeLike).
-			Or("en_name__istartswith", params.CustomsCodeLike)
+		cond1 := cond.And("name__istartswith", params.NameLike).
+			Or("hs__istartswith", params.NameLike).
+			Or("name__istartswith", params.NameLike)
 		query = query.SetCond(cond1)
 	}
 
@@ -89,40 +75,4 @@ func CiqOne(id int64) (*Ciq, error) {
 	}
 
 	return &m, nil
-}
-
-//Save 添加、编辑页面 保存
-func CiqSave(m *Ciq) (*Ciq, error) {
-	o := orm.NewOrm()
-	if m.Id == 0 {
-		if _, err := o.Insert(m); err != nil {
-			return nil, err
-		}
-	} else {
-		if _, err := o.Update(m); err != nil {
-			return nil, err
-		}
-	}
-
-	return m, nil
-}
-
-//Save 添加、编辑页面 保存
-func CiqFreeze(m *Ciq) (*Ciq, error) {
-	o := orm.NewOrm()
-	if _, err := o.Update(m, "Status"); err != nil {
-		return nil, err
-	}
-
-	return m, nil
-}
-
-//删除
-func CiqDelete(id int64) (num int64, err error) {
-	m := NewCiq(id)
-	if num, err := BaseDelete(&m); err != nil {
-		return num, err
-	} else {
-		return num, nil
-	}
 }

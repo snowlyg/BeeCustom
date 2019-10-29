@@ -8,6 +8,10 @@ import (
 
 func init() {
 
+	//商检编码管理
+	beego.Router("/ciq/index", &controllers.CiqController{}, "*:Index")
+	beego.Router("/ciq/datagrid", &controllers.CiqController{}, "Post:DataGrid")
+
 	//基础参数
 	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
 	beego.Router("/clearance/create/?:type", &controllers.ClearanceController{}, "Get:Create")

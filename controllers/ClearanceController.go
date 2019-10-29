@@ -1,14 +1,14 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
 	"strings"
+	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"github.com/astaxie/beego"
-
-	"encoding/json"
-	"fmt"
 )
 
 type ClearanceController struct {
@@ -20,7 +20,7 @@ func (c *ClearanceController) Prepare() {
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
 	//默认认证 "Index", "Create", "Edit", "Delete"
-	c.checkAuthor("Freeze")
+	c.checkAuthor()
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -34,6 +34,7 @@ func (c *ClearanceController) Index() {
 	//将页面左边菜单的某项激活
 	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
 	c.Data["type"] = strings.Split(beego.AppConfig.String("clearance::type"), ",")
+	c.Data["lastUpdateTime"] = c.GetLastUpdteTime("clearanceLastUpdateTime")
 
 	//页面模板设置
 	c.setTpl()
@@ -86,6 +87,7 @@ func (c *ClearanceController) Store() {
 	if _, err := models.ClearanceSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
+		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
@@ -123,6 +125,7 @@ func (c *ClearanceController) Update() {
 	if _, err := models.ClearanceSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
+		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	}
 }
@@ -131,6 +134,7 @@ func (c *ClearanceController) Update() {
 func (c *ClearanceController) Delete() {
 	id, _ := c.GetInt64(":id")
 	if num, err := models.ClearanceDelete(id); err == nil {
+		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)

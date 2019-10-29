@@ -61,10 +61,6 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	query := orm.NewOrm().QueryTable(ClearanceTBName())
 	datas := make([]*Clearance, 0)
 
-	if len(params.NameLike) > 0 {
-		query = query.Filter("name__istartswith", params.NameLike)
-	}
-
 	clearanceType := "0"
 	if len(params.Type) > 0 {
 		clearanceType = params.Type
@@ -74,9 +70,9 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	if len(params.CustomsCodeLike) > 0 {
 		cond := orm.NewCondition()
 		cond1 := cond.And("customs_code__istartswith", params.CustomsCodeLike).
-			Or("name__istartswith", params.CustomsCodeLike).
-			Or("short_name__istartswith", params.CustomsCodeLike).
-			Or("en_name__istartswith", params.CustomsCodeLike)
+			Or("name__istartswith", params.NameLike).
+			Or("short_name__istartswith", params.ShortNameLike).
+			Or("en_name__istartswith", params.EnNameLike)
 		query = query.SetCond(cond1)
 	}
 

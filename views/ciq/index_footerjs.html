@@ -1,0 +1,94 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table', 'form', 'upload'], async () => {
+        const table = layui.table, upload = layui.upload , $ = layui.$;
+
+        const upload_ciq = upload.render({
+            elem: '#ciq_upload'
+            , url: '/ciq/import'
+            , accept: 'file'
+            , field: 'ciq_file'
+            , before: function (obj) {
+                layer.load(2);
+            }
+            , done: function (res) {
+                layer.msg(res.msg, {
+                    offset: '15px'
+                    , icon: 1
+                    , time: 2000
+                    , id: 'Message'
+                });
+                layer.closeAll('loading');
+                table.reload('ciq_lists');
+            }
+            , error: function () {
+                layer.closeAll('loading');
+            }
+        });
+
+        table.render({
+            elem: '#ciq_lists'
+            , autoSort: false
+            , skin: 'line'
+            , method: 'post'
+            , where: {
+                order:'desc',
+                sort:'CreatedAt'
+            }
+            ,contentType:'application/json'
+            , url: '@{{ urlfor "CiqController.DataGrid" }}'
+            , request: {
+                pageName: 'offset' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            },response:{
+                statusName : 'code',
+                statusCode : 0,
+            }, parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "count": res.total,
+                    "data": res.rows
+                };
+            }
+            , toolbar: true
+            , defaultToolbar: ['filter']
+            , colFilterRecord: 'local'
+            , cols: [[
+                {field: 'Hs', title: 'HS编码', sort: true, style: 'color: rgb(27, 135, 255);'}
+                , {field: 'Name', title: '商品中文名称', sort: true}
+                , {field: 'CiqCode', title: 'CIQ代码', sort: true}
+                , {field: 'CiqName', title: 'CIQ代码中文名称', sort: true}
+            ]]
+            , page: true
+            , limit: 10
+        });
+
+        table.on('sort(ciq_lists)', function (obj) {
+            table.reload('ciq_lists', {
+                initSort: obj
+                , where: {
+                    orderBy: obj.field
+                    , sortedBy: obj.type
+                }
+            });
+        });
+
+        $("#ciq_search").on('keydown', function (e) {
+            let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+            if (eCode === 13) {
+                table.reload('ciq_lists', {
+                    where: {
+                        NameLike: $(this).val()
+                    },
+                    page: {
+                        curr: 1
+                    }
+                });
+            }
+        });
+    });
+
+</script>
