@@ -9,7 +9,7 @@ import (
 )
 
 func DataReset() (bool, error) {
-	f, err := os.Open("datareset.sql")
+	f, err := os.Open("bee_custom.sql")
 	if err != nil {
 		return false, err
 	}

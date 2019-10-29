@@ -70,6 +70,8 @@ func (c *HomeController) DoLogin() {
 		//获取用户信息
 		c.jsonResult(enums.JRCodeSucc, "登录成功", "")
 	} else {
+
+		utils.LogError(err)
 		c.jsonResult(enums.JRCodeFailed, "用户名或者密码错误", "")
 	}
 }
