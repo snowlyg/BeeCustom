@@ -6,7 +6,7 @@
     }).use(['index', 'form', 'admin'], function () {
         const admin = layui.admin  , form = layui.form ;
         form.on('submit(clearance_submit)', async (data) => {
-            const clearance_edit = await admin.patch(`/clearance/` +@{{ .m.Id}}, data.field);
+            const clearance_edit = await admin.patch(`/clearance/edit/` + "@{{ .m.Id}}", data.field);
             if(clearance_edit.status) {
                 const index = parent.layer.getFrameIndex(window.name);
                 setTimeout(() => {

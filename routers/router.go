@@ -10,7 +10,7 @@ func init() {
 
 	//基础参数
 	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
-	beego.Router("/clearance/create", &controllers.ClearanceController{}, "Get:Create")
+	beego.Router("/clearance/create/?:type", &controllers.ClearanceController{}, "Get:Create")
 	beego.Router("/clearance/store", &controllers.ClearanceController{}, "Post:Store")
 	beego.Router("/clearance/datagrid", &controllers.ClearanceController{}, "Post:DataGrid")
 	beego.Router("/clearance/edit/?:id", &controllers.ClearanceController{}, "Get:Edit")

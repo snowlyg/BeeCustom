@@ -4,9 +4,21 @@
             <form class="layui-form">
                 <div class="layui-row layui-col-space10 layui-form-item">
                     <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>参数类型：</label>
+                        <div class="layui-input-block">
+                            <select name="Type"  lay-verify="required">
+                                @{{ range $i,$v := .type }}
+                                    <option value="@{{$i}}">@{{$v}}</option>
+                                @{{end}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>海关编码：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="customs_code" id="CustomsCode" lay-verify="required"  lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input" >
+                            <input type="text" name="CustomsCode" id="CustomsCode" lay-verify="required"  lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input" >
                         </div>
                     </div>
                 </div>

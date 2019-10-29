@@ -35,3 +35,8 @@ func RoleTBName() string {
 func ClearanceTBName() string {
 	return TableName("clearances")
 }
+
+// CiqTBName 获取 Ciq 对应的表名称
+func CiqTBName() string {
+	return TableName("ciqs")
+}

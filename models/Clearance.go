@@ -2,6 +2,8 @@ package models
 
 import (
 	"errors"
+	"time"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -10,21 +12,12 @@ func (u *Clearance) TableName() string {
 	return ClearanceTBName()
 }
 
-// ClearanceQueryParam 用于查询的类
-type ClearanceQueryParam struct {
-	BaseQueryParam
-	NameLike        string //模糊查询
-	CustomsCodeLike string //模糊查询
-	ShortNameLike   string //模糊查询
-	EnNameLike      string //模糊查询
-}
-
 // Clearance 实体类
 type Clearance struct {
 	BaseModel
 	Type                int8   `orm:"column(type)" description:"参数类别"`
-	CustomsCode         string `orm:"column(customs_code);size(255)" description:"海关编码"`
-	Name                string `orm:"column(name);size(255)" description:"名称"`
+	CustomsCode         string `orm:"column(customs_code);size(255)" description:"海关编码"  valid:"Required;MaxSize(255)"`
+	Name                string `orm:"column(name);size(255)" description:"名称"  valid:"Required;MaxSize(255)"`
 	ShortName           string `orm:"column(short_name);size(255);null" description:"简称"`
 	EnName              string `orm:"column(en_name);size(255);null" description:"英文名称"`
 	InspectionCode      string `orm:"column(inspection_code);size(255);null" description:"商检编码"`
@@ -44,8 +37,18 @@ type Clearance struct {
 	Remark              string `orm:"column(remark);size(1000);null" description:"备注"`
 }
 
+// ClearanceQueryParam 用于查询的类
+type ClearanceQueryParam struct {
+	BaseQueryParam
+	Type            string //模糊查询
+	NameLike        string //模糊查询
+	CustomsCodeLike string //模糊查询
+	ShortNameLike   string //模糊查询
+	EnNameLike      string //模糊查询
+}
+
 func NewClearance(id int64) Clearance {
-	return Clearance{BaseModel: BaseModel{Id: id}}
+	return Clearance{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
 //查询参数
@@ -62,16 +65,19 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 		query = query.Filter("name__istartswith", params.NameLike)
 	}
 
+	clearanceType := "0"
+	if len(params.Type) > 0 {
+		clearanceType = params.Type
+	}
+	query = query.Filter("type", clearanceType)
+
 	if len(params.CustomsCodeLike) > 0 {
-		query = query.Filter("customs_code__istartswith", params.CustomsCodeLike)
-	}
-
-	if len(params.ShortNameLike) > 0 {
-		query = query.Filter("short_name__istartswith", params.ShortNameLike)
-	}
-
-	if len(params.EnNameLike) > 0 {
-		query = query.Filter("en_name__istartswith", params.EnNameLike)
+		cond := orm.NewCondition()
+		cond1 := cond.And("customs_code__istartswith", params.CustomsCodeLike).
+			Or("name__istartswith", params.CustomsCodeLike).
+			Or("short_name__istartswith", params.CustomsCodeLike).
+			Or("en_name__istartswith", params.CustomsCodeLike)
+		query = query.SetCond(cond1)
 	}
 
 	total, _ := query.Count()

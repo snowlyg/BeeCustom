@@ -2,27 +2,27 @@
     <div class="layui-card">
         <div class="layui-card-body">
             <div class="layui-row layui-col-space30 clearance-row">
-                <div class="layui-col-md2">
-                    <div class="clearance-row-left">
-
-                        <div class="clearance-left-flex " data-id=""  id="clearance_">
-                            <span></span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="layui-col-md10">
+                <div class="layui-col-md12">
                     <div class="layui-row custom-tool">
                         <div class="layui-col-md6">
                             <span class="custom-new_btn" id="clearance_new">+新建</span>
                             <span class="custom-upload_btn" id="clearance_upload">导入</span>
-                            <span class="custom-update" id="update_time"></span>
-                            <input type="hidden" id="clearance_id" value="0">
+                            <span class="custom-update"></span>
                         </div>
                         <div class="layui-col-md3 layui-col-md-offset3">
                             <div class="custom-tool-right">
-                                <label class="custom-tool-right-search iconfont icon-search"></label>
-                                <input type="text" name="clearance_search" id="clearance_search" placeholder="搜索海关编码/中文名称" class="custom-tool-right-input layui-input">
+                                <div class="layui-card layui-form width-25">
+                                    <select  lay-filter="type">
+                                        @{{ range $i,$v := .type }}
+                                        <option value="@{{$i}}">@{{$v}}</option>
+                                        @{{end}}
+                                    </select>
+                                </div>
+                                <div class="width-75">
+                                    <label class="custom-tool-right-search iconfont icon-search"></label>
+                                    <input type="text" name="clearance_search" id="clearance_search"
+                                           placeholder="搜索海关编码/中文名称" class="custom-tool-right-input layui-input">
+                                </div>
                             </div>
                         </div>
                     </div>

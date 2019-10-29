@@ -40,7 +40,7 @@ func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64
 		sortorder = "-" + sortorder
 	}
 
-	query.OrderBy(sortorder)
+	query = query.OrderBy(sortorder)
 
 	if limit != -1 {
 		query = query.Limit(limit, (offset-1)*limit)

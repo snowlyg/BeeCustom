@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"strings"
+	"time"
 
 	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
@@ -40,7 +41,7 @@ type BackendUser struct {
 }
 
 func NewBackendUser(id int64) BackendUser {
-	return BackendUser{BaseModel: BaseModel{Id: id}}
+	return BackendUser{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
 //查询参数

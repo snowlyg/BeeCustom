@@ -4,19 +4,8 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'table', 'admin',  'upload'], async () => {
-        const table = layui.table , admin = layui.admin , upload = layui.upload , $ = layui.$;
-        $('.clearance-left-flex').click(async function () {
-            $(this).addClass('active').siblings().removeClass('active');
-            $("#clearance_id").val($(this).data("id"));
-            const last_update_time = await admin.get(`clearance/${$("#clearance_id").val()}/last_update_time`);
-            $("#update_time").text(`最近更新时间：${last_update_time.last_update_time}`);
-            table.reload('clearance_lists', {
-                url: `clearance/${$("#clearance_id").val()}/lists?sortedBy=desc&orderBy=created_at`,
-                page: {
-                    curr: 1
-                }
-            });
-        });
+        const table = layui.table,form =layui.form , admin = layui.admin , upload = layui.upload , $ = layui.$;
+
         const upload_clearance = upload.render({
             elem: '#clearance_upload'
             , url: '/clearance/import'
@@ -58,27 +47,44 @@
             elem: '#clearance_lists'
             , autoSort: false
             , skin: 'line'
-            , url: `clearance/${$("#clearance_id").val()}/lists?sortedBy=desc&orderBy=created_at`
-            , response: {
-                statusCode: undefined,
-                countName: 'total'
+            , method: 'post'
+            , where: {
+                order:'desc',
+                sort:'CreatedAt'
+            }
+            ,contentType:'application/json'
+            , url: '@{{ urlfor "ClearanceController.DataGrid" }}'
+            , request: {
+                pageName: 'offset' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            },response:{
+                statusName : 'code',
+                statusCode : 0,
+            }
+            , parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "count": res.total,
+                    "data": res.rows
+                };
             }
             , toolbar: true
             , defaultToolbar: ['filter']
             , colFilterRecord: 'local'
             , cols: [[
-                {field: 'customs_code', title: '海关编码', sort: true}
-                , {field: 'inspection_code', title: '商检编码', sort: true}
-                , {field: 'name', title: '中文名称', sort: true}
-                , {field: 'short_name', title: '中文简称', sort: true}
-                , {field: 'en_name', title: '英文名称', sort: true}
-                , {field: 'short_en_name', title: '英文简称', sort: true}
-                , {field: 'remark', title: '备注', sort: true}
+                {field: 'CustomsCode', title: '海关编码', sort: true}
+                , {field: 'InspectionCode', title: '商检编码', sort: true}
+                , {field: 'Name', title: '中文名称', sort: true}
+                , {field: 'ShortName', title: '中文简称', sort: true}
+                , {field: 'EnName', title: '英文名称', sort: true}
+                , {field: 'ShortEnName', title: '英文简称', sort: true}
+                , {field: 'Remark', title: '备注', sort: true}
                 , {title: '操作', toolbar: '#clearance_toolbar', width: 120}
             ]]
             , page: true
             , limit: 10
         });
+
         table.on('sort(clearance_lists)', function (obj) {
             table.reload('clearance_lists', {
                 initSort: obj
@@ -88,12 +94,13 @@
                 }
             });
         });
+
         $("#clearance_search").on('keydown', function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
-            if (eCode == 13) {
+            if (eCode === 13) {
                 table.reload('clearance_lists', {
                     where: {
-                        search: $(this).val()
+                        CustomsCodeLike : $(this).val()
                     },
                     page: {
                         curr: 1
@@ -101,21 +108,23 @@
                 });
             }
         });
+
         $("#clearance_new").on('click', function () {
             layer.open({
                 type: 2,
                 title: '新增字段',
-                content: `/clearance/${$("#clearance_id").val()}/create/#/type=${$("#clearance_id").val()}`,
+                content: `/clearance/create/`+ $('#clearance_type').val(),
                 shadeClose: true,
                 area: admin.screen() < 2 ? ['100%', '80%'] : ['630px', '575px'],
                 maxmin: true
             });
         });
+
         table.on('tool(clearance_lists)', function (obj) {
             const data = obj.data;
             if (obj.event === 'del') {
                 layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                    await admin.delete(`/clearance/${data.id}`, obj);
+                    await admin.delete(`/clearance/delete/${data.Id}`, obj);
                     layer.close(index);
                     table.reload('clearance_lists');
                 });
@@ -123,14 +132,20 @@
                 layer.open({
                     type: 2
                     , title: '编辑字段'
-                    , content: `/clearance/${data.id}/edit/#/id=${data.id}`
+                    , content: `/clearance/edit/${data.Id}`
                     , shadeClose: true
                     , area: admin.screen() < 2 ? ['100%', '80%'] : ['630px', '575px']
                     , maxmin: true
                 });
             }
         });
-        const last_update_time = await admin.get(`clearance/${$("#clearance_id").val()}/last_update_time`);
-        $("#update_time").text(`最近更新时间：${last_update_time.last_update_time}`);
+
+        form.on('select(type)', function (data) {
+            table.reload('clearance_lists', {
+                where: {
+                    Type: data.value ? `${data.value}` : ''
+                }
+            });
+        });
     });
 </script>

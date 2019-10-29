@@ -1,8 +1,12 @@
 package controllers
 
 import (
+	"strings"
+
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"github.com/astaxie/beego"
+
 	"encoding/json"
 	"fmt"
 )
@@ -23,11 +27,14 @@ func (c *ClearanceController) Prepare() {
 	//c.checkLogin()
 
 }
+
 func (c *ClearanceController) Index() {
 	//是否显示更多查询条件的按钮弃用，前端自动判断
 	//c.Data["showMoreQuery"] = true
 	//将页面左边菜单的某项激活
 	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
+	c.Data["type"] = strings.Split(beego.AppConfig.String("clearance::type"), ",")
+
 	//页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -62,6 +69,7 @@ func (c *ClearanceController) Create() {
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "clearance/create_footerjs.html"
+	c.Data["type"] = strings.Split(beego.AppConfig.String("clearance::type"), ",")
 	c.GetXSRFToken()
 }
 
@@ -90,10 +98,10 @@ func (c *ClearanceController) Edit() {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
-
 	}
 
 	c.Data["m"] = m
+	c.Data["type"] = strings.Split(beego.AppConfig.String("clearance::type"), ",")
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "clearance/edit_footerjs.html"
