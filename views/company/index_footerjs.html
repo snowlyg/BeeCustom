@@ -1,0 +1,143 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table', 'admin', 'form', 'upload'], async () => {
+        const table = layui.table
+            , admin = layui.admin
+            , form = layui.form
+            , upload = layui.upload
+            , $ = layui.$;
+
+        const upload_history_item = upload.render({
+            elem: '#history_item_upload'
+            , url: '/history_item/import'
+            , accept: 'file'
+            , field: 'history_item_file'
+            , before: function (obj) {
+                layer.load(2);
+            }
+            , done: function (res) {
+                layer.msg(res.msg, {
+                    offset: '15px'
+                    , icon: 1
+                    , time: 2000
+                    , id: 'Message'
+                });
+                layer.closeAll('loading');
+            }
+            , error: function () {
+                layer.closeAll('loading');
+            }
+        });
+
+        const upload_company = upload.render({
+            elem: '#company_upload'
+            , url: '/company/import'
+            , accept: 'file'
+            , field: 'company_file'
+            , before: function (obj) {
+                layer.load(2);
+            }
+            , done: function (res) {
+                layer.msg(res.msg, {
+                    offset: '15px'
+                    , icon: 1
+                    , time: 2000
+                    , id: 'Message'
+                });
+                layer.closeAll('loading');
+            }
+            , error: function () {
+                layer.closeAll('loading');
+            }
+        });
+
+        table.render({
+            elem: '#company_lists'
+            , autoSort: false
+            , skin: 'line'
+            , method: 'post'
+            , where: {
+                order:'desc',
+                sort:'CreatedAt'
+            }
+            ,contentType:'application/json'
+            , url: '@{{ urlfor "CompanyController.DataGrid" }}'
+            , request: {
+                pageName: 'offset' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            },response:{
+                statusName : 'code',
+                statusCode : 0,
+            }, parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "count": res.total,
+                    "data": res.rows
+                };
+            }
+            , toolbar: true
+            , defaultToolbar: ['filter']
+            , colFilterRecord: 'local'
+            , cols: [[
+                {field: 'Number', title: '企业海关编号', sort: true}
+                , {field: 'Name', title: '企业名称', sort: true}
+                , {field: 'AdminName', title: '管理员', sort: true}
+                , {field: 'Phone', title: '联系电话', sort: true}
+                , {field: 'BusinessCode', title: '经营单位代码', sort: true}
+                , {field: 'CreditCode', title: '信用代码 （18位）', sort: true}
+                , {field: 'declareTypeName', title: '申报方式', sort: true}
+                , {title: '操作', toolbar: '#car_toolbar', width: 180}
+            ]]
+            , page: true
+            , limit: 10
+        });
+
+        table.on('sort(company_lists)', function (obj) {
+            table.reload('company_lists', {
+                initSort: obj
+                , where: {
+                    orderBy: obj.field
+                    , sortedBy: obj.type
+                }
+            });
+        });
+
+        $("#company_search").on('keydown', function (e) {
+            let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+            if (eCode === 13) {
+                table.reload('company_lists', {
+                    where: {
+                        search: $(this).val()
+                    },
+                    page: {
+                        curr: 1
+                    }
+                });
+            }
+        });
+
+        table.on('tool(company_lists)', function (obj) {
+            const data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                    await admin.delete(`/company/${data.id}`, obj);
+                    layer.close(index);
+                    table.reload('company_lists');
+                });
+            } else if (obj.event === 'edit') {
+                const topLayui = parent === self ? layui : top.layui
+                    , href = `/company/${data.id}/edit/#/id=${data.id}`
+                    , text = `编辑客户：${data.name}`;
+                topLayui.index.openTabsPage(href, text);
+            } else if (obj.event === 'show') {
+                const topLayui = parent === self ? layui : top.layui
+                    , href = `/company/${data.id}/#/id=${data.id}`
+                    , text = `客户信息：${data.name}`;
+                topLayui.index.openTabsPage(href, text);
+            }
+        });
+    });
+</script>

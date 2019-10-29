@@ -8,6 +8,15 @@ import (
 
 func init() {
 
+	//基础参数
+	beego.Router("/company/index", &controllers.CompanyController{}, "*:Index")
+	beego.Router("/company/create/?:type", &controllers.CompanyController{}, "Get:Create")
+	beego.Router("/company/store", &controllers.CompanyController{}, "Post:Store")
+	beego.Router("/company/datagrid", &controllers.CompanyController{}, "Post:DataGrid")
+	beego.Router("/company/edit/?:id", &controllers.CompanyController{}, "Get:Edit")
+	beego.Router("/company/update/?:id", &controllers.CompanyController{}, "Patch:Update")
+	beego.Router("/company/delete/?:id", &controllers.CompanyController{}, "Delete:Delete")
+
 	//商品编码管理
 	beego.Router("/hs_code/index", &controllers.HsCodeController{}, "*:Index")
 	beego.Router("/hs_code/datagrid", &controllers.HsCodeController{}, "Post:DataGrid")

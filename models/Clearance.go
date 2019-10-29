@@ -40,11 +40,8 @@ type Clearance struct {
 // ClearanceQueryParam 用于查询的类
 type ClearanceQueryParam struct {
 	BaseQueryParam
-	Type            string //模糊查询
-	NameLike        string //模糊查询
-	CustomsCodeLike string //模糊查询
-	ShortNameLike   string //模糊查询
-	EnNameLike      string //模糊查询
+	Type     string //模糊查询
+	NameLike string //模糊查询
 }
 
 func NewClearance(id int64) Clearance {
@@ -67,12 +64,12 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	}
 	query = query.Filter("type", clearanceType)
 
-	if len(params.CustomsCodeLike) > 0 {
+	if len(params.NameLike) > 0 {
 		cond := orm.NewCondition()
-		cond1 := cond.And("customs_code__istartswith", params.CustomsCodeLike).
+		cond1 := cond.And("customs_code__istartswith", params.NameLike).
 			Or("name__istartswith", params.NameLike).
-			Or("short_name__istartswith", params.ShortNameLike).
-			Or("en_name__istartswith", params.EnNameLike)
+			Or("short_name__istartswith", params.NameLike).
+			Or("en_name__istartswith", params.NameLike)
 		query = query.SetCond(cond1)
 	}
 
@@ -109,16 +106,6 @@ func ClearanceSave(m *Clearance) (*Clearance, error) {
 		if _, err := o.Update(m); err != nil {
 			return nil, err
 		}
-	}
-
-	return m, nil
-}
-
-//Save 添加、编辑页面 保存
-func ClearanceFreeze(m *Clearance) (*Clearance, error) {
-	o := orm.NewOrm()
-	if _, err := o.Update(m, "Status"); err != nil {
-		return nil, err
 	}
 
 	return m, nil

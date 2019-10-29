@@ -1,7 +1,6 @@
 package models
 
 import (
-	"errors"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -59,19 +58,4 @@ func CiqPageList(params *CiqQueryParam) ([]*Ciq, int64) {
 	_, _ = query.All(&datas)
 
 	return datas, total
-}
-
-// CiqOne 根据id获取单条
-func CiqOne(id int64) (*Ciq, error) {
-	m := NewCiq(0)
-	o := orm.NewOrm()
-	if err := o.QueryTable(CiqTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
-		return nil, err
-	}
-
-	if &m == nil {
-		return &m, errors.New("获取失败")
-	}
-
-	return &m, nil
 }

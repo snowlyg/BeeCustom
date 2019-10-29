@@ -1,0 +1,431 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin', 'rate', 'table', 'laytpl', 'upload'], async () => {
+        const form = layui.form
+            , admin = layui.admin
+            , rate = layui.rate
+            , table = layui.table
+            , laytpl = layui.laytpl
+            , upload = layui.upload
+            , $ = layui.$;
+        let contacts_lists = []
+            , foreign_lists = []
+            , seal_lists = []
+            , sub_content_check = 0
+            , sub_content_submit = 0
+            , sub_content_reject = 0
+            , sub_content_pass = 0
+            , contacts_lists_index = 0
+            , foreign_lists_index = 0
+            , seal_lists_index = 0;
+        rate.render({
+            elem: '#control_rating'
+            , theme: 'rgb(255, 204, 0)'
+            , choose: function (value) {
+                $("input[name='control_rating']").val(value);
+            }
+        });
+
+
+        table.render({
+            elem: '#contacts_lists_new'
+            , cols: [[
+                {
+                    field: 'name', title: '姓名', templet: function (data) {
+                        if (data.is_admin) {
+                            return `<span class="blue">${data.name}</span><span class="contacts_admin">管理员</span>`
+                        } else {
+                            return `<span class="blue">${data.name}</span>`
+                        }
+                    }
+                }
+                , {field: 'offer', title: '职位'}
+                , {field: 'phone', title: '手机号'}
+                , {field: 'email', title: '邮箱地址'}
+                , {field: 'i_c_code', title: 'IC卡号'}
+                , {field: 'remark', title: '备注'}
+                , {title: '操作', toolbar: '#contacts_lists_toolbar', width: 120}
+            ]]
+            , data: contacts_lists
+            , skin: 'line'
+        });
+        $("#contacts_new").on('click', function () {
+            layer.open({
+                type: 1,
+                title: '新增联系人',
+                shadeClose: true,
+                area: admin.screen() < 2 ? ['80%', '300px'] : ['700px', '600px'],
+                content: $('#contacts_show').html()
+            });
+            form.render();
+        });
+        table.on('tool(contacts_lists_new)', function (obj) {
+            const data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                    contacts_lists.splice(obj.tr[0].dataset.index, 1);
+                    layer.close(index);
+                    table.reload('contacts_lists_new', {
+                        data: contacts_lists
+                    });
+                });
+            } else if (obj.event === 'edit') {
+                contacts_lists_index = obj.tr[0].dataset.index;
+                laytpl($("#contacts_edit").html()).render(data, (html) => {
+                    $("#contacts_edit_show").html(html);
+                });
+                layer.open({
+                    type: 1,
+                    title: '编辑联系人',
+                    shadeClose: true,
+                    area: admin.screen() < 2 ? ['80%', '300px'] : ['700px', '600px'],
+                    content: $('#contacts_edit_show').html()
+                });
+                $("#offer_edit").find(`option[value='${data.offer}']`).prop('selected', true);
+                form.render();
+            }
+        });
+        form.on('submit(contacts_submit)', async (data) => {
+            if (data.field.is_admin) {
+                data.field.is_admin = 1;
+                for (let item of contacts_lists) {
+                    if (item.is_admin) {
+                        layer.msg("管理员已经存在");
+                        return
+                    }
+                }
+            } else {
+                data.field.is_admin = 0
+            }
+            contacts_lists.push(data.field);
+            table.reload('contacts_lists_new', {
+                data: contacts_lists
+            });
+            layer.closeAll();
+        });
+        form.on('submit(contacts_submit_edit)', async (data) => {
+            if (data.field.is_admin) {
+                data.field.is_admin = 1;
+                if (!contacts_lists[contacts_lists_index].is_admin) {
+                    for (let item of contacts_lists) {
+                        if (item.is_admin) {
+                            layer.msg("管理员已经存在");
+                            return
+                        }
+                    }
+                }
+            } else {
+                data.field.is_admin = 0
+            }
+            contacts_lists[contacts_lists_index] = data.field;
+            table.reload('contacts_lists_new', {
+                data: contacts_lists
+            });
+            layer.closeAll();
+        });
+
+
+        table.render({
+            elem: '#foreign_lists_new'
+            , cols: [[
+                {
+                    field: 'foreign_company_chapter', title: '外商章', templet: function (data) {
+                        return `<img src="${data.foreign_company_chapter}" />`
+                    }
+                }
+                , {field: 'foreign_company_name', title: '外商公司名称'}
+                , {field: 'foreign_company_address', title: '外商公司地址'}
+                , {field: 'foreign_company_phone', title: '外商公司电话'}
+                , {title: '操作', toolbar: '#foreign_lists_toolbar', width: 120}
+            ]]
+            , data: foreign_lists
+            , skin: 'line'
+        });
+        $("#foreign_new").on('click', function () {
+            layer.open({
+                type: 1,
+                title: '新增外商公司',
+                shadeClose: true,
+                area: admin.screen() < 2 ? ['80%', '600px'] : ['800px', '600px'],
+                content: $('#foreign_show').html()
+            });
+            upload.render({
+                elem: '#foreign_company_chapter'
+                , url: '/image/upload'
+                , accept: 'images'
+                , acceptMime: 'image/png'
+                , field: 'image'
+                , size: 500
+                , done: function (data) {
+                    $("#foreign-upload-img").attr('src', data.url);
+                }
+            });
+            form.render();
+        });
+        $("body").on("click", "#image_close", function () {
+            $("#foreign-upload-img").attr('src', '');
+        });
+        table.on('tool(foreign_lists_new)', function (obj) {
+            const data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                    foreign_lists.splice(obj.tr[0].dataset.index, 1);
+                    layer.close(index);
+                    table.reload('foreign_lists_new', {
+                        data: foreign_lists
+                    });
+                });
+            } else if (obj.event === 'edit') {
+                foreign_lists_index = obj.tr[0].dataset.index;
+                laytpl($("#foreign_edit").html()).render(data, (html) => {
+                    $("#foreign_edit_show").html(html);
+                });
+                layer.open({
+                    type: 1,
+                    title: '编辑外商公司',
+                    shadeClose: true,
+                    area: admin.screen() < 2 ? ['80%', '300px'] : ['800px', '600px'],
+                    content: $('#foreign_edit_show').html()
+                });
+                upload.render({
+                    elem: '#foreign_company_chapter_edit'
+                    , url: '/image/upload'
+                    , accept: 'images'
+                    , acceptMime: 'image/png'
+                    , field: 'image'
+                    , size: 500
+                    , done: function (data) {
+                        $("#foreign-upload-img-edit").attr('src', data.url);
+                    }
+                });
+                form.render();
+            }
+        });
+        $("body").on("click", "#image_close_edit", function () {
+            $("#foreign-upload-img-edit").attr('src', '');
+        });
+        form.on('submit(foreign_submit)', async (data) => {
+            data.field.foreign_company_chapter = $('#foreign-upload-img').attr('src');
+            foreign_lists.push(data.field);
+            table.reload('foreign_lists_new', {
+                data: foreign_lists
+            });
+            layer.closeAll();
+        });
+        form.on('submit(foreign_submit_edit)', async (data) => {
+            data.field.foreign_company_chapter = $('#foreign-upload-img-edit').attr('src');
+            foreign_lists[foreign_lists_index] = data.field;
+            table.reload('foreign_lists_new', {
+                data: foreign_lists
+            });
+            layer.closeAll();
+        });
+
+        laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
+            $("#seal_lists_new").html(html);
+        });
+        $("body").on("mouseenter mouseleave", ".seal_flex_img", function () {
+            $(this).find(".seal_flex_edit").fadeToggle()
+        });
+        $("body").on('click', '.seal_flex_edit_btn', function () {
+            seal_lists_index = $(this).data('index');
+            laytpl($("#seal_edit").html()).render($(this).data('item'), (html) => {
+                $("#seal_edit_show").html(html);
+            });
+            layer.open({
+                type: 1,
+                title: '编辑公章',
+                shadeClose: true,
+                area: admin.screen() < 2 ? ['80%', '550px'] : ['700px', '550px'],
+                content: $('#seal_edit_show').html()
+            });
+            upload.render({
+                elem: '#seal_file_edit'
+                , url: '/image/upload'
+                , accept: 'images'
+                , acceptMime: 'image/png'
+                , field: 'image'
+                , size: 500
+                , done: function (data) {
+                    $("#seal-file-img-edit").attr('src', data.url);
+                }
+            });
+            $("#seal_type").find(`input[value='${$(this).data('item').seal_type}']`).prop('checked', true);
+            form.render();
+        });
+        $("body").on('click', '.seal_flex_edit_del', function () {
+            layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                seal_lists.splice($(this).data('index'), 1);
+                layer.close(index);
+                laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
+                    $("#seal_lists_new").html(html);
+                });
+            });
+        });
+        $("#seal_new").on('click', function () {
+            layer.open({
+                type: 1,
+                title: '上传公章',
+                shadeClose: true,
+                area: admin.screen() < 2 ? ['80%', '500px'] : ['800px', '500px'],
+                content: $('#seal_show').html()
+            });
+            upload.render({
+                elem: '#seal_file'
+                , url: '/image/upload'
+                , accept: 'images'
+                , acceptMime: 'image/png'
+                , field: 'image'
+                , size: 500
+                , done: function (data) {
+                    $("#seal-file-img").attr('src', data.url);
+                }
+            });
+            form.render();
+        });
+        form.on('submit(seal_submit)', async (data) => {
+            data.field.seal_file = $('#seal-file-img').attr('src');
+            seal_lists.push(data.field);
+            laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
+                $("#seal_lists_new").html(html);
+            });
+            layer.closeAll();
+        });
+        form.on('submit(seal_submit_edit)', async (data) => {
+            data.field.seal_file = $('#seal-file-img-edit').attr('src');
+            seal_lists[seal_lists_index] = data.field;
+            laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
+                $("#seal_lists_new").html(html);
+            });
+            layer.closeAll();
+        });
+
+        form.verify({
+            sub_phone: function (value, item) {
+                if($("input[name='is_open_phone']").prop("checked")) {
+                    if (!value) {
+                        return '请输入手机号'
+                    }
+                    if (!(/^(0?(13|14|15|18|17)[0-9]{9},)*0?(13|14|15|18|17)[0-9]{9}$/.test(value))) {
+                        return "请正确输入手机号"
+                    }
+                }
+            }
+            , sub_email: function (value, item) {
+                if($("input[name='is_open_email']").prop("checked")) {
+                    if (!value) {
+                        return '请输入邮箱'
+                    }
+                    if (!(/^(([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+,)*([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value))) {
+                        return "请正确输入邮箱"
+                    }
+                }
+            }
+        });
+        $("#sub_content_check").on('click', function () {
+            if (sub_content_check) {
+                sub_content_check = 0;
+                $(this).text("订阅");
+                $(this).removeClass("active")
+            } else {
+                sub_content_check = 1;
+                $(this).text("退订");
+                $(this).addClass("active")
+            }
+        });
+        $("#sub_content_submit").on('click', function () {
+            if (sub_content_submit) {
+                sub_content_submit = 0;
+                $(this).text("订阅");
+                $(this).removeClass("active")
+            } else {
+                sub_content_submit = 1;
+                $(this).text("退订");
+                $(this).addClass("active")
+            }
+        });
+        $("#sub_content_reject").on('click', function () {
+            if (sub_content_reject) {
+                sub_content_reject = 0;
+                $(this).text("订阅");
+                $(this).removeClass("active")
+            } else {
+                sub_content_reject = 1;
+                $(this).text("退订");
+                $(this).addClass("active")
+            }
+        });
+        $("#sub_content_pass").on('click', function () {
+            if (sub_content_pass) {
+                sub_content_pass = 0;
+                $(this).text("订阅");
+                $(this).removeClass("active")
+            } else {
+                sub_content_pass = 1;
+                $(this).text("退订");
+                $(this).addClass("active")
+            }
+        });
+        if(!($("input[name='is_open_phone']").prop("checked"))) {
+            $(".is_phone_show").hide()
+        } else {
+            $(".is_phone_show").show()
+        }
+        if(!($("input[name='is_open_email']").prop("checked"))) {
+            $(".is_email_show").hide()
+        } else {
+            $(".is_email_show").show()
+        }
+        form.on('switch(is_open_phone)', function(data){
+            if(data.elem.checked) {
+                $(".is_phone_show").show();
+                $(".subscription_content").show();
+            } else {
+                $(".is_phone_show").hide();
+                if(!($("input[name='is_open_email']").prop("checked"))) {
+                    $(".subscription_content").hide();
+                }
+            }
+        });
+        form.on('switch(is_open_email)', function(data){
+            if(data.elem.checked) {
+                $(".is_email_show").show();
+                $(".subscription_content").show();
+            } else {
+                $(".is_email_show").hide();
+                if(!($("input[name='is_open_phone']").prop("checked"))) {
+                    $(".subscription_content").hide()
+                }
+            }
+        });
+
+        form.on('submit(company_submit)', async (data) => {
+            data.field.company_contacts = contacts_lists;
+            data.field.company_foreigns = foreign_lists;
+            data.field.seal_datas = seal_lists;
+            data.field.sub_content_check = sub_content_check;
+            data.field.sub_content_submit = sub_content_submit;
+            data.field.sub_content_reject = sub_content_reject;
+            data.field.sub_content_pass = sub_content_pass;
+            data.field.sub_phone = {
+                is_open: $("input[name='is_open_phone']").prop("checked") ? 1 : 0,
+                data: data.field.sub_phone
+            };
+            data.field.sub_email = {
+                is_open: $("input[name='is_open_email']").prop("checked") ? 1 : 0,
+                data: data.field.sub_email
+            };
+            delete data.field.is_open_phone;
+            delete data.field.is_open_email;
+            const result = await admin.post("{{ route('company.store') }}", data.field);
+            if(result.status) {
+                setTimeout(() => {
+                    parent.layui.admin.closeThisTabs()
+                }, 2000)
+            }
+        });
+    });
+</script>
