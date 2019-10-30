@@ -65,6 +65,9 @@ layui.define('view', function (exports) {
                 'gross_wt',
                 'net_wt',
             ],
+            reloadFrame: function (frameId) {
+                parent.document.getElementById(frameId).contentWindow.location.reload();
+            },
 
             get_goods_materials_data: function (cusIEFlag) {
                 /**

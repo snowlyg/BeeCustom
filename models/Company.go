@@ -34,8 +34,10 @@ type Company struct {
 	CompanyKind         int8         `orm:"column(company_kind);null" description:"企业性质：国有，合作，合资， 独资， 集体，私营"`
 	ControlRating       int8         `orm:"column(control_rating);null" description:"风控评级"`
 	Remark              string       `orm:"column(remark);size(1000);null" description:"备注"`
-	SubPhone            string       `orm:"column(sub_phone);null" description:"订阅手机 多个用，隔开 [is_open , data ]"`
-	SubEmail            string       `orm:"column(sub_email);null" description:"订阅邮箱 多个用，隔开 [is_open , data ]"`
+	IsOpenSubEmail      int8         `orm:"column(is_open_sub_email);null" `
+	IsOpenSubPhone      int8         `orm:"column(is_open_sub_phone);null" `
+	SubPhone            string       `orm:"column(sub_phone);null" description:"订阅手机 多个用，隔开"`
+	SubEmail            string       `orm:"column(sub_email);null" description:"订阅邮箱 多个用，隔开"`
 	SealDatas           string       `orm:"column(seal_datas);null" description:"公章 array[seal_file,seal_type] 多个用，隔开"`
 	SubContentCheck     int8         `orm:"column(sub_content_check);null" description:"订阅内容 审核通过"`
 	SubContentSubmit    int8         `orm:"column(sub_content_submit);null" description:"订阅内容 已提交海关处理"`
