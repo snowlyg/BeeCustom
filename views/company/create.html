@@ -1,6 +1,5 @@
 <form class="layui-form">
     <div class="layui-row layui-col-space15">
-        <div class="custom-company-height70"></div>
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body">
@@ -12,8 +11,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label"><i class="red margin-right-4">*</i>企业海关编码：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Number" lay-verify="required"
-                                               lay-verType="tips" placeholder="输入10位企业海关编码，必填" autocomplete="off" class="layui-input"  maxlength="10">
+                                        <input type="text" name="Number" value="@{{ .m.Number }}"  lay-verify="required" lay-verType="tips" placeholder="输入10位企业海关编码，必填" autocomplete="off" class="layui-input"  maxlength="10">
                                     </div>
                                 </div>
                             </div>
@@ -21,8 +19,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">企业简称：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Short"  placeholder="输入客户企业的简称，字符不限"
-                                               autocomplete="off" class="layui-input" >
+                                        <input type="text" name="Short" value="@{{ .m.Short }}"  placeholder="输入客户企业的简称，字符不限" autocomplete="off" class="layui-input" >
                                     </div>
                                 </div>
                             </div>
@@ -30,8 +27,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">地址：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Address"  placeholder="输入客户的的详细地址，字符不限"
-                                               autocomplete="off" class="layui-input" >
+                                        <input type="text" name="Address" value="@{{ .m.Address }}"   placeholder="输入客户的的详细地址，字符不限" autocomplete="off" class="layui-input" >
                                     </div>
                                 </div>
                             </div>
@@ -39,8 +35,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">客户电话：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Phone" placeholder="输入客户电话号码"
-                                               autocomplete="off" class="layui-input">
+                                        <input type="text" name="Phone" value="@{{ .m.Phone }}" placeholder="输入客户电话号码" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                             </div>
@@ -48,7 +43,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">企业产地证注册号：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="RegistrationCode" placeholder="输入客户的企业产地证注册号" autocomplete="off" class="layui-input" >
+                                        <input type="text" name="RegistrationCode" value="@{{ .m.RegistrationCode }}" placeholder="输入客户的企业产地证注册号" autocomplete="off" class="layui-input" >
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +51,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">经营单位名称：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="BusinessName" placeholder="输入客户的经营单位名称" autocomplete="off" class="layui-input" >
+                                        <input type="text" name="BusinessName" value="@{{ .m.BusinessName }}" placeholder="输入客户的经营单位名称" autocomplete="off" class="layui-input" >
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +59,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">银行账户：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Bank" placeholder="输入客户的银行账户，不超过20个字符" autocomplete="off" class="layui-input"  maxlength="20">
+                                        <input type="text" name="Bank" value="@{{ .m.Bank }}" placeholder="输入客户的银行账户，不超过20个字符" autocomplete="off" class="layui-input"  maxlength="20">
                                     </div>
                                 </div>
                             </div>
@@ -75,12 +70,12 @@
                                         <select name="CompanyType" lay-filter="company_type">
                                             <option value="">请选择</option>
                                             <option value="全部">全部</option>
-                                            <option value="往来客户">往来客户</option>
-                                            <option value="保税仓">保税仓</option>
-                                            <option value="供应商">供应商</option>
-                                            <option value="代理报关公司">代理报关公司</option>
-                                            <option value="代理报检公司">代理报检公司</option>
-                                            <option value="物流公司">物流公司</option>
+                                            <option @{{if compare  "0" .m.CompanyType  }} selected @{{end}} value="0">往来客户</option>
+                                            <option @{{if compare  "1" .m.CompanyType  }} selected @{{end}} value="1">保税仓</option>
+                                            <option @{{if compare  "2" .m.CompanyType  }} selected @{{end}} value="2">供应商</option>
+                                            <option @{{if compare  "3" .m.CompanyType  }} selected @{{end}} value="3">代理报关公司</option>
+                                            <option @{{if compare  "4" .m.CompanyType  }} selected @{{end}} value="4">代理报检公司</option>
+                                            <option @{{if compare  "5" .m.CompanyType  }} selected @{{end}} value="5">物流公司</option>
                                         </select>
                                     </div>
                                 </div>
@@ -89,19 +84,19 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">风控评级：</label>
                                     <div class="layui-input-block">
-                                        <div id="ControlRating"></div>
+                                        <div id="control_rating"></div>
                                     </div>
-                                    <input type="hidden" name="control_rating">
+                                    <input type="hidden" name="ControlRating">
                                 </div>
                             </div>
                         </div>
+
                         <div class="layui-col-md6">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label"><i class="red margin-right-4">*</i>企业全称：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Name"  lay-verify="required"
-                                               lay-verType="tips" placeholder="输入客户企业的全称，字符不限，必填" autocomplete="off"
+                                        <input type="text" name="Name" value="@{{ .m.Name}}"  lay-verify="required" lay-verType="tips" placeholder="输入客户企业的全称，字符不限，必填" autocomplete="off"
                                                class="layui-input" >
                                     </div>
                                 </div>
@@ -110,7 +105,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label"><i class="red margin-right-4">*</i>企业商检注册号：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Registration"  lay-verify="required"
+                                        <input type="text" name="Registration" value="@{{ .m.Registration}}"  lay-verify="required"
                                                lay-verType="tips" placeholder="输入客户的10位商检注册号" autocomplete="off"
                                                class="layui-input" maxlength="10">
                                     </div>
@@ -122,8 +117,8 @@
                                     <div class="layui-input-block" id="declare_type">
                                         <select name="DeclareType" lay-filter="declare_type">
                                             <option value="">请选择</option>
-                                            <option value="代理">代理</option>
-                                            <option value="自理">自理</option>
+                                            <option @{{if compare  "0" .m.DeclareType  }} selected @{{end}} value="0">代理</option>
+                                            <option @{{if compare  "1" .m.DeclareType  }} selected @{{end}} value="1">自理</option>
                                         </select>
                                     </div>
                                 </div>
@@ -132,7 +127,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">客户传真号码：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="Fax"  placeholder="输入传真号码" autocomplete="off" class="layui-input"  >
+                                        <input type="text" name="Fax" value="@{{ .m.Fax}}"  placeholder="输入传真号码" autocomplete="off" class="layui-input"  >
                                     </div>
                                 </div>
                             </div>
@@ -140,8 +135,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label"><i class="red margin-right-4">*</i>企业信用代码：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="CreditCode" id="credit_code" lay-verify="required"
-                                               lay-verType="tips" placeholder="输入客户的18位企业信用代码" autocomplete="off"
+                                        <input type="text" name="CreditCode"  value="@{{ .m.CreditCode}}" lay-verify="required" lay-verType="tips" placeholder="输入客户的18位企业信用代码" autocomplete="off"
                                                class="layui-input"  maxlength="18">
                                     </div>
                                 </div>
@@ -150,8 +144,7 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">经营单位代码：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="BusinessCode" id="business_code"
-                                               placeholder="输入客户的10位经营单位代码" autocomplete="off" class="layui-input"
+                                        <input type="text" name="BusinessCode" value="@{{ .m.BusinessCode}}" placeholder="输入客户的10位经营单位代码" autocomplete="off" class="layui-input"
                                                maxlength="10">
                                     </div>
                                 </div>
@@ -162,10 +155,10 @@
                                     <div class="layui-input-block" >
                                         <select name="CustomCertification" lay-filter="custom_certification">
                                             <option value="">请选择</option>
-                                            <option value="高级认证">高级认证</option>
-                                            <option value="一般认证">一般认证</option>
-                                            <option value="一般信用">一般信用</option>
-                                            <option value="失信企业">失信企业</option>
+                                            <option @{{if compare  "0" .m.DeclareType  }} selected @{{end}} value="0">高级认证</option>
+                                            <option @{{if compare  "1" .m.DeclareType  }} selected @{{end}} value="1">一般认证</option>
+                                            <option @{{if compare  "2" .m.DeclareType  }} selected @{{end}} value="2">一般信用</option>
+                                            <option @{{if compare  "3" .m.DeclareType  }} selected @{{end}} value="3">失信企业</option>
                                         </select>
                                     </div>
                                 </div>
@@ -176,12 +169,12 @@
                                     <div class="layui-input-block" >
                                         <select name="CompanyKind" lay-filter="company_kind">
                                             <option value="">请选择</option>
-                                            <option value="国有">国有</option>
-                                            <option value="合作">合作</option>
-                                            <option value="合资">合资</option>
-                                            <option value="独资">独资</option>
-                                            <option value="集体">集体</option>
-                                            <option value="私营">私营</option>
+                                            <option @{{if compare  "0" .m.DeclareType  }} selected @{{end}} value="0">国有</option>
+                                            <option @{{if compare  "1" .m.DeclareType  }} selected @{{end}} value="1">合作</option>
+                                            <option @{{if compare  "2" .m.DeclareType  }} selected @{{end}} value="2">合资</option>
+                                            <option @{{if compare  "3" .m.DeclareType  }} selected @{{end}} value="3">独资</option>
+                                            <option @{{if compare  "4" .m.DeclareType  }} selected @{{end}} value="4">集体</option>
+                                            <option @{{if compare  "5" .m.DeclareType  }} selected @{{end}} value="5">私营</option>
                                         </select>
                                     </div>
                                 </div>
@@ -190,11 +183,20 @@
                                 <div class="layui-col-md10">
                                     <label class="layui-form-label">默认跟单人：</label>
                                     <div class="layui-input-block" >
-                                        <select name="UserId" lay-filter="user_id" lay-search>
+                                        <select name="BackendUserId" lay-filter="user_id" lay-search>
                                             <option value="">请选择</option>
-                                            @foreach($users as $item)
-                                            <option value="@{{ .m.User.Id }}">@{{ .m.User.Name}}</option>
-                                            @endforeach
+                                            @{{ range .backendUsers }}
+                                                @{{ if $.m.BackendUser }}
+                                                    @{{ if eq $.m.BackendUser.Id .Id }}
+                                                         <option selected value="@{{ .Id }}">@{{ .RealName}}</option>
+                                                    @{{ else}}
+                                                        <option value="@{{ .Id }}">@{{ .RealName}}</option>
+                                                    @{{ end}}
+                                                @{{ else}}
+                                                     <option value="@{{ .Id }}">@{{ .RealName}}</option>
+                                                @{{ end}}
+
+                                            @{{ end}}
                                         </select>
                                     </div>
                                 </div>
@@ -205,19 +207,21 @@
                         <div class="layui-col-md11">
                             <label class="layui-form-label">备注：</label>
                             <div class="layui-input-block">
-                                <textarea name="Remark" id="remark" placeholder="请输入"   class="layui-textarea"></textarea>
+                                <textarea name="Remark" placeholder="请输入"   class="layui-textarea">@{{ .m.Remark }}</textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="layui-form-item custom-company-fixed_btn">
-                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="company_submit"
-                               type="button">
-                            <i class="iconfont icon-cloudupload"></i>提交
-                        </button>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn custom-create_btn" lay-submit lay-filter="company_submit" type="button">
+                                提  交
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body">
@@ -231,6 +235,7 @@
                 </div>
             </div>
         </div>
+
         <script type="text/html" id="contacts_show">
             <div class="custom-company-contacts_show">
                 <form class="layui-form">
@@ -238,8 +243,7 @@
                         <div class="layui-col-md10">
                             <label class="layui-form-label"><i class="red margin-right-4">*</i>姓名：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="Name" lay-verify="required" lay-verType="tips"
-                                       placeholder="请输入" autocomplete="off" class="layui-input">
+                                <input type="text" name="Name" lay-verify="required" lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -247,8 +251,7 @@
                         <div class="layui-col-md10">
                             <label class="layui-form-label"></label>
                             <div class="layui-input-block" id="is_admin">
-                                <input type="checkbox" name="IsAdmin" title="设置为企业管理员" lay-skin="primary"
-                                       value="1" checked>
+                                <input type="checkbox" name="IsAdmin" title="设置为企业管理员" lay-skin="primary" value="1" checked>
                             </div>
                         </div>
                     </div>
@@ -256,8 +259,7 @@
                         <div class="layui-col-md10">
                             <label class="layui-form-label"><i class="red margin-right-4">*</i>手机号：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="Phone" lay-verify="phone" lay-verType="tips"
-                                       placeholder="请输入" autocomplete="off" class="layui-input" maxlength="11">
+                                <input type="text" name="Phone" lay-verify="phone" lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input" maxlength="11">
                             </div>
                         </div>
                     </div>
@@ -265,8 +267,7 @@
                         <div class="layui-col-md10">
                             <label class="layui-form-label"><i class="red margin-right-4">*</i>邮箱地址：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="Email"lay-verify="email" lay-verType="tips"
-                                       placeholder="请输入" autocomplete="off" class="layui-input">
+                                <input type="text" name="Email"lay-verify="email" lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -538,7 +539,6 @@
             </div>
         </script>
         <script type="text/html" id="foreign_edit_show"></script>
-        <div class="custom-company-height70"></div>
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body">

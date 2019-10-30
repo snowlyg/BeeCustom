@@ -26,18 +26,19 @@ type BackendUserQueryParam struct {
 // BackendUser 实体类
 type BackendUser struct {
 	BaseModel
-	RealName string `orm:"size(32)" valid:"Required;MaxSize(32)"`
-	UserName string `orm:"size(24)" valid:"Required;MaxSize(24)"`
-	UserPwd  string `orm:"size(256)"`
-	Mobile   string `orm:"size(16)" valid:"Required;Mobile"`
-	Email    string `orm:"size(256)" valid:"Required;Email"`
-	Avatar   string `orm:"size(256)"`
-	ICCode   string `orm:"column(i_c_code);size(255);null"`
-	Chapter  string `orm:"column(chapter);size(255);null" description:"签章"`
-	RoleId   int64  `orm:"-" form:"RoleId" valid:"Required"` //关联管理会自动生成 role_id 字段，此处不生成字段
-	Role     *Role  `orm:"rel(fk)"`                          // fk 的反向关系
-	IsSuper  bool   `valid:"Required"`
-	Status   bool   `valid:"Required"`
+	RealName  string     `orm:"size(32)" valid:"Required;MaxSize(32)"`
+	UserName  string     `orm:"size(24)" valid:"Required;MaxSize(24)"`
+	UserPwd   string     `orm:"size(256)"`
+	Mobile    string     `orm:"size(16)" valid:"Required;Mobile"`
+	Email     string     `orm:"size(256)" valid:"Required;Email"`
+	Avatar    string     `orm:"size(256)"`
+	ICCode    string     `orm:"column(i_c_code);size(255);null"`
+	Chapter   string     `orm:"column(chapter);size(255);null" description:"签章"`
+	IsSuper   bool       `valid:"Required"`
+	Status    bool       `valid:"Required"`
+	RoleId    int64      `orm:"-" form:"RoleId" valid:"Required"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	Role      *Role      `orm:"rel(fk)"`                          // fk 的反向关系
+	Companies []*Company `orm:"reverse(many)"`                    //设置一对多关系
 }
 
 func NewBackendUser(id int64) BackendUser {
@@ -64,6 +65,12 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 	_, _ = query.All(&datas)
 
 	return datas, total
+}
+
+// BackenduserDataList 获取用户列表
+func BackenduserDataList(params *BackendUserQueryParam) []*BackendUser {
+	data, _ := BackendUserPageList(params)
+	return data
 }
 
 // BackendUserOne 根据id获取单条
@@ -110,10 +117,9 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 	if m.Id == 0 {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
-		if oR, err := RoleOne(m.RoleId); err != nil {
+
+		if err := getBackendUserRole(m); err != nil {
 			return nil, err
-		} else {
-			m.Role = oR
 		}
 
 		if _, err := o.Insert(m); err != nil {
@@ -136,10 +142,8 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 			m.Avatar = oM.Avatar
 		}
 
-		if oR, err := RoleOne(m.RoleId); err != nil {
+		if err := getBackendUserRole(m); err != nil {
 			return nil, err
-		} else {
-			m.Role = oR
 		}
 
 		if _, err := o.Update(m); err != nil {
@@ -148,6 +152,16 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 	}
 
 	return m, nil
+}
+
+//获取关联模型
+func getBackendUserRole(m *BackendUser) error {
+	if oR, err := RoleOne(m.RoleId); err != nil {
+		return err
+	} else {
+		m.Role = oR
+	}
+	return nil
 }
 
 //Save 添加、编辑页面 保存

@@ -41,7 +41,6 @@ type Company struct {
 	SubContentSubmit    int8         `orm:"column(sub_content_submit);null" description:"订阅内容 已提交海关处理"`
 	SubContentReject    int8         `orm:"column(sub_content_reject);null" description:"订阅内容 驳回信息"`
 	SubContentPass      int8         `orm:"column(sub_content_pass);null" description:"订阅内容 机关放行"`
-	UserId              *BackendUser `orm:"column(user_id);rel(fk)"`
 	StatementDate       int8         `orm:"column(statement_date)" description:"生成账单日期"`
 	IsTrade             int8         `orm:"column(is_trade)" description:"境内收发货单位 是否开启"`
 	IsOwner             int8         `orm:"column(is_owner)" description:"生产销售单位 是否开启"`
@@ -49,6 +48,8 @@ type Company struct {
 	BusinessAuditStatus int8         `orm:"column(business_audit_status);null" description:"营业执照审核状态"`
 	BusinessAuditAt     time.Time    `orm:"column(business_audit_at);type(datetime);null" description:"营业执照审核时间"`
 	Tax                 int8         `orm:"column(tax)" description:"税率"`
+	BackendUserId       int64        `orm:"-" form:"BackendUserId"`
+	BackendUser         *BackendUser `orm:"column(user_id);rel(fk);null"`
 }
 
 // CompanyQueryParam 用于查询的类
@@ -108,16 +109,34 @@ func CompanyOne(id int64) (*Company, error) {
 func CompanySave(m *Company) (*Company, error) {
 	o := orm.NewOrm()
 	if m.Id == 0 {
+		if err := getCompanyBackendUser(m); err != nil {
+			return nil, err
+		}
+
 		if _, err := o.Insert(m); err != nil {
 			return nil, err
 		}
 	} else {
+		if err := getCompanyBackendUser(m); err != nil {
+			return nil, err
+		}
+
 		if _, err := o.Update(m); err != nil {
 			return nil, err
 		}
 	}
 
 	return m, nil
+}
+
+//获取关联模型
+func getCompanyBackendUser(m *Company) error {
+	if bU, err := BackendUserOne(m.BackendUserId); err != nil {
+		return err
+	} else {
+		m.BackendUser = bU
+	}
+	return nil
 }
 
 //删除

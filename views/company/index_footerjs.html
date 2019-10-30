@@ -6,7 +6,6 @@
     }).use(['index', 'table', 'admin', 'form', 'upload'], async () => {
         const table = layui.table
             , admin = layui.admin
-            , form = layui.form
             , upload = layui.upload
             , $ = layui.$;
 
@@ -130,7 +129,7 @@
             } else if (obj.event === 'edit') {
                 const topLayui = parent === self ? layui : top.layui
                     , href = `/company/edit/${data.Id}`
-                    , text = `编辑客户：${data.name}`;
+                    , text = `编辑客户：${data.Name}`;
                 topLayui.index.openTabsPage(href, text);
             }
         });

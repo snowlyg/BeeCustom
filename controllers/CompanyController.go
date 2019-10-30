@@ -3,10 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/utils"
 )
 
 type CompanyController struct {
@@ -63,6 +63,11 @@ func (c *CompanyController) DataGrid() {
 
 // Create 添加 新建 页面
 func (c *CompanyController) Create() {
+
+	params := models.NewBackendUserQueryParam()
+	backendUser := models.BackenduserDataList(&params)
+	c.Data["backendUsers"] = backendUser
+
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "company/create_footerjs.html"
@@ -80,9 +85,9 @@ func (c *CompanyController) Store() {
 	c.validRequestData(m)
 
 	if _, err := models.CompanySave(&m); err != nil {
+		utils.LogDebug(err)
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
-		c.SetLastUpdteTime("companyLastUpdateTime", time.Now().Format(enums.BaseFormat))
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
@@ -96,11 +101,16 @@ func (c *CompanyController) Edit() {
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
-
 	c.Data["m"] = m
+
+	params := models.NewBackendUserQueryParam()
+	backendUser := models.BackenduserDataList(&params)
+	c.Data["backendUsers"] = backendUser
+
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "company/edit_footerjs.html"
+	c.setTpl("company/create.html")
+	c.LayoutSections["footerjs"] = "company/create_footerjs.html"
 	c.GetXSRFToken()
 }
 
@@ -111,6 +121,7 @@ func (c *CompanyController) Update() {
 
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
@@ -119,7 +130,6 @@ func (c *CompanyController) Update() {
 	if _, err := models.CompanySave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
-		c.SetLastUpdteTime("companyLastUpdateTime", time.Now().Format(enums.BaseFormat))
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	}
 }
@@ -128,7 +138,6 @@ func (c *CompanyController) Update() {
 func (c *CompanyController) Delete() {
 	id, _ := c.GetInt64(":id")
 	if num, err := models.CompanyDelete(id); err == nil {
-		c.SetLastUpdteTime("companyLastUpdateTime", time.Now().Format(enums.BaseFormat))
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
@@ -139,7 +148,6 @@ func (c *CompanyController) Delete() {
 func (c *CompanyController) Import() {
 	id, _ := c.GetInt64(":id")
 	if num, err := models.CompanyDelete(id); err == nil {
-		c.SetLastUpdteTime("companyLastUpdateTime", time.Now().Format(enums.BaseFormat))
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
