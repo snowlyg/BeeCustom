@@ -141,7 +141,7 @@ func (c *CompanyContactController) checkAdminContactCount(id, companyId int64, i
 			for _, v := range ccs {
 				if v.IsAdmin == 1 {
 					if v.Id != id {
-						c.jsonResult(enums.JRCodeFailed, "只能有一个"+sealName, nil)
+						c.jsonResult(enums.JRCodeFailed, "只能有一个管理员", nil)
 					}
 				}
 			}
