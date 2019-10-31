@@ -362,436 +362,269 @@
 </form>
 
 @{{if .m.Id }}
-    <div class="layui-col-md12">
-        <div class="layui-card">
-            <div class="layui-card-body">
-                <div class="custom-company-contacts_flex">
-                    <h1 class="new_title">联系人管理</h1>
-                    <button class="layui-btn custom-create_btn" id="contacts_new" type="button">
-                        新建
-                    </button>
-                </div>
-                <table class="layui-hide" id="contacts_lists_new" lay-filter="contacts_lists_new"></table>
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="custom-company-contacts_flex">
+                <h1 class="new_title">联系人管理</h1>
+                <button class="layui-btn custom-create_btn" id="contacts_new" type="button">
+                    新建
+                </button>
             </div>
+            <table class="layui-hide" id="contacts_lists_new" lay-filter="contacts_lists_new"></table>
         </div>
     </div>
+</div>
 
-    <script type="text/html" id="contacts_show">
-        <div class="custom-company-contacts_show">
-            <form class="layui-form">
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>姓名：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Name" lay-verify="required" lay-verType="tips"
-                                   placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"></label>
-                        <div class="layui-input-block" id="is_admin">
-                            <input type="checkbox" name="IsAdmin" title="设置为企业管理员" lay-skin="primary" value="1"
-                                   checked>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>手机号：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Phone" lay-verify="phone" lay-verType="tips" placeholder="请输入"
-                                   autocomplete="off" class="layui-input" maxlength="11">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>邮箱地址：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Email" lay-verify="email" lay-verType="tips" placeholder="请输入"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md6">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>职位：</label>
-                        <div class="layui-input-block">
-                            <select name="Offer" lay-filter="offer">
-                                <option value="">请选择</option>
-                                <option value="法定代表人">法定代表人</option>
-                                <option value="报关员">报关员</option>
-                                <option value="财务">财务</option>
-                                <option value="其他">其他</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">IC卡号：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ICCode" placeholder="请输入" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">备注：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Remark" placeholder="请输入" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="contacts_submit"
-                                id="contacts_submit" type="button">
-                            提交
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </script>
-    <script type="text/html" id="contacts_lists_toolbar">
-        <a class="custom-edit" lay-event="edit">编辑</a>
-        <a class="custom-delete" lay-event="del">删除</a>
-    </script>
-    <script type="text/html" id="contacts_edit">
-        <div class="custom-company-contacts_show">
-            <form class="layui-form">
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>姓名：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Name" lay-verify="required" lay-verType="tips"
-                                   placeholder="请输入" autocomplete="off" class="layui-input"
-                                   value="{{ d.Name || '' }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"></label>
-                        <div class="layui-input-block">
-                            <input type="checkbox" name="IsaAdmin" id="is_admin" title="设置为企业管理员" lay-skin="primary"
-                                   value="1" {{# if(d.IsaAdmin){ }} checked {{# } }}>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>手机号：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Phone" lay-verify="phone" lay-verType="tips"
-                                   placeholder="请输入" autocomplete="off" class="layui-input" maxlength="11"
-                                   value="{{ d.Phone || '' }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>邮箱地址：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Email" lay-verify="email" lay-verType="tips"
-                                   placeholder="请输入" autocomplete="off" class="layui-input"
-                                   value="{{ d.Email || '' }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md6">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>职位：</label>
-                        <div class="layui-input-block">
-                            <select name="Offer" lay-filter="offer">
-                                <option value="">请选择</option>
-                                <option value="法定代表人">法定代表人</option>
-                                <option value="报关员">报关员</option>
-                                <option value="财务">财务</option>
-                                <option value="其他">其他</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">IC卡号：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ICCode" placeholder="请输入" autocomplete="off"
-                                   class="layui-input" value="{{ d.ICCode || '' }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">备注：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Remark" placeholder="请输入" autocomplete="off"
-                                   class="layui-input" value="{{ d.Remark || '' }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="contacts_submit_edit"
-                                type="button">
-                            提交
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </script>
-    <script type="text/html" id="contacts_edit_show"></script>
+<script type="text/html" id="contacts_lists_toolbar">
+    <a class="custom-edit" lay-event="edit">编辑</a>
+    <a class="custom-delete" lay-event="del">删除</a>
+</script>
 
-    <div class="layui-col-md12">
-        <div class="layui-card">
-            <div class="layui-card-body">
-                <div class="custom-company-contacts_flex">
-                    <h1 class="new_title">外商公司管理</h1>
-                    <button class="layui-btn custom-create_btn" id="foreign_new" type="button">
-                        新建
-                    </button>
-                </div>
-                <table class="layui-hide" id="foreign_lists_new" lay-filter="foreign_lists_new"></table>
+
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="custom-company-contacts_flex">
+                <h1 class="new_title">外商公司管理</h1>
+                <button class="layui-btn custom-create_btn" id="foreign_new" type="button">
+                    新建
+                </button>
             </div>
+            <table class="layui-hide" id="foreign_lists_new" lay-filter="foreign_lists_new"></table>
         </div>
     </div>
+</div>
 
-    <script type="text/html" id="foreign_show">
-        <div class="custom-company-contacts_show">
-            <form class="layui-form">
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>外商公司名称：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ForeignCompanyName" lay-verify="required"
-                                   lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">外商公司地址：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ForeignCompanyAddress" placeholder="请输入" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">外商公司电话：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ForeignCompanyPhone" placeholder="请输入"
-                                   autocomplete="off" class="layui-input" maxlength="11">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md11">
-                        <label class="layui-form-label">外商章：</label>
-                        <div class="layui-input-block layui-flex">
-                            <div class="layui-upload-drag" id="ForeignCompanyChapter">
-                                <img id="foreign-upload-img">
-                                <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
-                            </div>
-                            <div class="custom-company-foreign_upload_acc">
-                                <p>只能上传png文件，且不超过500kb</p>
-                                <button class="layui-btn custom-create_btn" type="button">
-                                    清除图片
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
+<script type="text/html" id="foreign_show">
+    <div class="custom-company-contacts_show">
+        <form class="layui-form">
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>外商公司名称：</label>
                     <div class="layui-input-block">
-                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="foreign_submit"
-                                type="button">
-                            提交
-                        </button>
+                        <input type="text" name="ForeignCompanyName" lay-verify="required"
+                               lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-            </form>
-        </div>
-    </script>
-    <script type="text/html" id="foreign_lists_toolbar">
-        <a class="custom-edit" lay-event="edit">编辑</a>
-        <a class="custom-delete" lay-event="del">删除</a>
-    </script>
-    <script type="text/html" id="foreign_edit">
-        <div class="custom-company-contacts_show">
-            <form class="layui-form">
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>外商公司名称：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ForeignCompanyName" lay-verify="required"
-                                   lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input"
-                                   value="{{ d.ForeignCompanyName || '' }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">外商公司地址：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ForeignCompanyAddress"
-                                   placeholder="请输入" autocomplete="off" class="layui-input"
-                                   value="{{ d.ForeignCompanyAddress || '' }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">外商公司电话：</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ForeignCompanyPhone" placeholder="请输入"
-                                   autocomplete="off" class="layui-input"
-                                   value="{{ d.ForeignCompanyPhone || '' }}" maxlength="11">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md11">
-                        <label class="layui-form-label">外商章：</label>
-                        <div class="layui-input-block layui-flex">
-                            <div class="layui-upload-drag" id="foreign_company_chapter_edit">
-                                <img id="foreign-upload-img-edit" src="{{ d.ForeignCompanyChapter }}">
-                                <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
-                            </div>
-                            <div class="custom-company-foreign_upload_acc">
-                                <p>只能上传png文件，且不超过500kb</p>
-                                <button class="layui-btn custom-create_btn" id="image_close_edit" type="button">
-                                    清除图片
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label">外商公司地址：</label>
                     <div class="layui-input-block">
-                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="foreign_submit_edit"
-                                id="foreign_submit_edit" type="button">
-                            提交
-                        </button>
+                        <input type="text" name="ForeignCompanyAddress" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
                     </div>
                 </div>
-            </form>
-        </div>
-    </script>
-    <script type="text/html" id="foreign_edit_show"></script>
-
-    <div class="layui-col-md12">
-        <div class="layui-card">
-            <div class="layui-card-body">
-                <div class="custom-company-contacts_flex">
-                    <h1 class="new_title">公章管理</h1>
-                    <button class="layui-btn custom-create_btn" id="seal_new" type="button">
-                        上传
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label">外商公司电话：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ForeignCompanyPhone" placeholder="请输入"
+                               autocomplete="off" class="layui-input" maxlength="11">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md11">
+                    <label class="layui-form-label">外商章：</label>
+                    <div class="layui-input-block layui-flex">
+                        <div class="layui-upload-drag" id="ForeignCompanyChapter">
+                            <img id="foreign-upload-img">
+                            <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
+                        </div>
+                        <div class="custom-company-foreign_upload_acc">
+                            <p>只能上传png文件，且不超过500kb</p>
+                            <button class="layui-btn custom-create_btn" type="button">
+                                清除图片
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="foreign_submit"
+                            type="button">
+                        提交
                     </button>
                 </div>
-                <div id="seal_lists_new"></div>
             </div>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="foreign_lists_toolbar">
+    <a class="custom-edit" lay-event="edit">编辑</a>
+    <a class="custom-delete" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="foreign_edit">
+    <div class="custom-company-contacts_show">
+        <form class="layui-form">
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>外商公司名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ForeignCompanyName" lay-verify="required"
+                               lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input"
+                               value="{{ d.ForeignCompanyName || '' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label">外商公司地址：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ForeignCompanyAddress"
+                               placeholder="请输入" autocomplete="off" class="layui-input"
+                               value="{{ d.ForeignCompanyAddress || '' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label">外商公司电话：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ForeignCompanyPhone" placeholder="请输入"
+                               autocomplete="off" class="layui-input"
+                               value="{{ d.ForeignCompanyPhone || '' }}" maxlength="11">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md11">
+                    <label class="layui-form-label">外商章：</label>
+                    <div class="layui-input-block layui-flex">
+                        <div class="layui-upload-drag" id="foreign_company_chapter_edit">
+                            <img id="foreign-upload-img-edit" src="{{ d.ForeignCompanyChapter }}">
+                            <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
+                        </div>
+                        <div class="custom-company-foreign_upload_acc">
+                            <p>只能上传png文件，且不超过500kb</p>
+                            <button class="layui-btn custom-create_btn" id="image_close_edit" type="button">
+                                清除图片
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="foreign_submit_edit"
+                            id="foreign_submit_edit" type="button">
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="foreign_edit_show"></script>
+
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="custom-company-contacts_flex">
+                <h1 class="new_title">公章管理</h1>
+                <button class="layui-btn custom-create_btn" id="seal_new" type="button">
+                    上传
+                </button>
+            </div>
+            <div id="seal_lists_new"></div>
         </div>
     </div>
-    <script type="text/html" id="seal_lists_templet">
-        <div class="custom-company-seal_lists">
-            {{# layui.each(d, function(index, item) { }}
-            <div class="seal_flex">
-                <div class="seal_flex_img">
-                    <img src="{{ item.seal_file }}">
-                    <div class="seal_flex_edit">
-                        {{# const stringData = JSON.stringify(item); }}
-                        <a class="seal_flex_edit_btn" data-index={{ index }} data-item={{ stringData }}>编辑</a>
-                        <a class="seal_flex_edit_del" data-index={{ index }}>删除</a>
-                    </div>
+</div>
+<script type="text/html" id="seal_lists_templet">
+    <div class="custom-company-seal_lists">
+        {{# layui.each(d, function(index, item) { }}
+        <div class="seal_flex">
+            <div class="seal_flex_img">
+                <img src="{{ item.seal_file }}">
+                <div class="seal_flex_edit">
+                    {{# const stringData = JSON.stringify(item); }}
+                    <a class="seal_flex_edit_btn" data-index={{ index }} data-item={{ stringData }}>编辑</a>
+                    <a class="seal_flex_edit_del" data-index={{ index }}>删除</a>
                 </div>
-                <p>{{ item.seal_type }}</p>
             </div>
-            {{#  }); }}
+            <p>{{ item.seal_type }}</p>
         </div>
-    </script>
-    <script type="text/html" id="seal_show">
-        <div class="custom-company-contacts_show">
-            <form class="layui-form">
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>公章类型：</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="seal_type" value="公章" title="公章" checked>
-                            <input type="radio" name="seal_type" value="合同章" title="合同章">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md11">
-                        <label class="layui-form-label">印章图片：</label>
-                        <div class="layui-input-block">
-                            <div class="layui-upload-drag" id="seal_file">
-                                <img id="seal-file-img">
-                                <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
-                            </div>
-                            <div class="custom-company-foreign_upload_acc">
-                                <span>只能上传jpg/png文件，且不超过500kb</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
+        {{#  }); }}
+    </div>
+</script>
+<script type="text/html" id="seal_show">
+    <div class="custom-company-contacts_show">
+        <form class="layui-form">
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>公章类型：</label>
                     <div class="layui-input-block">
-                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="seal_submit"
-                                id="seal_submit" type="button">
-                            保存
-                        </button>
+                        <input type="radio" name="seal_type" value="公章" title="公章" checked>
+                        <input type="radio" name="seal_type" value="合同章" title="合同章">
                     </div>
                 </div>
-            </form>
-        </div>
-    </script>
-    <script type="text/html" id="seal_edit">
-        <div class="custom-company-contacts_show">
-            <form class="layui-form">
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label"><i class="red margin-right-4">*</i>公章类型：</label>
-                        <div class="layui-input-block" id="seal_type">
-                            <input type="radio" name="seal_type" value="公章" title="公章">
-                            <input type="radio" name="seal_type" value="合同章" title="合同章">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-col-md11">
-                        <label class="layui-form-label">印章图片：</label>
-                        <div class="layui-input-block">
-                            <div class="layui-upload-drag" id="seal_file_edit">
-                                <img id="seal-file-img-edit" src="{{ d.seal_file }}">
-                                <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
-                            </div>
-                            <div class="custom-company-foreign_upload_acc">
-                                <span>只能上传jpg/png文件，且不超过500kb</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md11">
+                    <label class="layui-form-label">印章图片：</label>
                     <div class="layui-input-block">
-                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="seal_submit_edit"
-                                id="seal_submit_edit" type="button">
-                            保存
-                        </button>
+                        <div class="layui-upload-drag" id="seal_file">
+                            <img id="seal-file-img">
+                            <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
+                        </div>
+                        <div class="custom-company-foreign_upload_acc">
+                            <span>只能上传jpg/png文件，且不超过500kb</span>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
-    </script>
-    <script type="text/html" id="seal_edit_show"></script>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="seal_submit"
+                            id="seal_submit" type="button">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="seal_edit">
+    <div class="custom-company-contacts_show">
+        <form class="layui-form">
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md10">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>公章类型：</label>
+                    <div class="layui-input-block" id="seal_type">
+                        <input type="radio" name="seal_type" value="公章" title="公章">
+                        <input type="radio" name="seal_type" value="合同章" title="合同章">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md11">
+                    <label class="layui-form-label">印章图片：</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload-drag" id="seal_file_edit">
+                            <img id="seal-file-img-edit" src="{{ d.seal_file }}">
+                            <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
+                        </div>
+                        <div class="custom-company-foreign_upload_acc">
+                            <span>只能上传jpg/png文件，且不超过500kb</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="seal_submit_edit"
+                            id="seal_submit_edit" type="button">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="seal_edit_show"></script>
 
 @{{end}}

@@ -9,11 +9,11 @@ import (
 	"BeeCustom/utils"
 )
 
-type CompanyController struct {
+type CompanyForeignController struct {
 	BaseController
 }
 
-func (c *CompanyController) Prepare() {
+func (c *CompanyForeignController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
@@ -26,7 +26,7 @@ func (c *CompanyController) Prepare() {
 
 }
 
-func (c *CompanyController) Index() {
+func (c *CompanyForeignController) Index() {
 	//是否显示更多查询条件的按钮弃用，前端自动判断
 	//c.Data["showMoreQuery"] = true
 	//将页面左边菜单的某项激活
@@ -35,7 +35,7 @@ func (c *CompanyController) Index() {
 	//页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "company/index_footerjs.html"
+	c.LayoutSections["footerjs"] = "companyforeign/index_footerjs.html"
 
 	//页面里按钮权限控制
 	c.getActionData("Edit", "Delete", "Create")
@@ -44,13 +44,13 @@ func (c *CompanyController) Index() {
 }
 
 //列表数据
-func (c *CompanyController) DataGrid() {
+func (c *CompanyForeignController) DataGrid() {
 	//直接获取参数 getDataGridData()
-	params := models.NewCompanyQueryParam()
+	params := models.NewCompanyForeignQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
 	//获取数据列表和总数
-	data, total := models.CompanyPageList(&params)
+	data, total := models.CompanyForeignPageList(&params)
 	//定义返回的数据结构
 	result := make(map[string]interface{})
 	result["total"] = total
@@ -62,21 +62,20 @@ func (c *CompanyController) DataGrid() {
 }
 
 // Create 添加 新建 页面
-func (c *CompanyController) Create() {
+func (c *CompanyForeignController) Create() {
 
-	params := models.NewBackendUserQueryParam()
-	backendUser := models.BackenduserDataList(&params)
-	c.Data["backendUsers"] = backendUser
+	Id, _ := c.GetInt64(":cid", 0)
+	c.Data["companyId"] = Id
 
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "company/create_footerjs.html"
+	c.LayoutSections["footerjs"] = "companyforeign/create_footerjs.html"
 	c.GetXSRFToken()
 }
 
 // Store 添加 新建 页面
-func (c *CompanyController) Store() {
-	m := models.NewCompany(0)
+func (c *CompanyForeignController) Store() {
+	m := models.NewCompanyForeign(0)
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
@@ -84,7 +83,7 @@ func (c *CompanyController) Store() {
 
 	c.validRequestData(m)
 
-	if _, err := models.CompanySave(&m); err != nil {
+	if _, err := models.CompanyForeignSave(&m); err != nil {
 		utils.LogDebug(err)
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
@@ -93,9 +92,9 @@ func (c *CompanyController) Store() {
 }
 
 // Edit 添加 编辑 页面
-func (c *CompanyController) Edit() {
+func (c *CompanyForeignController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.CompanyOne(Id, true)
+	m, err := models.CompanyForeignOne(Id)
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -107,17 +106,16 @@ func (c *CompanyController) Edit() {
 	backendUser := models.BackenduserDataList(&params)
 	c.Data["backendUsers"] = backendUser
 
-	c.setTpl()
 	c.LayoutSections = make(map[string]string)
-	c.setTpl("company/create.html")
-	c.LayoutSections["footerjs"] = "company/create_footerjs.html"
+	c.setTpl("company/foreign/create.html")
+	c.LayoutSections["footerjs"] = "companyforeign/create_footerjs.html"
 	c.GetXSRFToken()
 }
 
 // Update 添加 编辑 页面
-func (c *CompanyController) Update() {
+func (c *CompanyForeignController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
-	m := models.NewCompany(Id)
+	m := models.NewCompanyForeign(Id)
 
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
@@ -127,7 +125,7 @@ func (c *CompanyController) Update() {
 
 	c.validRequestData(m)
 
-	if _, err := models.CompanySave(&m); err != nil {
+	if _, err := models.CompanyForeignSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
@@ -135,9 +133,9 @@ func (c *CompanyController) Update() {
 }
 
 //删除
-func (c *CompanyController) Delete() {
+func (c *CompanyForeignController) Delete() {
 	id, _ := c.GetInt64(":id")
-	if num, err := models.CompanyDelete(id); err == nil {
+	if num, err := models.CompanyForeignDelete(id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
@@ -145,9 +143,9 @@ func (c *CompanyController) Delete() {
 }
 
 //导入
-func (c *CompanyController) Import() {
+func (c *CompanyForeignController) Import() {
 	id, _ := c.GetInt64(":id")
-	if num, err := models.CompanyDelete(id); err == nil {
+	if num, err := models.CompanyForeignDelete(id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)

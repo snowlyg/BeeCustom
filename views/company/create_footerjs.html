@@ -10,7 +10,6 @@
         let contacts_lists = []
             , foreign_lists = []
             , seal_lists = []
-            , contacts_lists_index = 0
             , foreign_lists_index = 0
             , seal_lists_index = 0;
 
@@ -23,12 +22,36 @@
             }
         });
 
-        const companyId = "@{{ .m.Id }}";
 
+        const companyId = "@{{ .m.Id }}";
         if (companyId) {
             table.render({
                 elem: '#contacts_lists_new'
-                , cols: [[
+                , autoSort: false
+                , method: 'post'
+                , where: {
+                    CompanyId: companyId,
+                    order: 'desc',
+                    sort: 'CreatedAt'
+                }
+                , contentType: 'application/json'
+                , url: "@{{ urlfor "CompanyContactController.DataGrid" }}"
+                , request: {
+                    pageName: 'offset' //页码的参数名称，默认：page
+                    , limitName: 'limit' //每页数据量的参数名，默认：limit
+                }, response: {
+                    statusName: 'code',
+                    statusCode: 0,
+                }, parseData: function (res) {
+                    return {
+                        "code": res.code,
+                        "count": res.total,
+                        "data": res.rows
+                    };
+                }
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local', cols: [[
                     {
                         field: 'name', title: '姓名', templet: function (data) {
                             if (data.IsAdmin) {
@@ -51,86 +74,64 @@
 
             $("#contacts_new").on('click', function () {
                 layer.open({
-                    type: 1,
+                    type: 2,
                     title: '新增联系人',
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '300px'] : ['700px', '600px'],
-                    content: $('#contacts_show').html()
+                    content:`/company_contact/create/${companyId}`,
                 });
-                form.render();
             });
 
             table.on('tool(contacts_lists_new)', function (obj) {
                 const data = obj.data;
                 if (obj.event === 'del') {
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                        contacts_lists.splice(obj.tr[0].dataset.index, 1);
+                        await admin.delete(`/company_contact/delete/${data.Id}`, obj);
                         layer.close(index);
-                        table.reload('contacts_lists_new', {
-                            data: contacts_lists
-                        });
+                        self.location.reload();
                     });
                 } else if (obj.event === 'edit') {
-                    contacts_lists_index = obj.tr[0].dataset.index;
-                    laytpl($("#contacts_edit").html()).render(data, (html) => {
-                        $("#contacts_edit_show").html(html);
-                    });
+                    const data = obj.data;
                     layer.open({
-                        type: 1,
+                        type: 2,
                         title: '编辑联系人',
                         shadeClose: true,
                         area: admin.screen() < 2 ? ['80%', '300px'] : ['700px', '600px'],
-                        content: $('#contacts_edit_show').html()
+                        content: `/company_contact/edit/${data.Id}`
                     });
                     $("#offer_edit").find(`option[value='${data.Offer}']`).prop('selected', true);
-
-                    form.render();
                 }
-            });
-
-            form.on('submit(contacts_submit)', async (data) => {
-                if (data.field.IsAdmin) {
-                    data.field.IsAdmin = 1;
-                    for (let item of contacts_lists) {
-                        if (item.IsAdmin) {
-                            layer.msg("管理员已经存在");
-                            return
-                        }
-                    }
-                } else {
-                    data.field.IsAdmin = 0
-                }
-                contacts_lists.push(data.field);
-                table.reload('contacts_lists_new', {
-                    data: contacts_lists
-                });
-                layer.closeAll();
-            });
-
-            form.on('submit(contacts_submit_edit)', async (data) => {
-                if (data.field.IsAdmin) {
-                    data.field.IsAdmin = 1;
-                    if (!contacts_lists[contacts_lists_index].IsAdmin) {
-                        for (let item of contacts_lists) {
-                            if (item.IsAdmin) {
-                                layer.msg("管理员已经存在");
-                                return
-                            }
-                        }
-                    }
-                } else {
-                    data.field.IsAdmin = 0
-                }
-                contacts_lists[contacts_lists_index] = data.field;
-                table.reload('contacts_lists_new', {
-                    data: contacts_lists
-                });
-                layer.closeAll();
             });
 
 
             table.render({
                 elem: '#foreign_lists_new'
+                , autoSort: false
+                , method: 'post'
+                , where: {
+                    CompanyId: companyId,
+                    order: 'desc',
+                    sort: 'CreatedAt'
+                }
+                , contentType: 'application/json'
+                , url: "@{{ urlfor "CompanyForeignController.DataGrid" }}"
+                , request: {
+                    companyId: '@{{ .m.Id}}', //id
+                    pageName: 'offset' //页码的参数名称，默认：page
+                    , limitName: 'limit' //每页数据量的参数名，默认：limit
+                }, response: {
+                    statusName: 'code',
+                    statusCode: 0,
+                }, parseData: function (res) {
+                    return {
+                        "code": res.code,
+                        "count": res.total,
+                        "data": res.rows
+                    };
+
+                }
+                , toolbar: true
+                , defaultToolbar: ['filter']
                 , cols: [[
                     {
                         field: 'ForeignCompanyChapter', title: '外商章', templet: function (data) {
@@ -450,7 +451,6 @@
                 const result = await admin.patch(`/company/update/${companyId}`, data.field);
                 if (result.status) {
                     admin.reloadFrame('企业客户管理iframe');
-
                 }
             } else {
                 const result = await admin.post("@{{ urlfor "CompanyController.Store" }}", data.field);

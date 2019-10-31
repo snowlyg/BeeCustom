@@ -201,8 +201,7 @@ func (c *BaseController) validRequestData(m interface{}) {
 	}
 
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("表单数据验证错误:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "表单数据验证错误", m)
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("表单数据验证错误:%v", err), m)
 	} else if len(errMsg) > 0 {
 		c.jsonResult(enums.JRCodeFailed, errMsg, m)
 	}

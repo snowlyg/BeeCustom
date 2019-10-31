@@ -1,0 +1,21 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin', 'rate', 'table', 'laytpl', 'upload'], async () => {
+        const form = layui.form, admin = layui.admin, table = layui.table;
+        //编辑联系人
+        form.on('submit(contacts_submit)', async (data) => {
+            data.field.CompanyId = "@{{.m.Company.Id}}";
+            console.log(data.field)
+            const result = await admin.patch("/company_contact/update/"+ "@{{.m.Id}}", data.field);
+            if (result.status) {
+                setTimeout(() => {
+                    parent.location.reload();
+                    layer.closeAll();
+                }, 2000)
+            }
+        });
+    });
+</script>

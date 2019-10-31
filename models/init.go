@@ -7,7 +7,7 @@ import (
 
 // init 初始化
 func init() {
-	orm.RegisterModel(new(BackendUser), new(Resource), new(Role), new(Clearance), new(Ciq), new(HsCode), new(Company))
+	orm.RegisterModel(new(BackendUser), new(Resource), new(Role), new(Clearance), new(Ciq), new(HsCode), new(Company), new(CompanyContact), new(CompanyForeign))
 }
 
 // TableName 下面是统一的表名管理
@@ -49,4 +49,14 @@ func HsCodeTBName() string {
 // CompanyTBName 获取 Company 对应的表名称
 func CompanyTBName() string {
 	return TableName("companies")
+}
+
+// CompanyContactTBName 获取 CompanyContact 对应的表名称
+func CompanyContactTBName() string {
+	return TableName("company_contacts")
+}
+
+// CompanyForeignTBName 获取 CompanyForeign 对应的表名称
+func CompanyForeignTBName() string {
+	return TableName("company_foreigns")
 }
