@@ -9,7 +9,13 @@ import (
 func init() {
 
 	//客户关联公司管理
-	beego.Router("/company_foreign/index", &controllers.CompanyForeignController{}, "*:Index")
+	beego.Router("/company_seal/create/?:cid", &controllers.CompanySealController{}, "Get:Create")
+	beego.Router("/company_seal/store", &controllers.CompanySealController{}, "Post:Store")
+	beego.Router("/company_seal/edit/?:id", &controllers.CompanySealController{}, "Get:Edit")
+	beego.Router("/company_seal/update/?:id", &controllers.CompanySealController{}, "Patch:Update")
+	beego.Router("/company_seal/delete/?:id", &controllers.CompanySealController{}, "Delete:Delete")
+
+	//客户关联公司管理
 	beego.Router("/company_foreign/create/?:cid", &controllers.CompanyForeignController{}, "Get:Create")
 	beego.Router("/company_foreign/store", &controllers.CompanyForeignController{}, "Post:Store")
 	beego.Router("/company_foreign/datagrid", &controllers.CompanyForeignController{}, "Post:DataGrid")
@@ -18,7 +24,6 @@ func init() {
 	beego.Router("/company_foreign/delete/?:id", &controllers.CompanyForeignController{}, "Delete:Delete")
 
 	//客户联系人管理
-	beego.Router("/company_contact/index", &controllers.CompanyContactController{}, "*:Index")
 	beego.Router("/company_contact/create/?:cid", &controllers.CompanyContactController{}, "Get:Create")
 	beego.Router("/company_contact/store", &controllers.CompanyContactController{}, "Post:Store")
 	beego.Router("/company_contact/datagrid", &controllers.CompanyContactController{}, "Post:DataGrid")

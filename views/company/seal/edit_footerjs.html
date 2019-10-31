@@ -1,0 +1,34 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin',  'laytpl', 'upload'], async () => {
+        const form = layui.form, admin = layui.admin, upload = layui.upload, $ = layui.$;
+
+
+        upload.render({
+            elem: '#seal_file'
+            , url: '/file/upload'
+            , accept: 'images'
+            , acceptMime: 'image/png'
+            , field: 'filename'
+            , size: 500
+            , done: function (data) {
+                $("#seal-file-img").attr('src', data.obj);
+            }
+        });
+
+        form.on('submit(seal_submit)', async (data) => {
+            data.field.Url = $('#seal-file-img').attr('src');
+            data.field.CompanyId = "@{{.m.Company.Id}}"
+            const result = await admin.patch("@{{ urlfor "CompanySealController.Update" }}", data.field);
+            if (result.status) {
+                setTimeout(() => {
+                    parent.location.reload();
+                    layer.closeAll();
+                }, 2000)
+            }
+        });
+    });
+</script>

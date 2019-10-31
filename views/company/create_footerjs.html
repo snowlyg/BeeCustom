@@ -189,7 +189,6 @@
             });
 
 
-
             laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
                 $("#seal_lists_new").html(html);
             });
@@ -199,86 +198,32 @@
             });
 
             $("body").on('click', '.seal_flex_edit_btn', function () {
-                seal_lists_index = $(this).data('index');
-                laytpl($("#seal_edit").html()).render($(this).data('item'), (html) => {
-                    $("#seal_edit_show").html(html);
-                });
-
                 layer.open({
-                    type: 1,
+                    type: 2,
                     title: '编辑公章',
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '550px'] : ['700px', '550px'],
-                    content: $('#seal_edit_show').html()
+                    content: `/company_seal/edit/${$(this).data('id')}`
                 });
-
-                upload.render({
-                    elem: '#seal_file_edit'
-                    , url: '/image/upload'
-                    , accept: 'images'
-                    , acceptMime: 'image/png'
-                    , field: 'image'
-                    , size: 500
-                    , done: function (data) {
-                        $("#seal-file-img-edit").attr('src', data.url);
-                    }
-                });
-
-                $("#seal_type").find(`input[value='${$(this).data('item').SealType}']`).prop('checked', true);
-                form.render();
             });
 
             $("body").on('click', '.seal_flex_edit_del', function () {
                 layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                    seal_lists.splice($(this).data('index'), 1);
+                    await admin.delete(`/company_seal/delete/${$(this).data('id')}`);
                     layer.close(index);
-                    laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
-                        $("#seal_lists_new").html(html);
-                    });
+                    self.location.reload();
                 });
             });
 
             $("#seal_new").on('click', function () {
                 layer.open({
-                    type: 1,
+                    type: 2,
                     title: '上传公章',
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '500px'] : ['800px', '500px'],
-                    content: $('#seal_show').html()
+                    content: `/company_seal/create/${companyId}`
                 });
-
-                upload.render({
-                    elem: '#seal_file'
-                    , url: '/image/upload'
-                    , accept: 'images'
-                    , acceptMime: 'image/png'
-                    , field: 'image'
-                    , size: 500
-                    , done: function (data) {
-                        $("#seal-file-img").attr('src', data.url);
-                    }
-                });
-                form.render();
             });
-
-            form.on('submit(seal_submit)', async (data) => {
-                data.field.sealFile = $('#seal-file-img').attr('src');
-                seal_lists.push(data.field);
-                laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
-                    $("#seal_lists_new").html(html);
-                });
-                layer.closeAll();
-            });
-
-            form.on('submit(seal_submit_edit)', async (data) => {
-                data.field.sealFile = $('#seal-file-img-edit').attr('src');
-                seal_lists[seal_lists_index] = data.field;
-                laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
-                    $("#seal_lists_new").html(html);
-                });
-                layer.closeAll();
-            });
-
         }
 
 

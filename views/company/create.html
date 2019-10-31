@@ -417,98 +417,19 @@
 
 <script type="text/html" id="seal_lists_templet">
     <div class="custom-company-seal_lists">
-        {{# layui.each(d, function(index, item) { }}
+        @{{range $i,$v := .m.CompanySeals }}
         <div class="seal_flex">
             <div class="seal_flex_img">
-                <img src="{{ item.seal_file }}">
+                <img src="@{{ $v.Url }}">
                 <div class="seal_flex_edit">
-                    {{# const stringData = JSON.stringify(item); }}
-                    <a class="seal_flex_edit_btn" data-index={{ index }} data-item={{ stringData }}>编辑</a>
-                    <a class="seal_flex_edit_del" data-index={{ index }}>删除</a>
+                    <a class="seal_flex_edit_btn" data-id="@{{$v.Id}}">编辑</a>
+                    <a class="seal_flex_edit_del" data-id="@{{$v.Id}}">删除</a>
                 </div>
             </div>
-            <p>{{ item.seal_type }}</p>
+            <p>@{{ $v.SealName }}</p>
         </div>
-        {{#  }); }}
+    @{{end }}
     </div>
 </script>
-
-<script type="text/html" id="seal_show">
-    <div class="custom-company-contacts_show">
-        <form class="layui-form">
-            <div class="layui-row layui-col-space10 layui-form-item">
-                <div class="layui-col-md10">
-                    <label class="layui-form-label"><i class="red margin-right-4">*</i>公章类型：</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="seal_type" value="公章" title="公章" checked>
-                        <input type="radio" name="seal_type" value="合同章" title="合同章">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-row layui-col-space10 layui-form-item">
-                <div class="layui-col-md11">
-                    <label class="layui-form-label">印章图片：</label>
-                    <div class="layui-input-block">
-                        <div class="layui-upload-drag" id="seal_file">
-                            <img id="seal-file-img">
-                            <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
-                        </div>
-                        <div class="custom-company-foreign_upload_acc">
-                            <span>只能上传jpg/png文件，且不超过500kb</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="seal_submit"
-                            id="seal_submit" type="button">
-                        保存
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</script>
-
-<script type="text/html" id="seal_edit">
-    <div class="custom-company-contacts_show">
-        <form class="layui-form">
-            <div class="layui-row layui-col-space10 layui-form-item">
-                <div class="layui-col-md10">
-                    <label class="layui-form-label"><i class="red margin-right-4">*</i>公章类型：</label>
-                    <div class="layui-input-block" id="seal_type">
-                        <input type="radio" name="seal_type" value="公章" title="公章">
-                        <input type="radio" name="seal_type" value="合同章" title="合同章">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-row layui-col-space10 layui-form-item">
-                <div class="layui-col-md11">
-                    <label class="layui-form-label">印章图片：</label>
-                    <div class="layui-input-block">
-                        <div class="layui-upload-drag" id="seal_file_edit">
-                            <img id="seal-file-img-edit" src="{{ d.seal_file }}">
-                            <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
-                        </div>
-                        <div class="custom-company-foreign_upload_acc">
-                            <span>只能上传jpg/png文件，且不超过500kb</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="seal_submit_edit"
-                            id="seal_submit_edit" type="button">
-                        保存
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</script>
-
-<script type="text/html" id="seal_edit_show"></script>
 
 @{{end}}

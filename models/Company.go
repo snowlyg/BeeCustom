@@ -38,7 +38,6 @@ type Company struct {
 	IsOpenSubPhone      int8              `orm:"column(is_open_sub_phone);null" `
 	SubPhone            string            `orm:"column(sub_phone);null" description:"订阅手机 多个用，隔开"`
 	SubEmail            string            `orm:"column(sub_email);null" description:"订阅邮箱 多个用，隔开"`
-	SealDatas           string            `orm:"column(seal_datas);null" description:"公章 array[seal_file,seal_type] 多个用，隔开"`
 	SubContentCheck     int8              `orm:"column(sub_content_check);null" description:"订阅内容 审核通过"`
 	SubContentSubmit    int8              `orm:"column(sub_content_submit);null" description:"订阅内容 已提交海关处理"`
 	SubContentReject    int8              `orm:"column(sub_content_reject);null" description:"订阅内容 驳回信息"`
@@ -54,6 +53,7 @@ type Company struct {
 	BackendUser         *BackendUser      `orm:"column(user_id);rel(fk);null"`
 	CompanyContacts     []*CompanyContact `orm:"reverse(many)"` //设置一对多关系
 	CompanyForeigns     []*CompanyForeign `orm:"reverse(many)"` //设置一对多关系
+	CompanySeals        []*CompanySeal    `orm:"reverse(many)"` //设置一对多关系
 }
 
 // CompanyQueryParam 用于查询的类
@@ -100,6 +100,10 @@ func CompanyOne(id int64, isRlated bool) (*Company, error) {
 	o := orm.NewOrm()
 	if isRlated {
 		if err := o.QueryTable(CompanyTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
+			return nil, err
+		}
+
+		if _, err := o.LoadRelated(&m, "CompanySeals"); err != nil {
 			return nil, err
 		}
 	} else {

@@ -27,23 +27,6 @@ func (c *CompanyContactController) Prepare() {
 
 }
 
-func (c *CompanyContactController) Index() {
-	//是否显示更多查询条件的按钮弃用，前端自动判断
-	//c.Data["showMoreQuery"] = true
-	//将页面左边菜单的某项激活
-	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
-
-	//页面模板设置
-	c.setTpl()
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "companycontact/index_footerjs.html"
-
-	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create")
-
-	c.GetXSRFToken()
-}
-
 //列表数据
 func (c *CompanyContactController) DataGrid() {
 	//直接获取参数 getDataGridData()
@@ -137,16 +120,6 @@ func (c *CompanyContactController) Update() {
 
 //删除
 func (c *CompanyContactController) Delete() {
-	id, _ := c.GetInt64(":id")
-	if num, err := models.CompanyContactDelete(id); err == nil {
-		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
-	} else {
-		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
-	}
-}
-
-//导入
-func (c *CompanyContactController) Import() {
 	id, _ := c.GetInt64(":id")
 	if num, err := models.CompanyContactDelete(id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")

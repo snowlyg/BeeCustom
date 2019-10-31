@@ -101,6 +101,7 @@ func (c *CompanyController) Edit() {
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
+
 	c.Data["m"] = m
 
 	params := models.NewBackendUserQueryParam()
