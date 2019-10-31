@@ -147,10 +147,24 @@ func (c *CompanyController) Delete() {
 
 //导入
 func (c *CompanyController) Import() {
-	id, _ := c.GetInt64(":id")
-	if num, err := models.CompanyDelete(id); err == nil {
-		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
-	} else {
-		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
+	f, err := excelize.OpenFile("./Book1.xlsx")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	// Get value from cell by given worksheet name and axis.
+	cell, err := f.GetCellValue("Sheet1", "B2")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(cell)
+	// Get all the rows in the Sheet1.
+	rows, err := f.GetRows("Sheet1")
+	for _, row := range rows {
+		for _, colCell := range row {
+			fmt.Print(colCell, "\t")
+		}
+		fmt.Println()
 	}
 }
