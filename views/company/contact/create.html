@@ -34,22 +34,22 @@
                 <div class="layui-input-block">
                     <select name="Offer" lay-filter="offer">
                         <option value="">请选择</option>
-                        @{{if compare .m.Offer "法定代表人" }}
+                        @{{if eq .m.Offer "法定代表人" }}
                         <option selected value="法定代表人">法定代表人</option>
                         <option value="报关员">报关员</option>
                         <option value="财务">财务</option>
                         <option value="其他">其他</option>
-                        @{{ else if compare .m.Offer "报关员"}}
+                        @{{ else if eq .m.Offer "报关员"}}
                         <option value="法定代表人">法定代表人</option>
                         <option selected value="报关员">报关员</option>
                         <option value="财务">财务</option>
                         <option value="其他">其他</option>
-                        @{{ else if compare .m.Offer "财务"}}
+                        @{{ else if eq .m.Offer "财务"}}
                         <option value="法定代表人">法定代表人</option>
                         <option value="报关员">报关员</option>
                         <option selected value="财务">财务</option>
                         <option value="其他">其他</option>
-                        @{{else if compare .m.Offer "其他"}}
+                        @{{else if eq .m.Offer "其他"}}
                         <option value="法定代表人">法定代表人</option>
                         <option value="报关员">报关员</option>
                         <option value="财务">财务</option>
@@ -78,10 +78,10 @@
                 <label class="layui-form-label"><i class="red margin-right-4">*</i>状态：</label>
                 <div class="layui-input-block">
                     <select name="Frozen" lay-filter="offer">
-                        @{{if compare .m.Frozen  "1" }}
+                        @{{if eq .m.Frozen  "1" }}
                         <option selected value="1">启用</option>
                         <option value="2">禁用</option>
-                        @{{else if compare .m.Frozen  "2" }}
+                        @{{else if eq .m.Frozen  "2" }}
                         <option value="1">启用</option>
                         <option selected value="2">禁用</option>
                         @{{else}}
@@ -94,7 +94,7 @@
             <div class="layui-col-md4">
                 <label class="layui-form-label"></label>
                 <div class="layui-input-block" id="is_admin">
-                    <input type="checkbox" name="IsAdmin" @{{if compare .m.IsAdmin  "1" }} checked @{{ end}} title="设置为企业管理员" lay-skin="primary" value="1">
+                    <input type="checkbox" name="IsAdmin" @{{if eq .m.IsAdmin  "1" }} checked @{{ end}} title="设置为企业管理员" lay-skin="primary" value="1">
                 </div>
             </div>
         </div>

@@ -65,7 +65,7 @@ func (c *CompanyContactController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
-	c.checkAdminContactCount(m.CompanyId, m.IsAdmin)
+	c.checkAdminContactCount(m.Id, m.CompanyId, m.IsAdmin)
 
 	c.validRequestData(m)
 
@@ -106,7 +106,7 @@ func (c *CompanyContactController) Update() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
-	c.checkAdminContactCount(m.CompanyId, m.IsAdmin)
+	c.checkAdminContactCount(m.Id, m.CompanyId, m.IsAdmin)
 
 	c.validRequestData(m)
 
@@ -128,15 +128,23 @@ func (c *CompanyContactController) Delete() {
 	}
 }
 
-func (c *CompanyContactController) checkAdminContactCount(companyId int64, isAdmin int8) {
+//判断联系人管理员，是否只有一个
+func (c *CompanyContactController) checkAdminContactCount(id, companyId int64, isAdmin int8) {
 	params := models.NewCompanyContactQueryParam()
 	params.IsAdmin = true
 	params.CompanyId = strconv.FormatInt(companyId, 10)
 
-	_, count := models.CompanyContactPageList(&params)
+	ccs, count := models.CompanyContactPageList(&params)
 
 	if count == 1 {
 		if isAdmin == 1 {
+			for _, v := range ccs {
+				if v.IsAdmin == 1 {
+					if v.Id != id {
+						c.jsonResult(enums.JRCodeFailed, "只能有一个"+sealName, nil)
+					}
+				}
+			}
 			c.jsonResult(enums.JRCodeFailed, "只能有一个管理员", nil)
 		}
 	} else if count > 1 {

@@ -27,6 +27,7 @@ type CompanySealQueryParam struct {
 	BaseQueryParam
 
 	CompanyId string
+	SealName  string
 }
 
 func NewCompanySeal(id int64) CompanySeal {
@@ -44,6 +45,9 @@ func CompanySealPageList(params *CompanySealQueryParam) ([]*CompanySeal, int64) 
 	datas := make([]*CompanySeal, 0)
 
 	query = query.Filter("company_id", params.CompanyId)
+	if len(params.SealName) > 0 {
+		query = query.Filter("seal_name", params.SealName)
+	}
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)

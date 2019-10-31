@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strconv"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -44,6 +45,8 @@ func (c *CompanySealController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
+	c.checkSealNameCount(m.Id, m.CompanyId, m.SealName)
+
 	c.validRequestData(m)
 
 	if _, err := models.CompanySealSave(&m); err != nil {
@@ -82,6 +85,8 @@ func (c *CompanySealController) Update() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
+	c.checkSealNameCount(m.Id, m.CompanyId, m.SealName)
+
 	c.validRequestData(m)
 
 	if _, err := models.CompanySealSave(&m); err != nil {
@@ -99,4 +104,27 @@ func (c *CompanySealController) Delete() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
+}
+
+//判断公章名称，是否只有一个
+func (c *CompanySealController) checkSealNameCount(id, companyId int64, sealName string) {
+
+	params := models.NewCompanySealQueryParam()
+	params.SealName = sealName
+	params.CompanyId = strconv.FormatInt(companyId, 10)
+	cs, count := models.CompanySealPageList(&params)
+
+	if count == 1 {
+		for _, v := range cs {
+			if v.SealName == sealName {
+				if v.Id != id {
+					c.jsonResult(enums.JRCodeFailed, "只能有一个"+sealName, nil)
+				}
+			}
+		}
+
+	} else if count > 1 {
+		c.jsonResult(enums.JRCodeFailed, sealName+"已经超过限制，请修改签章列表", nil)
+	}
+
 }

@@ -405,7 +405,7 @@
     <div class="layui-card">
         <div class="layui-card-body">
             <div class="custom-company-contacts_flex">
-                <h1 class="new_title">公章管理</h1>
+                <h1 class="new_title">签章管理</h1>
                 <button class="layui-btn custom-create_btn" id="seal_new" type="button">
                     上传
                 </button>
@@ -418,16 +418,16 @@
 <script type="text/html" id="seal_lists_templet">
     <div class="custom-company-seal_lists">
         @{{range $i,$v := .m.CompanySeals }}
-        <div class="seal_flex">
-            <div class="seal_flex_img">
-                <img src="@{{ $v.Url }}">
-                <div class="seal_flex_edit">
-                    <a class="seal_flex_edit_btn" data-id="@{{$v.Id}}">编辑</a>
-                    <a class="seal_flex_edit_del" data-id="@{{$v.Id}}">删除</a>
-                </div>
+    <div class="seal_flex">
+        <div class="seal_flex_img">
+            <img src="@{{ $v.Url }}">
+            <div class="seal_flex_edit">
+                <a class="seal_flex_edit_btn" data-id="@{{$v.Id}}">编辑</a>
+                <a class="seal_flex_edit_del" data-id="@{{$v.Id}}">删除</a>
             </div>
-            <p>@{{ $v.SealName }}</p>
         </div>
+        <p>@{{ $v.SealName }}</p>
+    </div>
     @{{end }}
     </div>
 </script>

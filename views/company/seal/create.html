@@ -8,11 +8,11 @@
                     <input type="radio" name="SealName" checked value="公章" title="公章">
                     <input type="radio" name="SealName" value="合同章" title="合同章">
                     @{{ else if compare .m.SealName "合同章" }}
-                    <input type="radio" name="SealName" checked value="公章" title="公章">
-                    <input type="radio" name="SealName" value="合同章" title="合同章">
-                    @{{ else}}
-                    <input type="radio" name="SealName" value="公章" title="公章">
+                    <input type="radio" name="SealName"  value="公章" title="公章">
                     <input type="radio" name="SealName" checked value="合同章" title="合同章">
+                    @{{ else}}
+                    <input type="radio" name="SealName" checked value="公章" title="公章">
+                    <input type="radio" name="SealName"  value="合同章" title="合同章">
                     @{{ end}}
                 </div>
             </div>
