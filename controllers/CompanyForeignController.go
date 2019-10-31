@@ -63,13 +63,12 @@ func (c *CompanyForeignController) DataGrid() {
 
 // Create 添加 新建 页面
 func (c *CompanyForeignController) Create() {
-
 	Id, _ := c.GetInt64(":cid", 0)
 	c.Data["companyId"] = Id
 
-	c.setTpl()
+	c.setTpl("company/foreign/create.html")
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "companyforeign/create_footerjs.html"
+	c.LayoutSections["footerjs"] = "company/foreign/create_footerjs.html"
 	c.GetXSRFToken()
 }
 
@@ -108,7 +107,7 @@ func (c *CompanyForeignController) Edit() {
 
 	c.LayoutSections = make(map[string]string)
 	c.setTpl("company/foreign/create.html")
-	c.LayoutSections["footerjs"] = "companyforeign/create_footerjs.html"
+	c.LayoutSections["footerjs"] = "company/foreign/create_footerjs.html"
 	c.GetXSRFToken()
 }
 

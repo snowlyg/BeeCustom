@@ -1,0 +1,56 @@
+<div class="custom-company-contacts_show">
+    <form class="layui-form">
+        <div class="layui-row layui-col-space10 layui-form-item">
+            <div class="layui-col-md10">
+                <label class="layui-form-label"><i class="red margin-right-4">*</i>外商公司名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="ForeignCompanyName" value="@{{ .m.ForeignCompanyName}}" lay-verify="required"
+                           lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space10 layui-form-item">
+            <div class="layui-col-md10">
+                <label class="layui-form-label">外商公司地址：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="ForeignCompanyAddress" value="@{{ .m.ForeignCompanyAddress}}"  placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space10 layui-form-item">
+            <div class="layui-col-md10">
+                <label class="layui-form-label">外商公司电话：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="ForeignCompanyPhone" value="@{{ .m.ForeignCompanyPhone}}"  placeholder="请输入"
+                           autocomplete="off" class="layui-input" maxlength="11">
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space10 layui-form-item">
+            <div class="layui-col-md11">
+                <label class="layui-form-label">外商章：</label>
+                <div class="layui-input-block layui-flex">
+                    <div class="layui-upload-drag" id="ForeignCompanyChapter">
+                        <img id="foreign-upload-img" src="@{{ .m.ForeignCompanyChapter}}">
+                        <p class="custom-company-foreign_upload">点击上传，或将文件拖拽到此处</p>
+                    </div>
+                    <div class="custom-company-foreign_upload_acc">
+                        <p>只能上传png文件，且不超过500kb</p>
+                        <button class="layui-btn custom-create_btn" type="button">
+                            清除图片
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="foreign_submit"
+                        type="button">
+                    提交
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

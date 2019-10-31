@@ -5,8 +5,7 @@
         index: 'lib/index'
     }).use(['index', 'form', 'admin', 'rate', 'table', 'laytpl', 'upload'], async () => {
 
-        const form = layui.form, admin = layui.admin, rate = layui.rate, table = layui.table, laytpl = layui.laytpl,
-            upload = layui.upload, $ = layui.$;
+        const form = layui.form, admin = layui.admin, rate = layui.rate, table = layui.table, laytpl = layui.laytpl, upload = layui.upload, $ = layui.$;
         let contacts_lists = []
             , foreign_lists = []
             , seal_lists = []
@@ -149,11 +148,11 @@
 
             $("#foreign_new").on('click', function () {
                 layer.open({
-                    type: 1,
+                    type: 2,
                     title: '新增外商公司',
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '600px'] : ['800px', '600px'],
-                    content: $('#foreign_show').html()
+                    content: `/company_foreign/create/${companyId}`
                 });
 
                 upload.render({
@@ -167,75 +166,27 @@
                         $("#foreign-upload-img").attr('src', data.url);
                     }
                 });
-                form.render();
-            });
-
-            $("body").on("click", "#image_close", function () {
-                $("#foreign-upload-img").attr('src', '');
             });
 
             table.on('tool(foreign_lists_new)', function (obj) {
                 const data = obj.data;
                 if (obj.event === 'del') {
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                        foreign_lists.splice(obj.tr[0].dataset.index, 1);
-                        layer.close(index);
-                        table.reload('foreign_lists_new', {
-                            data: foreign_lists
-                        });
+
                     });
                 } else if (obj.event === 'edit') {
-
-                    foreign_lists_index = obj.tr[0].dataset.index;
-                    laytpl($("#foreign_edit").html()).render(data, (html) => {
-                        $("#foreign_edit_show").html(html);
-                    });
-
                     layer.open({
-                        type: 1,
+                        type: 2,
                         title: '编辑外商公司',
                         shadeClose: true,
                         area: admin.screen() < 2 ? ['80%', '300px'] : ['800px', '600px'],
-                        content: $('#foreign_edit_show').html()
+                        content: `/company_foreign/edit/${data.Id}`
                     });
-
-                    upload.render({
-                        elem: '#foreign_company_chapter_edit'
-                        , url: '/image/upload'
-                        , accept: 'images'
-                        , acceptMime: 'image/png'
-                        , field: 'image'
-                        , size: 500
-                        , done: function (data) {
-                            $("#foreign-upload-img-edit").attr('src', data.url);
-                        }
-                    });
-
                     form.render();
                 }
             });
 
-            $("body").on("click", "#image_close_edit", function () {
-                $("#foreign-upload-img-edit").attr('src', '');
-            });
 
-            form.on('submit(foreign_submit)', async (data) => {
-                data.field.ForeignCompanyChapter = $('#foreign-upload-img').attr('src');
-                foreign_lists.push(data.field);
-                table.reload('foreign_lists_new', {
-                    data: foreign_lists
-                });
-                layer.closeAll();
-            });
-
-            form.on('submit(foreign_submit_edit)', async (data) => {
-                data.field.ForeignCompanyChapter = $('#foreign-upload-img-edit').attr('src');
-                foreign_lists[foreign_lists_index] = data.field;
-                table.reload('foreign_lists_new', {
-                    data: foreign_lists
-                });
-                layer.closeAll();
-            });
 
             laytpl($("#seal_lists_templet").html()).render(seal_lists, (html) => {
                 $("#seal_lists_new").html(html);

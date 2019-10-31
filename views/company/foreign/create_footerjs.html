@@ -1,0 +1,42 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin', 'laytpl', 'upload'], async () => {
+        const form = layui.form, admin = layui.admin, upload = layui.upload, $ = layui.$;
+
+        $("body").on("click", "#image_close", function () {
+            $("#foreign-upload-img").attr('src', '');
+        });
+
+        $("body").on("click", "#image_close_edit", function () {
+            $("#foreign-upload-img-edit").attr('src', '');
+        });
+
+
+        upload.render({
+            elem: '#ForeignCompanyChapter'
+            , url: '/image/upload'
+            , accept: 'images'
+            , acceptMime: 'image/png'
+            , field: 'image'
+            , size: 500
+            , done: function (data) {
+                $("#foreign-upload-img-edit").attr('src', data.url);
+            }
+        });
+
+        form.on('submit(foreign_submit)', async (data) => {
+            data.field.ForeignCompanyChapter = $('#foreign-upload-img').attr('src');
+            data.field.CompanyId = "@{{.companyId}}";
+            const result = await admin.post("@{{ urlfor "CompanyForeignController.Store" }}", data.field);
+            if (result.status) {
+                setTimeout(() => {
+                    parent.location.reload();
+                    layer.closeAll();
+                }, 2000)
+            }
+        });
+    });
+</script>
