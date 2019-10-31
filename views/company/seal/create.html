@@ -4,8 +4,16 @@
             <div class="layui-col-md10">
                 <label class="layui-form-label"><i class="red margin-right-4">*</i>公章类型：</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="SealName" value="公章" title="公章" @{{if compare .m.SealName "公章" }} checked @{{ end}}>
-                    <input type="radio" name="SealName" value="合同章" title="合同章"  @{{if compare .m.SealName "合同章" }} checked @{{ end}}>
+                    @{{if compare .m.SealName "公章" }}
+                    <input type="radio" name="SealName" checked value="公章" title="公章">
+                    <input type="radio" name="SealName" value="合同章" title="合同章">
+                    @{{ else if compare .m.SealName "合同章" }}
+                    <input type="radio" name="SealName" checked value="公章" title="公章">
+                    <input type="radio" name="SealName" value="合同章" title="合同章">
+                    @{{ else}}
+                    <input type="radio" name="SealName" value="公章" title="公章">
+                    <input type="radio" name="SealName" checked value="合同章" title="合同章">
+                    @{{ end}}
                 </div>
             </div>
         </div>
