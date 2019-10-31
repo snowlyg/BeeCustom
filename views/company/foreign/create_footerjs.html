@@ -10,20 +10,15 @@
             $("#foreign-upload-img").attr('src', '');
         });
 
-        $("body").on("click", "#image_close_edit", function () {
-            $("#foreign-upload-img-edit").attr('src', '');
-        });
-
-
         upload.render({
             elem: '#ForeignCompanyChapter'
-            , url: '/image/upload'
-            , accept: 'images'
+            , field: 'filename'
             , acceptMime: 'image/png'
-            , field: 'image'
+            , url: '/file/upload'
+            , accept: 'images'
             , size: 500
             , done: function (data) {
-                $("#foreign-upload-img-edit").attr('src', data.url);
+                $("#foreign-upload-img").attr('src', data.obj);
             }
         });
 

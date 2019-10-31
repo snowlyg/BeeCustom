@@ -101,13 +101,9 @@ func (c *CompanyForeignController) Edit() {
 	}
 	c.Data["m"] = m
 
-	params := models.NewBackendUserQueryParam()
-	backendUser := models.BackenduserDataList(&params)
-	c.Data["backendUsers"] = backendUser
-
 	c.LayoutSections = make(map[string]string)
 	c.setTpl("company/foreign/create.html")
-	c.LayoutSections["footerjs"] = "company/foreign/create_footerjs.html"
+	c.LayoutSections["footerjs"] = "company/foreign/edit_footerjs.html"
 	c.GetXSRFToken()
 }
 

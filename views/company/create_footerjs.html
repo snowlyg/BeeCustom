@@ -172,7 +172,9 @@
                 const data = obj.data;
                 if (obj.event === 'del') {
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-
+                        await admin.delete(`/company_foreign/delete/${data.Id}`, obj);
+                        layer.close(index);
+                        self.location.reload();
                     });
                 } else if (obj.event === 'edit') {
                     layer.open({
