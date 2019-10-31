@@ -145,7 +145,6 @@ func (c *CompanyContactController) checkAdminContactCount(id, companyId int64, i
 					}
 				}
 			}
-			c.jsonResult(enums.JRCodeFailed, "只能有一个管理员", nil)
 		}
 	} else if count > 1 {
 		c.jsonResult(enums.JRCodeFailed, "管理员已经超过限制，请修改联系人列表", nil)
