@@ -20,7 +20,7 @@ type CompanyForeign struct {
 	ForeignCompanyPhone   string   `orm:"column(foreign_company_phone);size(200);null" description:"外商公司电话"`
 	ForeignCompanyAddress string   `orm:"column(foreign_company_address);size(200);null" description:"外商公司地址"`
 	ForeignCompanyChapter string   `orm:"column(foreign_company_chapter);size(255);null" description:"外商公司章"`
-	ForeignType           string   `orm:"column(foreign_type);size(1)" description:"关联公司类型"`
+	ForeignType           string   `orm:"column(foreign_type);size(1)" description:"关联公司类型 1，外商公司"`
 	Company               *Company `orm:"column(company_id);rel(fk)"`
 	CompanyId             int64    `orm:"-" form:"CompanyId"`
 }
@@ -73,6 +73,9 @@ func CompanyForeignOne(id int64) (*CompanyForeign, error) {
 //Save 添加、编辑页面 保存
 func CompanyForeignSave(m *CompanyForeign) (*CompanyForeign, error) {
 	o := orm.NewOrm()
+
+	m.ForeignType = "1" //关联公司类型 1：外商
+
 	if m.Id == 0 {
 		if err := getCompanyForeignBackendUser(m); err != nil {
 			return nil, err
