@@ -8,6 +8,16 @@ import (
 
 func init() {
 
+	//手账册
+	beego.Router("/hand_book/index", &controllers.HandbookController{}, "*:Index")
+	beego.Router("/hand_book/create/?:type", &controllers.HandbookController{}, "Get:Create")
+	beego.Router("/hand_book/store", &controllers.HandbookController{}, "Post:Store")
+	beego.Router("/hand_book/datagrid", &controllers.HandbookController{}, "Post:DataGrid")
+	beego.Router("/hand_book/edit/?:id", &controllers.HandbookController{}, "Get:Edit")
+	beego.Router("/hand_book/update/?:id", &controllers.HandbookController{}, "Patch:Update")
+	beego.Router("/hand_book/delete/?:id", &controllers.HandbookController{}, "Delete:Delete")
+	beego.Router("/hand_book/import/?:type", &controllers.HandbookController{}, "Post:Import")
+
 	//客户关联公司管理
 	beego.Router("/company_seal/create/?:cid", &controllers.CompanySealController{}, "Get:Create")
 	beego.Router("/company_seal/store", &controllers.CompanySealController{}, "Post:Store")

@@ -9,7 +9,6 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/validations"
-	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/astaxie/beego/validation"
 
 	"github.com/astaxie/beego"
@@ -246,96 +245,6 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 			return fileNamePath, nil
 		}
 	}
-}
-
-//导入基础参数 xlsx 文件内容
-func (c *BaseController) ImportClearanceXlsx(clearance models.Clearance, clearanceType int8, fileNamePath, xmlTitle string) []map[string]string {
-
-	xmlTitles := strings.Split(xmlTitle, "/")
-	rXmlTitles := map[string]int{}
-	for k, v := range xmlTitles {
-		rXmlTitles[v] = k
-	}
-
-	f, err := excelize.OpenFile(fileNamePath)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
-	}
-
-	if f != nil {
-		// Get all the rows in the Sheet1.
-		rows, err := f.GetRows("Sheet1")
-
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
-		}
-
-		var Info []map[string]string
-		for _, row := range rows {
-			//将数组  转成对应的 map
-			var info = make(map[string]string)
-			// 模型前两个字段是 BaseModel ，Type 不需要赋值
-			for i := 0; i < reflect.ValueOf(clearance).NumField(); i++ {
-				obj := reflect.TypeOf(clearance).Field(i)
-				switch obj.Name {
-				case "Type":
-					info[obj.Name] = string(clearanceType)
-				case "CustomsCode":
-					funcName(rXmlTitles, info, obj, row, "CustomsCode")
-				case "Name":
-					funcName(rXmlTitles, info, obj, row, "Name")
-				case "ShortName":
-					funcName(rXmlTitles, info, obj, row, "ShortName")
-				case "EnName":
-					funcName(rXmlTitles, info, obj, row, "EnName")
-				case "InspectionCode":
-					funcName(rXmlTitles, info, obj, row, "InspectionCode")
-				case "ShortEnName":
-					funcName(rXmlTitles, info, obj, row, "ShortEnName")
-				case "MandatoryLevel":
-					funcName(rXmlTitles, info, obj, row, "MandatoryLevel")
-				case "CertificateType":
-					funcName(rXmlTitles, info, obj, row, "CertificateType")
-				case "StatisticalUnitCode":
-					funcName(rXmlTitles, info, obj, row, "StatisticalUnitCode")
-				case "ConversionRate":
-					funcName(rXmlTitles, info, obj, row, "ConversionRate")
-				case "NatureMark":
-					funcName(rXmlTitles, info, obj, row, "NatureMark")
-				case "Iso2":
-					funcName(rXmlTitles, info, obj, row, "Iso2")
-				case "Iso3":
-					funcName(rXmlTitles, info, obj, row, "Iso3")
-				case "TypeCode":
-					funcName(rXmlTitles, info, obj, row, "TypeCode")
-				case "OldCustomCode":
-					funcName(rXmlTitles, info, obj, row, "OldCustomCode")
-				case "OldCustomName":
-					funcName(rXmlTitles, info, obj, row, "OldCustomName")
-				case "OldCiqCode":
-					funcName(rXmlTitles, info, obj, row, "OldCiqCode")
-				case "OldCiqName":
-					funcName(rXmlTitles, info, obj, row, "OldCiqName")
-				case "Remark":
-					funcName(rXmlTitles, info, obj, row, "Remark")
-				}
-
-			}
-
-			Info = append(Info, info)
-		}
-
-		return Info
-
-	} else {
-		utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
-	}
-
-	return nil
-
 }
 
 // 判断是否存在键

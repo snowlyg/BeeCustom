@@ -133,6 +133,6 @@ func ClearanceDeleteAll(clearanceType int8) (num int64, err error) {
 }
 
 //批量插入
-func InsertMulti(datas []*Clearance) (num int64, err error) {
+func InsertClearanceMulti(datas []*Clearance) (num int64, err error) {
 	return BaseInsertMulti(len(datas), datas)
 }
