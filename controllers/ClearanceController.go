@@ -153,6 +153,11 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "参数错误", nil)
 	}
 
+	xmlTitle := c.GetString("xmlTitle", "")
+	if len(xmlTitle) == 0 {
+		c.jsonResult(enums.JRCodeFailed, "请设置表头", nil)
+	}
+
 	_, err = models.ClearanceDeleteAll(clearanceType)
 	if err != nil || clearanceType == -1 {
 		utils.LogDebug(fmt.Sprintf("ClearanceDeleteAll:%v", err))
@@ -167,13 +172,13 @@ func (c *ClearanceController) Import() {
 	}
 
 	cDatas := make([]*models.Clearance, 0)
-	title := models.Clearance{}
+	clearance := models.Clearance{}
 
-	info := c.ImportClearanceXlsx(title, clearanceType, fileNamePath)
-	cDatas, err = c.SaveDb(info, cDatas, &title)
+	info := c.ImportClearanceXlsx(clearance, clearanceType, fileNamePath, xmlTitle)
+	cDatas, err = c.GetXlsxContent(info, cDatas, &clearance)
 
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("SaveDb:%v", err))
+		utils.LogDebug(fmt.Sprintf("GetXlsxContent:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
 	}
 
@@ -188,42 +193,43 @@ func (c *ClearanceController) Import() {
 
 }
 
-func (c *ClearanceController) SaveDb(info []map[string]string, obj []*models.Clearance, title *models.Clearance) ([]*models.Clearance, error) {
+//获取 xlsx 文件内容
+func (c *ClearanceController) GetXlsxContent(info []map[string]string, obj []*models.Clearance, clearance *models.Clearance) ([]*models.Clearance, error) {
 	//忽略标题行
 	for i := 1; i < len(info); i++ {
-		t := reflect.ValueOf(title).Elem()
+		t := reflect.ValueOf(clearance).Elem()
 		for k, v := range info[i] {
 			switch t.FieldByName(k).Kind() {
 			case reflect.String:
 				t.FieldByName(k).Set(reflect.ValueOf(v))
 			case reflect.Float64:
-				titleV, err := strconv.ParseFloat(v, 64)
+				clearanceV, err := strconv.ParseFloat(v, 64)
 				if err != nil {
 					utils.LogDebug(fmt.Sprintf("ParseFloat:%v", err))
 					return nil, err
 				}
-				t.FieldByName(k).Set(reflect.ValueOf(titleV))
+				t.FieldByName(k).Set(reflect.ValueOf(clearanceV))
 			case reflect.Uint64:
 				reflect.ValueOf(v)
-				titleV, err := strconv.ParseUint(v, 0, 64)
+				clearanceV, err := strconv.ParseUint(v, 0, 64)
 				if err != nil {
 					utils.LogDebug(fmt.Sprintf("ParseUint:%v", err))
 					return nil, err
 				}
-				t.FieldByName(k).Set(reflect.ValueOf(titleV))
+				t.FieldByName(k).Set(reflect.ValueOf(clearanceV))
 			case reflect.Struct:
-				titleV, err := time.Parse("2006-01-02", v)
+				clearanceV, err := time.Parse("2006-01-02", v)
 				if err != nil {
 					utils.LogDebug(fmt.Sprintf("Parse:%v", err))
 					return nil, err
 				}
-				t.FieldByName(k).Set(reflect.ValueOf(titleV))
+				t.FieldByName(k).Set(reflect.ValueOf(clearanceV))
 			default:
 				utils.LogDebug("未知类型")
 			}
 		}
 
-		obj = append(obj, title)
+		obj = append(obj, clearance)
 
 	}
 

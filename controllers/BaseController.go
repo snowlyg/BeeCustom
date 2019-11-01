@@ -249,7 +249,13 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 }
 
 //导入基础参数 xlsx 文件内容
-func (c *BaseController) ImportClearanceXlsx(title models.Clearance, clearanceType int8, fileNamePath string) []map[string]string {
+func (c *BaseController) ImportClearanceXlsx(clearance models.Clearance, clearanceType int8, fileNamePath, xmlTitle string) []map[string]string {
+
+	xmlTitles := strings.Split(xmlTitle, "/")
+	rXmlTitles := map[string]int{}
+	for k, v := range xmlTitles {
+		rXmlTitles[v] = k
+	}
 
 	f, err := excelize.OpenFile(fileNamePath)
 	if err != nil {
@@ -271,15 +277,51 @@ func (c *BaseController) ImportClearanceXlsx(title models.Clearance, clearanceTy
 			//将数组  转成对应的 map
 			var info = make(map[string]string)
 			// 模型前两个字段是 BaseModel ，Type 不需要赋值
-			for i := 0; i < reflect.ValueOf(title).NumField(); i++ {
-				obj := reflect.TypeOf(title).Field(i)
-				if obj.Name == "Type" {
+			for i := 0; i < reflect.ValueOf(clearance).NumField(); i++ {
+				obj := reflect.TypeOf(clearance).Field(i)
+				switch obj.Name {
+				case "Type":
 					info[obj.Name] = string(clearanceType)
-				} else if obj.Name == "CustomsCode" {
-					info[obj.Name] = row[0]
-				} else if obj.Name == "Name" {
-					info[obj.Name] = row[1]
+				case "CustomsCode":
+					funcName(rXmlTitles, info, obj, row, "CustomsCode")
+				case "Name":
+					funcName(rXmlTitles, info, obj, row, "Name")
+				case "ShortName":
+					funcName(rXmlTitles, info, obj, row, "ShortName")
+				case "EnName":
+					funcName(rXmlTitles, info, obj, row, "EnName")
+				case "InspectionCode":
+					funcName(rXmlTitles, info, obj, row, "InspectionCode")
+				case "ShortEnName":
+					funcName(rXmlTitles, info, obj, row, "ShortEnName")
+				case "MandatoryLevel":
+					funcName(rXmlTitles, info, obj, row, "MandatoryLevel")
+				case "CertificateType":
+					funcName(rXmlTitles, info, obj, row, "CertificateType")
+				case "StatisticalUnitCode":
+					funcName(rXmlTitles, info, obj, row, "StatisticalUnitCode")
+				case "ConversionRate":
+					funcName(rXmlTitles, info, obj, row, "ConversionRate")
+				case "NatureMark":
+					funcName(rXmlTitles, info, obj, row, "NatureMark")
+				case "Iso2":
+					funcName(rXmlTitles, info, obj, row, "Iso2")
+				case "Iso3":
+					funcName(rXmlTitles, info, obj, row, "Iso3")
+				case "TypeCode":
+					funcName(rXmlTitles, info, obj, row, "TypeCode")
+				case "OldCustomCode":
+					funcName(rXmlTitles, info, obj, row, "OldCustomCode")
+				case "OldCustomName":
+					funcName(rXmlTitles, info, obj, row, "OldCustomName")
+				case "OldCiqCode":
+					funcName(rXmlTitles, info, obj, row, "OldCiqCode")
+				case "OldCiqName":
+					funcName(rXmlTitles, info, obj, row, "OldCiqName")
+				case "Remark":
+					funcName(rXmlTitles, info, obj, row, "Remark")
 				}
+
 			}
 
 			Info = append(Info, info)
@@ -294,4 +336,11 @@ func (c *BaseController) ImportClearanceXlsx(title models.Clearance, clearanceTy
 
 	return nil
 
+}
+
+// 判断是否存在键
+func funcName(rXmlTitles map[string]int, info map[string]string, obj reflect.StructField, row []string, s string) {
+	if _, ok := rXmlTitles[s]; ok {
+		info[obj.Name] = row[rXmlTitles[s]]
+	}
 }
