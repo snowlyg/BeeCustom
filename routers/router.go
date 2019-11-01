@@ -59,10 +59,11 @@ func init() {
 	beego.Router("/clearance/edit/?:id", &controllers.ClearanceController{}, "Get:Edit")
 	beego.Router("/clearance/update/?:id", &controllers.ClearanceController{}, "Patch:Update")
 	beego.Router("/clearance/delete/?:id", &controllers.ClearanceController{}, "Delete:Delete")
-	beego.Router("/clearance/import", &controllers.ClearanceController{}, "Post:Import")
+	beego.Router("/clearance/import/?:type", &controllers.ClearanceController{}, "Post:Import")
 
 	//文件上传
 	beego.Router("/file/upload", &controllers.FileController{}, "Post:Upload")
+	beego.Router("/orderfile/upload/?:id", &controllers.FileController{}, "Post:OrderDataUpload")
 
 	//后台用户路由
 	beego.Router("/backenduser/index", &controllers.BackendUserController{}, "*:Index")

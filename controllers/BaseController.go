@@ -2,12 +2,14 @@ package controllers
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/validations"
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/astaxie/beego/validation"
 
 	"github.com/astaxie/beego"
@@ -208,6 +210,7 @@ func (c *BaseController) validRequestData(m interface{}) {
 
 }
 
+//获取最后更新时间
 func (c *BaseController) GetLastUpdteTime(index string) string {
 	var lastUpdteTime string
 	_ = utils.GetCache(index, &lastUpdteTime)
@@ -219,6 +222,76 @@ func (c *BaseController) GetLastUpdteTime(index string) string {
 	return lastUpdteTime
 }
 
+//设置最后更新时间
 func (c *BaseController) SetLastUpdteTime(index, value string) {
 	_ = utils.SetCache(index, value, 2592000)
+}
+
+//上传文件
+func (c *BaseController) BaseUpload(fileType string) (string, error) {
+	f, h, err := c.GetFile("filename")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("参数错误:%v", err))
+		return "", err
+	}
+
+	if fileNamePath, err := utils.GetUploadFileUPath(f, h, fileType); err != nil {
+		return "", err
+	} else {
+		err = c.SaveToFile("filename", fileNamePath) // 保存位置在 static/upload, 没有文件夹要先创建
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("图片保存失败:%v", err))
+			return "", err
+		} else {
+			return fileNamePath, nil
+		}
+	}
+}
+
+//导入基础参数 xlsx 文件内容
+func (c *BaseController) ImportClearanceXlsx(title models.Clearance, clearanceType int8, fileNamePath string) []map[string]string {
+
+	f, err := excelize.OpenFile(fileNamePath)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+	}
+
+	if f != nil {
+		// Get all the rows in the Sheet1.
+		rows, err := f.GetRows("Sheet1")
+
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
+
+		var Info []map[string]string
+		for _, row := range rows {
+			//将数组  转成对应的 map
+			var info = make(map[string]string)
+			// 模型前两个字段是 BaseModel ，Type 不需要赋值
+			for i := 0; i < reflect.ValueOf(title).NumField(); i++ {
+				obj := reflect.TypeOf(title).Field(i)
+				if obj.Name == "Type" {
+					info[obj.Name] = string(clearanceType)
+				} else if obj.Name == "CustomsCode" {
+					info[obj.Name] = row[0]
+				} else if obj.Name == "Name" {
+					info[obj.Name] = row[1]
+				}
+			}
+
+			Info = append(Info, info)
+		}
+
+		return Info
+
+	} else {
+		utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+	}
+
+	return nil
+
 }

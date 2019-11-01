@@ -1,8 +1,9 @@
 package models
 
 import (
-	"BeeCustom/enums"
 	"time"
+
+	"BeeCustom/enums"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -53,6 +54,26 @@ func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64
 func BaseDelete(m interface{}) (num int64, err error) {
 	o := orm.NewOrm()
 	if num, err := o.Delete(m); err != nil {
+		return num, err
+	} else {
+		return num, nil
+	}
+}
+
+//删除
+func BaseDeleteAll(clearanceType int8) (num int64, err error) {
+	o := orm.NewOrm()
+	if num, err := o.QueryTable(ClearanceTBName()).Filter("type", clearanceType).Delete(); err != nil {
+		return num, err
+	} else {
+		return num, nil
+	}
+}
+
+//批量插入
+func BaseInsertMulti(bulk int, m interface{}) (num int64, err error) {
+	o := orm.NewOrm()
+	if num, err := o.InsertMulti(bulk, m); err != nil {
 		return num, err
 	} else {
 		return num, nil

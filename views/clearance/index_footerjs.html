@@ -8,14 +8,9 @@
 
         const upload_clearance = upload.render({
             elem: '#clearance_upload'
-            , url: '/clearance/import'
+            , url: '/clearance/import/' + $("#clearance_type_select").val()
             , accept: 'file'
-            , field: 'clearance_file'
-            , data: {
-                clearance_type: function () {
-                    return $("#clearance_id").val();
-                }
-            }
+            , field: 'filename'
             , before: function (obj) {
                 layer.load(2);
             }

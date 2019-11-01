@@ -15,6 +15,7 @@ func (u *Clearance) TableName() string {
 // Clearance 实体类
 type Clearance struct {
 	BaseModel
+
 	Type                int8   `orm:"column(type)" description:"参数类别"`
 	CustomsCode         string `orm:"column(customs_code);size(255)" description:"海关编码"  valid:"Required;MaxSize(255)"`
 	Name                string `orm:"column(name);size(255)" description:"名称"  valid:"Required;MaxSize(255)"`
@@ -62,6 +63,7 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	if len(params.Type) > 0 {
 		clearanceType = params.Type
 	}
+
 	query = query.Filter("type", clearanceType)
 
 	if len(params.NameLike) > 0 {
@@ -119,4 +121,18 @@ func ClearanceDelete(id int64) (num int64, err error) {
 	} else {
 		return num, nil
 	}
+}
+
+//删除
+func ClearanceDeleteAll(clearanceType int8) (num int64, err error) {
+	if num, err := BaseDeleteAll(clearanceType); err != nil {
+		return num, err
+	} else {
+		return num, nil
+	}
+}
+
+//批量插入
+func InsertMulti(datas []*Clearance) (num int64, err error) {
+	return BaseInsertMulti(len(datas), datas)
 }

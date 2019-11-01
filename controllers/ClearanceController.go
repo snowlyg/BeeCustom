@@ -3,12 +3,14 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/utils"
 	"github.com/astaxie/beego"
 )
 
@@ -144,24 +146,86 @@ func (c *ClearanceController) Delete() {
 
 //导入
 func (c *ClearanceController) Import() {
-	f, err := excelize.OpenFile("./Book1.xlsx")
-	if err != nil {
-		fmt.Println(err)
-		return
+
+	clearanceType, err := c.GetInt8(":type", -1)
+	if err != nil || clearanceType == -1 {
+		utils.LogDebug(fmt.Sprintf("GetInt8:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "参数错误", nil)
 	}
-	// Get value from cell by given worksheet name and axis.
-	cell, err := f.GetCellValue("Sheet1", "B2")
-	if err != nil {
-		fmt.Println(err)
-		return
+
+	_, err = models.ClearanceDeleteAll(clearanceType)
+	if err != nil || clearanceType == -1 {
+		utils.LogDebug(fmt.Sprintf("ClearanceDeleteAll:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "清空数据报错", nil)
 	}
-	fmt.Println(cell)
-	// Get all the rows in the Sheet1.
-	rows, err := f.GetRows("Sheet1")
-	for _, row := range rows {
-		for _, colCell := range row {
-			fmt.Print(colCell, "\t")
+
+	fileType := "clearance/" + strconv.FormatInt(c.curUser.Id, 10) + "/"
+	fileNamePath, err := c.BaseUpload(fileType)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("BaseUpload:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
+	}
+
+	cDatas := make([]*models.Clearance, 0)
+	title := models.Clearance{}
+
+	info := c.ImportClearanceXlsx(title, clearanceType, fileNamePath)
+	cDatas, err = c.SaveDb(info, cDatas, &title)
+
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("SaveDb:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
+	}
+
+	mun, err := models.InsertMulti(cDatas)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("InsertMulti:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
+	}
+
+	c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
+	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("上传成功%d项基础参数", mun), mun)
+
+}
+
+func (c *ClearanceController) SaveDb(info []map[string]string, obj []*models.Clearance, title *models.Clearance) ([]*models.Clearance, error) {
+	//忽略标题行
+	for i := 1; i < len(info); i++ {
+		t := reflect.ValueOf(title).Elem()
+		for k, v := range info[i] {
+			switch t.FieldByName(k).Kind() {
+			case reflect.String:
+				t.FieldByName(k).Set(reflect.ValueOf(v))
+			case reflect.Float64:
+				titleV, err := strconv.ParseFloat(v, 64)
+				if err != nil {
+					utils.LogDebug(fmt.Sprintf("ParseFloat:%v", err))
+					return nil, err
+				}
+				t.FieldByName(k).Set(reflect.ValueOf(titleV))
+			case reflect.Uint64:
+				reflect.ValueOf(v)
+				titleV, err := strconv.ParseUint(v, 0, 64)
+				if err != nil {
+					utils.LogDebug(fmt.Sprintf("ParseUint:%v", err))
+					return nil, err
+				}
+				t.FieldByName(k).Set(reflect.ValueOf(titleV))
+			case reflect.Struct:
+				titleV, err := time.Parse("2006-01-02", v)
+				if err != nil {
+					utils.LogDebug(fmt.Sprintf("Parse:%v", err))
+					return nil, err
+				}
+				t.FieldByName(k).Set(reflect.ValueOf(titleV))
+			default:
+				utils.LogDebug("未知类型")
+			}
 		}
-		fmt.Println()
+
+		obj = append(obj, title)
+
 	}
+
+	return obj, nil
 }
