@@ -21,39 +21,47 @@
                                 @{{range .HandBooks }}
                             <div class="layui-col-md4">
                                 @{{if ge .UsefulLifeDays 30 }}
-                            <div class="is_list_content  health ">
-                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
-                                    <h2>@{{ .ContractNumber }}</h2>
-                                    <span class="day_number">距离核销天数：</span>
-                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
-                                    <span class="is_list_delete" data-id="@{{ .Id }}"><i
-                                                class="iconfont icondelete"></i></span>
-                                </div>
+                            <a lay-href="/handbook/show/@{{.Id}}" lay-text="手账册详情">
+                                <div class="is_list_content  health ">
+                                    <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
+                                        <h2>@{{ .ContractNumber }}</h2>
+                                        <span class="day_number">距离核销天数：</span>
+                                        <span class="is_days">@{{  .UsefulLifeDays }}天</span>
+                                        <span class="is_list_delete" data-id="@{{ .Id }}"><i
+                                                    class="iconfont icondelete"></i></span>
+                                    </div>
 
-                                <span class="is_status">健康</span>
-                            </div>
+                                    <span class="is_status">健康</span>
+                                </div>
+                            </a>
+
                             @{{else if le .UsefulLifeDays 0 }}
-                            <div class="is_list_content    expired">
-                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
-                                    <h2>@{{ .ContractNumber }}</h2>
-                                    <span class="day_number">距离核销天数：</span>
-                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
-                                    <span class="is_list_delete" data-id="@{{ .Id }}"><i
-                                                class="iconfont icondelete"></i></span>
+                            <a lay-href="/handbook/show/@{{.Id}}" lay-text="手账册详情">
+                                <div class="is_list_content    expired">
+                                    <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
+                                        <h2>@{{ .ContractNumber }}</h2>
+                                        <span class="day_number">距离核销天数：</span>
+                                        <span class="is_days">@{{  .UsefulLifeDays }}天</span>
+                                        <span class="is_list_delete" data-id="@{{ .Id }}"><i
+                                                    class="iconfont icondelete"></i></span>
+                                    </div>
+                                    <span class="is_status">已过期</span>
                                 </div>
-                                <span class="is_status">已过期</span>
-                            </div>
+                            </a>
+
                             @{{else }}
-                            <div class="is_list_content  warn">
-                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
-                                    <h2>@{{ .ContractNumber }}</h2>
-                                    <span class="day_number">距离核销天数：</span>
-                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
-                                    <span class="is_list_delete" data-id="@{{ .Id }}"><i
-                                                class="iconfont icondelete"></i></span>
+                            <a lay-href="/handbook/show/@{{.Id}}" lay-text="手账册详情">
+                                <div class="is_list_content  warn">
+                                    <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
+                                        <h2>@{{ .ContractNumber }}</h2>
+                                        <span class="day_number">距离核销天数：</span>
+                                        <span class="is_days">@{{  .UsefulLifeDays }}天</span>
+                                        <span class="is_list_delete" data-id="@{{ .Id }}"><i
+                                                    class="iconfont icondelete"></i></span>
+                                    </div>
+                                    <span class="is_status">警告</span>
                                 </div>
-                                <span class="is_status">警告</span>
-                            </div>
+                            </a>
                             @{{end}}
                             </div>
                             @{{end }}

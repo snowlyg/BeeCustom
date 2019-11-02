@@ -1,0 +1,42 @@
+<div class="custom-manual-right">
+    <div class="custom-manual-right-company_table">
+        <div class="company_title">
+            <p class="company_title_p1">@{{ .m.Company.Name }}</p>
+            <p class="company_title_p2">
+                <span>账册编号：@{{  .m.ContractNumber }}</span>
+            </p>
+        </div>
+        <div class="company_btn">
+            <button class="layui-btn company_btn_primary" id="contract_del" type="button" data-id="@{{ .m.Id }}">
+                <i class="iconfont icon-delete"></i>删除
+            </button>
+        </div>
+    </div>
+    <div class="custom-manual-right-contract_table">
+        <div class="layui-tab">
+            <ul class="layui-tab-title is_tab">
+                <li class="layui-this">表头清单</li>
+                <li>成品清单</li>
+                <li>料件清单</li>
+                <li>单损表</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    @{{template "/handbook/show/gauge.html"}}
+                </div>
+                <div class="layui-tab-item">
+                    @{{template "/handbook/show/goods.html"}}
+                </div>
+                <div class="layui-tab-item">
+                    @{{template "/handbook/show/piece.html"}}
+                </div>
+                <div class="layui-tab-item">
+                    <div class="custom-manual-single">
+                        <table class="layui-hide" id="account-table-goods" lay-filter="account-table-goods"></table>
+                        <table class="layui-hide" id="account-table-piece" lay-filter="account-table-piece"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -107,7 +107,7 @@ func CompanyContactSave(m *CompanyContact) (*CompanyContact, error) {
 
 //获取关联模型
 func getCompanyContactCompany(m *CompanyContact) error {
-	if bU, err := CompanyOne(m.CompanyId, false); err != nil {
+	if bU, err := CompanyOne(m.CompanyId, ""); err != nil {
 		return err
 	} else {
 		m.Company = bU

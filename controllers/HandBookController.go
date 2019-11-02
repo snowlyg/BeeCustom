@@ -46,7 +46,7 @@ func (c *HandBookController) Index() {
 
 	companies, count := models.CompanyPageList(&params)
 
-	cs, err := models.CompanyGetRelations(companies, "HandBooks")
+	cs, err := models.CompaniesGetRelations(companies, "HandBooks")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
@@ -61,6 +61,24 @@ func (c *HandBookController) Index() {
 	//页面里按钮权限控制
 	c.getActionData("Delete", "Import")
 
+	c.GetXSRFToken()
+}
+
+// Edit 添加 编辑 页面
+func (c *HandBookController) Show() {
+	Id, _ := c.GetInt64(":id", 0)
+	m, err := models.HandBookOne(Id, "Company,Goods,Materials")
+	if m != nil && Id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
+
+	c.Data["m"] = m
+
+	c.setTpl()
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "handbook/show_footerjs.html"
 	c.GetXSRFToken()
 }
 

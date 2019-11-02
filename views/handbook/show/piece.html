@@ -1,0 +1,116 @@
+<div class="custom-manual-goods">
+    <table class="layui-table" lay-even="" lay-skin="row">
+        <colgroup>
+            <col width="70">
+            <col width="70">
+            <col width="110">
+            <col width="160">
+            <col width="260">
+            <col width="130">
+            <col width="260">
+            <col width="130">
+            <col width="130">
+            <col width="150">
+            <col width="80">
+            <col width="110">
+            <col width="140">
+            <col width="140">
+            <col width="110">
+            <col width="110">
+            <col width="110">
+            <col width="140">
+            <col width="140">
+            <col width="140">
+            <col width="110">
+            <col width="280">
+            <col width="110">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>货号</th>
+            <th>处理标志</th>
+            <th>商品编码</th>
+            <th>商品名称</th>
+            <th>分类标志</th>
+            <th>规格型号</th>
+            <th>申报计量单位</th>
+            <th>法定计量单位</th>
+            <th>法定第二计量单位</th>
+            <th>单价</th>
+            <th>币制名称</th>
+            <th>币制英文名称</th>
+            <th>申报单价人民币</th>
+            <th>申报数量</th>
+            <th>最大余量</th>
+            <th>初始数量</th>
+            <th>第二单位比例</th>
+            <th>第三单位比例</th>
+            <th>重量比例因子</th>
+            <th>征免类型</th>
+            <th>备注</th>
+            <th>申报类别</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="custom-manual-goods-bottom">
+        <table class="layui-table" lay-even="" lay-skin="row">
+            <colgroup>
+                <col width="70">
+                <col width="70">
+                <col width="110">
+                <col width="160">
+                <col width="260">
+                <col width="130">
+                <col width="260">
+                <col width="130">
+                <col width="130">
+                <col width="150">
+                <col width="80">
+                <col width="110">
+                <col width="140">
+                <col width="140">
+                <col width="110">
+                <col width="110">
+                <col width="110">
+                <col width="140">
+                <col width="140">
+                <col width="140">
+                <col width="110">
+                <col width="280">
+                <col width="110">
+            </colgroup>
+            <tbody>
+          
+             @foreach($account->materials as $material)
+             @{{range .m.Materials}}
+            <tr>
+                <td>@{{ .serial }}</td>
+                <td>@{{ .record_no }}</td>
+                <td>@{{ .handle_mark }}</td>
+                <td>@{{ .hs_code }}</td>
+                <td>@{{ .name }}</td>
+                <td>@{{ .classification_mark }}</td>
+                <td>@{{ .special }}</td>
+                <td>@{{ .unit_one }}</td>
+                <td>@{{ .unit_two }}</td>
+                <td>@{{ .unit_three }}</td>
+                <td>@{{ .price }}</td>
+                <td>@{{ .moneyunit }}</td>
+                <td>@{{ .moneyunit_en }}</td>
+                <td></td>
+                <td>@{{ .quantity  }}</td>
+                <td>@{{ .max_allowance  }}</td>
+                <td>@{{ .initial_quantity  }}</td>
+                <td>@{{ .unit_two_proportion }}</td>
+                <td>@{{ .unit_three_proportion }}</td>
+                <td>@{{ .weight_proportion }}</td>
+                <td>@{{ .taxationlx }}</td>
+                <td>@{{ .remark }}</td>
+                <td>@{{ .declare_mode }}</td>
+            </tr>
+            @{{end}}
+            </tbody>
+        </table>
+    </div>
+</div>

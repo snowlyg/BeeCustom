@@ -10,6 +10,7 @@ func init() {
 
 	//手账册
 	beego.Router("/handbook/index", &controllers.HandBookController{}, "*:Index")
+	beego.Router("/handbook/show/?:id", &controllers.HandBookController{}, "Get:Show")
 	beego.Router("/handbook/delete/?:id", &controllers.HandBookController{}, "Delete:Delete")
 	beego.Router("/handbook/import/?:type", &controllers.HandBookController{}, "Post:Import")
 

@@ -98,7 +98,7 @@ func CompanySealSave(m *CompanySeal) (*CompanySeal, error) {
 
 //获取关联模型
 func getCompanySealBackendUser(m *CompanySeal) error {
-	if bU, err := CompanyOne(m.CompanyId, false); err != nil {
+	if bU, err := CompanyOne(m.CompanyId, ""); err != nil {
 		return err
 	} else {
 		m.Company = bU

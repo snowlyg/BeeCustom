@@ -92,7 +92,8 @@ func (c *CompanyController) Store() {
 // Edit 添加 编辑 页面
 func (c *CompanyController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.CompanyOne(Id, true)
+	m, err := models.CompanyOne(Id, "CompanySeals")
+
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")

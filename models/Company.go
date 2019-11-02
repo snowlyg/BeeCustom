@@ -105,41 +105,45 @@ func CompanyPageList(params *CompanyQueryParam) ([]*Company, int64) {
 	return data, total
 }
 
-func CompanyGetRelations(ms []*Company, relations string) ([]*Company, error) {
-	o := orm.NewOrm()
-	rs := strings.Split(relations, ",")
-	for _, v := range ms {
-		for _, rv := range rs {
-			_, err := o.LoadRelated(v, rv)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
-				return nil, err
-			}
-
-			for _, hv := range v.HandBooks {
-				hv.UsefulLifeDays = int(math.Round(hv.UsefulLife.Sub(time.Now()).Hours() / 24))
-			}
-
-		}
+func CompaniesGetRelations(rs []*Company, relations string) ([]*Company, error) {
+	for _, rv := range rs {
+		_, _ = CompanyGetRelations(rv, relations)
 	}
 
-	return ms, nil
+	return rs, nil
+}
+
+func CompanyGetRelations(v *Company, relations string) (*Company, error) {
+	o := orm.NewOrm()
+	rs := strings.Split(relations, ",")
+	for _, rv := range rs {
+		_, err := o.LoadRelated(v, rv)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+			return nil, err
+		}
+
+		for _, hv := range v.HandBooks {
+			hv.UsefulLifeDays = int(math.Round(hv.UsefulLife.Sub(time.Now()).Hours() / 24))
+		}
+
+	}
+
+	return v, nil
 }
 
 // CompanyOne 根据id获取单条
-func CompanyOne(id int64, isRelated bool) (*Company, error) {
+func CompanyOne(id int64, relations string) (*Company, error) {
 	m := NewCompany(0)
 	o := orm.NewOrm()
-	if isRelated {
-		if err := o.QueryTable(CompanyTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
-			return nil, err
-		}
 
-		if _, err := o.LoadRelated(&m, "CompanySeals"); err != nil {
-			return nil, err
-		}
-	} else {
-		if err := o.QueryTable(CompanyTBName()).Filter("Id", id).One(&m); err != nil {
+	if err := o.QueryTable(CompanyTBName()).Filter("Id", id).One(&m); err != nil {
+		return nil, err
+	}
+
+	if len(relations) > 0 {
+		_, err := CompanyGetRelations(&m, relations)
+		if err != nil {
 			return nil, err
 		}
 	}

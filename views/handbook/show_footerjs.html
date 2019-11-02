@@ -1,0 +1,74 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table', 'form', 'upload', 'element'], async () => {
+        let table = layui.table
+            , admin = layui.admin
+            , $ = layui.$;
+
+
+        $("body").on("click", "#contract_del", function () {
+            layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                const data = await admin.delete(`/account/${$(this).data('id')}`);
+                if(data.status){
+                    setTimeout(() => {
+                        parent.layui.admin.closeThisTabs()
+                    }, 1000)
+                }
+            });
+        });
+
+
+        table.render({
+            elem: '#account-table-goods'
+            , toolbar: true
+            , defaultToolbar: ['filter']
+            , colFilterRecord: 'local'
+            , cols: [[
+                {field: 'serial', title: '成品序号', width: 120}
+                , {field: 'name', title: '成品名称', width: 400}
+                , {field: 'special', title: '成品规格', width: 400}
+                , {field: 'unit_two', title: '成品单位', width: 180}
+                , {field: 'gedition', title: '成品版本号', width: 200}
+                , {field: 'record_no', title: '成品货号'}
+            ]]
+            ,url: '/account/{{$account->id}}/goods' //数据接口
+            , parseData: function (res) {
+                return {
+                    "count": res.total,
+                    "data": res.data
+                };
+            }
+            ,page: true //开启分页
+            , height: 450
+        });
+
+        table.on('row(account-table-goods)', function (obj) {
+            table.render({
+                elem: '#account-table-piece'
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [[
+                    {field: 'originality_pro_no', title: '料件序号', width: 90}
+                    , {field: 'originality_pro_name', title: '料件名称', width: 400}
+                    , {field: 'originality_pro_special', title: '料件规格', width: 400}
+                    , {field: 'originality_pro_u', title: '料件单位', width: 120}
+                    , {field: 'only_ullage', title: '单耗', width: 160}
+                    , {field: 'ullage', title: '损耗', width: 120}
+                    , {field: 'record_no', title: '料件货号'}
+                ]]
+                ,url: `/account/${obj.data.id}/ullages` //数据接口
+                , parseData: function (res) {
+                    return {
+                        "count": res.total,
+                        "data": res.data
+                    };
+                }
+                ,page: true //开启分页
+            });
+        });
+    });
+</script>

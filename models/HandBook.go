@@ -1,7 +1,10 @@
 package models
 
 import (
+	"BeeCustom/utils"
 	"errors"
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -108,12 +111,34 @@ func NewHandBookQueryParam() HandBookQueryParam {
 	return HandBookQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
 
+func HandBookGetRelations(v *HandBook, relations string) (*HandBook, error) {
+	o := orm.NewOrm()
+	rs := strings.Split(relations, ",")
+	for _, rv := range rs {
+		_, err := o.LoadRelated(v, rv)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+			return nil, err
+		}
+
+	}
+
+	return v, nil
+}
+
 // HandBookOne 根据id获取单条
-func HandBookOne(id int64) (*HandBook, error) {
+func HandBookOne(id int64, relations string) (*HandBook, error) {
 	m := NewHandBook(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(HandBookTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
 		return nil, err
+	}
+
+	if len(relations) > 0 {
+		_, err := HandBookGetRelations(&m, relations)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if &m == nil {

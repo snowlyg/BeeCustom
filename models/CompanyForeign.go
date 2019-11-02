@@ -99,7 +99,7 @@ func CompanyForeignSave(m *CompanyForeign) (*CompanyForeign, error) {
 
 //获取关联模型
 func getCompanyForeignBackendUser(m *CompanyForeign) error {
-	if bU, err := CompanyOne(m.CompanyId, false); err != nil {
+	if bU, err := CompanyOne(m.CompanyId, ""); err != nil {
 		return err
 	} else {
 		m.Company = bU
