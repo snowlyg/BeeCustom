@@ -1,0 +1,418 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table', 'form', 'upload', 'element'], async function () {
+        var table = layui.table
+            , admin = layui.admin
+            , upload = layui.upload
+            , laytpl = layui.laytpl
+            , element = layui.element
+            , $ = layui.$
+            , account_data = []
+            , page = 1
+            , limit = 15
+            , last_page = 0;
+
+        /*导入账册*/
+        const upload_account = upload.render({
+            elem: '#account_upload',
+            url: '/two_account/import',
+            accept: 'file',
+            acceptMime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-excel.sheet.macroEnabled.12',
+            exts: 'xlsx|xls|xlsm',
+            field: 'account_file',
+            before: function (obj) {
+                layer.load(2);
+            },
+            done: async function (res) {
+                if (res.status) {
+                    layer.msg(res.msg, {
+                        offset: '15px'
+                        , icon: 1
+                        , time: 2000
+                        , id: 'Message'
+                    });
+                    page = 1;
+                    $("#account_search").val(res.data);
+                    const account_lists = await admin.get(`/two_account/lists?page=${page}&limit=${limit}&search=${res.data}`);
+                    account_list_template(account_lists);
+                } else {
+                    layer.msg(res.msg, {
+                        offset: '15px'
+                        , icon: 2
+                        , time: 2000
+                        , id: 'Message'
+                    });
+                }
+                layer.closeAll('loading');
+            },
+            error: function () {
+                layer.closeAll('loading');
+            }
+        });
+        /*导入账册 END*/
+
+
+        /*渲染表格 account_two_data 账册数据 */
+        function table_render_date(account_two_data) {
+            /*料件表*/
+            table.render({
+                elem: '#piece_table'
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [[
+                    {field: 'id', title: '序号', width: 120}
+                    , {field: 'record_no', title: '料号', width: 120}
+                    , {field: 'hs_code', title: '商品编码', width: 200}
+                    , {field: 'name', title: '商品名称', width: 180}
+                    , {field: 'special', title: '规格型号', width: 200}
+                    , {field: 'unit_one', title: '申报计量单位', width: 120}
+                    , {field: 'unit_two', title: '法定计量单位', width: 120}
+                    , {field: 'unit_three', title: '法定计量第二单位', width: 150}
+                    , {field: 'price', title: '申报单价', width: 120}
+                    , {field: 'moneyunit', title: '币制', width: 120}
+                    , {field: 'quantity', title: '申报数量', width: 120}
+                    , {field: 'taxationlx', title: '征免性质', width: 120}
+                    , {field: 'company_action_flag', title: '企业执行标志', width: 120}
+                    , {field: 'handle_mark', title: '修改标志', width: 120}
+                    , {field: 'start_count', title: '期初数量', width: 120}
+                    , {field: 'count_control_flag', title: '数量控制标志', width: 120}
+                    , {field: 'custom_action_flag', title: '海关执行标志', width: 120}
+                    , {field: 'big_count', title: '批准最大余数量', width: 150}
+                ]]
+                , data: account_two_data.data.materials.data
+                , limit: account_two_data.data.materials.data.length
+                , height: 450
+            });
+
+            /*监听成品搜索*/
+            $("#piece_search").on("input", function (e) {
+                field = ['record_no', 'hs_code', 'name'];
+                arr = search(e.delegateTarget.value, account_two_data.data.materials.data, field);
+                if (e.delegateTarget.value.length == 0) {
+                    arr = account_two_data.data.materials.data;
+                }
+                table.reload('piece_table', {
+                    data: arr
+                });
+
+            });
+
+
+            /*成品表*/
+            table.render({
+                elem: '#goods_table'
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [[
+                    {field: 'id', title: '序号', width: 120}
+                    , {field: 'record_no', title: '料号', width: 120}
+                    , {field: 'hs_code', title: '商品编码', width: 200}
+                    , {field: 'name', title: '商品名称', width: 180}
+                    , {field: 'special', title: '规格型号', width: 240}
+                    , {field: 'unit_one', title: '申报计量单位', width: 120}
+                    , {field: 'unit_two', title: '法定计量单位', width: 120}
+                    , {field: 'unit_three', title: '法定计量第二单位', width: 160}
+                    , {field: 'price', title: '申报单价', width: 120}
+                    , {field: 'moneyunit', title: '币制', width: 120}
+                    , {field: 'quantity', title: '申报数量', width: 120}
+                    , {field: 'taxationlx', title: '征免性质', width: 120}
+                    , {field: 'count_control_flag', title: '数量控制标志', width: 120}
+                    , {field: 'company_action_flag', title: '企业执行标志', width: 120}
+                    , {field: 'handle_mark', title: '修改标志', width: 120}
+                    , {field: 'custom_action_flag', title: '海关执行标志', width: 120}
+                    , {field: 'ullage_flag', title: '单耗质疑标志', width: 120}
+                    , {field: 'consult_mark', title: '磋商标志', width: 120}
+                ]]
+                , data: account_two_data.data.goods.data
+                , limit: account_two_data.data.goods.data.length
+                , height: 450
+            });
+
+            /*监听成品搜索*/
+            $("#goods_search").on("input", function (e) {
+                field = ['record_no', 'hs_code', 'name'];
+                arr = search(e.delegateTarget.value, account_two_data.data.goods.data, field);
+                if (e.delegateTarget.value.length == 0) {
+                    arr = account_two_data.data.goods.data;
+                }
+                table.reload('goods_table', {
+                    data: arr
+                });
+
+            });
+
+            /*单损耗表*/
+            table.render({
+                elem: '#single_table'
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [[
+                    {field: 'id', title: '序号', width: 120}
+                    , {field: 'finish_pro_no', title: '成品序号', width: 120}
+                    , {field: 'finish_record_no', title: '成品料号', width: 200}
+                    , {field: 'finish_hs_code', title: '成品商品编码', width: 180}
+                    , {field: 'finish_name', title: '成品商品名称', width: 200}
+                    , {field: 'originality_pro_no', title: '料件序号', width: 120}
+                    , {field: 'originality_record_no', title: '料件料号', width: 120}
+                    , {field: 'originality_hs_code', title: '料件商品编码', width: 120}
+                    , {field: 'originality_pro_name', title: '料件商品名称', width: 180}
+                    , {field: 'only_ullage_version', title: '单损版本号', width: 120}
+                    , {field: 'only_ullage', title: '单耗', width: 120}
+                    , {field: 'one_ullage', title: '净耗', width: 120}
+                    , {field: 'ullage', title: '有形损耗率', width: 120}
+                    , {field: 'no_ullage', title: '无形损耗率', width: 120}
+                    , {field: 'only_ullage_status', title: '单耗申报状态', width: 120}
+                    , {field: 'bonded_rate', title: '保税料件比例', width: 120}
+                    , {field: 'change_mark', title: '修改标志', width: 120}
+                    , {field: 'only_ullage_at', title: '单耗有效期', width: 180}
+                ]]
+                , data: account_two_data.data.ullages.data
+                , limit: account_two_data.data.ullages.data.length
+                , height: 450
+            });
+
+            /*监听成品搜索*/
+            $("#single_search").on("input", function (e) {
+                field = ['only_ullage_version', 'originality_record_no', 'finish_record_no'];
+                arr = search(e.delegateTarget.value, account_two_data.data.materials.data, field);
+                if (e.delegateTarget.value.length == 0) {
+                    arr = account_two_data.data.materials.data;
+                }
+                table.reload('piece_table', {
+                    data: arr
+                });
+
+            });
+
+
+        }
+
+
+        /*左侧公司列表切换*/
+        $("body").on("click", ".layui-colla-title", async function () {
+            $(this).addClass('is_show').parent().siblings().children('.layui-colla-title').removeClass('is_show');
+            $(".is_children").each(function () {
+                $(this).removeClass('is_active');
+            });
+            laytpl($("#contract_templet").html()).render(account_data[$(this).data('index')], function (html) {
+                $("#company_contract").html(html)
+            });
+        });
+        $("body").on("click", ".is_children", async function () {
+            $(this).addClass('is_active').siblings().removeClass('is_active');
+            $(this).parent().siblings('.is_title').removeClass('is_show').parent().siblings().children('.is_content').children().removeClass('is_active');
+            layer.load(2);
+            const data = await admin.get(`/two_account/${$(this).data('id')}`);
+            layer.closeAll('loading');
+            data.company_name = $(this).data('name');
+            laytpl($("#table_templet").html()).render(data, function (html) {
+                $("#company_contract").html(html)
+            });
+            /*渲染表格*/
+            table_render_date(data);
+        });
+        $("body").on("click", ".is_list_left", async function () {
+            const that = $(this);
+            const id = that.data('id');
+            $(".is_children").each(function () {
+                $(this).removeClass('is_active');
+                if ($(this).data('id') == id) {
+                    $(this).addClass('is_active');
+                    $(this).parent().siblings('.is_title').removeClass('is_show')
+                }
+            });
+            layer.load(2);
+            const data = await admin.get(`/two_account/${id}`);
+            layer.closeAll('loading');
+            data.company_name = $(this).data('name');
+            laytpl($("#table_templet").html()).render(data, function (html) {
+                $("#company_contract").html(html)
+            });
+            /*渲染表格*/
+            table_render_date(data);
+        });
+        $("body").on("click", ".is_list_delete", function () {
+            layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                const data = await admin.delete(`/two_account/${$(this).data('id')}`);
+                if (data.status) {
+                    page = 1;
+                    const account_lists = await admin.get(`/two_account/lists?page=${page}&limit=${limit}&search=${$(".company_title_p1").text()}`);
+                    account_list_template(account_lists);
+                }
+                layer.close(index);
+            });
+        });
+
+        /*搜索通用*/
+        function search(keyWord, len, field) {
+            var arr = [];
+            for (var i = 0; i < len.length; i++) {
+                for (var k = 0; k < field.length; k++) {
+                    var newVar = len[i][field[k]].toString();
+                    if (newVar.indexOf(keyWord) != -1) {
+                        arr.push(len[i]);
+                        break;
+                    }
+                }
+            }
+            return arr;
+        }
+
+
+        /*删除账册*/
+        $("body").on("click", "#contract_del", function () {
+            layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                const data = await admin.delete(`/two_account/${$(this).data('id')}`);
+                if (data.status) {
+                    page = 1;
+                    const account_lists = await admin.get(`/two_account/lists?page=${page}&limit=${limit}&search=${$('.company_title_p1').text()}`);
+                    account_list_template(account_lists);
+                }
+                layer.close(index);
+            });
+        });
+
+        $("#is_collapse").on('scroll', async function () {
+            let viewH = $(this).height()
+                , contentH = $(this).get(0).scrollHeight
+                , scrollTop = $(this).scrollTop();
+            if ((scrollTop / (contentH - viewH)) >= 1) {
+                if (page == last_page) {
+                    return false
+                } else {
+                    page++
+                }
+                const account_lists = await admin.get(`/two_account/lists?page=${page}&limit=${limit}&search=${$("#account_search").val()}`);
+                account_data = account_data.concat(account_lists.data);
+                laytpl($("#is_collapse_templet").html()).render(account_data, function (html) {
+                    $("#is_collapse").html(html)
+                });
+                element.render('collapse');
+            }
+        });
+
+        /*监听搜索按钮 START*/
+        $("#account_search").on('input', async function () {
+            page = 1;
+            const account_lists = await admin.get(`/two_account/lists?page=${page}&limit=${limit}&search=${$(this).val()}`);
+            account_list_template(account_lists);
+        });
+        /*监听搜索按钮 END*/
+
+
+        /*表格横向移动*/
+        $("body").on("mousedown", ".custom-manual-goods, .layui-table-main", function (event) {
+            if (event.button == 0) {
+                gapX = event.clientX;
+                startx = $(this).scrollLeft();
+                $(this).on('mousemove', function (ev) {
+                    let left = ev.clientX - gapX;
+                    $(this).scrollLeft(startx - left);
+                    return false;
+                });
+                $(this).on('mouseup', function (et) {
+                    $(this).off("mousemove");
+                    $(this).off("mouseup");
+                })
+            }
+        });
+        /*表格横向移动 END*/
+
+        /*监听料件表格*/
+        table.on('row(piece_table)', function (obj) {
+            data = obj.data;
+            $("#two_account_tab2_1").text(data.id);
+            $("#two_account_tab2_2").text(data.record_no);
+            $("#two_account_tab2_3").text(data.hs_code);
+            $("#two_account_tab2_4").text(data.name);
+            $("#two_account_tab2_5").text(data.special);
+            $("#two_account_tab2_6").text(data.unit_one);
+            $("#two_account_tab2_7").text(data.unit_two);
+            $("#two_account_tab2_8").text(data.unit_three);
+            $("#two_account_tab2_9").text(data.price);
+            $("#two_account_tab2_10").text(data.moneyunit);
+            $("#two_account_tab2_11").text(data.quantity);
+            $("#two_account_tab2_12").text(data.taxationlx);
+            $("#two_account_tab2_13").text(data.company_action_flag);
+            $("#two_account_tab2_14").text(data.custom_action_flag);
+            $("#two_account_tab2_15").text(data.handle_mark);
+            $("#two_account_tab2_16").text(data.start_count);
+            $("#two_account_tab2_17").text(data.count_control_flag);
+            $("#two_account_tab2_18").text(data.big_count);
+            $("#two_account_tab2_19").text(data.remark);
+        });
+
+        /*监听成品表格*/
+        table.on('row(goods_table)', function (obj) {
+            data = obj.data;
+            $("#two_account_tab3_1").text(data.id);
+            $("#two_account_tab3_2").text(data.record_no);
+            $("#two_account_tab3_3").text(data.hs_code);
+            $("#two_account_tab3_4").text(data.name);
+            $("#two_account_tab3_5").text(data.special);
+            $("#two_account_tab3_6").text(data.unit_one);
+            $("#two_account_tab3_7").text(data.unit_two);
+            $("#two_account_tab3_8").text(data.unit_three);
+            $("#two_account_tab3_9").text(data.price);
+            $("#two_account_tab3_10").text(data.moneyunit);
+            $("#two_account_tab3_11").text(data.quantity);
+            $("#two_account_tab3_12").text(data.taxationlx);
+            $("#two_account_tab3_13").text(data.count_control_flag);
+            $("#two_account_tab3_14").text(data.company_action_flag);
+            $("#two_account_tab3_15").text(data.handle_mark);
+            $("#two_account_tab3_16").text(data.custom_action_flag);
+            $("#two_account_tab3_17").text(data.ullage_flag);
+            $("#two_account_tab3_18").text(data.consult_mark);
+            $("#two_account_tab3_19").text(data.remark);
+        });
+        /*监听单损表表格*/
+        table.on('row(single_table)', function (obj) {
+            console.log(obj);
+            data = obj.data;
+            $("#two_account_tab4_1").text(data.id);
+            $("#two_account_tab4_2").text(data.finish_pro_no);
+            $("#two_account_tab4_3").text(data.finish_record_no);
+            $("#two_account_tab4_4").text(data.finish_hs_code);
+            $("#two_account_tab4_5").text(data.finish_name);
+            $("#two_account_tab4_6").text(data.originality_pro_no);
+            $("#two_account_tab4_7").text(data.originality_record_no);
+            $("#two_account_tab4_8").text(data.originality_hs_code);
+            $("#two_account_tab4_9").text(data.originality_pro_name);
+            $("#two_account_tab4_10").text(data.only_ullage_version);
+            $("#two_account_tab4_11").text(data.only_ullage);
+            $("#two_account_tab4_12").text(data.one_ullage);
+            $("#two_account_tab4_13").text(data.ullage);
+            $("#two_account_tab4_14").text(data.no_ullage);
+            $("#two_account_tab4_15").text(data.only_ullage_status);
+            $("#two_account_tab4_16").text(data.bonded_rate);
+            $("#two_account_tab4_17").text(data.change_mark);
+            $("#two_account_tab4_18").text(data.only_ullage_at);
+            $("#two_account_tab4_19").text(data.change_mark);
+        });
+
+        const account_list_template = async (account_lists) => {
+            account_data = account_lists.data;
+            last_page = account_lists.meta.pagination.total_pages;
+            laytpl($("#is_collapse_templet").html()).render(account_data, function (html) {
+                $("#is_collapse").html(html)
+            });
+            element.render('collapse');
+            if (account_data.length > 0) {
+                laytpl($("#contract_templet").html()).render(account_data[0], function (html) {
+                    $("#company_contract").html(html)
+                });
+            }
+        };
+        /**根据屏幕等比例缩小**/
+        admin.sideFlexible_window();
+        /*请求账册列表*/
+        const account_lists = await admin.get(`/two_account/lists?page=${page}&limit=${limit}&search=${$("#account_search").val()}`);
+        account_list_template(account_lists);
+    });
+</script>

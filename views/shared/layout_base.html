@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="_xsrf" content="@{{.xsrf_token}}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="_xsrf" content="@{{.xsrf_token}}"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
     <title>BeeCustom</title>
 
@@ -65,54 +66,54 @@
                                     class="layui-icon iconfont iconaccount"></i><cite>个人中心</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="/" >工作台</a></dd>
-                            <dd><a lay-href="@{{ urlfor "BackendUserController.Profile" }}" >我的信息</a></dd>
+                            <dd><a lay-href="">工作台</a></dd>
+                            <dd><a lay-href="@{{ urlfor "BackendUserController.Profile" }}">我的信息</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="清单申报"><i
                                     class="layui-icon iconfont iconfeatured-play-list"></i><cite>清单申报</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="//cusdecsys.com/annotation/i">进口清单</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/annotation/e" >出口清单</a></dd>
-                            <dd><a lay-href="//cusdecsys.com/annotation/recycle" >回收站</a></dd>
+                            <dd><a lay-href="">进口清单</a></dd>
+                            <dd><a lay-href="">出口清单</a></dd>
+                            <dd><a lay-href="">回收站</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="货物申报"><i
                                     class="layui-icon iconfont iconlocalshipping"></i><cite>货物申报</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="/" >进口报关整合申报</a></dd>
-                            <dd><a lay-href="/" >出口报关整合申报</a></dd>
-                            <dd><a lay-href="/" id="回收站">回收站</a></dd>
+                            <dd><a lay-href="">进口报关整合申报</a></dd>
+                            <dd><a lay-href="">出口报关整合申报</a></dd>
+                            <dd><a lay-href="" id="回收站">回收站</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="基础数据"><i
                                     class="layui-icon iconfont iconassignment"></i><cite>基础数据</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="@{{ urlfor "ClearanceController.Index" }}" >通关参数</a></dd>
-                            <dd><a lay-href="@{{ urlfor "CiqController.Index" }}" >商检编码管理</a></dd>
-                            <dd><a lay-href="@{{ urlfor "HsCodeController.Index" }}" >商品编码管理</a></dd>
-                            <dd><a lay-href="/" >金关二期手册</a></dd>
-                            <dd><a lay-href="/" >金关二期账册</a></dd>
+                            <dd><a lay-href="@{{ urlfor "ClearanceController.Index" }}">通关参数</a></dd>
+                            <dd><a lay-href="@{{ urlfor "CiqController.Index" }}">商检编码管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "HsCodeController.Index" }}">商品编码管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "HandBookController.CIndex" }}">金关二期手册</a></dd>
+                            <dd><a lay-href="@{{ urlfor "HandBookController.EIndex" }}">金关二期账册</a></dd>
                         </dl>
                     </li>
-                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="客户管理" ><i
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="客户管理"><i
                                     class="layui-icon iconfont iconcontactmail"></i><cite>客户管理</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="@{{ urlfor "CompanyController.Index" }}" >企业客户管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "CompanyController.Index" }}">企业客户管理</a></dd>
                         </dl>
                     </li>
 
-                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="系统管理" ><i
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="系统管理"><i
                                     class="layui-icon iconfont iconsettings"></i><cite>系统管理</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="@{{ urlfor "BackendUserController.Index" }}" >账号管理</a></dd>
-                            <dd><a lay-href="@{{ urlfor "RoleController.Index" }}" >角色管理</a></dd>
-                            <dd><a lay-href="@{{ urlfor "ResourceController.Index" }}" >权限管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "BackendUserController.Index" }}">账号管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "RoleController.Index" }}">角色管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "ResourceController.Index" }}">权限管理</a></dd>
                         </dl>
                     </li>
                     <span class="layui-nav-bar" style="top: 364px; height: 0px; opacity: 0;"></span></ul>
@@ -136,7 +137,8 @@
             </div>
             <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id='@{{ urlfor "ResourceController.Index" }}' lay-attr='@{{ urlfor "ResourceController.Index" }}'
+                    <li lay-id='@{{ urlfor "ResourceController.Index" }}'
+                        lay-attr='@{{ urlfor "ResourceController.Index" }}'
                         class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
                 </ul>
             </div>

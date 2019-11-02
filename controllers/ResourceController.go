@@ -27,7 +27,7 @@ func (c *ResourceController) Prepare() {
 
 func (c *ResourceController) Index() {
 	//将页面左边菜单的某项激活
-	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
+
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/index_footerjs.html"

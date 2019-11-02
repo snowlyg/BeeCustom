@@ -7,7 +7,9 @@
                     <span class="custom-new_btn" lay-href="@{{ urlfor "CompanyController.Create" }}" lay-text="新建客户"
                           id="company_new">+新建</span>
                     @{{ end}}
+                    @{{if .canImport}}
                     <span class="custom-new_btn margin_left_10" id="company_upload">客户导入</span>
+                    @{{end}}
                     <span class="custom-new_btn margin_left_10" id="history_item_upload">商品库导入</span>
                 </div>
                 <div class="layui-col-md3 layui-col-md-offset3">

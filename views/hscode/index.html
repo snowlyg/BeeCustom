@@ -3,7 +3,9 @@
         <div class="layui-card-body">
             <div class="layui-row custom-tool">
                 <div class="layui-col-md6">
+                    @{{if .canImport}}
                     <span class="custom-new_btn" id="hs_code_upload">导入</span>
+                    @{{end}}
                     <span class="custom-update" id="update_time">最近更新：@{{ .lastUpdateTime }}</span>
                 </div>
                 <div class="layui-col-md3 layui-col-md-offset3">
