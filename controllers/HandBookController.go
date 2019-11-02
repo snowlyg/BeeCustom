@@ -11,7 +11,6 @@ import (
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/utils"
-	"github.com/astaxie/beego"
 )
 
 type HandBookController struct {
@@ -60,74 +59,9 @@ func (c *HandBookController) Index() {
 	c.Data["searchWork"] = searchWork
 
 	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create", "Import")
+	c.getActionData("Delete", "Import")
 
 	c.GetXSRFToken()
-}
-
-// Create 添加 新建 页面
-func (c *HandBookController) Create() {
-	c.setTpl()
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "handBook/create_footerjs.html"
-	c.Data["type"] = strings.Split(beego.AppConfig.String("handBook::type"), ",")
-	c.GetXSRFToken()
-}
-
-// Store 添加 新建 页面
-func (c *HandBookController) Store() {
-	m := models.NewHandBook(0)
-	//获取form里的值
-	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
-	}
-
-	c.validRequestData(m)
-
-	if _, err := models.HandBookSave(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
-	} else {
-		c.SetLastUpdteTime("handBookLastUpdateTime", time.Now().Format(enums.BaseFormat))
-		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
-	}
-}
-
-// Edit 添加 编辑 页面
-func (c *HandBookController) Edit() {
-	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.HandBookOne(Id)
-	if m != nil && Id > 0 {
-		if err != nil {
-			c.pageError("数据无效，请刷新后重试")
-		}
-	}
-
-	c.Data["m"] = m
-	c.Data["type"] = strings.Split(beego.AppConfig.String("handBook::type"), ",")
-	c.setTpl()
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "handBook/edit_footerjs.html"
-	c.GetXSRFToken()
-}
-
-// Update 添加 编辑 页面
-func (c *HandBookController) Update() {
-	Id, _ := c.GetInt64(":id", 0)
-	m := models.NewHandBook(Id)
-
-	//获取form里的值
-	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
-	}
-
-	c.validRequestData(m)
-
-	if _, err := models.HandBookSave(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
-	} else {
-		c.SetLastUpdteTime("handBookLastUpdateTime", time.Now().Format(enums.BaseFormat))
-		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
-	}
 }
 
 //删除
