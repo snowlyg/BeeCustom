@@ -3,8 +3,8 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'table', 'admin', 'form', 'upload'], async () => {
-        const table = layui.table, laypage = layui.laypage, $ = layui.$;
+    }).use([ 'index','admin','upload',"laypage"], async () => {
+        const laypage = layui.laypage,admin = layui.admin, $ = layui.$;
 
         laypage.render({
             elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
@@ -36,6 +36,14 @@
             if (eCode === 13) {
                 self.location.href = "@{{ urlfor "HandBookController.Index"}}" + "?searchWork=" + $(this).val();
             }
+        });
+
+        $(".is_list_delete").on('click', function (e) {
+            layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                await admin.delete(`/handbook/delete/` +$(this).data('id'), e);
+                layer.close(index);
+                self.location.reload()
+            });
         });
     });
 </script>
