@@ -86,6 +86,7 @@ type HandBook struct {
 	AccountFunction         string    `orm:"column(account_function);size(255);null" description:"账册用途"`
 	AplDate                 time.Time `orm:"column(apl_date);type(datetime);null" description:"申报日期"`
 	UsefulLife              time.Time `orm:"column(useful_life);type(datetime);null" description:"结束有效期"`
+	UsefulLifeDays          int       `orm:"-" `
 	PreentryDate            time.Time `orm:"column(preentry_date);type(datetime)" description:"录入日期"`
 	Company                 *Company  `orm:"column(company_id);rel(fk)"`
 	CompanyId               int64     `orm:"-" form:"CompanyId"`

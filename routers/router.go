@@ -9,8 +9,7 @@ import (
 func init() {
 
 	//手账册
-	beego.Router("/hand_book/index", &controllers.HandBookController{}, "*:CIndex")
-	beego.Router("/hand_book/index", &controllers.HandBookController{}, "*:EIndex")
+	beego.Router("/hand_book/index", &controllers.HandBookController{}, "*:Index")
 	beego.Router("/hand_book/create/?:type", &controllers.HandBookController{}, "Get:Create")
 	beego.Router("/hand_book/store", &controllers.HandBookController{}, "Post:Store")
 	beego.Router("/hand_book/datagrid", &controllers.HandBookController{}, "Post:DataGrid")

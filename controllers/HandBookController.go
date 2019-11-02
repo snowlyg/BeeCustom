@@ -24,7 +24,7 @@ func (c *HandBookController) Prepare() {
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
 	//默认认证 "Index", "Create", "Edit", "Delete"
-	c.checkAuthor("CIndex", "EIndex")
+	c.checkAuthor()
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -32,31 +32,21 @@ func (c *HandBookController) Prepare() {
 
 }
 
-func (c *HandBookController) CIndex() {
-	//是否显示更多查询条件的按钮弃用，前端自动判断
-	//c.Data["showMoreQuery"] = true
-	//将页面左边菜单的某项激活
+func (c *HandBookController) Index() {
 
+	params := models.NewCompanyQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+	companies, total := models.CompanyPageList(&params)
+	cs, err := models.CompanyGetRelations(companies, "HandBooks")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
+	}
 	//页面模板设置
-	c.setTpl("handbook/index.html")
+	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "handbook/index_footerjs.html"
-
-	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create", "Import")
-
-	c.GetXSRFToken()
-}
-
-func (c *HandBookController) EIndex() {
-	//是否显示更多查询条件的按钮弃用，前端自动判断
-	//c.Data["showMoreQuery"] = true
-	//将页面左边菜单的某项激活
-
-	//页面模板设置
-	c.setTpl("handbook/index.html")
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "handBook/index_footerjs.html"
+	c.Data["m"] = cs
+	c.Data["total"] = total
 
 	//页面里按钮权限控制
 	c.getActionData("Edit", "Delete", "Create", "Import")

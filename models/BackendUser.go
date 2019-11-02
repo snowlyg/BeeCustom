@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -65,6 +66,22 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 	_, _ = query.All(&datas)
 
 	return datas, total
+}
+
+func BackendUserGetRelations(ms []*BackendUser, relations string) ([]*BackendUser, error) {
+	o := orm.NewOrm()
+	rs := strings.Split(relations, ",")
+	for _, v := range ms {
+		for _, rv := range rs {
+			_, err := o.LoadRelated(v, rv)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+				return nil, err
+			}
+		}
+	}
+
+	return ms, nil
 }
 
 // BackenduserDataList 获取用户列表

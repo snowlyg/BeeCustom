@@ -25,10 +25,6 @@ func (c *BackendUserController) Prepare() {
 
 }
 func (c *BackendUserController) Index() {
-	//是否显示更多查询条件的按钮弃用，前端自动判断
-	//c.Data["showMoreQuery"] = true
-	//将页面左边菜单的某项激活
-
 	//页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -48,10 +44,14 @@ func (c *BackendUserController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.BackendUserPageList(&params)
+	ms, err := models.BackendUserGetRelations(data, "Role")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
+	}
 	//定义返回的数据结构
 	result := make(map[string]interface{})
 	result["total"] = total
-	result["rows"] = data
+	result["rows"] = ms
 	result["code"] = 0
 	c.Data["json"] = result
 

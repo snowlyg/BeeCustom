@@ -1,7 +1,11 @@
 package models
 
 import (
+	"BeeCustom/utils"
 	"errors"
+	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -54,6 +58,7 @@ type Company struct {
 	CompanyContacts     []*CompanyContact `orm:"reverse(many)"` //设置一对多关系
 	CompanyForeigns     []*CompanyForeign `orm:"reverse(many)"` //设置一对多关系
 	CompanySeals        []*CompanySeal    `orm:"reverse(many)"` //设置一对多关系
+	HandBooks           []*HandBook       `orm:"reverse(many)"` //设置一对多关系
 }
 
 // CompanyQueryParam 用于查询的类
@@ -76,7 +81,7 @@ func NewCompanyQueryParam() CompanyQueryParam {
 // CompanyPageList 获取分页数据
 func CompanyPageList(params *CompanyQueryParam) ([]*Company, int64) {
 	query := orm.NewOrm().QueryTable(CompanyTBName())
-	datas := make([]*Company, 0)
+	data := make([]*Company, 0)
 
 	if len(params.NameLike) > 0 {
 		cond := orm.NewCondition()
@@ -89,16 +94,38 @@ func CompanyPageList(params *CompanyQueryParam) ([]*Company, int64) {
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
-	_, _ = query.All(&datas)
 
-	return datas, total
+	_, _ = query.All(&data)
+
+	return data, total
+}
+
+func CompanyGetRelations(ms []*Company, relations string) ([]*Company, error) {
+	o := orm.NewOrm()
+	rs := strings.Split(relations, ",")
+	for _, v := range ms {
+		for _, rv := range rs {
+			_, err := o.LoadRelated(v, rv)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+				return nil, err
+			}
+
+			for _, hv := range v.HandBooks {
+				hv.UsefulLifeDays = int(math.Round(hv.UsefulLife.Sub(time.Now()).Hours() / 24))
+			}
+
+		}
+	}
+
+	return ms, nil
 }
 
 // CompanyOne 根据id获取单条
-func CompanyOne(id int64, isRlated bool) (*Company, error) {
+func CompanyOne(id int64, isRelated bool) (*Company, error) {
 	m := NewCompany(0)
 	o := orm.NewOrm()
-	if isRlated {
+	if isRelated {
 		if err := o.QueryTable(CompanyTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
 			return nil, err
 		}

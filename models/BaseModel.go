@@ -29,6 +29,24 @@ type BaseQueryParam struct {
 	Limit  int64  `json:"limit"`
 }
 
+type Page struct {
+	PageNo     int
+	PageSize   int
+	TotalPage  int
+	TotalCount int
+	FirstPage  bool
+	LastPage   bool
+	List       interface{}
+}
+
+func PageUtil(count int, pageNo int, pageSize int, list interface{}) Page {
+	tp := count / pageSize
+	if count%pageSize > 0 {
+		tp = count/pageSize + 1
+	}
+	return Page{PageNo: pageNo, PageSize: pageSize, TotalPage: tp, TotalCount: count, FirstPage: pageNo == 1, LastPage: pageNo == tp, List: list}
+}
+
 //默认列表数据
 func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64) orm.QuerySeter {
 	//默认排序
@@ -47,7 +65,7 @@ func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64
 		query = query.Limit(limit, (offset-1)*limit)
 	}
 
-	return query.RelatedSel()
+	return query
 }
 
 //删除

@@ -27,10 +27,6 @@ func (c *HsCodeController) Prepare() {
 
 func (c *HsCodeController) Index() {
 
-	//是否显示更多查询条件的按钮弃用，前端自动判断
-	//c.Data["showMoreQuery"] = true
-	//将页面左边菜单的某项激活
-
 	c.Data["lastUpdateTime"] = c.GetLastUpdteTime("hsCodeLastUpdteTime")
 
 	//页面模板设置
