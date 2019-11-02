@@ -5,7 +5,7 @@
                 <div class="layui-col-md3 ">
                     <div class="custom-tool-right">
                         <label class="custom-tool-right-search iconfont iconsearch"></label>
-                        <input type="text" name="company_search" id="company_search" placeholder="搜索企业海关编号/企业全称/信用代码/经营单位代码" class="custom-tool-right-input layui-input">
+                        <input type="text" value="@{{.searchWork}}" id="company_search" placeholder="搜索企业全称/手账册编号" class="custom-tool-right-input layui-input">
                     </div>
                 </div>
             </div>
@@ -13,7 +13,7 @@
                 @{{ range  $i,$v  := .m  }}
                 <div class="layui-colla-item">
                     <h2 class="layui-colla-title">@{{ .Name}}</h2>
-                    <div class="layui-colla-content @{{if eq $i 0 }} layui-show @{{end}}">
+                    <div class="layui-colla-content @{{if eq $i 0 }}@{{if gt (.HandBooks|len) 0 }} layui-show @{{end}}@{{end}}">
                         <div class="custom-manual-right company_contract company_show">
                             <div class="custom-manual-right-contract">
                                 <div class="is_list">

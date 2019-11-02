@@ -6,7 +6,7 @@
     }).use(['index', 'form', 'admin'], function () {
         const admin = layui.admin , form = layui.form;
         form.on('submit(perm_submit)', async (data) => {
-            await admin.post('@{{ urlfor "ResourceController.Store"  }}', data.field);
+            await admin.post(@{{ urlfor "ResourceController.Store"  }}, data.field);
         })
     });
 </script>

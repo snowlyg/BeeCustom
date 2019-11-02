@@ -8,33 +8,30 @@
         const form = layui.form, admin = layui.admin, rate = layui.rate, table = layui.table, laytpl = layui.laytpl, upload = layui.upload, $ = layui.$;
         let contacts_lists = []
             , foreign_lists = []
-            , seal_lists = []
-            , foreign_lists_index = 0
-            , seal_lists_index = 0;
+            , seal_lists = [];
 
         rate.render({
             elem: '#control_rating'
             , theme: 'rgb(255, 204, 0)'
-            , value: "@{{ .m.ControlRating }}"
+            , value: @{{ .m.ControlRating }}
             , choose: function (value) {
                 $("input[name='ControlRating']").val(value);
             }
         });
 
 
-        const companyId = "@{{ .m.Id }}";
-        if (companyId) {
+        if (@{{ .m.Id }}) {
             table.render({
                 elem: '#contacts_lists_new'
                 , autoSort: false
                 , method: 'post'
                 , where: {
-                    CompanyId: companyId,
+                    CompanyId: @{{ .m.Id }},
                     order: 'desc',
                     sort: 'CreatedAt'
                 }
                 , contentType: 'application/json'
-                , url: "@{{ urlfor "CompanyContactController.DataGrid" }}"
+                , url: @{{ urlfor "CompanyContactController.DataGrid" }}
                 , request: {
                     pageName: 'offset' //页码的参数名称，默认：page
                     , limitName: 'limit' //每页数据量的参数名，默认：limit
@@ -77,7 +74,7 @@
                     title: '新增联系人',
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '300px'] : ['700px', '600px'],
-                    content:`/company_contact/create/${companyId}`,
+                    content:`/company_contact/create/` +@{{ .m.Id }},
                 });
             });
 
@@ -108,14 +105,14 @@
                 , autoSort: false
                 , method: 'post'
                 , where: {
-                    CompanyId: companyId,
+                    CompanyId: @{{ .m.Id }},
                     order: 'desc',
                     sort: 'CreatedAt'
                 }
                 , contentType: 'application/json'
-                , url: "@{{ urlfor "CompanyForeignController.DataGrid" }}"
+                , url: @{{ urlfor "CompanyForeignController.DataGrid" }}
                 , request: {
-                    companyId: '@{{ .m.Id}}', //id
+                    companyId: @{{ .m.Id}}, //id
                     pageName: 'offset' //页码的参数名称，默认：page
                     , limitName: 'limit' //每页数据量的参数名，默认：limit
                 }, response: {
@@ -152,7 +149,7 @@
                     title: '新增外商公司',
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '600px'] : ['800px', '600px'],
-                    content: `/company_foreign/create/${companyId}`
+                    content: `/company_foreign/create/`+@{{ .m.Id }}
                 });
 
                 upload.render({
@@ -221,7 +218,7 @@
                     title: '上传公章',
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '500px'] : ['800px', '500px'],
-                    content: `/company_seal/create/${companyId}`
+                    content: `/company_seal/create/`+@{{ .m.Id }}
                 });
             });
         }

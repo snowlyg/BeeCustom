@@ -5,7 +5,6 @@
         index: 'lib/index'
     }).use(['index', 'table', 'admin'], function () {
         const table = layui.table, admin = layui.admin, $ = layui.$;
-        const _xsrf = $('meta[name=_xsrf]').attr('content');
         table.render({
             elem: '#perm_lists'
             , autoSort: false
@@ -16,7 +15,7 @@
                 sort: 'CreatedAt'
             }
             , contentType: 'application/json'
-            , url: '@{{ urlfor "ResourceController.TreeGrid" }}'
+            , url: @{{ urlfor "ResourceController.TreeGrid" }}
             , request: {
                 pageName: 'offset' //页码的参数名称，默认：page
                 , limitName: 'limit' //每页数据量的参数名，默认：limit
@@ -66,7 +65,7 @@
 
         $("#perm_search").on('keydown', function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
-            if (eCode == 13) {
+            if (eCode === 13) {
                 table.reload('perm_lists', {
                     where: {
                         NameLike: $(this).val()

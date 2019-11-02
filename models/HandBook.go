@@ -108,34 +108,6 @@ func NewHandBookQueryParam() HandBookQueryParam {
 	return HandBookQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
 
-// HandBookPageList 获取分页数据
-func HandBookPageList(params *HandBookQueryParam) ([]*HandBook, int64) {
-	query := orm.NewOrm().QueryTable(HandBookTBName())
-	datas := make([]*HandBook, 0)
-
-	clearanceType := "0"
-	if len(params.Type) > 0 {
-		clearanceType = params.Type
-	}
-
-	query = query.Filter("type", clearanceType)
-
-	if len(params.NameLike) > 0 {
-		cond := orm.NewCondition()
-		cond1 := cond.And("customs_code__istartswith", params.NameLike).
-			Or("name__istartswith", params.NameLike).
-			Or("short_name__istartswith", params.NameLike).
-			Or("en_name__istartswith", params.NameLike)
-		query = query.SetCond(cond1)
-	}
-
-	total, _ := query.Count()
-	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
-	_, _ = query.All(&datas)
-
-	return datas, total
-}
-
 // HandBookOne 根据id获取单条
 func HandBookOne(id int64) (*HandBook, error) {
 	m := NewHandBook(0)

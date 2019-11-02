@@ -20,8 +20,8 @@
 
         form.on('submit(seal_submit)', async (data) => {
             data.field.Url = $('#seal-file-img').attr('src');
-            data.field.CompanyId = "@{{.companyId}}"
-            const result = await admin.post("@{{ urlfor "CompanySealController.Store" }}", data.field);
+            data.field.CompanyId = @{{.companyId}}
+            const result = await admin.post(@{{ urlfor "CompanySealController.Store" }}, data.field);
             if (result.status) {
                 setTimeout(() => {
                     parent.location.reload();

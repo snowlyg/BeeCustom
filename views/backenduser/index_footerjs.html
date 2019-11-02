@@ -35,7 +35,7 @@
                 sort:'CreatedAt'
             }
             ,contentType:'application/json'
-            , url: '@{{ urlfor "BackendUserController.DataGrid" }}'
+            , url: @{{ urlfor "BackendUserController.DataGrid" }}
             , request: {
                 pageName: 'offset' //页码的参数名称，默认：page
                 , limitName: 'limit' //每页数据量的参数名，默认：limit
@@ -82,7 +82,7 @@
 
         $("#user_search").on('keydown', function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
-            if (eCode == 13) {
+            if (eCode === 13) {
                 table.reload('user_lists', {
                     where: {
                         UserNameLike: $(this).val(),

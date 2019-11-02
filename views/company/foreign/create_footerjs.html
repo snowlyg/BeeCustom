@@ -24,8 +24,8 @@
 
         form.on('submit(foreign_submit)', async (data) => {
             data.field.ForeignCompanyChapter = $('#foreign-upload-img').attr('src');
-            data.field.CompanyId = "@{{.companyId}}";
-            const result = await admin.post("@{{ urlfor "CompanyForeignController.Store" }}", data.field);
+            data.field.CompanyId = @{{.companyId}};
+            const result = await admin.post(@{{ urlfor "CompanyForeignController.Store" }}, data.field);
             if (result.status) {
                 setTimeout(() => {
                     parent.location.reload();

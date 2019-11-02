@@ -48,8 +48,8 @@
         });
 
         form.on('submit(update)',async function(data){
-            data.field.RoleId = "@{{ .m.Role.Id }}";
-            await admin.patch(`/backenduser/update/` + "@{{ .m.Id }}", data.field);
+            data.field.RoleId = @{{ .m.Role.Id }};
+            await admin.patch(`/backenduser/update/` + @{{ .m.Id }}, data.field);
         });
     });
 </script>

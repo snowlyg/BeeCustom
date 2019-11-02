@@ -65,7 +65,8 @@ type Company struct {
 type CompanyQueryParam struct {
 	BaseQueryParam
 
-	NameLike string //模糊查询
+	NameLike   string //模糊查询
+	SearchWork string //模糊查询
 
 }
 
@@ -85,11 +86,15 @@ func CompanyPageList(params *CompanyQueryParam) ([]*Company, int64) {
 
 	if len(params.NameLike) > 0 {
 		cond := orm.NewCondition()
-		cond1 := cond.And("number__istartswith", params.NameLike).
-			Or("name__istartswith", params.NameLike).
-			Or("credit_code__istartswith", params.NameLike).
-			Or("business_code__istartswith", params.NameLike)
+		cond1 := cond.AndCond(cond.And("number", params.NameLike)).
+			OrCond(cond.And("name__istartswith", params.NameLike)).
+			OrCond(cond.And("credit_code", params.NameLike)).
+			OrCond(cond.And("business_code", params.NameLike))
 		query = query.SetCond(cond1)
+	}
+
+	if len(params.SearchWork) > 0 {
+		query = query.Filter("HandBooks__contract_number__iexact", params.SearchWork)
 	}
 
 	total, _ := query.Count()

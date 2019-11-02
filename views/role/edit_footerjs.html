@@ -6,7 +6,7 @@
     }).use(['index', 'form', 'admin', 'layuiXtree'], async () => {
         const form = layui.form , admin = layui.admin  , layuiXtree = layui.layuiXtree;
 
-        const perms = await admin.get(`/role/perm_lists/` + "@{{.m.Id}}");
+        const perms = await admin.get(`/role/perm_lists/` + @{{.m.Id}});
 
         const permission = new layuiXtree({
             elem: 'permission'

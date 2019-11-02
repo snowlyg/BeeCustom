@@ -4,46 +4,38 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'table', 'admin', 'form', 'upload'], async () => {
-        const table = layui.table , admin = layui.admin , upload = layui.upload ,laypage = layui.laypage, $ = layui.$;
+        const table = layui.table, laypage = layui.laypage, $ = layui.$;
 
         laypage.render({
             elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-            ,count: 50 //
-            ,limit: 10 //
-            ,limits: true //
-        });
+            , count: @{{.count}} //
+            , limit: 10 //
+            , limits: true //
+            , curr: location.hash.replace('#!fenye=', '') //
+            , hash: 'fenye' //自定义hash值
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                //console.log(obj.limit); //得到每页显示的条数
+                //首次不执行
+                if (!first) {
+                    if (@{{ .searchWork }} !== "") {
+                        self.location.href = @{{ urlfor "HandBookController.Index"}} + "?limit=" + obj.limit +
+                            "&offset=" + obj.curr + "#!fenye=" + obj.curr + "?searchWork=" + @{{ .searchWork }};
+                    } else {
+                        self.location.href = @{{ urlfor "HandBookController.Index"}} + "?limit=" + obj.limit + "&offset=" + obj.curr + "#!fenye=" + obj.curr;
+                    }
 
+
+                }
+            }
+        });
 
         $("#company_search").on('keydown', function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
             if (eCode === 13) {
-                table.reload('company_lists', {
-                    where: {
-                        NameLike: $(this).val()
-                    },
-                    page: {
-                        curr: 1
-                    }
-                });
-            }
-        });
-
-        table.on('tool(company_lists)', function (obj) {
-            const data = obj.data;
-            if (obj.event === 'del') {
-                layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                    await admin.delete(`/company/delete/${data.Id}`, obj);
-                    layer.close(index);
-                    table.reload('company_lists');
-                });
-            } else if (obj.event === 'edit') {
-                const topLayui = parent === self ? layui : top.layui
-                    , href = `/company/edit/${data.Id}`
-                    , text = `编辑客户：${data.Name}`;
-                topLayui.index.openTabsPage(href, text);
+                self.location.href = "@{{ urlfor "HandBookController.Index"}}" + "?searchWork=" + $(this).val();
             }
         });
     });
-
-
 </script>

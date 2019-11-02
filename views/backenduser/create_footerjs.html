@@ -13,7 +13,7 @@
         });
 
         form.on('submit(user_submit)', async (data) => {
-            await admin.post("@{{ urlfor "BackendUserController.Store" }}", data.field);
+            await admin.post(@{{ urlfor "BackendUserController.Store" }}, data.field);
         })
     });
 </script>

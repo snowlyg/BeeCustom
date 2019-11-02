@@ -7,8 +7,8 @@
         const form = layui.form, admin = layui.admin, table = layui.table;
         //新建联系人
         form.on('submit(contacts_submit)', async (data) => {
-            data.field.CompanyId = "@{{.companyId}}";
-            const result = await admin.post("@{{ urlfor "CompanyContactController.Store" }}", data.field);
+            data.field.CompanyId = @{{.companyId}};
+            const result = await admin.post(@{{ urlfor "CompanyContactController.Store" }}, data.field);
             if (result.status) {
                 setTimeout(() => {
                     parent.location.reload();

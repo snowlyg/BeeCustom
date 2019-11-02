@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"reflect"
@@ -35,8 +34,19 @@ func (c *HandBookController) Prepare() {
 func (c *HandBookController) Index() {
 
 	params := models.NewCompanyQueryParam()
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
-	companies, total := models.CompanyPageList(&params)
+	limit, err := c.GetInt64("limit", 10)
+	offset, err := c.GetInt64("offset", 1)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
+	}
+
+	searchWork := c.GetString("searchWork", "")
+	params.SearchWork = searchWork
+	params.Limit = limit
+	params.Offset = offset
+
+	companies, count := models.CompanyPageList(&params)
+
 	cs, err := models.CompanyGetRelations(companies, "HandBooks")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
@@ -46,30 +56,13 @@ func (c *HandBookController) Index() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "handbook/index_footerjs.html"
 	c.Data["m"] = cs
-	c.Data["total"] = total
+	c.Data["count"] = count
+	c.Data["searchWork"] = searchWork
 
 	//页面里按钮权限控制
 	c.getActionData("Edit", "Delete", "Create", "Import")
 
 	c.GetXSRFToken()
-}
-
-//列表数据
-func (c *HandBookController) DataGrid() {
-	//直接获取参数 getDataGridData()
-	params := models.NewHandBookQueryParam()
-	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
-
-	//获取数据列表和总数
-	data, total := models.HandBookPageList(&params)
-	//定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = total
-	result["rows"] = data
-	result["code"] = 0
-	c.Data["json"] = result
-
-	c.ServeJSON()
 }
 
 // Create 添加 新建 页面
