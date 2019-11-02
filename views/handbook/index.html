@@ -5,57 +5,64 @@
                 <div class="layui-col-md3 ">
                     <div class="custom-tool-right">
                         <label class="custom-tool-right-search iconfont iconsearch"></label>
-                        <input type="text" value="@{{.searchWork}}" id="company_search" placeholder="搜索企业全称/手账册编号" class="custom-tool-right-input layui-input">
+                        <input type="text" value="@{{.searchWork}}" id="company_search" placeholder="搜索企业全称/手账册编号"
+                               class="custom-tool-right-input layui-input">
                     </div>
                 </div>
             </div>
             <div class="layui-collapse" lay-accordion>
                 @{{ range  $i,$v  := .m  }}
-                <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">@{{ .Name}}</h2>
-                    <div class="layui-colla-content @{{if eq $i 0 }}@{{if gt (.HandBooks|len) 0 }} layui-show @{{end}}@{{end}}">
-                        <div class="custom-manual-right company_contract company_show">
-                            <div class="custom-manual-right-contract">
-                                <div class="is_list">
-                                    @{{range .HandBooks }}
-                                        @{{if ge .UsefulLifeDays 30 }}
-                                            <div class="is_list_content   health ">
-                                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
-                                                    <h2>@{{ .ContractNumber }}</h2>
-                                                    <span class="day_number">距离核销天数：</span>
-                                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
-                                                </div>
-                                                <span class="is_status">健康</span>
-                                                <span class="is_list_delete" data-id="@{{ .Id }}"><i class="iconfont icondelete"></i></span>
-                                            </div>
-                                        @{{else if le .UsefulLifeDays 0 }}
-                                            <div class="is_list_content   expired">
-                                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
-                                                    <h2>@{{ .ContractNumber }}</h2>
-                                                    <span class="day_number">距离核销天数：</span>
-                                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
-                                                </div>
-                                                <span class="is_status">已过期</span>
-                                                <span class="is_list_delete" data-id="@{{ .Id }}"><i class="iconfont icondelete"></i></span>
-                                            </div>
-                                        @{{else }}
-                                            <div class="is_list_content warn">
-                                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
-                                                    <h2>@{{ .ContractNumber }}</h2>
-                                                    <span class="day_number">距离核销天数：</span>
-                                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
-                                                </div>
-                                                <span class="is_status">警告</span>
-                                                <span class="is_list_delete" data-id="@{{ .Id }}"><i class="iconfont icondelete"></i></span>
-                                            </div>
-                                        @{{end}}
-                                    @{{end }}
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">@{{ .Name}}</h2>
+                <div class="layui-colla-content @{{if eq $i 0 }}@{{if gt (.HandBooks|len) 0 }} layui-show @{{end}}@{{end}}">
+                    <div class="custom-manual-right company_contract company_show">
+                        <div class="custom-manual-right-contract">
+                            <div class="is_list  layui-row">
+                                @{{range .HandBooks }}
+                            <div class="layui-col-md4">
+                                @{{if ge .UsefulLifeDays 30 }}
+                            <div class="is_list_content  health ">
+                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
+                                    <h2>@{{ .ContractNumber }}</h2>
+                                    <span class="day_number">距离核销天数：</span>
+                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
+                                    <span class="is_list_delete" data-id="@{{ .Id }}"><i
+                                                class="iconfont icondelete"></i></span>
                                 </div>
+
+                                <span class="is_status">健康</span>
+                            </div>
+                            @{{else if le .UsefulLifeDays 0 }}
+                            <div class="is_list_content    expired">
+                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
+                                    <h2>@{{ .ContractNumber }}</h2>
+                                    <span class="day_number">距离核销天数：</span>
+                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
+                                    <span class="is_list_delete" data-id="@{{ .Id }}"><i
+                                                class="iconfont icondelete"></i></span>
+                                </div>
+                                <span class="is_status">已过期</span>
+                            </div>
+                            @{{else }}
+                            <div class="is_list_content  warn">
+                                <div class="is_list_left" data-id="@{{ .Id }}" data-name="@{{ .ContractNumber }}">
+                                    <h2>@{{ .ContractNumber }}</h2>
+                                    <span class="day_number">距离核销天数：</span>
+                                    <span class="is_days">@{{  .UsefulLifeDays }}天</span>
+                                    <span class="is_list_delete" data-id="@{{ .Id }}"><i
+                                                class="iconfont icondelete"></i></span>
+                                </div>
+                                <span class="is_status">警告</span>
+                            </div>
+                            @{{end}}
+                            </div>
+                            @{{end }}
                             </div>
                         </div>
                     </div>
                 </div>
-                @{{ end }}
+            </div>
+            @{{ end }}
             </div>
 
             <div id="test1"></div>
