@@ -19,6 +19,8 @@ func init() {
 		new(CompanyForeign),
 		new(CompanySeal),
 		new(HandBook),
+		new(HandBookGood),
+		new(HandBookUllage),
 	)
 }
 
@@ -81,4 +83,14 @@ func CompanySealTBName() string {
 // HandBookTBName 获取 HandBook 对应的表名称
 func HandBookTBName() string {
 	return TableName("hand_books")
+}
+
+// HandBookGoodTBName 获取 HandBookGood 对应的表名称
+func HandBookGoodTBName() string {
+	return TableName("hand_book_goods")
+}
+
+// HandBookUllageTBName 获取 HandBookUllage 对应的表名称
+func HandBookUllageTBName() string {
+	return TableName("hand_book_ullages")
 }

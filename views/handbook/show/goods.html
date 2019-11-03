@@ -82,32 +82,34 @@
             </colgroup>
             <tbody>
 
-            @{{range .m.Goods}}
-            <tr>
-                <td>@{{ .serial  }}</td>
-                <td>@{{ .record_no  }}</td>
-                <td>@{{ .handle_mark  }}</td>
-                <td>@{{ .hs_code  }}</td>
-                <td>@{{ .name  }}</td>
-                <td>@{{ .classification_mark  }}</td>
-                <td>@{{ .special  }}</td>
-                <td>@{{ .unit_one  }}</td>
-                <td>@{{ .unit_two  }}</td>
-                <td>@{{ .unit_three  }}</td>
-                <td>@{{ .price  }}</td>
-                <td>@{{ .moneyunit  }}</td>
-                <td>@{{ .moneyunit_en  }}</td>
-                <td>@{{ .moneyunit  }}</td>
-                <td>@{{ .quantity  }}</td>
-                <td>@{{ .max_allowance}}</td>
-                <td>@{{ .initial_quantity }}</td>
-                <td>@{{ .unit_two_proportion  }}</td>
-                <td>@{{ .unit_three_proportion  }}</td>
-                <td>@{{ .weight_proportion  }}</td>
-                <td>@{{ .taxationlx  }}</td>
-                <td>@{{ .remark  }}</td>
-                <td>@{{ .declare_mode  }}</td>
-            </tr>
+            @{{range .m.HandBookGoods}}
+                @{{if eq .Type 1}}
+                <tr>
+                    <td>@{{ .Serial  }}</td>
+                    <td>@{{ .RecordNo  }}</td>
+                    <td>@{{ .HandleMark  }}</td>
+                    <td>@{{ .HsCode  }}</td>
+                    <td>@{{ .Name  }}</td>
+                    <td>@{{ .ClassificationMark  }}</td>
+                    <td>@{{ .Special  }}</td>
+                    <td>@{{ .UnitOne  }}</td>
+                    <td>@{{ .UnitTwo  }}</td>
+                    <td>@{{ .UnitThree  }}</td>
+                    <td>@{{ .Price  }}</td>
+                    <td>@{{ .Moneyunit  }}</td>
+                    <td>@{{ .MoneyunitEn  }}</td>
+                    <td>@{{ .Moneyunit  }}</td>
+                    <td>@{{ .Quantity  }}</td>
+                    <td>@{{ .MaxAllowance}}</td>
+                    <td>@{{ .InitialQuantity }}</td>
+                    <td>@{{ .UnitTwoProportion  }}</td>
+                    <td>@{{ .UnitThreeProportion  }}</td>
+                    <td>@{{ .WeightProportion  }}</td>
+                    <td>@{{ .Taxationlx  }}</td>
+                    <td>@{{ .Remark  }}</td>
+                    <td>@{{ .DeclareMode  }}</td>
+                </tr>
+                @{{end}}
             @{{end}}
             </tbody>
         </table>

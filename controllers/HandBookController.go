@@ -67,7 +67,7 @@ func (c *HandBookController) Index() {
 // Edit 添加 编辑 页面
 func (c *HandBookController) Show() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.HandBookOne(Id, "Company,Goods,Materials")
+	m, err := models.HandBookOne(Id, "Company,HandBookGoods")
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")

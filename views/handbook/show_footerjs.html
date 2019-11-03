@@ -3,15 +3,12 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'table', 'form', 'upload', 'element'], async () => {
-        let table = layui.table
-            , admin = layui.admin
-            , $ = layui.$;
-
+    }).use(['index', 'table'], async () => {
+        let table = layui.table  , admin = layui.admin , $ = layui.$;
 
         $("body").on("click", "#contract_del", function () {
             layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                const data = await admin.delete(`/account/${$(this).data('id')}`);
+                const data = await admin.delete(`/handbook/delete/${$(this).data('id')}`);
                 if(data.status){
                     setTimeout(() => {
                         parent.layui.admin.closeThisTabs()
@@ -19,7 +16,6 @@
                 }
             });
         });
-
 
         table.render({
             elem: '#account-table-goods'
