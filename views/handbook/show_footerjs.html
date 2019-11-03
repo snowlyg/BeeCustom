@@ -17,54 +17,54 @@
             });
         });
 
+        /*表格横向移动*/
+        $("body").on("mousedown", ".custom-manual-goods, .layui-table-main", function (event) {
+            if (event.button === 0) {
+                gapX = event.clientX;
+                startx = $(this).scrollLeft();
+                $(this).on('mousemove', function (ev) {
+                    let left = ev.clientX - gapX;
+                    $(this).scrollLeft(startx - left);
+                    return false;
+                });
+                $(this).on('mouseup', function (et) {
+                    $(this).off("mousemove");
+                    $(this).off("mouseup");
+                })
+            }
+        });
+        /*表格横向移动 END*/
+
+        /*单损耗表*/
         table.render({
-            elem: '#account-table-goods'
+            elem: '#single_table'
             , toolbar: true
             , defaultToolbar: ['filter']
             , colFilterRecord: 'local'
             , cols: [[
-                {field: 'serial', title: '成品序号', width: 120}
-                , {field: 'name', title: '成品名称', width: 400}
-                , {field: 'special', title: '成品规格', width: 400}
-                , {field: 'unit_two', title: '成品单位', width: 180}
-                , {field: 'gedition', title: '成品版本号', width: 200}
-                , {field: 'record_no', title: '成品货号'}
+                {field: 'id', title: '序号', width: 120}
+                , {field: 'finish_pro_no', title: '成品序号', width: 120}
+                , {field: 'finish_record_no', title: '成品料号', width: 200}
+                , {field: 'finish_hs_code', title: '成品商品编码', width: 180}
+                , {field: 'finish_name', title: '成品商品名称', width: 200}
+                , {field: 'originality_pro_no', title: '料件序号', width: 120}
+                , {field: 'originality_record_no', title: '料件料号', width: 120}
+                , {field: 'originality_hs_code', title: '料件商品编码', width: 120}
+                , {field: 'originality_pro_name', title: '料件商品名称', width: 180}
+                , {field: 'only_ullage_version', title: '单损版本号', width: 120}
+                , {field: 'only_ullage', title: '单耗', width: 120}
+                , {field: 'one_ullage', title: '净耗', width: 120}
+                , {field: 'ullage', title: '有形损耗率', width: 120}
+                , {field: 'no_ullage', title: '无形损耗率', width: 120}
+                , {field: 'only_ullage_status', title: '单耗申报状态', width: 120}
+                , {field: 'bonded_rate', title: '保税料件比例', width: 120}
+                , {field: 'change_mark', title: '修改标志', width: 120}
+                , {field: 'only_ullage_at', title: '单耗有效期', width: 180}
             ]]
-            ,url: '/account/{{$account->id}}/goods' //数据接口
-            , parseData: function (res) {
-                return {
-                    "count": res.total,
-                    "data": res.data
-                };
-            }
-            ,page: true //开启分页
+            , data: account_two_data.data.ullages.data
+            , limit: account_two_data.data.ullages.data.length
             , height: 450
         });
 
-        table.on('row(account-table-goods)', function (obj) {
-            table.render({
-                elem: '#account-table-piece'
-                , toolbar: true
-                , defaultToolbar: ['filter']
-                , colFilterRecord: 'local'
-                , cols: [[
-                    {field: 'originality_pro_no', title: '料件序号', width: 90}
-                    , {field: 'originality_pro_name', title: '料件名称', width: 400}
-                    , {field: 'originality_pro_special', title: '料件规格', width: 400}
-                    , {field: 'originality_pro_u', title: '料件单位', width: 120}
-                    , {field: 'only_ullage', title: '单耗', width: 160}
-                    , {field: 'ullage', title: '损耗', width: 120}
-                    , {field: 'record_no', title: '料件货号'}
-                ]]
-                ,url: `/account/${obj.data.id}/ullages` //数据接口
-                , parseData: function (res) {
-                    return {
-                        "count": res.total,
-                        "data": res.data
-                    };
-                }
-                ,page: true //开启分页
-            });
-        });
     });
 </script>

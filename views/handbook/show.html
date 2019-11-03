@@ -32,8 +32,8 @@
                 </div>
                 <div class="layui-tab-item">
                     <div class="custom-manual-single">
-                        <table class="layui-hide" id="account-table-goods" lay-filter="account-table-goods"></table>
-                        <table class="layui-hide" id="account-table-piece" lay-filter="account-table-piece"></table>
+                        @{{template "/handbook/show/goods.html" .}}
+                        @{{template "/handbook/show/ullage.html" .}}
                     </div>
                 </div>
             </div>
