@@ -3,11 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/360EntSecGroup-Skylar/excelize"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -17,6 +18,8 @@ import (
 
 type ClearanceController struct {
 	BaseController
+
+	clearanceType map[string]string
 }
 
 func (c *ClearanceController) Prepare() {
@@ -29,12 +32,18 @@ func (c *ClearanceController) Prepare() {
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
 	//c.checkLogin()
+	clearanceType, err := beego.AppConfig.GetSection("clearance_type")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("clearance_type:%v", err))
+	}
+
+	c.clearanceType = clearanceType
 
 }
 
 func (c *ClearanceController) Index() {
 
-	c.Data["type"] = strings.Split(beego.AppConfig.String("clearance::type"), ",")
+	c.Data["type"] = c.clearanceType
 	c.Data["lastUpdateTime"] = c.GetLastUpdteTime("clearanceLastUpdateTime")
 
 	//页面模板设置
@@ -68,10 +77,11 @@ func (c *ClearanceController) DataGrid() {
 
 // Create 添加 新建 页面
 func (c *ClearanceController) Create() {
+
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "clearance/create_footerjs.html"
-	c.Data["type"] = strings.Split(beego.AppConfig.String("clearance::type"), ",")
+	c.Data["type"] = c.clearanceType
 	c.GetXSRFToken()
 }
 
@@ -104,7 +114,7 @@ func (c *ClearanceController) Edit() {
 	}
 
 	c.Data["m"] = m
-	c.Data["type"] = strings.Split(beego.AppConfig.String("clearance::type"), ",")
+	c.Data["type"] = c.clearanceType
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "clearance/edit_footerjs.html"
@@ -252,62 +262,30 @@ func (c *ClearanceController) ImportClearanceXlsx(clearance models.Clearance, cl
 	if f != nil {
 		// Get all the rows in the Sheet1.
 		rows, err := f.GetRows("Sheet1")
-
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
 
 		var Info []map[string]string
+		importWord, err := beego.AppConfig.GetSection("clearance_excel_tile")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
 		for _, row := range rows {
 			//将数组  转成对应的 map
 			var info = make(map[string]string)
 			// 模型前两个字段是 BaseModel ，Type 不需要赋值
 			for i := 0; i < reflect.ValueOf(clearance).NumField(); i++ {
 				obj := reflect.TypeOf(clearance).Field(i)
-				switch obj.Name {
-				case "Type":
-					info[obj.Name] = string(clearanceType)
-				case "CustomsCode":
-					funcName(rXmlTitles, info, obj, row, "CustomsCode")
-				case "Name":
-					funcName(rXmlTitles, info, obj, row, "Name")
-				case "ShortName":
-					funcName(rXmlTitles, info, obj, row, "ShortName")
-				case "EnName":
-					funcName(rXmlTitles, info, obj, row, "EnName")
-				case "InspectionCode":
-					funcName(rXmlTitles, info, obj, row, "InspectionCode")
-				case "ShortEnName":
-					funcName(rXmlTitles, info, obj, row, "ShortEnName")
-				case "MandatoryLevel":
-					funcName(rXmlTitles, info, obj, row, "MandatoryLevel")
-				case "CertificateType":
-					funcName(rXmlTitles, info, obj, row, "CertificateType")
-				case "StatisticalUnitCode":
-					funcName(rXmlTitles, info, obj, row, "StatisticalUnitCode")
-				case "ConversionRate":
-					funcName(rXmlTitles, info, obj, row, "ConversionRate")
-				case "NatureMark":
-					funcName(rXmlTitles, info, obj, row, "NatureMark")
-				case "Iso2":
-					funcName(rXmlTitles, info, obj, row, "Iso2")
-				case "Iso3":
-					funcName(rXmlTitles, info, obj, row, "Iso3")
-				case "TypeCode":
-					funcName(rXmlTitles, info, obj, row, "TypeCode")
-				case "OldCustomCode":
-					funcName(rXmlTitles, info, obj, row, "OldCustomCode")
-				case "OldCustomName":
-					funcName(rXmlTitles, info, obj, row, "OldCustomName")
-				case "OldCiqCode":
-					funcName(rXmlTitles, info, obj, row, "OldCiqCode")
-				case "OldCiqName":
-					funcName(rXmlTitles, info, obj, row, "OldCiqName")
-				case "Remark":
-					funcName(rXmlTitles, info, obj, row, "Remark")
+				for _, iw := range importWord {
+					if iw == obj.Name {
+						funcName(rXmlTitles, info, obj, row, iw)
+					} else if obj.Name == "Type" {
+						info[obj.Name] = string(clearanceType)
+					}
 				}
-
 			}
 
 			Info = append(Info, info)

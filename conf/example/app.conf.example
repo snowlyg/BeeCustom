@@ -59,3 +59,7 @@ redis_host = "127.0.0.1:6379"
 redis_password = ""
 #过期时间
 cache_expire = 10
+
+
+include "clearance.conf"
+include "import.conf"

@@ -3,6 +3,8 @@ package controllers
 import (
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/astaxie/beego"
+
 	"reflect"
 	"strconv"
 	"strings"
@@ -31,6 +33,12 @@ func (c *HandBookController) Prepare() {
 }
 
 func (c *HandBookController) Index() {
+	section, err := beego.AppConfig.DIY("import")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf(" beego.AppConfig.GetSection:%v", err))
+	}
+
+	utils.LogDebug(fmt.Sprintf("section:%v", section))
 
 	params := models.NewCompanyQueryParam()
 	limit, err := c.GetInt64("limit", 10)
@@ -201,64 +209,41 @@ func (c *HandBookController) ImportHandBookXlsx(handBook models.HandBook, handBo
 	}
 
 	if f != nil {
+
+		// Get value from cell by given worksheet name and axis.
+		cell, err := f.GetCellValue("Sheet1", "B2")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("GetCellValue:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
+
 		// Get all the rows in the Sheet1.
 		rows, err := f.GetRows("Sheet1")
-
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
 
 		var Info []map[string]string
+		importWord, _ := beego.AppConfig.GetSection("handbook_excel_tile_sheet1")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
+
 		for _, row := range rows {
 			//将数组  转成对应的 map
 			var info = make(map[string]string)
 			// 模型前两个字段是 BaseModel ，Type 不需要赋值
 			for i := 0; i < reflect.ValueOf(handBook).NumField(); i++ {
 				obj := reflect.TypeOf(handBook).Field(i)
-				switch obj.Name {
-				case "Type":
-					info[obj.Name] = string(handBookType)
-				case "CustomsCode":
-					funcName(rXmlTitles, info, obj, row, "CustomsCode")
-				case "Name":
-					funcName(rXmlTitles, info, obj, row, "Name")
-				case "ShortName":
-					funcName(rXmlTitles, info, obj, row, "ShortName")
-				case "EnName":
-					funcName(rXmlTitles, info, obj, row, "EnName")
-				case "InspectionCode":
-					funcName(rXmlTitles, info, obj, row, "InspectionCode")
-				case "ShortEnName":
-					funcName(rXmlTitles, info, obj, row, "ShortEnName")
-				case "MandatoryLevel":
-					funcName(rXmlTitles, info, obj, row, "MandatoryLevel")
-				case "CertificateType":
-					funcName(rXmlTitles, info, obj, row, "CertificateType")
-				case "StatisticalUnitCode":
-					funcName(rXmlTitles, info, obj, row, "StatisticalUnitCode")
-				case "ConversionRate":
-					funcName(rXmlTitles, info, obj, row, "ConversionRate")
-				case "NatureMark":
-					funcName(rXmlTitles, info, obj, row, "NatureMark")
-				case "Iso2":
-					funcName(rXmlTitles, info, obj, row, "Iso2")
-				case "Iso3":
-					funcName(rXmlTitles, info, obj, row, "Iso3")
-				case "TypeCode":
-					funcName(rXmlTitles, info, obj, row, "TypeCode")
-				case "OldCustomCode":
-					funcName(rXmlTitles, info, obj, row, "OldCustomCode")
-				case "OldCustomName":
-					funcName(rXmlTitles, info, obj, row, "OldCustomName")
-				case "OldCiqCode":
-					funcName(rXmlTitles, info, obj, row, "OldCiqCode")
-				case "OldCiqName":
-					funcName(rXmlTitles, info, obj, row, "OldCiqName")
-				case "Remark":
-					funcName(rXmlTitles, info, obj, row, "Remark")
+				for _, iw := range importWord {
+					if iw == obj.Name {
+						funcName(rXmlTitles, info, obj, row, iw)
+					} else if obj.Name == "Type" {
+						info[obj.Name] = string(handBookType)
+					}
 				}
-
 			}
 
 			Info = append(Info, info)

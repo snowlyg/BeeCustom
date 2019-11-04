@@ -4,7 +4,7 @@
     }).extend({
         index: 'lib/index'
     }).use([ 'index','admin','upload',"laypage"], async () => {
-        const laypage = layui.laypage,admin = layui.admin, $ = layui.$;
+        const laypage = layui.laypage,upload = layui.upload,admin = layui.admin, $ = layui.$;
 
         laypage.render({
             elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
@@ -44,6 +44,70 @@
                 layer.close(index);
                 self.location.reload()
             });
+        });
+
+        const handbook_account_upload = upload.render({
+            elem: '#handbook_account_upload'
+            , url: '/handbook/import/2'
+            , accept: 'file'
+            , field: 'filename'
+            , before: function (obj) {
+                layer.load(2);
+            }
+            , done: function (res) {
+                if (res.status) {
+                    layer.msg(res.msg, {
+                        offset: '15px'
+                        , icon: 1
+                        , time: 2000
+                        , id: 'Message'
+                    });
+                } else {
+                    layer.msg(res.msg, {
+                        offset: '15px'
+                        , icon: 2
+                        , time: 2000
+                        , id: 'Message'
+                    });
+                }
+
+                layer.closeAll('loading');
+            }
+            , error: function () {
+                layer.closeAll('loading');
+            }
+        });
+
+        const handbook_manual_upload = upload.render({
+            elem: '#handbook_manual_upload'
+            , url: '/handbook/import/1'
+            , accept: 'file'
+            , field: 'filename'
+            , before: function (obj) {
+                layer.load(2);
+            }
+            , done: function (res) {
+                if (res.status) {
+                    layer.msg(res.msg, {
+                        offset: '15px'
+                        , icon: 1
+                        , time: 2000
+                        , id: 'Message'
+                    });
+                } else {
+                    layer.msg(res.msg, {
+                        offset: '15px'
+                        , icon: 2
+                        , time: 2000
+                        , id: 'Message'
+                    });
+                }
+
+                layer.closeAll('loading');
+            }
+            , error: function () {
+                layer.closeAll('loading');
+            }
         });
     });
 </script>

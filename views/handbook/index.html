@@ -2,11 +2,16 @@
     <div class="layui-card">
         <div class="layui-card-body">
             <div class="layui-row custom-tool">
-                <div class="layui-col-md3 ">
+                <div class="layui-col-md6">
+                    @{{if .canImport}}
+                    <span class="custom-upload_btn" id="handbook_account_upload">账册导入</span>
+                    <span class="custom-upload_btn" id="handbook_manual_upload">手册导入</span>
+                    @{{end}}
+                </div>
+                <div class="layui-col-md3 layui-col-md-offset3">
                     <div class="custom-tool-right">
                         <label class="custom-tool-right-search iconfont iconsearch"></label>
-                        <input type="text" value="@{{.searchWork}}" id="company_search" placeholder="搜索企业全称/手账册编号"
-                               class="custom-tool-right-input layui-input">
+                        <input type="text" value="@{{.searchWork}}" id="company_search" placeholder="搜索企业全称/手账册编号" class="custom-tool-right-input layui-input">
                     </div>
                 </div>
             </div>
