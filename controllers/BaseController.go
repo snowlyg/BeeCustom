@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"reflect"
+	"strconv"
 	"strings"
 
 	"BeeCustom/enums"
@@ -248,8 +248,16 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 }
 
 // 判断是否存在键
-func funcName(rXmlTitles map[string]int, info map[string]string, obj reflect.StructField, row []string, s string) {
-	if _, ok := rXmlTitles[s]; ok {
-		info[obj.Name] = row[rXmlTitles[s]]
+func funcName(rXmlTitles map[string]string, s string) int {
+	fRXmlTitles := enums.FilpValueString(rXmlTitles)
+	if _, ok := fRXmlTitles[s]; ok {
+		i, err := strconv.Atoi(rXmlTitles[s])
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("funcName=>Atoi:%v", err))
+		}
+		return i
+	} else {
+		return -1
 	}
+
 }

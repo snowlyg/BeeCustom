@@ -1,27 +1,5 @@
 #导入字段对应模板表头设置
-[clearance_excel_tile]
-0="CustomsCode"
-1="Name"
-2="ShortName"
-2="EnName"
-2="InspectionCode"
-2="ShortEnName"
-2="MandatoryLevel"
-2="CertificateType"
-2="StatisticalUnitCode"
-2="ConversionRate"
-2="NatureMark"
-2="Iso2"
-2="Iso3"
-2="TypeCode"
-2="OldCustomCode"
-2="OldCustomName"
-2="OldCiqCode"
-2="OldCiqName"
-2="Remark"
-
-[handbook_excel_tile_sheet1]
-0="Name"
-
+include "import_clearance.conf"
+include "import_handbook_account.conf"
 
 

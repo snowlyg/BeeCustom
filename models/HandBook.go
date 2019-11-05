@@ -2,6 +2,8 @@ package models
 
 import (
 	"BeeCustom/utils"
+	"github.com/astaxie/beego"
+
 	"errors"
 	"fmt"
 	"strings"
@@ -30,9 +32,7 @@ type HandBook struct {
 	PermitNumber            string          `orm:"column(permit_number);size(20);null" description:"批准证编号"`
 	Manualslx               string          `orm:"column(manualslx);size(20)" description:"账册类型"`
 	SuperviseMode           string          `orm:"column(supervise_mode);size(50);null" description:"监管方式 (贸易方式)"`
-	SuperviseModeCode       string          `orm:"column(supervise_mode_code);size(20);null" description:"监管方式 (贸易方式)代码"`
 	Permitcn                string          `orm:"column(permitcn);size(20);null" description:"批文账册号"`
-	TaxationxzCode          string          `orm:"column(taxationxz_code);size(255);null" description:"征免性质代码"`
 	TaxationxzName          string          `orm:"column(taxationxz_name);size(200);null" description:"征免性质"`
 	ProcessingMode          string          `orm:"column(processing_mode);size(20);null" description:"加工种类"`
 	OriginalityPquantity    string          `orm:"column(originality_pquantity);size(10);null" description:"进口货物项数"`
@@ -41,12 +41,8 @@ type HandBook struct {
 	InAmount                float64         `orm:"column(in_amount);null;digits(17);decimals(4)" description:"进口总金额(实际进口总金额)"`
 	ContractNo              string          `orm:"column(contract_no);size(10);null" description:"协议号"`
 	OutAmount               float64         `orm:"column(out_amount);null;digits(17);decimals(4)" description:"出口总金额(实际出口总金额)"`
-	InMoneyunitCode         string          `orm:"column(in_moneyunit_code);size(20);null" description:"进口币制代码"`
 	InMoneyunit             string          `orm:"column(in_moneyunit);size(255);null" description:"进口币制"`
-	InMoneyunitEn           string          `orm:"column(in_moneyunit_en);size(100);null" description:"进口币制英文"`
-	OutMoneyunitCode        string          `orm:"column(out_moneyunit_code);size(20);null" description:"出口币制代码"`
 	OutMoneyunit            string          `orm:"column(out_moneyunit);size(255);null" description:"出口币制"`
-	OutMoneyunitEn          string          `orm:"column(out_moneyunit_en);size(100);null" description:"出口币制英文"`
 	InContractNo            string          `orm:"column(in_contract_no);size(255);null" description:"进口合同号"`
 	OutContractNo           string          `orm:"column(out_contract_no);size(255);null" description:"出口合同号"`
 	WarehouseVolume         string          `orm:"column(warehouse_volume);size(10);null" description:"仓库体积"`
@@ -56,7 +52,6 @@ type HandBook struct {
 	ThroughPut              float64         `orm:"column(through_put);null;digits(17);decimals(5)" description:"生产能力"`
 	ThroughPutUnit          string          `orm:"column(through_put_unit);size(255);null" description:"生产能力单位"`
 	MaxWorkingCapital       string          `orm:"column(max_working_capital);size(255);null" description:"最大周转资金"`
-	MaxWorkingCapitalUnit   string          `orm:"column(max_working_capital_unit);size(255);null" description:"最大周转资金单位"`
 	Remark                  string          `orm:"column(remark);size(1000);null" description:"备注"`
 	Type                    int8            `orm:"column(type)" description:"账册类别 1：普通账册；2：二期账册"`
 	CompanyManageCreditCode string          `orm:"column(company_manage_credit_code);size(18);null" description:"经营单位社会信用代码"`
@@ -64,7 +59,6 @@ type HandBook struct {
 	AgentCode               string          `orm:"column(agent_code);size(50);null" description:"申报单位代码"`
 	AgentCodeScc            string          `orm:"column(agent_code_scc);size(18);null" description:"申报单位社会信用代码"`
 	AgentName               string          `orm:"column(agent_name);size(100);null" description:"申报单位名称"`
-	CompanyClientAreaCode   string          `orm:"column(company_client_area_code);size(255);null" description:"加工企业地区代码"`
 	CompanyClientAreaName   string          `orm:"column(company_client_area_name);size(100);null" description:"加工企业地区"`
 	AplCompanyType          string          `orm:"column(apl_company_type);size(100);null" description:"申报企业类型"`
 	AplType                 string          `orm:"column(apl_type);size(100);null" description:"申报类型"`
@@ -103,6 +97,15 @@ type HandBookQueryParam struct {
 	NameLike string //模糊查询
 }
 
+// HandBookImportParam 用于查询的类
+type HandBookImportParam struct {
+	Info         []map[string]string
+	Obj          []*HandBook
+	HandBook     HandBook
+	FileNamePath string
+	XmlTitle     string
+}
+
 func NewHandBook(id int64) HandBook {
 	return HandBook{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
@@ -110,6 +113,22 @@ func NewHandBook(id int64) HandBook {
 //查询参数
 func NewHandBookQueryParam() HandBookQueryParam {
 	return HandBookQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
+}
+
+//查询参数
+func GetHandBookTypeWithString(handBookType string) string {
+	handBookTypes, err := beego.AppConfig.GetSection("hand_book_type")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
+	}
+
+	for i, v := range handBookTypes {
+		if v == handBookType {
+			return i
+		}
+	}
+
+	return ""
 }
 
 func HandBookGetRelations(v *HandBook, relations string) (*HandBook, error) {

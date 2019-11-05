@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
@@ -155,22 +154,27 @@ func (c *ClearanceController) Delete() {
 //导入
 func (c *ClearanceController) Import() {
 
+	cIP := models.ClearanceImportParam{}
+	cIP.Clearance = models.NewClearance(0)
+	cIP.Obj = make([]*models.Clearance, 0)
+
 	clearanceType, err := c.GetInt8(":type", -1)
 	if err != nil || clearanceType == -1 {
 		utils.LogDebug(fmt.Sprintf("GetInt8:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "参数错误", nil)
 	}
 
-	xmlTitle := c.GetString("xmlTitle", "")
-	if len(xmlTitle) == 0 {
-		c.jsonResult(enums.JRCodeFailed, "请设置表头", nil)
-	}
+	cIP.Clearance.Type = clearanceType
 
-	_, err = models.ClearanceDeleteAll(clearanceType)
-	if err != nil || clearanceType == -1 {
+	xmlTitle := c.GetString("xmlTitle", "")
+	_, err = models.ClearanceDeleteAll(cIP.Clearance.Type)
+
+	if err != nil || cIP.Clearance.Type == -1 {
 		utils.LogDebug(fmt.Sprintf("ClearanceDeleteAll:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "清空数据报错", nil)
 	}
+
+	cIP.XmlTitle = xmlTitle
 
 	fileType := "clearance/" + strconv.FormatInt(c.curUser.Id, 10) + "/"
 	fileNamePath, err := c.BaseUpload(fileType)
@@ -179,18 +183,16 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
 	}
 
-	cDatas := make([]*models.Clearance, 0)
-	clearance := models.Clearance{}
+	cIP.FileNamePath = fileNamePath
 
-	info := c.ImportClearanceXlsx(clearance, clearanceType, fileNamePath, xmlTitle)
-	cDatas, err = c.GetXlsxContent(info, cDatas, &clearance)
-
+	c.ImportClearanceXlsx(&cIP)
+	err = c.GetXlsxContent(&cIP)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetXlsxContent:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
 	}
 
-	mun, err := models.InsertClearanceMulti(cDatas)
+	mun, err := models.InsertClearanceMulti(cIP.Obj)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("InsertMulti:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
@@ -202,58 +204,25 @@ func (c *ClearanceController) Import() {
 }
 
 //获取 xlsx 文件内容
-func (c *ClearanceController) GetXlsxContent(info []map[string]string, obj []*models.Clearance, clearance *models.Clearance) ([]*models.Clearance, error) {
+func (c *ClearanceController) GetXlsxContent(cIP *models.ClearanceImportParam) error {
 	//忽略标题行
-	for i := 1; i < len(info); i++ {
-		t := reflect.ValueOf(clearance).Elem()
-		for k, v := range info[i] {
-			switch t.FieldByName(k).Kind() {
-			case reflect.String:
-				t.FieldByName(k).Set(reflect.ValueOf(v))
-			case reflect.Float64:
-				clearanceV, err := strconv.ParseFloat(v, 64)
-				if err != nil {
-					utils.LogDebug(fmt.Sprintf("ParseFloat:%v", err))
-					return nil, err
-				}
-				t.FieldByName(k).Set(reflect.ValueOf(clearanceV))
-			case reflect.Uint64:
-				reflect.ValueOf(v)
-				clearanceV, err := strconv.ParseUint(v, 0, 64)
-				if err != nil {
-					utils.LogDebug(fmt.Sprintf("ParseUint:%v", err))
-					return nil, err
-				}
-				t.FieldByName(k).Set(reflect.ValueOf(clearanceV))
-			case reflect.Struct:
-				clearanceV, err := time.Parse("2006-01-02", v)
-				if err != nil {
-					utils.LogDebug(fmt.Sprintf("Parse:%v", err))
-					return nil, err
-				}
-				t.FieldByName(k).Set(reflect.ValueOf(clearanceV))
-			default:
-				utils.LogDebug("未知类型")
-			}
+	for i := 1; i < len(cIP.Info); i++ {
+		t := reflect.ValueOf(&cIP.Clearance).Elem()
+		for k, v := range cIP.Info[i] {
+			enums.SetObjValue(k, v, t)
 		}
-
-		obj = append(obj, clearance)
-
+		cIP.Obj = append(cIP.Obj, &cIP.Clearance)
 	}
 
-	return obj, nil
+	return nil
 }
 
 //导入基础参数 xlsx 文件内容
-func (c *ClearanceController) ImportClearanceXlsx(clearance models.Clearance, clearanceType int8, fileNamePath, xmlTitle string) []map[string]string {
+func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportParam) {
 
-	xmlTitles := strings.Split(xmlTitle, "/")
-	rXmlTitles := map[string]int{}
-	for k, v := range xmlTitles {
-		rXmlTitles[v] = k
-	}
+	rXmlTitles, _ := utils.GetRXmlTitles(cIP.XmlTitle, "clearance_excel_tile")
 
-	f, err := excelize.OpenFile(fileNamePath)
+	f, err := excelize.OpenFile(cIP.FileNamePath)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
@@ -267,37 +236,35 @@ func (c *ClearanceController) ImportClearanceXlsx(clearance models.Clearance, cl
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
 
-		var Info []map[string]string
-		importWord, err := beego.AppConfig.GetSection("clearance_excel_tile")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
+
 		for _, row := range rows {
 			//将数组  转成对应的 map
 			var info = make(map[string]string)
 			// 模型前两个字段是 BaseModel ，Type 不需要赋值
-			for i := 0; i < reflect.ValueOf(clearance).NumField(); i++ {
-				obj := reflect.TypeOf(clearance).Field(i)
-				for _, iw := range importWord {
+			for i := 0; i < reflect.ValueOf(cIP.Clearance).NumField(); i++ {
+				obj := reflect.TypeOf(cIP.Clearance).Field(i)
+				for _, iw := range rXmlTitles {
 					if iw == obj.Name {
-						funcName(rXmlTitles, info, obj, row, iw)
-					} else if obj.Name == "Type" {
-						info[obj.Name] = string(clearanceType)
+						rI := funcName(rXmlTitles, iw)
+						// 模板字段数量定义
+						if rI != -1 && rI < 2 {
+							info[obj.Name] = row[rI]
+						}
 					}
+
 				}
 			}
 
-			Info = append(Info, info)
+			cIP.Info = append(cIP.Info, info)
 		}
-
-		return Info
 
 	} else {
 		utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
-
-	return nil
 
 }

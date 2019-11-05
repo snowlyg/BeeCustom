@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"BeeCustom/enums"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -45,6 +47,15 @@ type ClearanceQueryParam struct {
 	NameLike string //模糊查询
 }
 
+// ClearanceImportParam 用于查询的类
+type ClearanceImportParam struct {
+	Info         []map[string]string
+	Obj          []*Clearance
+	Clearance    Clearance
+	FileNamePath string
+	XmlTitle     string
+}
+
 func NewClearance(id int64) Clearance {
 	return Clearance{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
@@ -59,7 +70,14 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	query := orm.NewOrm().QueryTable(ClearanceTBName())
 	datas := make([]*Clearance, 0)
 
-	clearanceType := "0"
+	clearanceTypeStrings, err := beego.AppConfig.GetSection("clearance_type")
+	if err != nil {
+		return nil, 0
+	}
+
+	clearanceTypeStrings = enums.FilpValueString(clearanceTypeStrings)
+	clearanceType := clearanceTypeStrings["关区代码"]
+
 	if len(params.Type) > 0 {
 		clearanceType = params.Type
 	}

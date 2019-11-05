@@ -26,23 +26,17 @@ type HandBookGood struct {
 	Name                string    `orm:"column(name);size(50);null" description:"商品名称"`
 	ClassificationMark  string    `orm:"column(classification_mark);size(10);null" description:"分类标志"`
 	Special             string    `orm:"column(special);size(255)" description:"规格型号"`
-	UnitOneCode         string    `orm:"column(unit_one_code);size(255)" description:"第一单位代码 （计量单位）"`
 	UnitOne             string    `orm:"column(unit_one);size(100)" description:"第一单位名称"`
-	UnitTwoCode         string    `orm:"column(unit_two_code);size(255);null" description:"第二单位代码 （法定计量单位）"`
 	UnitTwo             string    `orm:"column(unit_two);size(100);null" description:"第二单位名称"`
-	UnitThreeCode       string    `orm:"column(unit_three_code);size(255);null" description:"第三单位代码"`
 	UnitThree           string    `orm:"column(unit_three);size(100);null" description:"第三单位名称"`
 	Price               float64   `orm:"column(price);null;digits(17);decimals(4)" description:"单价"`
-	MoneyunitCode       string    `orm:"column(moneyunit_code);size(255);null" description:"币制代码"`
 	Moneyunit           string    `orm:"column(moneyunit);size(200);null" description:"币制名称"`
-	MoneyunitEn         string    `orm:"column(moneyunit_en);size(100);null" description:"币制英文名称"`
 	Quantity            float64   `orm:"column(quantity);null;digits(19);decimals(5)" description:"申报数量"`
 	MaxAllowance        float64   `orm:"column(max_allowance);null;digits(19);decimals(5)" description:"最大余量"`
 	InitialQuantity     float64   `orm:"column(initial_quantity);null;digits(19);decimals(5)" description:"初始数量"`
 	UnitTwoProportion   float64   `orm:"column(unit_two_proportion);null;digits(19);decimals(5)" description:"第二单位比例"`
 	UnitThreeProportion float64   `orm:"column(unit_three_proportion);null;digits(19);decimals(5)" description:"第三单位比例"`
 	WeightProportion    float64   `orm:"column(weight_proportion);null;digits(19);decimals(5)" description:"重量比例因子"`
-	TaxationlxCode      string    `orm:"column(taxationlx_code);size(255);null" description:"征免类型代码"`
 	Taxationlx          string    `orm:"column(taxationlx);size(200);null" description:"征免类型"`
 	DeclareMode         string    `orm:"column(declare_mode);size(255);null" description:"申报类别"`
 	Remark              string    `orm:"column(remark);size(255);null" description:"备注"`

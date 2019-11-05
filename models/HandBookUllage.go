@@ -22,7 +22,6 @@ type HandBookUllage struct {
 	OriginalityProNo      int8          `orm:"column(originality_pro_no)" description:"料件项号"`
 	OriginalityProName    string        `orm:"column(originality_pro_name);size(50)" description:"料件名称"`
 	OriginalityProSpecial string        `orm:"column(originality_pro_special);size(1000);null" description:"料件规格"`
-	OriginalityProUCode   string        `orm:"column(originality_pro_u_code);size(255);null" description:"料件单位代码"`
 	OriginalityProU       string        `orm:"column(originality_pro_u);size(255);null" description:"料件单位"`
 	OnlyUllage            string        `orm:"column(only_ullage);size(255);null" description:"单耗"`
 	Ullage                string        `orm:"column(ullage);size(255);null" description:"损耗"`
@@ -33,7 +32,6 @@ type HandBookUllage struct {
 	FinishHsCode          string        `orm:"column(finish_hs_code);size(255);null" description:"成品商品编码"`
 	FinishName            string        `orm:"column(finish_name);size(50);null" description:"成品名称"`
 	FinishSpecial         string        `orm:"column(finish_special);size(1000);null" description:"成品规格"`
-	FinishSpecialUCode    string        `orm:"column(finish_special_u_code);size(255);null" description:"成品计量单位代码"`
 	FinishSpecialU        string        `orm:"column(finish_special_u);size(200);null" description:"成品计量单位"`
 	OriginalityRecordNo   string        `orm:"column(originality_record_no);size(255);null" description:"料件料号"`
 	OriginalityHsCode     string        `orm:"column(originality_hs_code);size(50);null" description:"料件商品编码"`

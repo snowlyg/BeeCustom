@@ -132,6 +132,22 @@ func CompanyGetRelations(v *Company, relations string) (*Company, error) {
 	return v, nil
 }
 
+// CompanyByManageCode 根据海关编码 获取单条
+func CompanyByManageCode(manageCode string) (*Company, error) {
+	m := NewCompany(0)
+	o := orm.NewOrm()
+
+	if err := o.QueryTable(CompanyTBName()).Filter("Number", manageCode).One(&m); err != nil {
+		return nil, err
+	}
+
+	if &m == nil {
+		return &m, errors.New("获取失败")
+	}
+
+	return &m, nil
+}
+
 // CompanyOne 根据id获取单条
 func CompanyOne(id int64, relations string) (*Company, error) {
 	m := NewCompany(0)

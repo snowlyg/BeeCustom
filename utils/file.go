@@ -1,6 +1,13 @@
 package utils
 
-import "os"
+import (
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/astaxie/beego"
+)
 
 //调用os.MkdirAll递归创建文件夹
 func CreateFile(filePath string) error {
@@ -21,4 +28,24 @@ func IsExist(path string) bool {
 		return false
 	}
 	return true
+}
+
+//获取导入文件表头
+func GetRXmlTitles(xmlTitle, configSection string) (map[string]string, error) {
+	rXmlTitles := map[string]string{}
+	if len(xmlTitle) == 0 {
+		importWord, err := beego.AppConfig.GetSection(configSection)
+		if err != nil {
+			LogDebug(fmt.Sprintf("GetSection:%v", err))
+			return nil, err
+		}
+		rXmlTitles = importWord
+	} else {
+		xmlTitles := strings.Split(xmlTitle, "/")
+		for k, v := range xmlTitles {
+			rXmlTitles[v] = strconv.Itoa(k)
+		}
+	}
+
+	return rXmlTitles, nil
 }
