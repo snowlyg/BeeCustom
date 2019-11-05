@@ -251,7 +251,7 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 					if iw == obj.Name {
 						rI := funcName(rXmlTitles, iw)
 						// 模板字段数量定义
-						if rI != -1 && rI < 2 {
+						if rI != -1 && rI <= len(row) {
 							info[obj.Name] = row[rI]
 						}
 					}
