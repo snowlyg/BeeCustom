@@ -81,9 +81,10 @@ func BaseDeleteAll(clearanceType int8) (num int64, err error) {
 }
 
 //批量插入
-func BaseInsertMulti(bulk int, m interface{}) (num int64, err error) {
+func BaseInsertMulti(m interface{}) (num int64, err error) {
 	o := orm.NewOrm()
-	if num, err := o.InsertMulti(bulk, m); err != nil {
+	if num, err := o.InsertMulti(100, m); err != nil {
+
 		return num, err
 	} else {
 		return num, nil

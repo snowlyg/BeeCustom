@@ -106,12 +106,11 @@ func HandBookGoodOne(id int64, relations string) (*HandBookGood, error) {
 	return &m, nil
 }
 
-// GetHandBookGoodBySerial 根据Serial获取单条
+// GetHandBookGoodBySerial 根据Serial获取单条 成品
 func GetHandBookGoodBySerial(serial string) (*HandBookGood, error) {
 	m := NewHandBookGood(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(HandBookGoodTBName()).Filter("Serial", serial).Filter("Type", 1).One(&m); err != nil {
-		utils.LogDebug(fmt.Sprintf("HandBookGoodBySerial:%v", err))
 		return nil, err
 	}
 
@@ -124,5 +123,5 @@ func GetHandBookGoodBySerial(serial string) (*HandBookGood, error) {
 
 //批量插入
 func InsertHandBookGoodMulti(datas []*HandBookGood) (num int64, err error) {
-	return BaseInsertMulti(len(datas), datas)
+	return BaseInsertMulti(datas)
 }

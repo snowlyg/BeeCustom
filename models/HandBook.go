@@ -105,10 +105,7 @@ type HandBookImportParam struct {
 
 	HandBookGoodType int8
 
-	HandBook       HandBook
-	HandBookGood   HandBookGood
-	HandBookUllage HandBookUllage
-
+	HandBook        HandBook
 	HandBookGoods   []*HandBookGood
 	HandBookUllages []*HandBookUllage
 }

@@ -169,17 +169,14 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
 	}
 
-	clearance := models.NewClearance(0)
-	clearance.Type = clearanceType
-
 	clearances := make([]*models.Clearance, 0)
 	param := xlsx.BaseImportParam{
 		ExcelName:    "Sheet1",
 		FileNamePath: fileNamePath,
 	}
 	cIP := models.ClearanceImportParam{
-		InObj:           clearance,
 		Obj:             clearances,
+		ClearanceType:   clearanceType,
 		BaseImportParam: param,
 	}
 
@@ -209,33 +206,42 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 	}
 
 	//提取 excel 数据
-	for _, row := range rows {
-		//将数组  转成对应的 map
-		var info = make(map[string]string)
-		for i := 0; i < reflect.ValueOf(cIP.InObj).NumField(); i++ {
-			obj := reflect.TypeOf(cIP.InObj).Field(i)
-			for _, iw := range rXmlTitles {
-				if iw == obj.Name {
-					rI := xlsx.ObjIsExists(rXmlTitles, iw)
-					// 模板字段数量定义
-					if rI != -1 && rI <= len(row) {
-						info[obj.Name] = row[rI]
+
+	for roI, row := range rows {
+		if roI > 0 {
+			info := make(map[string]string)
+			//将数组  转成对应的 map
+			inObj := models.NewClearance(0)
+			for i := 0; i < reflect.ValueOf(inObj).NumField(); i++ {
+				obj := reflect.TypeOf(inObj).Field(i)
+				for _, iw := range rXmlTitles {
+					if iw == obj.Name {
+						rI := xlsx.ObjIsExists(rXmlTitles, iw)
+						// 模板字段数量定义
+						if rI != -1 && rI <= len(row) {
+							info[obj.Name] = row[rI]
+						} else {
+							continue
+						}
 					}
 				}
 			}
+
+			cIP.Info = append(cIP.Info, info)
 		}
 
-		cIP.Info = append(cIP.Info, info)
 	}
 
 	//转换 excel 数据
 	//忽略标题行
-	for i := 1; i < len(cIP.Info); i++ {
-		t := reflect.ValueOf(&cIP.InObj).Elem()
+	for i := 0; i < len(cIP.Info); i++ {
+		inObj := models.NewClearance(0)
+		inObj.Type = cIP.ClearanceType
+		t := reflect.ValueOf(&inObj).Elem()
 		for k, v := range cIP.Info[i] {
 			xlsx.SetObjValue(k, v, t)
 		}
-		cIP.Obj = append(cIP.Obj, &cIP.InObj)
+		cIP.Obj = append(cIP.Obj, &inObj)
 	}
 
 }

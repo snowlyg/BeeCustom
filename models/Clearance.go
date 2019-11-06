@@ -51,8 +51,8 @@ type ClearanceQueryParam struct {
 type ClearanceImportParam struct {
 	xlsx.BaseImportParam
 
-	Obj   []*Clearance
-	InObj Clearance
+	ClearanceType int8
+	Obj           []*Clearance
 }
 
 func NewClearance(id int64) Clearance {
@@ -151,5 +151,5 @@ func ClearanceDeleteAll(clearanceType int8) (num int64, err error) {
 
 //批量插入
 func InsertClearanceMulti(datas []*Clearance) (num int64, err error) {
-	return BaseInsertMulti(len(datas), datas)
+	return BaseInsertMulti(datas)
 }

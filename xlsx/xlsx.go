@@ -18,13 +18,10 @@ type BaseImportParam struct {
 	Info         []map[string]string
 	FileNamePath string
 	ExcelTitle   map[string]string
-	ExcelTitle2  map[string]string
-	ExcelTitle3  map[string]string
-	ExcelTitle4  map[string]string
 	ExcelName    string
 }
 
-//导入基础参数 xlsx 文件内容
+//导入基础参数 rows 文件内容
 func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 
 	f, err := excelize.OpenFile(fileNamePath)
@@ -42,6 +39,24 @@ func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 	}
 
 	return rows, nil
+
+}
+
+//导入基础参数 Cell 文件内容
+func GetExcelCell(fileNamePath, excelName, axis string) (string, error) {
+
+	f, err := excelize.OpenFile(fileNamePath)
+	if err != nil {
+		return "", err
+	}
+
+	if f == nil {
+		return "", errors.New("excelize.OpenFile 出错")
+	}
+
+	cell, err := f.GetCellValue(excelName, axis)
+
+	return cell, nil
 
 }
 
@@ -82,11 +97,13 @@ func SetObjValue(objName, v string, t reflect.Value) {
 	case reflect.String:
 		t.FieldByName(objName).Set(reflect.ValueOf(v))
 	case reflect.Float64:
-		objV, err := strconv.ParseFloat(v, 64)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("ParseFloat:%v,%v", err, v))
+		if len(v) > 0 {
+			objV, err := strconv.ParseFloat(v, 64)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("ParseFloat:%v,%v", err, v))
+			}
+			t.FieldByName(objName).Set(reflect.ValueOf(objV))
 		}
-		t.FieldByName(objName).Set(reflect.ValueOf(objV))
 	case reflect.Uint64:
 		reflect.ValueOf(v)
 		objV, err := strconv.ParseUint(v, 0, 64)

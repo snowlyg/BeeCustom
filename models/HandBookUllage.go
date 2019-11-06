@@ -105,5 +105,5 @@ func HandBookUllageOne(id int64, relations string) (*HandBookUllage, error) {
 
 //批量插入
 func InsertHandBookUllageMulti(datas []*HandBookUllage) (num int64, err error) {
-	return BaseInsertMulti(len(datas), datas)
+	return BaseInsertMulti(datas)
 }
