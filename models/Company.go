@@ -138,6 +138,7 @@ func CompanyByManageCode(manageCode string) (*Company, error) {
 	o := orm.NewOrm()
 
 	if err := o.QueryTable(CompanyTBName()).Filter("Number", manageCode).One(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("CompanyByManageCode:%v", err))
 		return nil, err
 	}
 

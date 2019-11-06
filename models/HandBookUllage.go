@@ -103,25 +103,6 @@ func HandBookUllageOne(id int64, relations string) (*HandBookUllage, error) {
 	return &m, nil
 }
 
-//删除
-func HandBookUllageDelete(id int64) (num int64, err error) {
-	m := NewHandBookUllage(id)
-	if num, err := BaseDelete(&m); err != nil {
-		return num, err
-	} else {
-		return num, nil
-	}
-}
-
-//删除
-func HandBookUllageDeleteAll(clearanceType int8) (num int64, err error) {
-	if num, err := BaseDeleteAll(clearanceType); err != nil {
-		return num, err
-	} else {
-		return num, nil
-	}
-}
-
 //批量插入
 func InsertHandBookUllageMulti(datas []*HandBookUllage) (num int64, err error) {
 	return BaseInsertMulti(len(datas), datas)

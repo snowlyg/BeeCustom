@@ -1,13 +1,15 @@
 package models
 
 import (
-	"BeeCustom/utils"
-	"github.com/astaxie/beego"
-
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
+
+	"BeeCustom/utils"
+	"BeeCustom/xlsx"
+	"github.com/astaxie/beego"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -97,13 +99,25 @@ type HandBookQueryParam struct {
 	NameLike string //模糊查询
 }
 
-// HandBookImportParam 用于查询的类
+// HandBookImportParam 用于导入的类
 type HandBookImportParam struct {
-	Info         []map[string]string
-	HandBook     HandBook
-	Obj          []*HandBook
-	FileNamePath string
-	XmlTitle     string
+	xlsx.BaseImportParam
+
+	HandBookGoodType int8
+
+	HandBook       HandBook
+	HandBookGood   HandBookGood
+	HandBookUllage HandBookUllage
+
+	HandBookGoods   []*HandBookGood
+	HandBookUllages []*HandBookUllage
+}
+
+// HandBookGoodImportParam 用于导入的类
+type HandBookGoodImportParam struct {
+	ExcelNameString    string
+	ExcelTitleString   string
+	HandBookTypeString string
 }
 
 func NewHandBook(id int64) HandBook {
@@ -111,24 +125,27 @@ func NewHandBook(id int64) HandBook {
 }
 
 //查询参数
-func NewHandBookQueryParam() HandBookQueryParam {
-	return HandBookQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
-}
-
-//查询参数
-func GetHandBookTypeWithString(handBookType string) string {
-	handBookTypes, err := beego.AppConfig.GetSection("hand_book_type")
+func GetHandBookTypeWithString(handBookType, configSection string) (int8, error) {
+	handBookTypes, err := beego.AppConfig.GetSection(configSection)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 	}
 
 	for i, v := range handBookTypes {
 		if v == handBookType {
-			return i
+
+			handBookTypeI, err := strconv.Atoi(i)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("ParseInt:%v", err))
+				return -1, err
+			}
+
+			return int8(handBookTypeI), nil
+
 		}
 	}
 
-	return ""
+	return -1, errors.New("查询参数错误")
 }
 
 func HandBookGetRelations(v *HandBook, relations string) (*HandBook, error) {
@@ -168,6 +185,22 @@ func HandBookOne(id int64, relations string) (*HandBook, error) {
 	return &m, nil
 }
 
+// GetHandBookByContractNumber 根据contractNumber获取单条
+func GetHandBookByContractNumber(contractNumber string) (*HandBook, error) {
+	m := NewHandBook(0)
+	o := orm.NewOrm()
+	if err := o.QueryTable(HandBookTBName()).Filter("ContractNumber", contractNumber).One(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("GetHandBookByContractNumber:%v", err))
+		return nil, err
+	}
+
+	if &m == nil {
+		return &m, errors.New("获取失败")
+	}
+
+	return &m, nil
+}
+
 //Save 添加、编辑页面 保存
 func HandBookSave(m *HandBook) (*HandBook, error) {
 	o := orm.NewOrm()
@@ -192,18 +225,4 @@ func HandBookDelete(id int64) (num int64, err error) {
 	} else {
 		return num, nil
 	}
-}
-
-//删除
-func HandBookDeleteAll(clearanceType int8) (num int64, err error) {
-	if num, err := BaseDeleteAll(clearanceType); err != nil {
-		return num, err
-	} else {
-		return num, nil
-	}
-}
-
-//批量插入
-func InsertHandBookMulti(datas []*HandBook) (num int64, err error) {
-	return BaseInsertMulti(len(datas), datas)
 }

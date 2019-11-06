@@ -156,8 +156,9 @@ func (c *ClearanceController) Delete() {
 func (c *ClearanceController) Import() {
 
 	cIP := models.ClearanceImportParam{}
-	cIP.Clearance = models.NewClearance(0)
+	cIP.InObj = models.NewClearance(0)
 	cIP.Obj = make([]*models.Clearance, 0)
+	cIP.ExcelName = "Sheet1"
 
 	clearanceType, err := c.GetInt8(":type", -1)
 	if err != nil || clearanceType == -1 {
@@ -165,17 +166,14 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "参数错误", nil)
 	}
 
-	cIP.Clearance.Type = clearanceType
+	cIP.InObj.Type = clearanceType
 
-	xmlTitle := c.GetString("xmlTitle", "")
-	_, err = models.ClearanceDeleteAll(cIP.Clearance.Type)
+	_, err = models.ClearanceDeleteAll(cIP.InObj.Type) //清空对应基础参数
 
-	if err != nil || cIP.Clearance.Type == -1 {
+	if err != nil || cIP.InObj.Type == -1 {
 		utils.LogDebug(fmt.Sprintf("ClearanceDeleteAll:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "清空数据报错", nil)
 	}
-
-	cIP.XmlTitle = xmlTitle
 
 	fileType := "clearance/" + strconv.FormatInt(c.curUser.Id, 10) + "/"
 	fileNamePath, err := c.BaseUpload(fileType)
@@ -208,11 +206,11 @@ func (c *ClearanceController) Import() {
 func (c *ClearanceController) GetXlsxContent(cIP *models.ClearanceImportParam) error {
 	//忽略标题行
 	for i := 1; i < len(cIP.Info); i++ {
-		t := reflect.ValueOf(&cIP.Clearance).Elem()
+		t := reflect.ValueOf(&cIP.InObj).Elem()
 		for k, v := range cIP.Info[i] {
 			xlsx.SetObjValue(k, v, t)
 		}
-		cIP.Obj = append(cIP.Obj, &cIP.Clearance)
+		cIP.Obj = append(cIP.Obj, &cIP.InObj)
 	}
 
 	return nil
@@ -228,28 +226,28 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 	}
 
 	if f != nil {
-		// Get all the rows in the Sheet1.
-		rows, err := f.GetRows("Sheet1")
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
-		}
 
-		rXmlTitles, err := xlsx.GetExcelTitles(cIP.XmlTitle, "clearance_excel_tile")
+		rXmlTitles, err := xlsx.GetExcelTitles("", "clearance_excel_tile")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
 
+		rows, err := f.GetRows(cIP.ExcelName)
+		// Get all the rows in the Sheet1.
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
 		for _, row := range rows {
 			//将数组  转成对应的 map
 			var info = make(map[string]string)
 			// 模型前两个字段是 BaseModel ，Type 不需要赋值
-			for i := 0; i < reflect.ValueOf(cIP.Clearance).NumField(); i++ {
-				obj := reflect.TypeOf(cIP.Clearance).Field(i)
+			for i := 0; i < reflect.ValueOf(cIP.InObj).NumField(); i++ {
+				obj := reflect.TypeOf(cIP.InObj).Field(i)
 				for _, iw := range rXmlTitles {
 					if iw == obj.Name {
-						rI := funcName(rXmlTitles, iw)
+						rI := xlsx.ObjIsExists(rXmlTitles, iw)
 						// 模板字段数量定义
 						if rI != -1 && rI <= len(row) {
 							info[obj.Name] = row[rI]

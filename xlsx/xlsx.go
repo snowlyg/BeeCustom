@@ -11,6 +11,17 @@ import (
 	"github.com/astaxie/beego"
 )
 
+// ClearanceImportParam 用于查询的类
+type BaseImportParam struct {
+	Info         []map[string]string
+	FileNamePath string
+	ExcelTitle   map[string]string
+	ExcelTitle2  map[string]string
+	ExcelTitle3  map[string]string
+	ExcelTitle4  map[string]string
+	ExcelName    string
+}
+
 //获取导入文件表头
 func GetExcelTitles(xmlTitle, configSection string) (map[string]string, error) {
 	rXmlTitles := map[string]string{}
@@ -48,24 +59,24 @@ func SetObjValue(objName, v string, t reflect.Value) {
 	case reflect.String:
 		t.FieldByName(objName).Set(reflect.ValueOf(v))
 	case reflect.Float64:
-		handBookV, err := strconv.ParseFloat(v, 64)
+		objV, err := strconv.ParseFloat(v, 64)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("ParseFloat:%v,%v", err, v))
 		}
-		t.FieldByName(objName).Set(reflect.ValueOf(handBookV))
+		t.FieldByName(objName).Set(reflect.ValueOf(objV))
 	case reflect.Uint64:
 		reflect.ValueOf(v)
-		handBookV, err := strconv.ParseUint(v, 0, 64)
+		objV, err := strconv.ParseUint(v, 0, 64)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("ParseUint:%v,%v", err, v))
 		}
-		t.FieldByName(objName).Set(reflect.ValueOf(handBookV))
+		t.FieldByName(objName).Set(reflect.ValueOf(objV))
 	case reflect.Struct:
-		handBookV, err := time.Parse("20060102", v)
+		objV, err := time.Parse("20060102", v)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("Parse:%v,%v", err, v))
 		}
-		t.FieldByName(objName).Set(reflect.ValueOf(handBookV))
+		t.FieldByName(objName).Set(reflect.ValueOf(objV))
 	default:
 		utils.LogDebug("未知类型")
 	}
@@ -78,4 +89,18 @@ func FilpValueString(obj map[string]string) map[string]string {
 	}
 
 	return obj
+}
+
+// 判断是否存在键
+func ObjIsExists(rXmlTitles map[string]string, s string) int {
+	fRXmlTitles := FilpValueString(rXmlTitles)
+	if _, ok := fRXmlTitles[s]; ok {
+		i, err := strconv.Atoi(rXmlTitles[s])
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("funcName=>Atoi:%v", err))
+		}
+		return i
+	} else {
+		return -1
+	}
 }

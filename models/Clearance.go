@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"BeeCustom/enums"
+	"BeeCustom/xlsx"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
@@ -49,11 +49,10 @@ type ClearanceQueryParam struct {
 
 // ClearanceImportParam 用于查询的类
 type ClearanceImportParam struct {
-	Info         []map[string]string
-	Obj          []*Clearance
-	Clearance    Clearance
-	FileNamePath string
-	XmlTitle     string
+	xlsx.BaseImportParam
+
+	Obj   []*Clearance
+	InObj Clearance
 }
 
 func NewClearance(id int64) Clearance {

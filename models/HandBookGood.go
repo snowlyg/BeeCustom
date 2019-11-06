@@ -106,23 +106,20 @@ func HandBookGoodOne(id int64, relations string) (*HandBookGood, error) {
 	return &m, nil
 }
 
-//删除
-func HandBookGoodDelete(id int64) (num int64, err error) {
-	m := NewHandBookGood(id)
-	if num, err := BaseDelete(&m); err != nil {
-		return num, err
-	} else {
-		return num, nil
+// GetHandBookGoodBySerial 根据Serial获取单条
+func GetHandBookGoodBySerial(serial string) (*HandBookGood, error) {
+	m := NewHandBookGood(0)
+	o := orm.NewOrm()
+	if err := o.QueryTable(HandBookGoodTBName()).Filter("Serial", serial).Filter("Type", 1).One(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("HandBookGoodBySerial:%v", err))
+		return nil, err
 	}
-}
 
-//删除
-func HandBookGoodDeleteAll(clearanceType int8) (num int64, err error) {
-	if num, err := BaseDeleteAll(clearanceType); err != nil {
-		return num, err
-	} else {
-		return num, nil
+	if &m == nil {
+		return &m, errors.New("获取失败")
 	}
+
+	return &m, nil
 }
 
 //批量插入

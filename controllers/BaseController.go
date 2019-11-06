@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"BeeCustom/enums"
@@ -10,7 +9,6 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/validations"
-	"BeeCustom/xlsx"
 	"github.com/astaxie/beego/validation"
 
 	"github.com/astaxie/beego"
@@ -247,19 +245,4 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 			return fileNamePath, nil
 		}
 	}
-}
-
-// 判断是否存在键
-func funcName(rXmlTitles map[string]string, s string) int {
-	fRXmlTitles := xlsx.FilpValueString(rXmlTitles)
-	if _, ok := fRXmlTitles[s]; ok {
-		i, err := strconv.Atoi(rXmlTitles[s])
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("funcName=>Atoi:%v", err))
-		}
-		return i
-	} else {
-		return -1
-	}
-
 }
