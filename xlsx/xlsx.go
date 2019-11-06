@@ -1,7 +1,9 @@
 package xlsx
 
 import (
+	"errors"
 	"fmt"
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"reflect"
 	"strconv"
 	"strings"
@@ -20,6 +22,27 @@ type BaseImportParam struct {
 	ExcelTitle3  map[string]string
 	ExcelTitle4  map[string]string
 	ExcelName    string
+}
+
+//导入基础参数 xlsx 文件内容
+func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
+
+	f, err := excelize.OpenFile(fileNamePath)
+	if err != nil {
+		return nil, err
+	}
+
+	if f == nil {
+		return nil, errors.New("excelize.OpenFile 出错")
+	}
+
+	rows, err := f.GetRows(excelName)
+	if err != nil {
+		return nil, err
+	}
+
+	return rows, nil
+
 }
 
 //获取导入文件表头
