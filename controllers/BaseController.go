@@ -6,9 +6,11 @@ import (
 	"strings"
 
 	"BeeCustom/enums"
+	"BeeCustom/file"
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/validations"
+	"BeeCustom/xlsx"
 	"github.com/astaxie/beego/validation"
 
 	"github.com/astaxie/beego"
@@ -234,7 +236,7 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 		return "", err
 	}
 
-	if fileNamePath, err := utils.GetUploadFileUPath(f, h, fileType); err != nil {
+	if fileNamePath, err := file.GetUploadFileUPath(f, h, fileType); err != nil {
 		return "", err
 	} else {
 		err = c.SaveToFile("filename", fileNamePath) // 保存位置在 static/upload, 没有文件夹要先创建
@@ -249,7 +251,7 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 
 // 判断是否存在键
 func funcName(rXmlTitles map[string]string, s string) int {
-	fRXmlTitles := enums.FilpValueString(rXmlTitles)
+	fRXmlTitles := xlsx.FilpValueString(rXmlTitles)
 	if _, ok := fRXmlTitles[s]; ok {
 		i, err := strconv.Atoi(rXmlTitles[s])
 		if err != nil {

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"BeeCustom/xlsx"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/astaxie/beego"
 
@@ -33,12 +34,6 @@ func (c *HandBookController) Prepare() {
 }
 
 func (c *HandBookController) Index() {
-	section, err := beego.AppConfig.DIY("import")
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf(" beego.AppConfig.GetSection:%v", err))
-	}
-
-	utils.LogDebug(fmt.Sprintf("section:%v", section))
 
 	params := models.NewCompanyQueryParam()
 	limit, err := c.GetInt64("limit", 10)
@@ -47,8 +42,8 @@ func (c *HandBookController) Index() {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
 
-	searchWork := c.GetString("searchWork", "")
-	params.SearchWork = searchWork
+	searchWord := c.GetString("searchWord", "")
+	params.SearchWord = searchWord
 	params.Limit = limit
 	params.Offset = offset
 
@@ -64,7 +59,7 @@ func (c *HandBookController) Index() {
 	c.LayoutSections["footerjs"] = "handbook/index_footerjs.html"
 	c.Data["m"] = cs
 	c.Data["count"] = count
-	c.Data["searchWork"] = searchWork
+	c.Data["searchWord"] = searchWord
 
 	//页面里按钮权限控制
 	c.getActionData("Delete", "Import")
@@ -122,22 +117,23 @@ func (c *HandBookController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "文件格式错误，只能导入 xlsx 文件", nil)
 	}
 
-	c.ImportHandBookXlsx(&hIP)
+	c.ImportHandBookXlsxByCell(&hIP)
+	c.ImportHandBookXlsxByRow(&hIP)
 	//cDatas, err = c.GetXlsxContent(info, cDatas, &handBook)
 
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetXlsxContent:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	mun, err := models.HandBookSave(&hIP.HandBook)
+	m, err := models.HandBookSave(&hIP.HandBook)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("InsertMulti:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
 	c.SetLastUpdteTime("handBookLastUpdateTime", time.Now().Format(enums.BaseFormat))
-	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("上传成功%d项基础参数", mun), mun)
+	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("导入成功"), m.Id)
 
 }
 
@@ -147,7 +143,7 @@ func (c *HandBookController) GetXlsxContent(info []map[string]string, obj []*mod
 	for i := 1; i < len(info); i++ {
 		t := reflect.ValueOf(handBook).Elem()
 		for k, v := range info[i] {
-			enums.SetObjValue(k, v, t)
+			xlsx.SetObjValue(k, v, t)
 		}
 
 		obj = append(obj, handBook)
@@ -158,16 +154,16 @@ func (c *HandBookController) GetXlsxContent(info []map[string]string, obj []*mod
 }
 
 //导入基础参数 xlsx 文件内容
-func (c *HandBookController) ImportHandBookXlsx(hIP *models.HandBookImportParam) {
+func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImportParam) {
 
 	f, err := excelize.OpenFile(hIP.FileNamePath)
+
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("OpenFile:%v ,fileNamePath;%s", err, hIP.FileNamePath))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
 	if f != nil {
-
 		accountSheet1Name, _ := beego.AppConfig.GetSection("handbook_account_excel_sheet1_name")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
@@ -203,8 +199,72 @@ func (c *HandBookController) ImportHandBookXlsx(hIP *models.HandBookImportParam)
 						utils.LogDebug(fmt.Sprintf("GetCellValue:%v", err))
 						c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 					}
+					xlsx.SetObjValue(obj.Name, cell, t)
+				}
+			}
+		}
 
-					enums.SetObjValue(obj.Name, cell, t)
+		CompanyManageCode := hIP.HandBook.CompanyManageCode // 经营单位代码
+		company, err := models.CompanyByManageCode(CompanyManageCode)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("CompanyByManageCode:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
+
+		hIP.HandBook.Company = company
+
+	} else {
+		utils.LogDebug(fmt.Sprintf("导入失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+	}
+
+}
+
+//导入基础参数 xlsx 文件内容
+func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportParam) {
+
+	f, err := excelize.OpenFile(hIP.FileNamePath)
+
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("OpenFile:%v ,fileNamePath;%s", err, hIP.FileNamePath))
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+	}
+
+	if f != nil {
+		accountSheet1Name, err := xlsx.GetExcelName("handbook_account_excel_sheet1_name")
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
+
+		accountSheet1Title, err := xlsx.GetExcelTitles("", "handbook_account_excel_sheet1_title")
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
+
+		handBookTypeString := models.GetHandBookTypeWithString("账册")
+		if len(handBookTypeString) == 0 {
+			c.jsonResult(enums.JRCodeFailed, "账册类型获取失败", nil)
+		}
+
+		handBookType, err := strconv.Atoi(handBookTypeString)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("ParseInt:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		}
+
+		hIP.HandBook.Type = int8(handBookType)
+		t := reflect.ValueOf(&hIP.HandBook).Elem()
+		for i := 0; i < reflect.ValueOf(hIP.HandBook).NumField(); i++ {
+			obj := reflect.TypeOf(hIP.HandBook).Field(i)
+			for iw, v := range accountSheet1Title {
+				// Get value from cell by given worksheet name and axis.
+				if iw == strings.ToLower(obj.Name) {
+					cell, err := f.GetCellValue(accountSheet1Name, v)
+					if err != nil {
+						utils.LogDebug(fmt.Sprintf("GetCellValue:%v", err))
+						c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+					}
+					xlsx.SetObjValue(obj.Name, cell, t)
 				}
 			}
 		}

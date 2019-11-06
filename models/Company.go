@@ -66,7 +66,7 @@ type CompanyQueryParam struct {
 	BaseQueryParam
 
 	NameLike   string //模糊查询
-	SearchWork string //模糊查询
+	SearchWord string //模糊查询
 
 }
 
@@ -93,8 +93,8 @@ func CompanyPageList(params *CompanyQueryParam) ([]*Company, int64) {
 		query = query.SetCond(cond1)
 	}
 
-	if len(params.SearchWork) > 0 {
-		query = query.Filter("HandBooks__contract_number__iexact", params.SearchWork)
+	if len(params.SearchWord) > 0 {
+		query = query.Distinct().Filter("HandBooks__contract_number__iexact", params.SearchWord)
 	}
 
 	total, _ := query.Count()

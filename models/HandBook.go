@@ -100,8 +100,8 @@ type HandBookQueryParam struct {
 // HandBookImportParam 用于查询的类
 type HandBookImportParam struct {
 	Info         []map[string]string
-	Obj          []*HandBook
 	HandBook     HandBook
+	Obj          []*HandBook
 	FileNamePath string
 	XmlTitle     string
 }

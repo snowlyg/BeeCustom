@@ -75,7 +75,7 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 		return nil, 0
 	}
 
-	clearanceTypeStrings = enums.FilpValueString(clearanceTypeStrings)
+	clearanceTypeStrings = xlsx.FilpValueString(clearanceTypeStrings)
 	clearanceType := clearanceTypeStrings["关区代码"]
 
 	if len(params.Type) > 0 {

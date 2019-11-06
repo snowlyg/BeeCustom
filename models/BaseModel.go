@@ -39,14 +39,6 @@ type Page struct {
 	List       interface{}
 }
 
-func PageUtil(count int, pageNo int, pageSize int, list interface{}) Page {
-	tp := count / pageSize
-	if count%pageSize > 0 {
-		tp = count/pageSize + 1
-	}
-	return Page{PageNo: pageNo, PageSize: pageSize, TotalPage: tp, TotalCount: count, FirstPage: pageNo == 1, LastPage: pageNo == tp, List: list}
-}
-
 //默认列表数据
 func BaseListQuery(query orm.QuerySeter, sort, order string, limit, offset int64) orm.QuerySeter {
 	//默认排序

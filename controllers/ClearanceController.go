@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"BeeCustom/xlsx"
 	"github.com/360EntSecGroup-Skylar/excelize"
 
 	"BeeCustom/enums"
@@ -209,7 +210,7 @@ func (c *ClearanceController) GetXlsxContent(cIP *models.ClearanceImportParam) e
 	for i := 1; i < len(cIP.Info); i++ {
 		t := reflect.ValueOf(&cIP.Clearance).Elem()
 		for k, v := range cIP.Info[i] {
-			enums.SetObjValue(k, v, t)
+			xlsx.SetObjValue(k, v, t)
 		}
 		cIP.Obj = append(cIP.Obj, &cIP.Clearance)
 	}
@@ -219,8 +220,6 @@ func (c *ClearanceController) GetXlsxContent(cIP *models.ClearanceImportParam) e
 
 //导入基础参数 xlsx 文件内容
 func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportParam) {
-
-	rXmlTitles, _ := utils.GetRXmlTitles(cIP.XmlTitle, "clearance_excel_tile")
 
 	f, err := excelize.OpenFile(cIP.FileNamePath)
 	if err != nil {
@@ -236,6 +235,7 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
 
+		rXmlTitles, err := xlsx.GetExcelTitles(cIP.XmlTitle, "clearance_excel_tile")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)

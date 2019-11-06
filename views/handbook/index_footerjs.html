@@ -19,9 +19,9 @@
                 //console.log(obj.limit); //得到每页显示的条数
                 //首次不执行
                 if (!first) {
-                    if (@{{ .searchWork }} !== "") {
+                    if (@{{ .searchWord }} !== "") {
                         self.location.href = @{{ urlfor "HandBookController.Index"}} + "?limit=" + obj.limit +
-                            "&offset=" + obj.curr + "#!fenye=" + obj.curr + "?searchWork=" + @{{ .searchWork }};
+                            "&offset=" + obj.curr + "#!fenye=" + obj.curr + "?searchWord=" + @{{ .searchWord }};
                     } else {
                         self.location.href = @{{ urlfor "HandBookController.Index"}} + "?limit=" + obj.limit + "&offset=" + obj.curr + "#!fenye=" + obj.curr;
                     }
@@ -34,7 +34,7 @@
         $("#company_search").on('keydown', function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
             if (eCode === 13) {
-                self.location.href = "@{{ urlfor "HandBookController.Index"}}" + "?searchWork=" + $(this).val();
+                self.location.href = "@{{ urlfor "HandBookController.Index"}}" + "?searchWord=" + $(this).val();
             }
         });
 
