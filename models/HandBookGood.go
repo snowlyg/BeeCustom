@@ -53,6 +53,7 @@ type HandBookGood struct {
 	Amount              float64   `orm:"column(amount);digits(17);decimals(4)" description:"总价（申报总价）"`
 	Manuplace           string    `orm:"column(manuplace);size(50)" description:"产销国(地区)"`
 	GoodAttr            string    `orm:"column(good_attr);size(255);null" description:"商品属性"`
+	SeqNo               string    `orm:"column(seq_no);size(18);null" description:"预录入统一编号 (返填)"`
 	HandBook            *HandBook `orm:"column(hand_book_id);rel(fk)"`
 	HandBookId          int64     `orm:"-" form:"HandBookId"`
 }
@@ -60,8 +61,8 @@ type HandBookGood struct {
 // HandBookGoodQueryParam 用于查询的类
 type HandBookGoodQueryParam struct {
 	BaseQueryParam
-	Type     string //模糊查询
-	NameLike string //模糊查询
+	Type       int8  //模糊查询
+	HandBookId int64 //模糊查询
 }
 
 func NewHandBookGood(id int64) HandBookGood {
@@ -71,6 +72,21 @@ func NewHandBookGood(id int64) HandBookGood {
 //查询参数
 func NewHandBookGoodQueryParam() HandBookGoodQueryParam {
 	return HandBookGoodQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
+}
+
+// HandBookGoodPageList 获取分页数据
+func HandBookGoodPageList(params *HandBookGoodQueryParam) ([]*HandBookGood, int64) {
+	query := orm.NewOrm().QueryTable(HandBookGoodTBName())
+	data := make([]*HandBookGood, 0)
+
+	query = query.Distinct().Filter("hand_book_id", params.HandBookId).Filter("Type", params.Type)
+
+	total, _ := query.Count()
+	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
+
+	_, _ = query.All(&data)
+
+	return data, total
 }
 
 func HandBookGoodGetRelations(v *HandBookGood, relations string) (*HandBookGood, error) {

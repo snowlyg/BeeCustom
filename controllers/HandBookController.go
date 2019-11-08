@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"reflect"
@@ -64,10 +65,46 @@ func (c *HandBookController) Index() {
 	c.GetXSRFToken()
 }
 
+//列表数据
+func (c *HandBookController) GoodDataGrid() {
+	//直接获取参数 GoodDataGrid()
+	params := models.NewHandBookGoodQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, total := models.HandBookGoodPageList(&params)
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = total
+	result["rows"] = data
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
+//列表数据
+func (c *HandBookController) UllageDataGrid() {
+	//直接获取参数 getDataGridData()
+	params := models.NewHandBookUllageQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, total := models.HandBookUllagePageList(&params)
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = total
+	result["rows"] = data
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
 // Edit 添加 编辑 页面
 func (c *HandBookController) Show() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.HandBookOne(Id, "Company,HandBookGoods")
+	m, err := models.HandBookOne(Id, "Company")
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -77,14 +114,19 @@ func (c *HandBookController) Show() {
 	c.Data["m"] = m
 
 	var html, showFooterjs string
-	handBookType, err := enums.GetSectionWithString("手册", "hand_book_type")
+	chandBookType, err := enums.GetSectionWithString("手册", "hand_book_type")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
 	}
-	if m.Type == handBookType {
+
+	ahandBookType, err := enums.GetSectionWithString("账册", "hand_book_type")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+	}
+	if m.Type == chandBookType {
 		html = "handbook/manual/show.html"
 		showFooterjs = "handbook/manual/show_footerjs.html"
-	} else {
+	} else if m.Type == ahandBookType {
 		html = "handbook/account/show.html"
 		showFooterjs = "handbook/account/show_footerjs.html"
 	}
@@ -93,26 +135,6 @@ func (c *HandBookController) Show() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = showFooterjs
 	c.GetXSRFToken()
-}
-
-// Edit 添加 编辑 页面
-func (c *HandBookController) One() {
-	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.HandBookOne(Id, "Company,HandBookGoods")
-	if m != nil && Id > 0 {
-		if err != nil {
-			c.pageError("数据无效，请刷新后重试")
-		}
-	}
-
-	//定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = 1
-	result["rows"] = m
-	result["code"] = 0
-	c.Data["json"] = result
-
-	c.ServeJSON()
 }
 
 //删除
@@ -360,7 +382,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 		var Info []map[string]string
 		obj := models.NewHandBookGood(0)
 		for roI, row := range rows {
-			if roI > 1 { //忽略标题行
+			if roI > 1 { //忽略标题和表头 2 行
 				//将数组  转成对应的 map
 				var info = make(map[string]string)
 				// 模型前两个字段是 BaseModel ，Type 不需要赋值

@@ -1,12 +1,12 @@
 package enums
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
 	"BeeCustom/utils"
 	"github.com/astaxie/beego"
-	"github.com/kataras/iris/core/errors"
 )
 
 type JsonResultCode int

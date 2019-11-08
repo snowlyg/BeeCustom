@@ -4,32 +4,7 @@
     }).extend({
         index: 'lib/index'
     }).use([ 'index','admin','upload',"laypage"], async () => {
-        const laypage = layui.laypage,upload = layui.upload,admin = layui.admin, $ = layui.$;
-
-        laypage.render({
-            elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-            , count: @{{.count}} //
-            , limit: 10 //
-            , limits: true //
-            , curr: location.hash.replace('#!fenye=', '') //
-            , hash: 'fenye' //自定义hash值
-            , jump: function (obj, first) {
-                //obj包含了当前分页的所有参数，比如：
-                //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
-                //console.log(obj.limit); //得到每页显示的条数
-                //首次不执行
-                if (!first) {
-                    if (@{{ .searchWord }} !== "") {
-                        self.location.href = @{{ urlfor "HandBookController.Index"}} + "?limit=" + obj.limit +
-                            "&offset=" + obj.curr + "#!fenye=" + obj.curr + "?searchWord=" + @{{ .searchWord }};
-                    } else {
-                        self.location.href = @{{ urlfor "HandBookController.Index"}} + "?limit=" + obj.limit + "&offset=" + obj.curr + "#!fenye=" + obj.curr;
-                    }
-
-
-                }
-            }
-        });
+        const upload = layui.upload,admin = layui.admin, $ = layui.$;
 
         $("#company_search").on('keydown', function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;

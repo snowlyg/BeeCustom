@@ -36,21 +36,41 @@
         });
         /*表格横向移动 END*/
 
-
-        const responeData = await admin.get("/handbook/" + @{{ .m.Id}});
-
-        table_render_date(responeData.rows)
+        table_render_date()
 
         /*渲染表格 account_data 账册数据 */
-        function table_render_date(account_data) {
+        function table_render_date() {
             /*料件表*/
             table.render({
                 elem: '#piece_table'
                 , toolbar: true
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
+                , method: 'post'
+                , where: {
+                    order: 'desc',
+                    sort: 'CreatedAt',
+                    Type: 2,
+                    HandBookId: @{{ .m.Id }},
+                }
+                , contentType: 'application/json'
+                , url: "/handbook/gooddatagrid"
+                , request: {
+                    pageName: 'offset' //页码的参数名称，默认：page
+                    , limitName: 'limit' //每页数据量的参数名，默认：limit
+                }, response: {
+                    statusName: 'code',
+                    statusCode: 0,
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.code,
+                        "count": res.total,
+                        "data": res.rows
+                    };
+                }
                 , cols: [[
-                    {field: 'Id', title: '序号', width: 120}
+                    {field: 'Serial', title: '序号', width: 120}
                     , {field: 'RecordNo', title: '料号', width: 120}
                     , {field: 'HsCode', title: '商品编码', width: 200}
                     , {field: 'Name', title: '商品名称', width: 180}
@@ -68,24 +88,25 @@
                     , {field: 'CountControlFlag', title: '数量控制标志', width: 120}
                     , {field: 'CustomActionFlag', title: '海关执行标志', width: 120}
                     , {field: 'BigCount', title: '批准最大余数量', width: 150}
+                    , {field: 'Remark', title: '备注'}
                 ]]
-                , data: account_data.HandBookGoods
-                , limit: account_data.HandBookGoods.length
+                , page: true
+                , limit: 10
                 , height: 450
             });
 
             /*监听成品搜索*/
-            $("#piece_search").on("input", function (e) {
-                field = ['RecordNo', 'HsCode', 'name'];
-                arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
-                if (e.delegateTarget.value.length == 0) {
-                    arr = account_data.HandBookGoods;
-                }
-                table.reload('piece_table', {
-                    data: arr
-                });
-
-            });
+            // $("#piece_search").on("input", function (e) {
+            //     field = ['RecordNo', 'HsCode', 'name'];
+            //     arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
+            //     if (e.delegateTarget.value.length == 0) {
+            //         arr = account_data.HandBookGoods;
+            //     }
+            //     table.reload('piece_table', {
+            //         data: arr
+            //     });
+            //
+            // });
 
 
             /*成品表*/
@@ -94,8 +115,31 @@
                 , toolbar: true
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
+                , method: 'post'
+                , where: {
+                    order: 'desc',
+                    sort: 'CreatedAt',
+                    Type: 2,
+                    HandBookId: @{{ .m.Id }},
+                }
+                , contentType: 'application/json'
+                , url: "/handbook/gooddatagrid"
+                , request: {
+                    pageName: 'offset' //页码的参数名称，默认：page
+                    , limitName: 'limit' //每页数据量的参数名，默认：limit
+                }, response: {
+                    statusName: 'code',
+                    statusCode: 0,
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.code,
+                        "count": res.total,
+                        "data": res.rows
+                    };
+                }
                 , cols: [[
-                    {field: 'Id', title: '序号', width: 120}
+                    {field: 'Serial', title: '序号', width: 120}
                     , {field: 'RecordNo', title: '料号', width: 120}
                     , {field: 'HsCode', title: '商品编码', width: 200}
                     , {field: 'Name', title: '商品名称', width: 180}
@@ -113,24 +157,25 @@
                     , {field: 'CustomActionFlag', title: '海关执行标志', width: 120}
                     , {field: 'UllageFlag', title: '单耗质疑标志', width: 120}
                     , {field: 'ConsultMark', title: '磋商标志', width: 120}
+                    , {field: 'Remark', title: '备注'}
                 ]]
-                , data: account_data.HandBookGoods
-                , limit: account_data.HandBookGoods.length
+                , page: true
+                , limit: 10
                 , height: 450
             });
 
             /*监听成品搜索*/
-            $("#goods_search").on("input", function (e) {
-                field = ['RecordNo', 'HsCode', 'name'];
-                arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
-                if (e.delegateTarget.value.length == 0) {
-                    arr = account_data.HandBookGoods;
-                }
-                table.reload('goods_table', {
-                    data: arr
-                });
-
-            });
+            // $("#goods_search").on("input", function (e) {
+            //     field = ['RecordNo', 'HsCode', 'name'];
+            //     arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
+            //     if (e.delegateTarget.value.length == 0) {
+            //         arr = account_data.HandBookGoods;
+            //     }
+            //     table.reload('goods_table', {
+            //         data: arr
+            //     });
+            //
+            // });
 
             /*单损耗表*/
             table.render({
@@ -138,8 +183,30 @@
                 , toolbar: true
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
+                , method: 'post'
+                , where: {
+                    order: 'desc',
+                    sort: 'CreatedAt',
+                    HandBookId: @{{ .m.Id }},
+                }
+                , contentType: 'application/json'
+                , url: "/handbook/ullagedatagrid"
+                , request: {
+                    pageName: 'offset' //页码的参数名称，默认：page
+                    , limitName: 'limit' //每页数据量的参数名，默认：limit
+                }, response: {
+                    statusName: 'code',
+                    statusCode: 0,
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.code,
+                        "count": res.total,
+                        "data": res.rows
+                    };
+                }
                 , cols: [[
-                    {field: 'Id', title: '序号', width: 120}
+                    {field: 'Serial', title: '序号', width: 120}
                     , {field: 'FinishProNo', title: '成品序号', width: 120}
                     , {field: 'FinishRecordNo', title: '成品料号', width: 200}
                     , {field: 'FinishHsCode', title: '成品商品编码', width: 180}
@@ -158,30 +225,30 @@
                     , {field: 'ChangeMark', title: '修改标志', width: 120}
                     , {field: 'OnlyUllageAt', title: '单耗有效期', width: 180}
                 ]]
-                , data: account_data.HandBookGoods
-                , limit: account_data.HandBookGoods.length
+                , page: true
+                , limit: 10
                 , height: 450
             });
 
             /*监听成品搜索*/
-            $("#single_search").on("input", function (e) {
-                field = ['OnlyUllageVersion', 'OriginalityRecordNo', 'FinishRecordNo'];
-                arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
-                if (e.delegateTarget.value.length == 0) {
-                    arr = account_data.HandBookGoods;
-                }
-                table.reload('piece_table', {
-                    data: arr
-                });
-
-            });
+            // $("#single_search").on("input", function (e) {
+            //     field = ['OnlyUllageVersion', 'OriginalityRecordNo', 'FinishRecordNo'];
+            //     arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
+            //     if (e.delegateTarget.value.length == 0) {
+            //         arr = account_data.HandBookGoods;
+            //     }
+            //     table.reload('piece_table', {
+            //         data: arr
+            //     });
+            //
+            // });
 
         }
 
         /*监听料件表格*/
         table.on('row(piece_table)', function (data) {
-            data = data.data
-            $("#two_account_tab2_1").text(data.Id);
+            data = data.data;
+            $("#two_account_tab2_1").text(data.Serial);
             $("#two_account_tab2_2").text(data.RecordNo);
             $("#two_account_tab2_3").text(data.HsCode);
             $("#two_account_tab2_4").text(data.Name);
@@ -194,18 +261,19 @@
             $("#two_account_tab2_11").text(data.Quantity);
             $("#two_account_tab2_12").text(data.Taxationlx);
             $("#two_account_tab2_13").text(data.CompanyActionFlag);
-            $("#two_account_tab2_14").text(data.CustomActionFlag);
-            $("#two_account_tab2_15").text(data.HandleMark);
-            $("#two_account_tab2_16").text(data.StartCount);
-            $("#two_account_tab2_17").text(data.CountControlFlag);
+            $("#two_account_tab2_14").text(data.HandleMark);
+            $("#two_account_tab2_15").text(data.StartCount);
+            $("#two_account_tab2_16").text(data.CountControlFlag);
+            $("#two_account_tab2_17").text(data.CustomActionFlag);
             $("#two_account_tab2_18").text(data.BigCount);
             $("#two_account_tab2_19").text(data.Remark);
         });
 
         /*监听成品表格*/
         table.on('row(goods_table)', function (data) {
-            data = data.data
-            $("#two_account_tab3_1").text(data.Id);
+            data = data.data;
+
+            $("#two_account_tab3_1").text(data.Serial);
             $("#two_account_tab3_2").text(data.RecordNo);
             $("#two_account_tab3_3").text(data.HsCode);
             $("#two_account_tab3_4").text(data.Name);
@@ -227,15 +295,15 @@
         });
         /*监听单损表表格*/
         table.on('row(single_table)', function (data) {
-            data = data.data
-            $("#two_account_tab4_1").text(data.Id);
+            data = data.data;
+            $("#two_account_tab4_1").text(data.Serial);
             $("#two_account_tab4_2").text(data.FinishProNo);
             $("#two_account_tab4_3").text(data.FinishRecordNo);
             $("#two_account_tab4_4").text(data.FinishHsCode);
             $("#two_account_tab4_5").text(data.FinishName);
             $("#two_account_tab4_6").text(data.OriginalityProNo);
-            $("#two_account_tab4_7").text(data.OriginalityPecordNo);
-            $("#two_account_tab4_8").text(data.OriginalityPsCode);
+            $("#two_account_tab4_7").text(data.OriginalityRecordNo);
+            $("#two_account_tab4_8").text(data.OriginalityHsCode);
             $("#two_account_tab4_9").text(data.OriginalityProName);
             $("#two_account_tab4_10").text(data.OnlyUllageVersion);
             $("#two_account_tab4_11").text(data.OnlyUllage);
@@ -246,9 +314,6 @@
             $("#two_account_tab4_16").text(data.BondedRate);
             $("#two_account_tab4_17").text(data.ChangeMark);
             $("#two_account_tab4_18").text(data.OnlyUllageAt);
-            $("#two_account_tab4_19").text(data.ChangeMark);
         });
-
-
     });
 </script>

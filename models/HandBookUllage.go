@@ -53,8 +53,8 @@ type HandBookUllage struct {
 // HandBookUllageQueryParam 用于查询的类
 type HandBookUllageQueryParam struct {
 	BaseQueryParam
-	Type     string //模糊查询
-	NameLike string //模糊查询
+
+	HandBookId int64 //模糊查询
 }
 
 func NewHandBookUllage(id int64) HandBookUllage {
@@ -64,6 +64,21 @@ func NewHandBookUllage(id int64) HandBookUllage {
 //查询参数
 func NewHandBookUllageQueryParam() HandBookUllageQueryParam {
 	return HandBookUllageQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
+}
+
+// HandBookUllagePageList 获取分页数据
+func HandBookUllagePageList(params *HandBookUllageQueryParam) ([]*HandBookUllage, int64) {
+	query := orm.NewOrm().QueryTable(HandBookUllageTBName())
+	data := make([]*HandBookUllage, 0)
+
+	query = query.Distinct().Filter("HandBookGood__HandBook__Id__iexact", params.HandBookId)
+
+	total, _ := query.Count()
+	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
+
+	_, _ = query.All(&data)
+
+	return data, total
 }
 
 func HandBookUllageGetRelations(v *HandBookUllage, relations string) (*HandBookUllage, error) {

@@ -90,6 +90,7 @@ type HandBook struct {
 	StopChangeFlag          string    `orm:"column(stop_change_flag);size(100);null" description:"暂停变更标记"`
 	SelfAuditFlag           string    `orm:"column(self_audit_flag);size(255);null" description:"自核资格标记"`
 	ManualChangTimes        string    `orm:"column(manual_chang_times);size(255);null" description:"手册变更次数"`
+	ManualType              string    `orm:"column(manual_type);size(255);null" description:"手册类型"`
 
 	UsefulLifeDays int             `orm:"-" `
 	PreentryDate   time.Time       `orm:"column(preentry_date);type(datetime)" description:"录入日期"`
