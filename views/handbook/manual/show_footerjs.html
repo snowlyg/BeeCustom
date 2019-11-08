@@ -297,6 +297,7 @@
 
         /*监听单损表表格*/
         table.on('row(ullages_table)', function (data) {
+            console.log(data)
             data = data.data;
             $("#ullage_file_1").text(data.Serial);
             $("#ullage_file_2").text(data.FinishProNo);
