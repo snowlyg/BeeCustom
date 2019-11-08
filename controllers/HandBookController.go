@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"BeeCustom/enums"
-	"BeeCustom/models"
-	"BeeCustom/utils"
-	"BeeCustom/xlsx"
 	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
+
+	"BeeCustom/enums"
+	"BeeCustom/models"
+	"BeeCustom/utils"
+	"BeeCustom/xlsx"
 )
 
 type HandBookController struct {
@@ -75,10 +76,43 @@ func (c *HandBookController) Show() {
 
 	c.Data["m"] = m
 
-	c.setTpl()
+	var html, showFooterjs string
+	handBookType, err := enums.GetSectionWithString("手册", "hand_book_type")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+	}
+	if m.Type == handBookType {
+		html = "handbook/manual/show.html"
+		showFooterjs = "handbook/manual/show_footerjs.html"
+	} else {
+		html = "handbook/account/show.html"
+		showFooterjs = "handbook/account/show_footerjs.html"
+	}
+
+	c.setTpl(html)
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "handbook/show_footerjs.html"
+	c.LayoutSections["footerjs"] = showFooterjs
 	c.GetXSRFToken()
+}
+
+// Edit 添加 编辑 页面
+func (c *HandBookController) One() {
+	Id, _ := c.GetInt64(":id", 0)
+	m, err := models.HandBookOne(Id, "Company,HandBookGoods")
+	if m != nil && Id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
+
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = 1
+	result["rows"] = m
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
 }
 
 //删除
@@ -93,6 +127,7 @@ func (c *HandBookController) Delete() {
 
 //导入
 func (c *HandBookController) Import() {
+	importType, _ := c.GetInt8(":type")
 
 	fileType := "handBook/" + strconv.FormatInt(c.curUser.Id, 10) + "/"
 	fileNamePath, err := c.BaseUpload(fileType)
@@ -107,13 +142,36 @@ func (c *HandBookController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "文件格式错误，只能导入 xlsx 文件", nil)
 	}
 
-	accountSheet1Name, _ := xlsx.GetExcelName("handbook_account_excel_sheet1_name")
+	var sheet1Name, sheet1Title, sheet2Name, sheet2Title, sheet3Name, sheet3Title, sheet4Name, sheet4Title string
+	importManualType, _ := enums.GetSectionWithString("手册", "hand_book_type")
+	importAccountType, _ := enums.GetSectionWithString("账册", "hand_book_type")
+	if importType == importManualType {
+		sheet1Name = "handbook_manual_excel_sheet1_name"
+		sheet1Title = "handbook_manual_excel_sheet1_title"
+		sheet2Name = "handbook_manual_excel_sheet2_name"
+		sheet2Title = "handbook_manual_excel_sheet2_title"
+		sheet3Name = "handbook_manual_excel_sheet3_name"
+		sheet3Title = "handbook_manual_excel_sheet3_title"
+		sheet4Name = "handbook_manual_excel_sheet4_name"
+		sheet4Title = "handbook_manual_excel_sheet4_title"
+	} else if importType == importAccountType {
+		sheet1Name = "handbook_account_excel_sheet1_name"
+		sheet1Title = "handbook_account_excel_sheet1_title"
+		sheet2Name = "handbook_account_excel_sheet2_name"
+		sheet2Title = "handbook_account_excel_sheet2_title"
+		sheet3Name = "handbook_account_excel_sheet3_name"
+		sheet3Title = "handbook_account_excel_sheet3_title"
+		sheet4Name = "handbook_account_excel_sheet4_name"
+		sheet4Title = "handbook_account_excel_sheet4_title"
+	}
+
+	accountSheet1Name, _ := xlsx.GetExcelName(sheet1Name)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	accountSheet1Title, _ := xlsx.GetExcelTitles("", "handbook_account_excel_sheet1_title")
+	accountSheet1Title, _ := xlsx.GetExcelTitles("", sheet1Title)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
@@ -128,6 +186,8 @@ func (c *HandBookController) Import() {
 		HandBook: models.NewHandBook(0),
 	}
 
+	hIP.HandBook.Type = importType
+
 	c.ImportHandBookXlsxByCell(&hIP)
 
 	m, err := models.HandBookSave(&hIP.HandBook)
@@ -138,25 +198,26 @@ func (c *HandBookController) Import() {
 	hIP.HandBook = *m
 
 	eInfo := []map[string]string{}
+
 	hBGIP := models.HandBookGoodImportParam{
-		"handbook_account_excel_sheet2_name",
-		"handbook_account_excel_sheet2_title",
+		sheet2Name,
+		sheet2Title,
 		"料件",
 	}
 	hIP.Info = eInfo
 	c.InsertHandBookGoods(&hIP, &hBGIP)
 
 	hBGIP = models.HandBookGoodImportParam{
-		"handbook_account_excel_sheet3_name",
-		"handbook_account_excel_sheet3_title",
+		sheet3Name,
+		sheet3Title,
 		"成品",
 	}
 	hIP.Info = eInfo
 	c.InsertHandBookGoods(&hIP, &hBGIP)
 
 	hBGIP = models.HandBookGoodImportParam{
-		"handbook_account_excel_sheet4_name",
-		"handbook_account_excel_sheet4_title",
+		sheet4Name,
+		sheet4Title,
 		"",
 	}
 	hIP.Info = eInfo
@@ -246,12 +307,6 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 //导入基础参数 xlsx 文件内容
 func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImportParam) {
 
-	handBookType, err := models.GetHandBookTypeWithString("账册", "hand_book_type")
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
-	}
-
-	hIP.HandBook.Type = handBookType
 	t := reflect.ValueOf(&hIP.HandBook).Elem()
 	for i := 0; i < reflect.ValueOf(hIP.HandBook).NumField(); i++ {
 		obj := reflect.TypeOf(hIP.HandBook).Field(i)
@@ -274,7 +329,13 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 	}
 
 	if hB != nil && hB.Id != 0 {
-		c.jsonResult(enums.JRCodeFailed, "账册已存在", nil)
+		var errMsg string
+		if hB.Type == 1 {
+			errMsg = "手册已存在"
+		} else if hB.Type == 2 {
+			errMsg = "账册已存在"
+		}
+		c.jsonResult(enums.JRCodeFailed, errMsg, nil)
 	}
 
 	CompanyManageCode := hIP.HandBook.CompanyManageCode // 经营单位代码
@@ -309,7 +370,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 						if iw == obj.Name {
 							rI := xlsx.ObjIsExists(hIP.ExcelTitle, iw)
 							// 模板字段数量定义
-							if rI != -1 && rI <= len(row) {
+							if rI != -1 && rI <= len(row)-1 {
 								info[obj.Name] = row[rI]
 							}
 						}
@@ -322,7 +383,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 
 		hIP.Info = Info
 
-		handBookGoodType, err := models.GetHandBookTypeWithString(handBookTypeString, "hand_book_good_type")
+		handBookGoodType, err := enums.GetSectionWithString(handBookTypeString, "hand_book_good_type")
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
 		}

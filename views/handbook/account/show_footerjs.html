@@ -1,0 +1,254 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table'], async () => {
+        let table = layui.table, admin = layui.admin, $ = layui.$;
+        admin.sideFlexible_window();
+
+        $("body").on("click", "#contract_del", function () {
+            layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                const data = await admin.delete(`/handbook/delete/${$(this).data('id')}`);
+                if (data.status) {
+                    setTimeout(() => {
+                        parent.layui.admin.closeThisTabs()
+                    }, 1000)
+                }
+            });
+        });
+
+        /*表格横向移动*/
+        $("body").on("mousedown", ".custom-manual-goods, .layui-table-main", function (event) {
+            if (event.button === 0) {
+                gapX = event.clientX;
+                startx = $(this).scrollLeft();
+                $(this).on('mousemove', function (ev) {
+                    let left = ev.clientX - gapX;
+                    $(this).scrollLeft(startx - left);
+                    return false;
+                });
+                $(this).on('mouseup', function (et) {
+                    $(this).off("mousemove");
+                    $(this).off("mouseup");
+                })
+            }
+        });
+        /*表格横向移动 END*/
+
+
+        const responeData = await admin.get("/handbook/" + @{{ .m.Id}});
+
+        table_render_date(responeData.rows)
+
+        /*渲染表格 account_data 账册数据 */
+        function table_render_date(account_data) {
+            /*料件表*/
+            table.render({
+                elem: '#piece_table'
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [[
+                    {field: 'Id', title: '序号', width: 120}
+                    , {field: 'RecordNo', title: '料号', width: 120}
+                    , {field: 'HsCode', title: '商品编码', width: 200}
+                    , {field: 'Name', title: '商品名称', width: 180}
+                    , {field: 'Special', title: '规格型号', width: 200}
+                    , {field: 'UnitOne', title: '申报计量单位', width: 120}
+                    , {field: 'UnitTwo', title: '法定计量单位', width: 120}
+                    , {field: 'UnitThree', title: '法定计量第二单位', width: 150}
+                    , {field: 'Price', title: '申报单价', width: 120}
+                    , {field: 'Moneyunit', title: '币制', width: 120}
+                    , {field: 'Quantity', title: '申报数量', width: 120}
+                    , {field: 'Taxationlx', title: '征免性质', width: 120}
+                    , {field: 'CompanyActionFlag', title: '企业执行标志', width: 120}
+                    , {field: 'HandleMark', title: '修改标志', width: 120}
+                    , {field: 'StartCount', title: '期初数量', width: 120}
+                    , {field: 'CountControlFlag', title: '数量控制标志', width: 120}
+                    , {field: 'CustomActionFlag', title: '海关执行标志', width: 120}
+                    , {field: 'BigCount', title: '批准最大余数量', width: 150}
+                ]]
+                , data: account_data.HandBookGoods
+                , limit: account_data.HandBookGoods.length
+                , height: 450
+            });
+
+            /*监听成品搜索*/
+            $("#piece_search").on("input", function (e) {
+                field = ['RecordNo', 'HsCode', 'name'];
+                arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
+                if (e.delegateTarget.value.length == 0) {
+                    arr = account_data.HandBookGoods;
+                }
+                table.reload('piece_table', {
+                    data: arr
+                });
+
+            });
+
+
+            /*成品表*/
+            table.render({
+                elem: '#goods_table'
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [[
+                    {field: 'Id', title: '序号', width: 120}
+                    , {field: 'RecordNo', title: '料号', width: 120}
+                    , {field: 'HsCode', title: '商品编码', width: 200}
+                    , {field: 'Name', title: '商品名称', width: 180}
+                    , {field: 'Special', title: '规格型号', width: 240}
+                    , {field: 'UnitOne', title: '申报计量单位', width: 120}
+                    , {field: 'UnitTwo', title: '法定计量单位', width: 120}
+                    , {field: 'UnitThree', title: '法定计量第二单位', width: 160}
+                    , {field: 'Price', title: '申报单价', width: 120}
+                    , {field: 'Moneyunit', title: '币制', width: 120}
+                    , {field: 'Quantity', title: '申报数量', width: 120}
+                    , {field: 'Taxationlx', title: '征免性质', width: 120}
+                    , {field: 'CountControlFlag', title: '数量控制标志', width: 120}
+                    , {field: 'CompanyActionFlag', title: '企业执行标志', width: 120}
+                    , {field: 'HandleMark', title: '修改标志', width: 120}
+                    , {field: 'CustomActionFlag', title: '海关执行标志', width: 120}
+                    , {field: 'UllageFlag', title: '单耗质疑标志', width: 120}
+                    , {field: 'ConsultMark', title: '磋商标志', width: 120}
+                ]]
+                , data: account_data.HandBookGoods
+                , limit: account_data.HandBookGoods.length
+                , height: 450
+            });
+
+            /*监听成品搜索*/
+            $("#goods_search").on("input", function (e) {
+                field = ['RecordNo', 'HsCode', 'name'];
+                arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
+                if (e.delegateTarget.value.length == 0) {
+                    arr = account_data.HandBookGoods;
+                }
+                table.reload('goods_table', {
+                    data: arr
+                });
+
+            });
+
+            /*单损耗表*/
+            table.render({
+                elem: '#single_table'
+                , toolbar: true
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [[
+                    {field: 'Id', title: '序号', width: 120}
+                    , {field: 'FinishProNo', title: '成品序号', width: 120}
+                    , {field: 'FinishRecordNo', title: '成品料号', width: 200}
+                    , {field: 'FinishHsCode', title: '成品商品编码', width: 180}
+                    , {field: 'FinishName', title: '成品商品名称', width: 200}
+                    , {field: 'OriginalityProNo', title: '料件序号', width: 120}
+                    , {field: 'OriginalityRecordNo', title: '料件料号', width: 120}
+                    , {field: 'OriginalityHsCode', title: '料件商品编码', width: 120}
+                    , {field: 'OriginalityProName', title: '料件商品名称', width: 180}
+                    , {field: 'OnlyUllageVersion', title: '单损版本号', width: 120}
+                    , {field: 'OnlyUllage', title: '单耗', width: 120}
+                    , {field: 'OneUllage', title: '净耗', width: 120}
+                    , {field: 'Ullage', title: '有形损耗率', width: 120}
+                    , {field: 'NoUllage', title: '无形损耗率', width: 120}
+                    , {field: 'OnlyUllageStatus', title: '单耗申报状态', width: 120}
+                    , {field: 'BondedRate', title: '保税料件比例', width: 120}
+                    , {field: 'ChangeMark', title: '修改标志', width: 120}
+                    , {field: 'OnlyUllageAt', title: '单耗有效期', width: 180}
+                ]]
+                , data: account_data.HandBookGoods
+                , limit: account_data.HandBookGoods.length
+                , height: 450
+            });
+
+            /*监听成品搜索*/
+            $("#single_search").on("input", function (e) {
+                field = ['OnlyUllageVersion', 'OriginalityRecordNo', 'FinishRecordNo'];
+                arr = search(e.delegateTarget.value, account_data.HandBookGoods, field);
+                if (e.delegateTarget.value.length == 0) {
+                    arr = account_data.HandBookGoods;
+                }
+                table.reload('piece_table', {
+                    data: arr
+                });
+
+            });
+
+        }
+
+        /*监听料件表格*/
+        table.on('row(piece_table)', function (data) {
+            data = data.data
+            $("#two_account_tab2_1").text(data.Id);
+            $("#two_account_tab2_2").text(data.RecordNo);
+            $("#two_account_tab2_3").text(data.HsCode);
+            $("#two_account_tab2_4").text(data.Name);
+            $("#two_account_tab2_5").text(data.Special);
+            $("#two_account_tab2_6").text(data.UnitOne);
+            $("#two_account_tab2_7").text(data.UnitTwo);
+            $("#two_account_tab2_8").text(data.UnitThree);
+            $("#two_account_tab2_9").text(data.Price);
+            $("#two_account_tab2_10").text(data.Moneyunit);
+            $("#two_account_tab2_11").text(data.Quantity);
+            $("#two_account_tab2_12").text(data.Taxationlx);
+            $("#two_account_tab2_13").text(data.CompanyActionFlag);
+            $("#two_account_tab2_14").text(data.CustomActionFlag);
+            $("#two_account_tab2_15").text(data.HandleMark);
+            $("#two_account_tab2_16").text(data.StartCount);
+            $("#two_account_tab2_17").text(data.CountControlFlag);
+            $("#two_account_tab2_18").text(data.BigCount);
+            $("#two_account_tab2_19").text(data.Remark);
+        });
+
+        /*监听成品表格*/
+        table.on('row(goods_table)', function (data) {
+            data = data.data
+            $("#two_account_tab3_1").text(data.Id);
+            $("#two_account_tab3_2").text(data.RecordNo);
+            $("#two_account_tab3_3").text(data.HsCode);
+            $("#two_account_tab3_4").text(data.Name);
+            $("#two_account_tab3_5").text(data.Special);
+            $("#two_account_tab3_6").text(data.UnitOne);
+            $("#two_account_tab3_7").text(data.UnitTwo);
+            $("#two_account_tab3_8").text(data.UnitThree);
+            $("#two_account_tab3_9").text(data.Price);
+            $("#two_account_tab3_10").text(data.Moneyunit);
+            $("#two_account_tab3_11").text(data.Quantity);
+            $("#two_account_tab3_12").text(data.Taxationlx);
+            $("#two_account_tab3_13").text(data.CountControlFlag);
+            $("#two_account_tab3_14").text(data.CompanyActionFlag);
+            $("#two_account_tab3_15").text(data.HandleMark);
+            $("#two_account_tab3_16").text(data.CustomActionFlag);
+            $("#two_account_tab3_17").text(data.UllageFlag);
+            $("#two_account_tab3_18").text(data.ConsultMark);
+            $("#two_account_tab3_19").text(data.Remark);
+        });
+        /*监听单损表表格*/
+        table.on('row(single_table)', function (data) {
+            data = data.data
+            $("#two_account_tab4_1").text(data.Id);
+            $("#two_account_tab4_2").text(data.FinishProNo);
+            $("#two_account_tab4_3").text(data.FinishRecordNo);
+            $("#two_account_tab4_4").text(data.FinishHsCode);
+            $("#two_account_tab4_5").text(data.FinishName);
+            $("#two_account_tab4_6").text(data.OriginalityProNo);
+            $("#two_account_tab4_7").text(data.OriginalityPecordNo);
+            $("#two_account_tab4_8").text(data.OriginalityPsCode);
+            $("#two_account_tab4_9").text(data.OriginalityProName);
+            $("#two_account_tab4_10").text(data.OnlyUllageVersion);
+            $("#two_account_tab4_11").text(data.OnlyUllage);
+            $("#two_account_tab4_12").text(data.OneUllage);
+            $("#two_account_tab4_13").text(data.Ullage);
+            $("#two_account_tab4_14").text(data.NoUllage);
+            $("#two_account_tab4_15").text(data.OnlyUllageStatus);
+            $("#two_account_tab4_16").text(data.BondedRate);
+            $("#two_account_tab4_17").text(data.ChangeMark);
+            $("#two_account_tab4_18").text(data.OnlyUllageAt);
+            $("#two_account_tab4_19").text(data.ChangeMark);
+        });
+
+
+    });
+</script>

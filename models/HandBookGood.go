@@ -1,11 +1,12 @@
 package models
 
 import (
-	"BeeCustom/utils"
 	"errors"
 	"fmt"
 	"strings"
 	"time"
+
+	"BeeCustom/utils"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -49,6 +50,9 @@ type HandBookGood struct {
 	UllageFlag          string    `orm:"column(ullage_flag);size(255);null" description:"单耗质疑标志"`
 	ConsultMark         string    `orm:"column(consult_mark);size(255);null" description:"磋商标志"`
 	MainMark            string    `orm:"column(main_mark);size(255);null" description:"主料标志"`
+	Amount              float64   `orm:"column(amount);digits(17);decimals(4)" description:"总价（申报总价）"`
+	Manuplace           string    `orm:"column(manuplace);size(50)" description:"产销国(地区)"`
+	GoodAttr            string    `orm:"column(good_attr);size(255);null" description:"商品属性"`
 	HandBook            *HandBook `orm:"column(hand_book_id);rel(fk)"`
 	HandBookId          int64     `orm:"-" form:"HandBookId"`
 }
