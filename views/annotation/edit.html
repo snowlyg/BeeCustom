@@ -1,0 +1,422 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="custom-order_import">
+                <div class="status_flex">
+                    <div class="status_flex_list" id="status_flex_list">
+                        <div class="status_flex_list_item active" data-status="全部订单" data-sum="1">
+                            全部订单
+                        </div>
+                    </div>
+
+@{{/*                    <script type="text/html" id="status_flex_list_template">*/}}
+@{{/*                        @{{# for(let key in d){ }}*/}}
+@{{/*                        <div class="status_flex_list_item" data-status="@{{ key }}" data-sum="1">*/}}
+@{{/*                            @{{ key }}*/}}
+@{{/*                            <span>@{{ d[key] }}</span>*/}}
+@{{/*                        </div>*/}}
+@{{/*                        @{{# } }}*/}}
+@{{/*                    </script>*/}}
+
+                    <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
+                        <i class="iconfont icon-delete"></i>
+                        <span>订单回收站</span>
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <span class="custom-new_btn" lay-href=@{{urlfor "AnnotationController.Create"}} lay-text="新建进口清单" id="order_import_new">代客下单</span>
+                        <span class="custom-upload_btn" id="order_import_upload">导入</span>
+                    </div>
+                    <div class="layui-col-md5">
+                        <div class="custom-tool-right">
+                            <label class="custom-tool-right-search iconfont icon-search"></label>
+                            <input type="text" name="order_import_search" id="order_import_search" placeholder="搜索订单号/客户名称" class="custom-tool-right-input layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md1">
+                        <span class="advanced_search" id="advanced_search">高级搜索</span>
+                        <i class="iconfont icon-keyboardarrowdown" id="advanced_search_i"></i>
+                    </div>
+                </div>
+                <form class="custom-order_import-form layui-form" id="advanced_form">
+                    <div class="custom-order_import-advanced">
+                        <div class="advanced_list">
+                            <span>申报日期：</span>
+                            <div class="layui-input-inline">
+                                <input type="text" name="invt_dcl_time" class="layui-input" id="invt_dcl_time" placeholder="请选择日期">
+                            </div>
+                        </div>
+                        <div class="advanced_list">
+                            <span>客户名称：</span>
+                            <div class="layui-input-inline">
+                                <input type="text" name="company.name" class="layui-input" id="company.name" placeholder="搜索">
+                            </div>
+                        </div>
+                        <div class="advanced_list">
+                            <span>清单号：</span>
+                            <div class="layui-input-inline">
+                                <input type="text" name="bond_invt_no" class="layui-input" id="bond_invt_no" placeholder="搜索">
+                            </div>
+                        </div>
+                        <div class="advanced_list">
+                            <span>运输方式：</span>
+                            <div class="layui-input-inline" id="annotation_trsp_modecd"></div>
+
+                            <script type="text/html" id="trsp_modecd_template">
+                                <select name="trsp_modecd" lay-filter="trsp_modecd">
+                                    <option value="">请选择</option>
+                                    <option value="@{{ .m.customs_code }}">@{{ .m.name }}</option>
+                                </select>
+
+                            </script>
+                        </div>
+                        <div class="advanced_list">
+                            <span class="custom-new_btn" lay-submit lay-filter="advanced_search_btn" id="advanced_search_btn">搜索</span>
+                        </div>
+                    </div>
+                </form>
+                <div class="custom-order_import-table">
+                    <table class="layui-table" lay-skin="nob" id="order-i-table">
+                        <colgroup>
+                            <col width="35%">
+                            <col width="20%">
+                            <col width="20%">
+                            <col width="15%">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>
+                                <div class="order-time-flex">
+                                    <div class="order-time-cont">
+                                        <span>时间：</span>
+                                        <div class="layui-input-inline">
+                                            <form class="layui-form">
+                                                <select name="time_table" lay-filter="time_table" id="time_table">
+                                                    <option value="">请选择</option>
+                                                    <option selected="" value="今天">今天</option>
+                                                    <option value="昨天">昨天</option>
+                                                    <option value="最近三天">最近三天</option>
+                                                    <option value="本周">本周</option>
+                                                    <option value="上周">上周</option>
+                                                    <option value="本月">本月</option>
+                                                    <option value="上月">上月</option>
+                                                    <option value="本季度">本季度</option>
+                                                    <option value="上季度">上季度</option>
+                                                    <option value="今年">今年</option>
+                                                    <option value="去年">去年</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="order-time-txt">订单详情</div>
+                                </div>
+                            </th>
+                            <th>申报日期</th>
+                            <th>物流信息</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                    </table>
+
+@{{/*                    <script type="text/html" id="order_i_list">*/}}
+@{{/*                        @{{# layui.each(d, function(index, item){ }}*/}}
+@{{/*                        <tbody>*/}}
+@{{/*                        <tr class="sep-row">*/}}
+@{{/*                            <td colspan="5"></td>*/}}
+@{{/*                        </tr>*/}}
+@{{/*                        @{{# let status = ''; if(item.status_string == '待派单' || item.status_string ==*/}}
+@{{/*                        '待审核' || item.status_string == '审核中' || item.status_string == '审核通过' ||*/}}
+@{{/*                        item.status_string == '复核通过' || item.status_string == '待暂存'){status =*/}}
+@{{/*                        'assigned'}if(item.status_string == '已派单' || item.status_string == '待制单' ||*/}}
+@{{/*                        item.status_string == '制单中' || item.status_string == '待复核' ||*/}}
+@{{/*                        item.status_string == '复核中' || item.status_string == '单一处理中'){status =*/}}
+@{{/*                        'making'}if(item.status_string == '审核不通过' || item.status_string ==*/}}
+@{{/*                        '复核不通过'){status =*/}}
+@{{/*                        'fail'}if(item.status_string == '已完成' || item.status_string == '订单关闭'){status =*/}}
+@{{/*                        'success'} }}*/}}
+@{{/*                        <tr class="tr-th @{{ status }}">*/}}
+@{{/*                            <td colspan="5">*/}}
+@{{/*                                <div class="tr-th-flex">*/}}
+@{{/*                                    <div class="tr-th-flex-left">*/}}
+@{{/*                                        <b>@{{ item.created_at || '' }}</b>*/}}
+@{{/*                                        <span class="left-margin">订单号：@{{ item.etps_inner_invt_no || '' }}</span>*/}}
+@{{/*                                        <span class="left-margin">制单人：@{{ item.declare_name || '--' }}</span>*/}}
+@{{/*                                        @{{# if(item.status_string == '待复核' || item.status_string ==*/}}
+@{{/*                                        '复核中' || item.status_string == '复核通过' || item.status_string ==*/}}
+@{{/*                                        '复核不通过' || item.status_string == '待暂存' || item.status_string ==*/}}
+@{{/*                                        '单一处理中' || item.status_string == '已完成'){ }}*/}}
+@{{/*                                        <span class="left-margin">复核员：@{{ item.recheck_name || '--' }}</span>*/}}
+@{{/*                                    @{{# } }}*/}}
+@{{/*                                    @{{# if(item.status_string == '已完成'){ }}*/}}
+@{{/*                                    @can('i.annotation.copy')*/}}
+@{{/*                                        <div class="copy_number copy_order" data-id="@{{ item.id }}">*/}}
+@{{/*                                            <i class="iconfont icon-content-copy"></i>*/}}
+@{{/*                                            <span>复制订单</span>*/}}
+@{{/*                                        </div>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @{{# } }}*/}}
+@{{/*                                    </div>*/}}
+@{{/*                                    <div class="tr-th-flex-center">*/}}
+@{{/*                                        <p>@{{ item.company_name || '' }}</p>*/}}
+@{{/*                                    </div>*/}}
+@{{/*                                    <div class="tr-th-flex-right">*/}}
+@{{/*                                        <i class="iconfont icon-xiaoxi blue person_tips" data-index="@{{ index }}" title="客户信息"></i>*/}}
+@{{/*                                        <i class="iconfont icon-jilu" data-id="@{{ item.id }}" onclick="layui.admin.annotation_jilu_click(this, 'i')" title="办理记录"></i>*/}}
+@{{/*                                        <i class="iconfont icon-attach-file" data-id="@{{ item.id }}" title="附件"></i>*/}}
+@{{/*                                        <i class="iconfont icon-shanchu1" data-id="@{{ item.id }}" title="删除"></i>*/}}
+@{{/*                                    </div>*/}}
+@{{/*                                </div>*/}}
+@{{/*                            </td>*/}}
+@{{/*                        </tr>*/}}
+@{{/*                        <tr class="tr-bd @{{ status }}">*/}}
+@{{/*                            <td>*/}}
+@{{/*                                <div class="tr-bd-one">*/}}
+@{{/*                                    <div class="tr-bd-one-img">*/}}
+@{{/*                                        <img width="100" src="{{ asset('/static/images/annotation_import_i.png') }}">*/}}
+@{{/*                                    </div>*/}}
+@{{/*                                    <div class="tr-bd-one-txt">*/}}
+@{{/*                                        <p>*/}}
+@{{/*                                            <span style="color:#999999;">手/账册号：</span>*/}}
+@{{/*                                            <span style="color:#101010;">@{{ item.putrec_no || '' }}</span>*/}}
+@{{/*                                        </p>*/}}
+@{{/*                                        <p>*/}}
+@{{/*                                            <span style="color:#999999;">进境关别/代码：</span>*/}}
+@{{/*                                            @{{# const impexp_portcd_name = item.impexp_portcd_name ? `${item.impexp_portcd_name}/` : '无'; }}*/}}
+@{{/*                                            <span style="color:#101010;">@{{ impexp_portcd_name }}@{{ item.impexp_portcd || '' }}</span>*/}}
+@{{/*                                        </p>*/}}
+@{{/*                                        <p>*/}}
+@{{/*                                            <span style="color:#999999;">清单编码/关联报关单号：</span>*/}}
+@{{/*                                            <span style="color:#101010;">@{{ item.bond_invt_no || '无' }}</span>/*/}}
+@{{/*                                            @{{# if(item.order_entry_id){ }}*/}}
+@{{/*                                            <span style="color:#101010;" lay-href="/order/i/@{{ item.order_id }}/show" lay-text="订单详情@{{ item.order_entry_id }}">@{{ item.order_entry_id }}</span>*/}}
+@{{/*                                            @{{# }else{ }}*/}}
+@{{/*                                            <span style="color:#101010;">无</span>*/}}
+@{{/*                                            @{{# } }}*/}}
+@{{/*                                        </p>*/}}
+@{{/*                                    </div>*/}}
+@{{/*                                </div>*/}}
+@{{/*                            </td>*/}}
+@{{/*                            <td rowspan="1">*/}}
+@{{/*                                <p class="center">@{{ item.invt_dcl_time || '' }}</p>*/}}
+@{{/*                            </td>*/}}
+@{{/*                            <td rowspan="1" class="tr-bd-person_list">*/}}
+@{{/*                                <div class="tr-bd-one-txt">*/}}
+@{{/*                                    <p>*/}}
+@{{/*                                        <span style="color:#999999;">监管方式：</span>*/}}
+@{{/*                                        <span style="color:#101010;">@{{ item.supv_modecd_name || '无' }}</span>*/}}
+@{{/*                                    </p>*/}}
+@{{/*                                    <p>*/}}
+@{{/*                                        <span style="color:#999999;">运输方式：</span>*/}}
+@{{/*                                        <span style="color:#101010;">@{{ item.trsp_modecd_name || '无' }}</span>*/}}
+@{{/*                                    </p>*/}}
+@{{/*                                </div>*/}}
+@{{/*                            </td>*/}}
+@{{/*                            <td rowspan="1">*/}}
+@{{/*                                <div class="tr-bd-status">*/}}
+@{{/*                                    <p class="status_p">@{{ item.status_string }}</p>*/}}
+@{{/*                                    @{{# if(item.status_string == '审核不通过'){ }}*/}}
+@{{/*                                    @can('i.annotation.first_audit_reject_logs')*/}}
+@{{/*                                    <p class="status_detail first_audit_reject_logs_show" data-id="@{{ item.id }}">*/}}
+@{{/*                                    查看驳回原因</p>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @{{# } }}*/}}
+@{{/*                                    @{{# if(item.status_string == '复核不通过'){ }}*/}}
+@{{/*                                    @can('i.annotation.first_reject_logs')*/}}
+@{{/*                                    <p class="status_detail first_reject_logs_show" data-id="@{{ item.id }}">*/}}
+@{{/*                                    查看失败原因</p>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @{{# } }}*/}}
+@{{/*                                    <p class="status_detail order_detail" data-id="@{{ item.id }}">订单详情</p>*/}}
+@{{/*                                @{{# if(item.status_string == '单一处理中' || item.status_string ==*/}}
+@{{/*                                    '已完成'){ }}*/}}
+@{{/*                                @can('i.annotation.returns')*/}}
+@{{/*                                    <p class="status_detail returns_show" data-id="@{{ item.id }}">查看回执</p>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                </div>*/}}
+@{{/*                            </td>*/}}
+@{{/*                            <td rowspan="1">*/}}
+@{{/*                                <div class="center tr-bd-operate">*/}}
+@{{/*                                    @{{# if(item.status_string == '待审核'){ }}*/}}
+@{{/*                                    @can('i.annotation.get_audit')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_start_auth" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                    开始审核*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @can('i.annotation.cancel')*/}}
+@{{/*                                    <a class="gray margin_top_10 cancel_order" data-id="@{{ item.id }}">取消订单</a>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @{{# } }}*/}}
+@{{/*                                    @{{# if(item.status_string == '审核中'){ }}*/}}
+@{{/*                                    @can('i.annotation.get_audit')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_keep_auth" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                    继续审核*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @can('i.annotation.cancel')*/}}
+@{{/*                                    <a class="gray margin_top_10 cancel_order" data-id="@{{ item.id }}">取消订单</a>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @{{# } }}*/}}
+@{{/*                                    @{{# if(item.status_string == '审核通过'){ }}*/}}
+@{{/*                                    @can('i.annotation.distribute')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_distribute" type="button" data-id="@{{ item.id }}" data-user="@{{ item.company_user_id }}">*/}}
+@{{/*                                    派单*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @can('i.annotation.cancel')*/}}
+@{{/*                                    <a class="gray margin_top_10 cancel_order" data-id="@{{ item.id }}">取消订单</a>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '审核不通过'){ }}*/}}
+@{{/*                                @can('i.annotation.cancel')*/}}
+@{{/*                                <a class="gray margin_top_10 cancel_order" data-id="@{{ item.id }}">取消订单</a>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '待派单'){ }}*/}}
+@{{/*                                @can('i.annotation.distribute')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_distribute" type="button" data-id="@{{ item.id }}" data-user="@{{ item.company_user_id }}">*/}}
+@{{/*                                        派单*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '已派单'){ }}*/}}
+@{{/*                                @can('i.annotation.distribute')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_distribute" type="button" data-id="@{{ item.id }}" data-user="@{{ item.company_user_id }}">*/}}
+@{{/*                                        重新派单*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '待制单'){ }}*/}}
+@{{/*                                @can('i.annotation.edit')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_start_maker" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                        开始制单*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '制单中'){ }}*/}}
+@{{/*                                @can('i.annotation.edit')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_keep_maker" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                        继续制单*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '待复核'){ }}*/}}
+@{{/*                                @can('i.annotation.get_recheck')*/}}
+@{{/*                                <button class="layui-btn tr-bd-@{{ status }} order_check" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                复核*/}}
+@{{/*                                </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                    @{{# if(item.status_string == '复核中'){ }}*/}}
+@{{/*                                    @can('i.annotation.get_recheck')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_check" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                    复核*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @can('i.annotation.press')*/}}
+@{{/*                                    <a class="margin_top_10 order_reminder" data-id="@{{ item.id }}">催单</a>*/}}
+@{{/*                                    @endcan*/}}
+@{{/*                                    @{{# } }}*/}}
+
+@{{/*                                @{{# if(item.status_string == '复核通过'  || item.status_string == '复核不通过'){ }}*/}}
+
+@{{/*                                @can('i.annotation.recheck_cancel')*/}}
+@{{/*                                <a class="order_recall" data-id="@{{ item.id }}">撤回</a>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '复核不通过'){ }}*/}}
+@{{/*                                @can('i.annotation.edit')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_revise" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                        修改*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @can('i.annotation.update')*/}}
+@{{/*                                <a class="margin_top_10 order_again_check" data-id="@{{ item.id }}">重新提交复核</a>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '待暂存'){ }}*/}}
+@{{/*                                @can('i.annotation.create_xml')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_check_success" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                        暂存到单一窗口*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @can('i.annotation.edit')*/}}
+@{{/*                                <a class="order_revise" data-id="@{{ item.id }}">修改</a>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '单一处理中'){ }}*/}}
+@{{/*                                @can('i.annotation.create_xml')*/}}
+@{{/*                                    <button class="layui-btn tr-bd-@{{ status }} order_check_success_reload" type="button" data-id="@{{ item.id }}">*/}}
+@{{/*                                        重新发送*/}}
+@{{/*                                    </button>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '已完成'){ }}*/}}
+@{{/*                                @can('i.annotation.store_errors')*/}}
+@{{/*                                <a class="order_error_log" data-id="@{{ item.id }}">差错登记</a>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @can('i.annotation.get_change')*/}}
+@{{/*                                    <a class="order_switch_bill" data-id="@{{ item.id }}">改单</a>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @can('i.annotation.for_change')*/}}
+@{{/*                                <a class="order_apply_switch_bill" data-id="@{{ item.id }}">申请改单</a>*/}}
+@{{/*                                @endcan*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                @{{# if(item.status_string == '订单关闭'){ }}*/}}
+@{{/*                                    <a class="blue again_open_order" data-id="@{{ item.id }}">重新开启订单</a>*/}}
+@{{/*                                @{{# } }}*/}}
+@{{/*                                </div>*/}}
+@{{/*                            </td>*/}}
+@{{/*                        </tr>*/}}
+@{{/*                        </tbody>*/}}
+@{{/*                        @{{# }) }}*/}}
+@{{/*                    </script>*/}}
+
+
+                </div>
+                <div class="custom-order_import-page" id="order_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="pdf_lists_template">
+    <div class="custom-order_import-pdf">
+        <table class="layui-hide" id="pdf_lists" lay-filter="pdf_lists"></table>
+    </div>
+</script>
+<script type="text/html" id="pdf_toolbar">
+    <a class="custom-edit" lay-event="preview">预览</a>
+    <a class="custom-edit" lay-event="download">下载</a>
+</script>
+<script type="text/html" id="distribute_template">
+    <div class="custom-order_import-distribute">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <select name="user_id" lay-filter="user_id" lay-search>
+                    <option value="">请选择制单人</option>
+                    @foreach($users as $item)
+                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-form-item">
+                <textarea name="remark" id="remark" placeholder="备注" class="layui-textarea" maxlength="300"></textarea>
+                <p class="custom-order_import-distribute-number"><span>0</span>/300</p>
+            </div>
+            <div class="layui-form-item distribute_submit">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="distribute_submit" id="distribute_submit" type="button">
+                    提交
+                </button>
+            </div>
+        </form>
+    </div>
+</script>
+
+@include('order::i.create.order_application_change')
+@include('order::i.create.order_error_logging')
+@include('order::i.index.order_enclosure_check')
+@include('order::i.create.order_take')
+

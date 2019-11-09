@@ -1,0 +1,39 @@
+<script type="text/html" id="order_error_logging_template">
+    <div class="custom-order_import-distribute">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                    <textarea name="content" id="order_error_logging_content" placeholder="填写差错原因，字数不限"
+                              class="layui-textarea" maxlength="300"></textarea>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">责任人：</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="0" title="内部员工" lay-filter="order_error_logging_type" checked>
+                    <input type="radio" name="type" value="1" title="客户" lay-filter="order_error_logging_type">
+                    <input type="radio" name="type" value="2" title="其他" lay-filter="order_error_logging_type">
+                </div>
+            </div>
+            <div class="layui-form-item" id="order_error_logging_user_id">
+                <label class="layui-form-label">请选择：</label>
+                <div class="layui-input-block">
+                    <select name="user_id" lay-search>
+                        <option value="">选择内部责任人</option>
+                        @foreach($all_users as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                    <textarea name="remark" id="order_error_logging_remark" placeholder="填写备注"
+                              class="layui-textarea" maxlength="300"></textarea>
+            </div>
+            <div class="layui-form-item distribute_submit">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="order_error_logging_submit"
+                        id="order_error_logging_submit" type="button">
+                    提交
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

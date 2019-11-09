@@ -21,6 +21,7 @@ func init() {
 		new(HandBook),
 		new(HandBookGood),
 		new(HandBookUllage),
+		new(Annotation),
 	)
 }
 
@@ -93,4 +94,9 @@ func HandBookGoodTBName() string {
 // HandBookUllageTBName 获取 HandBookUllage 对应的表名称
 func HandBookUllageTBName() string {
 	return TableName("hand_book_ullages")
+}
+
+// AnnotationTBName 获取 Annotation 对应的表名称
+func AnnotationTBName() string {
+	return TableName("annotations")
 }

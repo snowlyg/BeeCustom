@@ -8,6 +8,14 @@ import (
 
 func init() {
 
+	//清单管理
+	beego.Router("/annotation/index", &controllers.AnnotationController{}, "Get:Index")
+	beego.Router("/annotation/create", &controllers.AnnotationController{}, "Get:Create")
+	beego.Router("/annotation/store", &controllers.AnnotationController{}, "Post:Store")
+	beego.Router("/annotation/edit/?:id", &controllers.AnnotationController{}, "Get:Edit")
+	beego.Router("/annotation/update/?:id", &controllers.AnnotationController{}, "Patch:Update")
+	beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:Delete")
+
 	//手账册
 	beego.Router("/handbook/index", &controllers.HandBookController{}, "*:Index")
 	beego.Router("/handbook/show/?:id", &controllers.HandBookController{}, "Get:Show")

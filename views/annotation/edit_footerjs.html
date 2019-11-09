@@ -1,0 +1,23 @@
+<script type="text/javascript">
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'form', 'admin'], async () => {
+        const form = layui.form , admin = layui.admin;
+
+        await form.verify({
+            password: [
+                /^[\S]{6,16}$/
+                , '密码必须6到16位，且不能出现空格'
+            ]
+        });
+
+        form.on('submit(user_submit)', async (data) => {
+            if (!data.field.password) {
+                delete data.field.password
+            }
+            await admin.patch(`/backenduser/update/`+@{{ .m.Id }}, data.field);
+        })
+    });
+</script>

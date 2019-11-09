@@ -1,0 +1,23 @@
+<script type="text/html" id="order_enclosure_check_template">
+    <div class="custom-order_import-pdf">
+        <div class="order_enclosure_top">
+            <span class="order_enclosure_tips">请选择需要暂存的附件文件：</span>
+        </div>
+        <table class="layui-hide" id="order_enclosure_check_lists" lay-filter="order_enclosure_check_lists"></table>
+        <div class="manual_no_btn">
+            <div class="manual_no_btn_check">
+                <form class="layui-form">
+                    <input type="checkbox" name="decl_trn_rel" id="decl_trn_rel" title="跨境快速通关" lay-skin="primary" value="1">
+                </form>
+            </div>
+            <button class="layui-btn custom-create_btn" id="order_enclosure_check" type="button">
+                提交
+            </button>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="order_enclosure_check_toolbar">
+    @can('i.order.show_pdf')
+    <a class="custom-edit" lay-event="preview">预览</a>
+    @endcan
+</script>

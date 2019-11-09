@@ -1,0 +1,105 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form">
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>姓名：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="RealName" lay-verify="required" lay-verType="tips"
+                                   placeholder="输入使用者的姓名，不超过32个字符" autocomplete="off" class="layui-input" maxlength="32">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>用户名：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="UserName" lay-verify="required" lay-verType="tips"
+                                   placeholder="输入使用者的姓名，不超过24个字符" autocomplete="off" class="layui-input" maxlength="24" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>邮箱：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Email" lay-verify="email" lay-verType="tips"
+                                   placeholder="邮箱地址将作为登录系统的账号名，字符不限" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>手机号：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Mobile" lay-verify="phone" lay-verType="tips"
+                                   placeholder="输入使用者的11位手机号码" autocomplete="off" class="layui-input" maxlength="11">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>密码：</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="UserPwd" lay-verify="password"
+                                   lay-verType="tips"
+                                   placeholder="8~16个字符，区分大小写" autocomplete="off" class="layui-input" maxlength="16">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">IC卡号：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ICCode" placeholder="输入报关员的IC卡号"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>是否超级管理员：</label>
+                        <div class="layui-input-block">
+                            <select name="IsSuper" lay-verify="required" lay-vertype="tips">
+                                <option value="false">否</option>
+                                <option value="true">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>状态：</label>
+                        <div class="layui-input-block">
+                            <select name="Status" lay-verify="required" lay-vertype="tips">
+                                <option value="1">启用</option>
+                                <option value="0">禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>选择角色：</label>
+                        <div class="layui-input-block">
+                            <select name="RoleId"  lay-verify="required"  lay-vertype="tips">
+                                <option value="">选择角色</option>
+                                @{{ range .roles }}
+                                    <option value="@{{ .Id }}">@{{ .Name }}</option>
+                                @{{ end }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="user_submit" type="button">
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
