@@ -209,23 +209,6 @@ func (c *BaseController) validRequestData(m interface{}) {
 
 }
 
-//获取最后更新时间
-func (c *BaseController) GetLastUpdteTime(index string) string {
-	var lastUpdteTime string
-	_ = utils.GetCache(index, &lastUpdteTime)
-	if len(lastUpdteTime) == 0 {
-		lastUpdteTime = "超过一个月时间未更新"
-		_ = utils.SetCache(index, lastUpdteTime, 2592000)
-	}
-
-	return lastUpdteTime
-}
-
-//设置最后更新时间
-func (c *BaseController) SetLastUpdteTime(index, value string) {
-	_ = utils.SetCache(index, value, 2592000)
-}
-
 //上传文件
 func (c *BaseController) BaseUpload(fileType string) (string, error) {
 	f, h, err := c.GetFile("filename")

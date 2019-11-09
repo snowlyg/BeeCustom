@@ -9,14 +9,14 @@
                         </div>
                     </div>
 
-                    @{{/*                    <script type="text/html" id="status_flex_list_template">*/}}
-                    @{{/*                        @{{# for(let key in d){ }}*/}}
-                    @{{/*                        <div class="status_flex_list_item" data-status="@{{ key }}" data-sum="1">*/}}
-                    @{{/*                            @{{ key }}*/}}
-                    @{{/*                            <span>@{{ d[key] }}</span>*/}}
-                    @{{/*                        </div>*/}}
-                    @{{/*                        @{{# } }}*/}}
-                    @{{/*                    </script>*/}}
+                    <script type="text/html" id="status_flex_list_template">
+                        @{{/*                        @{{# for(let key in d){ }}*/}}
+                        @{{/*                        <div class="status_flex_list_item" data-status="@{{ key }}" data-sum="1">*/}}
+                        @{{/*                            @{{ key }}*/}}
+                        @{{/*                            <span>@{{ d[key] }}</span>*/}}
+                        @{{/*                        </div>*/}}
+                        @{{/*                        @{{# } }}*/}}
+                    </script>
 
                     <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
                         <i class="iconfont icon-delete"></i>
@@ -25,13 +25,16 @@
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6">
-                        <span class="custom-new_btn" lay-href=@{{urlfor "AnnotationController.Create"}} lay-text="新建进口清单" id="order_import_new">代客下单</span>
+                        <span class="custom-new_btn"
+                              lay-href=@{{urlfor "AnnotationController.Create"}} lay-text="新建进口清单"
+                              id="order_import_new">代客下单</span>
                         <span class="custom-upload_btn" id="order_import_upload">导入</span>
                     </div>
                     <div class="layui-col-md5">
                         <div class="custom-tool-right">
                             <label class="custom-tool-right-search iconfont icon-search"></label>
-                            <input type="text" name="order_import_search" id="order_import_search" placeholder="搜索订单号/客户名称" class="custom-tool-right-input layui-input">
+                            <input type="text" name="order_import_search" id="order_import_search"
+                                   placeholder="搜索订单号/客户名称" class="custom-tool-right-input layui-input">
                         </div>
                     </div>
                     <div class="layui-col-md1">
@@ -44,19 +47,22 @@
                         <div class="advanced_list">
                             <span>申报日期：</span>
                             <div class="layui-input-inline">
-                                <input type="text" name="invt_dcl_time" class="layui-input" id="invt_dcl_time" placeholder="请选择日期">
+                                <input type="text" name="invt_dcl_time" class="layui-input" id="invt_dcl_time"
+                                       placeholder="请选择日期">
                             </div>
                         </div>
                         <div class="advanced_list">
                             <span>客户名称：</span>
                             <div class="layui-input-inline">
-                                <input type="text" name="company.name" class="layui-input" id="company.name" placeholder="搜索">
+                                <input type="text" name="company.name" class="layui-input" id="company.name"
+                                       placeholder="搜索">
                             </div>
                         </div>
                         <div class="advanced_list">
                             <span>清单号：</span>
                             <div class="layui-input-inline">
-                                <input type="text" name="bond_invt_no" class="layui-input" id="bond_invt_no" placeholder="搜索">
+                                <input type="text" name="bond_invt_no" class="layui-input" id="bond_invt_no"
+                                       placeholder="搜索">
                             </div>
                         </div>
                         <div class="advanced_list">
@@ -72,7 +78,8 @@
                             </script>
                         </div>
                         <div class="advanced_list">
-                            <span class="custom-new_btn" lay-submit lay-filter="advanced_search_btn" id="advanced_search_btn">搜索</span>
+                            <span class="custom-new_btn" lay-submit lay-filter="advanced_search_btn"
+                                  id="advanced_search_btn">搜索</span>
                         </div>
                     </div>
                 </form>
@@ -407,7 +414,8 @@
                 <p class="custom-order_import-distribute-number"><span>0</span>/300</p>
             </div>
             <div class="layui-form-item distribute_submit">
-                <button class="layui-btn custom-create_btn" lay-submit lay-filter="distribute_submit" id="distribute_submit" type="button">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="distribute_submit"
+                        id="distribute_submit" type="button">
                     提交
                 </button>
             </div>

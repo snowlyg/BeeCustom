@@ -14,6 +14,7 @@
             upload
         } = layui;
         const cusIEFlag = 'I';
+
         let order_i_edit_data;
         let order_pros_data_filter = []
             /**订单ID**/
@@ -114,7 +115,7 @@
              *
              * add item+'_string'
              *
-             *  **/
+             * **/
             for (let item in data) {
                 if ($.inArray(item, admin.annotaion_items_arr) >= 0) {
                     data[item + '_string'] = data[item]
@@ -130,8 +131,6 @@
                 /** create **/
                 admin.order_pros_data.push(data);
             }
-
-            console.log(admin.order_pros_data);
 
             admin.order_pros_data.forEach((value, index) => {
                 value.gds_seqno = index + 1
@@ -172,22 +171,6 @@
                 }
             }
             order_pros_index = obj.data.gds_seqno;
-            $("#order_pros_form input").removeClass('is_check_fail');
-            if (order_i_edit_data.status_string == '复核不通过') {
-                if (order_i_edit_data.reject_logs.length > 0) {
-                    if (order_i_edit_data.reject_logs[order_i_edit_data.reject_logs.length - 1]
-                        .recheck_error_input_ids) {
-                        for (let item of order_i_edit_data.reject_logs[order_i_edit_data.reject_logs
-                            .length - 1].recheck_error_input_ids) {
-                            if (item.index == order_pros_index) {
-                                for (let id of item.id) {
-                                    $(`#${id}`).addClass('is_check_fail');
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         });
         /**商品列表--按钮操作**/
         table.on('toolbar(order_pros)', async function(obj) {
@@ -491,9 +474,6 @@
             $("#annotation_save").click();
         });
         form.on('submit(annotation_save)', async (data) => {
-            if (admin.order_pros_data.length === 0) {
-                return layer.msg("请先输入表体商品");
-            }
             layer.load(2);
             /**表体商品数据**/
             for (let item of admin.annotation_items_delete_ids) {
@@ -502,10 +482,10 @@
                 })
             }
             data.field.items = admin.order_pros_data;
-            data.field.order_items = admin.decListData;
             data.field.id = order_id;
             data.field.status = order_i_edit_data.status_string;
-            const order_save_data = await admin.patch(`/annotation/i/${order_id}`, data.field);
+            const order_save_data = await admin.post(`/annotation/i/${order_id}/store_change`, data
+                .field);
             if (order_save_data.status) {
                 await order_i_add_back_filling(order_save_data.data);
                 order_i_edit_data = order_save_data.data;
@@ -549,27 +529,10 @@
             laytpl($("#order_button_template").html()).render(order_i_edit_data.status_string, function(html) {
                 $("#order_button").html(html)
             });
-            laytpl($("#order_fail_template").html()).render(order_i_edit_data, function(html) {
-                $("#order_fail").html(html)
+            laytpl($("#order_edit_bill_template").html()).render(order_i_edit_data, function(html) {
+                $("#order_edit_bill").html(html)
             });
             await order_i_edit_back_filling(order_i_edit_data);
-            if (order_i_edit_data.status_string == '复核不通过') {
-                if (order_i_edit_data.reject_logs.length > 0) {
-                    $("#order_application_review span").text('重新申请复核');
-                    if (order_i_edit_data.reject_logs[order_i_edit_data.reject_logs.length - 1]
-                        .recheck_error_input_ids) {
-                        for (let item of order_i_edit_data.reject_logs[order_i_edit_data.reject_logs.length - 1]
-                            .recheck_error_input_ids) {
-                            if (item.index) {
-                                $(`div[lay-id='order_pros'] .layui-table-body tr[data-index=${item.index - 1}]`)
-                                    .css('background-color', 'rgba(255, 235, 236, 1)');
-                            } else {
-                                $(`#${item.id}`).addClass('is_check_fail');
-                            }
-                        }
-                    }
-                }
-            }
             const data = await admin.get(
                 `/annotation/two_account_manual?limit=0&search=${$("#putrec_no").val()}`);
             if (data.length === 0) {
@@ -647,9 +610,6 @@
             $("#annotation_save_pass").click();
         });
         form.on('submit(annotation_save_pass)', async (data) => {
-            if (admin.order_pros_data.length === 0) {
-                return layer.msg("请先输入表体商品");
-            }
             layer.load(2);
             /**表体商品数据**/
             for (let item of admin.annotation_items_delete_ids) {
@@ -658,10 +618,9 @@
                 })
             }
             data.field.items = admin.order_pros_data;
-            data.field.order_items = admin.decListData;
             data.field.status = '审核通过';
             if (!order_id) {
-                const order_save_data = await admin.post("{{ route('i.annotation.store') }}", data
+                const order_save_data = await admin.post("/", data
                     .field);
                 if (order_save_data.status) {
                     order_id = order_save_data.data.id;
@@ -702,58 +661,6 @@
                 content: `<div id="order_take_list_content">${$('#order_take_list').html()}</div>`
             });
         });
-        /**申请复核**/
-        $("body").on("click", "#order_application_review", function() {
-            $("#annotation_application_review").click();
-        });
-        form.on('submit(annotation_application_review)', async (data) => {
-            if (admin.order_pros_data.length === 0) {
-                return layer.msg("请先输入表体商品");
-            }
-            if (order_i_edit_data.status_string == '待复核') {
-                layer.closeAll('loading');
-                return layer.msg('该订单已经提交复核');
-            }
-            layer.load(2);
-            /**表体商品数据**/
-            for (let item of admin.annotation_items_delete_ids) {
-                admin.order_pros_data.push({
-                    id: item
-                })
-            }
-            data.field.items = admin.order_pros_data;
-            data.field.order_items = admin.decListData;
-            data.field.id = order_id;
-            data.field.status = '待复核';
-            const order_save_data = await admin.patch(`/annotation/i/${order_id}`, data.field);
-            if (order_save_data.status) {
-                await order_i_add_back_filling(order_save_data.data);
-                order_i_edit_data = order_save_data.data;
-            }
-            layer.closeAll('loading');
-        });
-        /**重新暂存到单一窗口**/
-        $("body").on("click", "#order_save_reload", function() {
-            $("#annotation_save_reload").click();
-        });
-        form.on('submit(annotation_save_reload)', async (data) => {
-            if (admin.order_pros_data.length === 0) {
-                return layer.msg("请先输入表体商品");
-            }
-            layer.load(2);
-            /**表体商品数据**/
-            for (let item of admin.annotation_items_delete_ids) {
-                admin.order_pros_data.push({
-                    id: item
-                })
-            }
-            data.field.items = admin.order_pros_data;
-            data.field.order_items = admin.decListData;
-            data.field.id = order_id;
-            data.field.status = '单一处理中';
-            const order_save_data = await admin.post(`/annotation/i/re_create_xml`, data.field);
-            layer.closeAll('loading');
-        });
         /**打印**/
         $("body").on("click", "#order_print", async function() {
             if (!order_id) {
@@ -769,13 +676,13 @@
         admin.sideFlexible_window();
         /**保税清单（进口）自动完成汇总**/
         $("body").on("click", "#order_rebase", async function() {
-
             try {
                 layer.load(2);
                 for (let item in admin.annotations_complete_data) {
                     admin.annotations_complete_data[item] = [];
                     layui.data(item, null);
                 }
+
                 await admin.annotations_auto();
                 layer.closeAll('loading');
             } catch (err) {

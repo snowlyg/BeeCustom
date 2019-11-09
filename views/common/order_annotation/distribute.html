@@ -1,0 +1,25 @@
+<script type="text/html" id="distribute_template">
+    <div class="custom-order_import-distribute">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <select name="user_id" lay-filter="user_id" lay-search lay-verify="required" lay-vertype="tips">
+                    <option value="">请选择制单人</option>
+@{{/*                    @foreach($users as $item)*/}}
+@{{/*                        <option value="{{ $item->id }}">{{ $item->name }}</option>*/}}
+@{{/*                    @endforeach*/}}
+                </select>
+            </div>
+            <div class="layui-form-item">
+                    <textarea name="remark" id="remark_distribute" placeholder="备注" class="layui-textarea"
+                              maxlength="300"></textarea>
+                <p class="custom-order_import-distribute-number" id="remark_distribute_number"><span>0</span>/300</p>
+            </div>
+            <div class="layui-form-item distribute_submit">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="distribute_submit"
+                        id="distribute_submit" type="button">
+                    提交
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

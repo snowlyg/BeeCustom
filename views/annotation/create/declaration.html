@@ -1,0 +1,322 @@
+<script type="text/html" id="order_i_declaration_template">
+    <div class="annotation_table">
+        <div class="annotation_table_title">
+            <span class="_h1">进口保税清单</span>
+            <span class="_span">（仅供核对使用）</span>
+        </div>
+        <table class="layui-table">
+            <tbody>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">预录入统一编号</td>
+                    <td class="td-scale-04">
+                        <span data-id="seq_no">@{{ .m.seq_no  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">清单编号</td>
+                    <td class="td-scale-04">
+                        <span data-id="bond_invt_no">@{{ .m.bond_invt_no  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">清单类型</td>
+                    <td class="td-scale-04">
+                        <span data-id="invt_type_name">@{{ .m.invt_type_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">手(账)编号</td>
+                    <td class="td-scale-04">
+                        <span data-id="putrec_no">@{{ .m.putrec_no  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">经营企业编码</td>
+                    <td class="td-scale-04">
+                        <span data-id="bizop_etpsno">@{{ .m.bizop_etpsno  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">经营企业社会信用代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="bizop_etps_sccd">@{{ .m.bizop_etps_sccd  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">经营企业名称</td>
+                    <td class="td-scale-04">
+                        <span data-id="bizop_etps_nm">@{{ .m.bizop_etps_nm  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">加工企业编码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rcvgd_etpsno">@{{ .m.rcvgd_etpsno  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">加工企业社会信用代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rvsngd_etps_sccd">@{{ .m.rvsngd_etps_sccd  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">加工企业名称</td>
+                    <td class="td-scale-04">
+                        <span data-id="rcvgd_etps_nm">@{{ .m.rcvgd_etps_nm  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">申报单位代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="dcl_etpsno">@{{ .m.dcl_etpsno  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">申报单位社会信用代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="dcl_etps_sccd">@{{ .m.dcl_etps_sccd  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">申报单位名称</td>
+                    <td class="td-scale-04">
+                        <span data-id="dcl_etps_nm">@{{ .m.dcl_etps_nm  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">录入单位代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="input_code">@{{ .m.input_code  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">录入单位社会信用代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="input_credit_code">@{{ .m.input_credit_code  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">录入单位名称</td>
+                    <td class="td-scale-04">
+                        <span data-id="input_name">@{{ .m.input_name  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">录入日期</td>
+                    <td class="td-scale-04">
+                        <span data-id="input_time">@{{ .m.input_time }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">清单申报日期</td>
+                    <td class="td-scale-04">
+                        <span data-id="invt_dcl_time">@{{ .m.invt_dcl_time }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">清单进出卡口状态</td>
+                    <td class="td-scale-04">
+                        <span data-id="invt_iochkpt_stucd">@{{ .m.invt_iochkpt_stucd  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">核扣标志</td>
+                    <td class="td-scale-04">
+                        <span data-id="vrfded_markcd">@{{ .m.vrfded_markcd  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">企业内部编号</td>
+                    <td class="td-scale-04">
+                        <span data-id="etps_inner_invt_no">@{{ .m.etps_inner_invt_no  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">进（出）境关别</td>
+                    <td class="td-scale-04">
+                        <span data-id="impexp_portcd_name">@{{ .m.impexp_portcd_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">主管海关</td>
+                    <td class="td-scale-04">
+                        <span data-id="dcl_plc_cuscd_name">@{{ .m.dcl_plc_cuscd_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">启运国(地区)</td>
+                    <td class="td-scale-04">
+                        <span data-id="stship_trsarv_natcd_name">@{{ .m.stship_trsarv_natcd_name  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">料件、成品标志</td>
+                    <td class="td-scale-04">
+                        <span data-id="mtpck_endprd_markcd_name">@{{ .m.mtpck_endprd_markcd_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">监管方式</td>
+                    <td class="td-scale-04">
+                        <span data-id="supv_modecd_name">@{{ .m.supv_modecd_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">运输方式</td>
+                    <td class="td-scale-04">
+                        <span data-id="trsp_modecd_name">@{{ .m.trsp_modecd_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">申报表编号</td>
+                    <td class="td-scale-04">
+                        <span data-id="apply_no">@{{ .m.apply_no  }}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">流转类型</td>
+                    <td class="td-scale-04">
+                        <span data-id="list_type_name">@{{ .m.list_type_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">报关标志</td>
+                    <td class="td-scale-04">
+                        <span data-id="apply_no">@{{ .m.dclcus_flag_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">报关类型</td>
+                    <td class="td-scale-04">
+                        <span data-id="dclcus_typecd_name">@{{ .m.dclcus_typecd_name  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">报关单类型</td>
+                    <td class="td-scale-04">
+                        <span data-id="dec_type_name">@{{ .m.dec_type_name  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">关联清单编号</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_invt_no">@{{ .m.rlt_invt_no  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联手(账)册备案号</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_putrec_no">@{{ .m.rlt_putrec_no  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单编号</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_entry_no">@{{ .m.rlt_entry_no  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单申报日期</td>
+                    <td class="td-scale-04">
+                        <span data-id="entry_dcl_time">@{{ .m.entry_dcl_time  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray" colspan="2">关联报关单收发货人代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_entry_bizop_etpsno">@{{ .m.rlt_entry_bizop_etpsno  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单社会信用代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_entry_bizop_etps_sccd">@{{ .m.rlt_entry_bizop_etps_sccd  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单收发货人名称</td>
+                    <td class="td-scale-04" colspan="2">
+                        <span data-id="rlt_entry_bizop_etps_nm">@{{ .m.rlt_entry_bizop_etps_nm  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray" colspan="2">关联报关单生产销售(消费使用)单位代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_entry_rcvgd_etpsno">@{{ .m.rlt_entry_rcvgd_etpsno  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单社会信用代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_entry_rvsngd_etps_sccd">@{{ .m.rlt_entry_rvsngd_etps_sccd  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单单位名称</td>
+                    <td class="td-scale-04" colspan="2">
+                        <span data-id="rlt_entry_rcvgd_etps_nm">@{{ .m.rlt_entry_rcvgd_etps_nm  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray" colspan="2">关联报关单申报单位代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_entry_dcl_etpsno">@{{ .m.rlt_entry_dcl_etpsno  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单社会信用代码</td>
+                    <td class="td-scale-04">
+                        <span data-id="rlt_entry_dcl_etps_sccd">@{{ .m.rlt_entry_dcl_etps_sccd  }}</span>
+                    </td>
+                    <td class="td-scale-05 text-align-right _gray">关联报关单申报单位名称</td>
+                    <td class="td-scale-04" colspan="2">
+                        <span data-id="rlt_entry_dcl_etps_nm">@{{ .m.rlt_entry_dcl_etps_nm  }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-05 text-align-right _gray">备注</td>
+                    <td class="td-scale-04" colspan="7">
+                        <span data-id="rmk">@{{ .m.rmkv   }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th colspan="20">
+                        <p class="text-center font-weight-bold">表体</p>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <p class="font-weight-bold">商品序号</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">报关单商品序号</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">备案序号</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">商品料号</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">商品编码</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">商品名称</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">规格型号</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">原厂国(地区)</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">最终目的国(地区)</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">币制</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">申报单价</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">申报数量</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">申报计量单位</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">申报总价</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">法定数量</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">法定计量单位</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">第二法定数量</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">法定第二计量单位</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">征免方式</p>
+                    </th>
+                    <th>
+                        <p class="font-weight-bold">单耗版本号</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# if(.m.items){ }}
+                    {{# layui.each(.m.items, function(index, item){ }}
+                        <tr>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="gds_seqno">@{{ .m.gds_seqno  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="entry_gds_seqno">@{{ .m.entry_gds_seqno  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="putrec_seqno">@{{ .m.putrec_seqno  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="gds_mtno">@{{ .m.gds_mtno  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="gdecd">@{{ .m.gdecd  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="gds_nm">@{{ .m.gds_nm  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="gds_spcf_model_desc">@{{ .m.gds_spcf_model_desc  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="natcd_name">@{{ .m.natcd_name  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="destination_natcd_name">@{{ .m.destination_natcd_name  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="dcl_currcd_name">@{{ .m.dcl_currcd_name  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="dcl_uprc_amt">@{{ .m.dcl_uprc_amt_string  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="dcl_qty">@{{ .m.dcl_qty_string  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="dcl_unitcd_name">@{{ .m.dcl_unitcd_name  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="dcl_total_amt">@{{ .m.dcl_total_amt_string  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="lawf_qty">@{{ .m.lawf_qty_string  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="lawf_unitcd_name">@{{ .m.lawf_unitcd_name  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="secd_lawf_qty">@{{ .m.secd_lawf_qty_string  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="secd_lawf_unitcd_name">@{{ .m.secd_lawf_unitcd_name  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="lvyrlf_modecd_name">@{{ .m.lvyrlf_modecd_name  }}</span></td>
+                            <td><span data-index="@{{ .m.gds_seqno  }}" data-id="ucns_verno">@{{ .m.ucns_verno  }}</span></td>
+                        </tr>
+                        {{# }) }}
+                            {{# } }}
+            </tbody>
+        </table>
+    </div>
+</script>

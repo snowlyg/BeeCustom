@@ -3,10 +3,11 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'table', 'admin', 'laydate', 'form', 'upload'], async function() {
-        const { $, laydate, form,  layer, admin, laytpl, upload, table } = layui;
+    }).use(['index', 'table', 'admin', 'laydate', 'form', 'upload'], async () => {
+        const { $, laydate, form,  layer, admin,  upload, table } = layui;
         /**根据屏幕等比例缩小**/
         admin.sideFlexible_window();
+
         let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index, order_import_list, status = '全部订单',
             search_input = '',
             invt_dcl_time_start = '',
@@ -32,7 +33,8 @@
                         time: 2000,
                         id: 'Message'
                     });
-                    await admin.get_data_list(`/annotation/i/list?month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+                    // await admin.get_data_list(`/annotation/datagrid?month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+                    await admin.get_data_list("/annotation/datagrid", order_import_list);
                 } else {
                     layer.msg(res.msg, {
                         offset: '15px',
@@ -182,7 +184,9 @@
                 status = ''
             }
             order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&search=${search_input}&month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-        }); /**复制订单**/
+        });
+
+        /**复制订单**/
         $("body").on("click", ".copy_order", async function() {
             const id = $(this).data("id");
             await admin.get(`/annotation/i/${id}/copy`, 'show');
@@ -217,7 +221,9 @@
         $("#advanced_search").on("click", function() {
             $("#advanced_form").slideToggle();
             $("#advanced_search_i").toggleClass('selected');
-        }); /**查看联系人信息**/
+        });
+
+        /**查看联系人信息**/
         $("body").on("click", ".person_tips", function() {
             const index = $(this).data('index');
             if (order_import_list.datas.data[index].company_admin_name) {
@@ -368,7 +374,8 @@
         });
 
         /**订单列表**/
-        order_import_list = await admin.get_data_list(`/annotation/i/list?month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+        order_import_list = await admin.get_data_list(`/annotation/datagrid?month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+
         /**订单详情**/
         $("body").on("click", ".order_detail, .order_keep_auth, .order_start_auth", function() {
             const id = $(this).data('id');
@@ -401,6 +408,7 @@
                 text = `制单/修改保税清单（进口）`;
             topLayui.index.openTabsPage(href, text);
         });
+
         /**改单**/
         $(document).on("click", ".order_switch_bill", async function() {
             const id = $(this).data('id');
@@ -569,7 +577,7 @@
 
         /**运输方式**/
         try {
-            const data = await admin.get(`/clearance/no_paginate?type=运输方式代码`);
+            const data = await admin.post(`/clearance/no_paginate`,{Type:"运输方式代码"});
             laytpl($("#trsp_modecd_template").html()).render(data, function(html) {
                 $("#annotation_trsp_modecd").html(html);
             });

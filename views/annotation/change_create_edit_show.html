@@ -1,0 +1,78 @@
+<div class="custom-order_form">
+
+    <div class="custom-order_form_annotation">
+        <div class="custom-order_form_top" id="order_button"></div>
+        <script type="text/html" id="order_button_template">
+@{{/*            @can('i.annotation.store.html" .}}*/}}
+@{{/*            <button class="layui-btn custom-create_btn" id="order_save" type="button">*/}}
+@{{/*                <i class="iconfont icon-save"></i>保存*/}}
+@{{/*            </button>*/}}
+@{{/*            @endcan*/}}
+@{{/*            @{{# if(d != '已完成.html" .}}{ }}*/}}
+@{{/*            @can('i.annotation.audit_pass.html" .}}*/}}
+@{{/*            <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">*/}}
+@{{/*                <i class="iconfont icon-checkcircle"></i>审核通过*/}}
+@{{/*            </button>*/}}
+@{{/*            @endcan*/}}
+@{{/*            @can('i.annotation.distribute.html" .}}*/}}
+@{{/*            <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">*/}}
+@{{/*                <i class="iconfont icon-folder-shared"></i>派单*/}}
+@{{/*            </button>*/}}
+@{{/*            @endcan*/}}
+@{{/*            @can('i.annotation.import.html" .}}*/}}
+@{{/*            <button class="layui-btn custom-create_btn" id="order_i_import" type="button">*/}}
+@{{/*                <i class="iconfont icon-input"></i>导入*/}}
+@{{/*            </button>*/}}
+@{{/*            @endcan*/}}
+@{{/*            @{{# } }}*/}}
+@{{/*            @can('i.annotation.prints.html" .}}*/}}
+@{{/*            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print" type="button">*/}}
+@{{/*                <i class="iconfont icon-print"></i>打印*/}}
+@{{/*            </button>*/}}
+@{{/*            @endcan*/}}
+@{{/*            @can('i.annotation.extra_remark.html" .}}*/}}
+@{{/*            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note" type="button">*/}}
+@{{/*                <i class="iconfont icon-tab"></i>附注*/}}
+@{{/*                <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>*/}}
+@{{/*            </button>*/}}
+@{{/*            @endcan*/}}
+@{{/*            @can('i.annotation.annotation_logs.html" .}}*/}}
+@{{/*            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_take" type="button">*/}}
+@{{/*                <i class="iconfont icon-assignment1"></i>办理记录*/}}
+@{{/*            </button>*/}}
+@{{/*            @endcan*/}}
+        </script>
+        <script type="text/html" id="order_edit_bill_template">
+@{{/*            @{{# if(d.status_string == '已完成.html" .}}{ }}*/}}
+@{{/*            @{{# if(d.annotation_change_logs.length > 0){ }}*/}}
+@{{/*            <div class="order_edit_bill_string">*/}}
+@{{/*                <p class="order_edit_bill_string_p">*/}}
+@{{/*                    <i class="iconfont icon-edit"></i>*/}}
+@{{/*                    <span>@{{ d.annotation_change_logs[d.annotation_change_logs.length-1].content }}</span>*/}}
+@{{/*                </p>*/}}
+@{{/*            </div>*/}}
+@{{/*            @{{# } }}*/}}
+@{{/*            @{{# } }}*/}}
+        </script>
+        <div id="order_edit_bill"></div>
+        <div class="layui-tab">
+            <ul class="layui-tab-title template_list">
+                <li class="layui-this">表头</li>
+                <li>表体</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    @{{template "/annotation/create/gauge.html" .}}
+                </div>
+                <div class="layui-tab-item">
+                    @{{template "/annotation/create/body.html" .}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{{template "/common/order_annotation/distribute.html" .}}
+@{{template "/annotation/create/remark_note.html" .}}
+@{{template "/common/order_annotation/take.html" .}}
+@{{template "/annotation/create/edit_data.html" .}}
+@{{template "/annotation/create/annotation_search.html" .}}

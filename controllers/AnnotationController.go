@@ -59,11 +59,8 @@ func (c *AnnotationController) DataGrid() {
 
 // Create 添加 新建 页面
 func (c *AnnotationController) Create() {
-	params := models.NewRoleQueryParam()
-	roles := models.RoleDataList(&params)
 
-	c.Data["roles"] = roles
-	c.setTpl()
+	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
 	c.GetXSRFToken()
@@ -110,11 +107,8 @@ func (c *AnnotationController) Edit() {
 	}
 
 	c.Data["m"] = m
-	params := models.NewRoleQueryParam()
-	roles := models.RoleDataList(&params)
-	c.Data["roles"] = roles
 
-	c.setTpl()
+	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/edit_footerjs.html"
 	c.GetXSRFToken()
@@ -161,25 +155,4 @@ func (c *AnnotationController) Delete() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
-}
-
-// Edit 添加 编辑 页面
-func (c *AnnotationController) Profile() {
-
-	m, err := models.AnnotationOne(c.curUser.Id)
-	if m != nil && c.curUser.Id > 0 {
-		if err != nil {
-			c.pageError("数据无效，请刷新后重试")
-		}
-	}
-
-	c.Data["m"] = m
-	params := models.NewRoleQueryParam()
-	roles := models.RoleDataList(&params)
-	c.Data["roles"] = roles
-
-	c.setTpl()
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "annotation/profile_footerjs.html"
-	c.GetXSRFToken()
 }

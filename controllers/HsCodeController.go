@@ -27,8 +27,6 @@ func (c *HsCodeController) Prepare() {
 
 func (c *HsCodeController) Index() {
 
-	c.Data["lastUpdateTime"] = c.GetLastUpdteTime("hsCodeLastUpdteTime")
-
 	//页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)

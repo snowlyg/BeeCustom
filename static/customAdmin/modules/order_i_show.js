@@ -147,7 +147,7 @@ layui.define(function (exports) {
                     $(document).off('keydown', this.enterEsc);
                 }
             });
-            const data = await admin.get(`/clearance/no_paginate?type=包装种类代码`);
+            const data = await admin.post(`/clearance/no_paginate`,{Type:"包装种类代码"})
             data.forEach(function (item, index) {
                 item.index = index
             });
@@ -679,7 +679,7 @@ layui.define(function (exports) {
             });
             let queryDocRep = []
                 , check_data = [];
-            const data = await admin.get(`/clearance/no_paginate?type=商检签证申报要素`);
+            const data = await admin.post(`/clearance/no_paginate`,{Type:"商检签证申报要素"});
             for (let item of data) {
                 queryDocRep.push({
                     app_cert_code: item.customs_code,
@@ -1357,7 +1357,7 @@ layui.define(function (exports) {
         });
         /**货物属性**/
         $("body").on("click", "#goods_attr_open", async function () {
-            const data = await admin.get(`/clearance/no_paginate?type=货物属性代码`);
+            const data = await admin.post(`/clearance/no_paginate`,{Type:"货物属性代码"});
             const len = data.length;
             let result = [];
             const sliceNum = 4;
@@ -1894,7 +1894,7 @@ layui.define(function (exports) {
                     $("body #val0Name").focus();
                     $("#selectCodeTs").val(order_pros_data[declaration_index].g_name);
                     $("#good_information").val(`${order_pros_data[declaration_index].g_no}-${order_pros_data[declaration_index].contr_item ? order_pros_data[declaration_index].contr_item : '一般贸易'}-${order_pros_data[declaration_index].g_name}`);
-                    let brand_type = await admin.get(`/clearance/no_paginate?type=品牌类型`);
+                    let brand_type = await admin.post(`/clearance/no_paginate`,{Type:"品牌类型"});
                     let data_filter = [];
                     for (let item of brand_type) {
                         data_filter.push({
@@ -1918,7 +1918,7 @@ layui.define(function (exports) {
                         }
                     });
 
-                    let export_benefits = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
+                    let export_benefits = await admin.post(`/clearance/no_paginate`,{Type:"出口享惠情况"});
                     let data_filter_benefits = [];
                     for (let item of export_benefits) {
                         data_filter_benefits.push({
@@ -1994,7 +1994,7 @@ layui.define(function (exports) {
                     });
                     $("#selectCodeTs").val(order_pros_data[declaration_index].g_name);
                     $("#good_information").val(`${order_pros_data[declaration_index].g_no}-${order_pros_data[declaration_index].contr_item ? order_pros_data[declaration_index].contr_item : '一般贸易'}-${order_pros_data[declaration_index].g_name}`);
-                    let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`);
+                    let brand_type_show = await admin.post(`/clearance/no_paginate`,{Type:"品牌类型"});
                     let data_filter_show = [];
                     for (let item of brand_type_show) {
                         data_filter_show.push({
@@ -2018,7 +2018,7 @@ layui.define(function (exports) {
                         }
                     });
 
-                    let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
+                    let export_benefits_show = await admin.post(`/clearance/no_paginate`,{Type:"出口享惠情况"});
                     let data_filter_benefits_show = [];
                     for (let item of export_benefits_show) {
                         data_filter_benefits_show.push({
@@ -2129,7 +2129,7 @@ layui.define(function (exports) {
             });
             $("#selectCodeTs").val(order_pros_data[declaration_index].g_name);
             $("#good_information").val(`${order_pros_data[declaration_index].g_no}-${order_pros_data[declaration_index].contr_item ? order_pros_data[declaration_index].contr_item : '一般贸易'}-${order_pros_data[declaration_index].g_name}`);
-            let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`);
+            let brand_type_show = await admin.post(`/clearance/no_paginate`,{Type:"品牌类型"});
             let data_filter_show = [];
             for (let item of brand_type_show) {
                 data_filter_show.push({
@@ -2153,7 +2153,7 @@ layui.define(function (exports) {
                 }
             });
 
-            let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
+            let export_benefits_show = await admin.post(`/clearance/no_paginate`,{Type:"出口享惠情况"});
             let data_filter_benefits_show = [];
             for (let item of export_benefits_show) {
                 data_filter_benefits_show.push({
@@ -2219,7 +2219,7 @@ layui.define(function (exports) {
             });
             $("#selectCodeTs").val(order_pros_data[declaration_index].g_name);
             $("#good_information").val(`${order_pros_data[declaration_index].g_no}-${order_pros_data[declaration_index].contr_item ? order_pros_data[declaration_index].contr_item : '一般贸易'}-${order_pros_data[declaration_index].g_name}`);
-            let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`);
+            let brand_type_show = await admin.post(`/clearance/no_paginate`,{Type:"品牌类型"});
             let data_filter_show = [];
             for (let item of brand_type_show) {
                 data_filter_show.push({
@@ -2243,7 +2243,7 @@ layui.define(function (exports) {
                 }
             });
 
-            let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
+            let export_benefits_show = await admin.post(`/clearance/no_paginate`,{Type:"出口享惠情况"});
             let data_filter_benefits_show = [];
             for (let item of export_benefits_show) {
                 data_filter_benefits_show.push({
@@ -2314,7 +2314,7 @@ layui.define(function (exports) {
             });
             $("#selectCodeTs").val(order_pros_data[declaration_index].g_name);
             $("#good_information").val(`${order_pros_data[declaration_index].g_no}-${order_pros_data[declaration_index].contr_item ? order_pros_data[declaration_index].contr_item : '一般贸易'}-${order_pros_data[declaration_index].g_name}`);
-            let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`);
+            let brand_type_show = await admin.post(`/clearance/no_paginate`,{Type:"品牌类型"});
             let data_filter_show = [];
             for (let item of brand_type_show) {
                 data_filter_show.push({
@@ -2338,7 +2338,7 @@ layui.define(function (exports) {
                 }
             });
 
-            let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
+            let export_benefits_show = await admin.post(`/clearance/no_paginate`,{Type:"出口享惠情况"});
             let data_filter_benefits_show = [];
             for (let item of export_benefits_show) {
                 data_filter_benefits_show.push({
@@ -2413,7 +2413,7 @@ layui.define(function (exports) {
             });
             $("#selectCodeTs").val(order_pros_data[declaration_index].g_name);
             $("#good_information").val(`${order_pros_data[declaration_index].g_no}-${order_pros_data[declaration_index].contr_item ? order_pros_data[declaration_index].contr_item : '一般贸易'}-${order_pros_data[declaration_index].g_name}`);
-            let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`);
+            let brand_type_show = await admin.post(`/clearance/no_paginate`,{Type:"品牌类型"});
             let data_filter_show = [];
             for (let item of brand_type_show) {
                 data_filter_show.push({
@@ -2437,7 +2437,7 @@ layui.define(function (exports) {
                 }
             });
 
-            let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
+            let export_benefits_show = await admin.post(`/clearance/no_paginate`,{Type:"出口享惠情况"});
             let data_filter_benefits_show = [];
             for (let item of export_benefits_show) {
                 data_filter_benefits_show.push({
@@ -2483,7 +2483,7 @@ layui.define(function (exports) {
         }
         /**批量修改--货物属性**/
         $("body").on("click", "#goods_attr_open_batch", async function () {
-            const data = await admin.get(`/clearance/no_paginate?type=货物属性代码`);
+            const data = await admin.post(`/clearance/no_paginate`,{Type:"货物属性代码"});
             const len = data.length;
             let result = [];
             const sliceNum = 4;
@@ -3131,7 +3131,7 @@ layui.define(function (exports) {
             }
             if (order_i_edit_data.pros) {
                 order_i_edit_data.pros.sort(admin.compare('g_no'));
-                const goods_attr_filter = await admin.get(`/clearance/no_paginate?type=货物属性代码`);
+                const goods_attr_filter = await admin.post(`/clearance/no_paginate`,{Type:"货物属性代码"});
                 for (let item of order_i_edit_data.pros) {
                     item.goods_spec_data = {
                         stuff: item.stuff,

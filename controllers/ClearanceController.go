@@ -42,7 +42,7 @@ func (c *ClearanceController) Prepare() {
 func (c *ClearanceController) Index() {
 
 	c.Data["type"] = c.clearanceType
-	c.Data["lastUpdateTime"] = c.GetLastUpdteTime("clearanceLastUpdateTime")
+	c.Data["lastUpdateTime"] = c.GetLastUpdteTime()
 
 	//页面模板设置
 	c.setTpl()
@@ -73,9 +73,22 @@ func (c *ClearanceController) DataGrid() {
 	c.ServeJSON()
 }
 
+//通关参数更新时间
+func (c *ClearanceController) GetClearanceUpdateTime() {
+
+	lastUpdateTime := c.GetLastUpdteTime()
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = 0
+	result["rows"] = lastUpdateTime
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
 // Create 添加 新建 页面
 func (c *ClearanceController) Create() {
-
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "clearance/create_footerjs.html"
@@ -96,7 +109,7 @@ func (c *ClearanceController) Store() {
 	if _, err := models.ClearanceSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
-		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
+		c.SetLastUpdteTime(m.Type)
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
@@ -134,7 +147,7 @@ func (c *ClearanceController) Update() {
 	if _, err := models.ClearanceSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
-		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
+		c.SetLastUpdteTime(m.Type)
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	}
 }
@@ -142,8 +155,9 @@ func (c *ClearanceController) Update() {
 //删除
 func (c *ClearanceController) Delete() {
 	id, _ := c.GetInt64(":id")
+	m, _ := models.ClearanceOne(id)
 	if num, err := models.ClearanceDelete(id); err == nil {
-		c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
+		c.SetLastUpdteTime(m.Type)
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
@@ -187,7 +201,7 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	c.SetLastUpdteTime("clearanceLastUpdateTime", time.Now().Format(enums.BaseFormat))
+	c.SetLastUpdteTime(clearanceType)
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("导入成功 %d 项基础参数", mun), mun)
 
 }
@@ -243,5 +257,44 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 		}
 		cIP.Obj = append(cIP.Obj, &inObj)
 	}
+
+}
+
+//获取最后更新时间
+func (c *ClearanceController) GetLastUpdteTime() []*models.ClearanceUpdateTime {
+
+	//直接获取参数 getDataGridData()
+	params := models.NewClearanceUpdateTimeQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, _ := models.ClearanceUpdateTimePageList(&params)
+
+	return data
+}
+
+//设置最后更新时间
+func (c *ClearanceController) SetLastUpdteTime(cType int8) {
+
+	oldLastUpdateTime, err := models.GetLastUpdteTimeByClearanceType(cType)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)
+	}
+
+	if oldLastUpdateTime == nil {
+		lastUpdateTime := models.NewClearanceUpdateTime(0)
+		_, err = models.ClearanceUpdateTimeSave(&lastUpdateTime)
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)
+		}
+	} else {
+		oldLastUpdateTime.LastUpdatedAt = time.Now()
+		_, err = models.ClearanceUpdateTimeSave(oldLastUpdateTime)
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)
+		}
+	}
+
+	c.jsonResult(enums.JRCodeSucc, "设置最后更新时间成功", nil)
 
 }

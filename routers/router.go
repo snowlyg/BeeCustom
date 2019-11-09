@@ -11,6 +11,7 @@ func init() {
 	//清单管理
 	beego.Router("/annotation/index", &controllers.AnnotationController{}, "Get:Index")
 	beego.Router("/annotation/create", &controllers.AnnotationController{}, "Get:Create")
+	beego.Router("/annotation/datagrid", &controllers.AnnotationController{}, "Post:DataGrid")
 	beego.Router("/annotation/store", &controllers.AnnotationController{}, "Post:Store")
 	beego.Router("/annotation/edit/?:id", &controllers.AnnotationController{}, "Get:Edit")
 	beego.Router("/annotation/update/?:id", &controllers.AnnotationController{}, "Patch:Update")
@@ -69,6 +70,7 @@ func init() {
 
 	//基础参数
 	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
+	beego.Router("/clearance/get_clearance_update_time", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTime")
 	beego.Router("/clearance/create/?:type", &controllers.ClearanceController{}, "Get:Create")
 	beego.Router("/clearance/store", &controllers.ClearanceController{}, "Post:Store")
 	beego.Router("/clearance/datagrid", &controllers.ClearanceController{}, "Post:DataGrid")

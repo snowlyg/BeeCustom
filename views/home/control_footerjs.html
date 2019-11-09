@@ -1,0 +1,17 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index','admin'], async function () {
+        const admin = layui.admin;
+        /**加载通关参数和客户数据，手账册数据**/
+        try {
+            const clearance_update_times = await admin.get("/clearance/get_clearance_update_time");
+            await admin.clearance_data_auto(clearance_update_times);
+        } catch (err) {
+            console.log(err)
+        }
+
+    });
+</script>
