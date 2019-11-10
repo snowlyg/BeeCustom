@@ -1006,105 +1006,104 @@ layui.define('view', function (exports) {
             cusIEFlag: '',
 
             //自动完成
-            async auto_fn(type) {
-                let data_filter = type.data || [];
-                let data;
+            async autoFnClearanceData(data) {
 
-                if (type.url) {
-                    try {
-                        data = await admin.post(type.url,{Type:type.clearanceType});
-                        type.filter(data.rows, data_filter);
-                    } catch (e) {
-                        //报错重新执行 报关整合申报自动完成汇总
-                        // await admin.order_auto(admin.auto_fn);
+                //通关参数
+                data.layuicomplete.render({
+                    elem: $(data.elem)[0],
+                    url: '/clearance/datagrid',
+                    cache: data.cache,
+                    response: {
+                        code: 'code',
+                        data: 'rows'
+                    },
+                    request: {
+                        keywords: 'NameLike'
+                    },
+                    params: {Limit: 5,Type:data.type},
+                    method: 'post',
+                    template_val: '{{d.CustomsCode}}',
+                    template_txt: '{{d.CustomsCode}}' + "-" + '{{d.Name}}',
+                    onselect: function (resp) {
+                        // $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
                     }
-                }
+                });
 
-                if (type.data_name) {
-                    //货物申报-自动完成所有数据
-                    admin.all_complete_data[type.data_name] = data_filter;
-                    layui.data(type.data_name, {
-                        key: 'data',
-                        value: data_filter
-                    });
-
-                }
-
-                if (type.id) {
-                    //参数默认规则
-                    type.id.forEach((value, index) => {
-                        $(value).AutoComplete({
-                            'data': data_filter,
-                            'itemHeight': 20,
-                            'listStyle': 'custom',
-                            'listDirection': type.listDirection ? 'up' : 'down',
-                            'createItemHandler': function (index, data) {
-                                return `<p class="auto_list_p">${data.label}</p>`
-                            },
-                            'afterSelectedHandler': function (data) {
-                                if (type.after) {
-                                    $(type.after[index]).val(data.id);
-                                    if (type.after[index] == '#trans_mode') {
-                                        admin.transModeControl(admin.cusIEFlag)
-                                    }
-                                    if (type.after[index] == '#fee_mark') {
-                                        admin.markSelect('fee_mark', 'fee_curr', 'fee_curr_name')
-                                    }
-                                    if (type.after[index] == '#insur_mark') {
-                                        admin.markSelect('insur_mark', 'insur_curr', 'insur_curr_name')
-                                    }
-                                    if (type.after[index] == '#other_mark') {
-                                        admin.markSelect('other_mark', 'other_curr', 'other_curr_name')
-                                    }
-                                    if (type.after[index] == '#traf_mode') {
-                                        if ($("#traf_mode").val() == 4) {
-                                            //$("#bill_no").removeAttr("disabled", "disabled");
-                                            //启运国(地区)
-                                            $("#trade_country").val("HKG");
-                                            $("#trade_country_name").val("中国香港");
-                                            //经停港
-                                            $("#distinate_port").val("HKG003");
-                                            $("#distinate_port_name").val("香港（中国香港）");
-                                            //贸易国别（地区）
-                                            $("#trade_area_code").val("HKG");
-                                            $("#trade_area_name").val("中国香港");
-                                            //启运港
-                                            $("#desp_port_code").val("HKG003");
-                                            $("#desp_port_name").val("香港（中国香港）");
-                                        } else {
-                                            //$("#bill_no").attr("disabled", "disabled");
-                                        }
-                                    }
-                                    if (type.after[index] == '#trsp_modecd') {
-                                        if ($("#trsp_modecd").val() == 4) {
-                                            $("#stship_trsarv_natcd").val("110");
-                                            $("#stship_trsarv_natcd_name").val("中国香港");
-                                        }
-                                    }
-
-                                    if (type.after[index] == '#cus_fie') {
-                                        const value = $(type.after[index]).val()
-                                        if (value == '5284') {
-                                            $("#note_s").val('[装卸口岸：长安车检场]');
-                                        }
-                                        if (value == '5299') {
-                                            $("#note_s").val('[装卸口岸：其它业务]');
-                                        }
-                                        if (value == '5238') {
-                                            $("#note_s").val('[装卸口岸：凤岗车检场]');
-                                        }
-                                        if (value == '5298') {
-                                            $("#note_s").val('[装卸口岸：外关区]');
-                                        }
-                                        if (value == '5297') {
-                                            $("#note_s").val('[装卸口岸：加贸结转]');
-                                        }
-                                    }
-                                }
-                            }
-                        })
-                    })
-                }
+                // if (data.elem) {
+                //     //参数默认规则
+                //     type.elem.forEach((value, index) => {
+                //         $(value).AutoComplete({
+                //             'data': data_filter,
+                //             'itemHeight': 20,
+                //             'listStyle': 'custom',
+                //             'listDirection': type.listDirection ? 'up' : 'down',
+                //             'createItemHandler': function (index, data) {
+                //                 return `<p class="auto_list_p">${data.label}</p>`
+                //             },
+                //             'afterSelectedHandler': function (data) {
+                //                 if (type.after) {
+                //                     $(type.after[index]).val(data.id);
+                //                     if (type.after[index] == '#trans_mode') {
+                //                         admin.transModeControl(admin.cusIEFlag)
+                //                     }
+                //                     if (type.after[index] == '#fee_mark') {
+                //                         admin.markSelect('fee_mark', 'fee_curr', 'fee_curr_name')
+                //                     }
+                //                     if (type.after[index] == '#insur_mark') {
+                //                         admin.markSelect('insur_mark', 'insur_curr', 'insur_curr_name')
+                //                     }
+                //                     if (type.after[index] == '#other_mark') {
+                //                         admin.markSelect('other_mark', 'other_curr', 'other_curr_name')
+                //                     }
+                //                     if (type.after[index] == '#traf_mode') {
+                //                         if ($("#traf_mode").val() == 4) {
+                //                             //$("#bill_no").removeAttr("disabled", "disabled");
+                //                             //启运国(地区)
+                //                             $("#trade_country").val("HKG");
+                //                             $("#trade_country_name").val("中国香港");
+                //                             //经停港
+                //                             $("#distinate_port").val("HKG003");
+                //                             $("#distinate_port_name").val("香港（中国香港）");
+                //                             //贸易国别（地区）
+                //                             $("#trade_area_code").val("HKG");
+                //                             $("#trade_area_name").val("中国香港");
+                //                             //启运港
+                //                             $("#desp_port_code").val("HKG003");
+                //                             $("#desp_port_name").val("香港（中国香港）");
+                //                         } else {
+                //                             //$("#bill_no").attr("disabled", "disabled");
+                //                         }
+                //                     }
+                //                     if (type.after[index] == '#trsp_modecd') {
+                //                         if ($("#trsp_modecd").val() == 4) {
+                //                             $("#stship_trsarv_natcd").val("110");
+                //                             $("#stship_trsarv_natcd_name").val("中国香港");
+                //                         }
+                //                     }
+                //
+                //                     if (type.after[index] == '#cus_fie') {
+                //                         const value = $(type.after[index]).val()
+                //                         if (value == '5284') {
+                //                             $("#note_s").val('[装卸口岸：长安车检场]');
+                //                         }
+                //                         if (value == '5299') {
+                //                             $("#note_s").val('[装卸口岸：其它业务]');
+                //                         }
+                //                         if (value == '5238') {
+                //                             $("#note_s").val('[装卸口岸：凤岗车检场]');
+                //                         }
+                //                         if (value == '5298') {
+                //                             $("#note_s").val('[装卸口岸：外关区]');
+                //                         }
+                //                         if (value == '5297') {
+                //                             $("#note_s").val('[装卸口岸：加贸结转]');
+                //                         }
+                //                     }
+                //                 }
+                //             }
+                //         })
+                //     })
+                // }
             },
 
             //核注清单商品删除存储

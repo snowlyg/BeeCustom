@@ -7,35 +7,40 @@
         const {form, admin, table, $, laytpl, layuicomplete} = layui;
         const cusIEFlag = 'I';
         let order_i_edit_data;
-        let order_pros_data_filter = []
-            /**订单ID**/
-            ,
-            order_id
-            /**附注数据**/
-            , order_note_data
-            /**商品快速查询index**/
-            , annotation_searc_index;
+        let order_pros_data_filter = [],
+            order_id  /**订单ID**/
+            , order_note_data /**附注数据**/
+            , annotation_searc_index;  /**商品快速查询index**/
+
+        /**根据屏幕等比例缩小**/
+        admin.sideFlexible_window();
+
         /**回车键光标跳转**/
         admin.keydown_input_textarea();
+
         /**首次进入自动聚焦 and 初始数据赋值**/
         const first_name = $("#invt_type_name").val();
+
         $("#invt_type_name").val("").focus().val(first_name);
         $("#input_time").val(admin.getCurrDate());
         $("#invt_dcl_time").val(admin.getCurrDate());
+
         /**清单产品/报关草稿列表**/
         admin.getAnnotationTable(admin.order_pros_data, admin.decListData);
+
         /**光标进入全选**/
         $('body').on('focus', 'input,textarea', function (e) {
             $(this).select();
             let tipText = "";
             for (let item of admin.tipsJson) {
-                if (item.id == this.id) {
+                if (item.id === this.id) {
                     tipText = item.name;
                     break;
                 }
             }
             $("#tipsMessagetext").text(tipText);
         });
+
         /**table点击行选中**/
         admin.table_radio_click();
         /**table左右拖动**/
@@ -44,7 +49,7 @@
         /**备注回车保存商品**/
         $("body").on("keyup", "#body_rmk", function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-            if (event.shiftKey != 1 && eCode == 13) {
+            if (event.shiftKey !== 1 && eCode === 13) {
                 $("#order_pros_submit").click();
             }
         });
@@ -53,7 +58,7 @@
         let order_pros_index = null;
         const annotation_item_data = (data) => {
             /**集报不允许新增**/
-            if (($("#invt_type").val() == "1" || $("#invt_type").val() == "8") && data.gds_seqno > admin
+            if (($("#invt_type").val() === "1" || $("#invt_type").val() === "8") && data.gds_seqno > admin
                 .order_pros_data.length) {
                 layer.open({
                     title: "提示",
@@ -64,7 +69,7 @@
             }
             let _row = {};
             $.extend(_row, admin.order_pros_data[order_pros_index - 1]);
-            if (_row && _row.gds_seqno && _row.gds_seqno != data.gds_seqno) {
+            if (_row && _row.gds_seqno && _row.gds_seqno !== data.gds_seqno) {
                 layer.open({
                     title: "提示",
                     content: "表体序号不能修改！",
@@ -74,12 +79,14 @@
             }
             /**如果报关则生成报关商品**/
             if ($("#dclcus_flag").val() === "1") {
+
                 /**如果用户设置报关单序号，检查序号是否合规**/
                 if (admin.DecListGNoCheck(data, admin.decListData, admin.order_pros_data) === false) return;
                 if (!data.entry_gds_seqno) {
                     data.entry_gds_seqno = data.gds_seqno
                 }
             }
+
             if (admin.DecListCountCheck(data, admin.decListData) === false) {
                 layer.open({
                     title: "提示",
@@ -129,18 +136,18 @@
         };
         form.on('submit(order_pros_submit)', function (form) {
             if (admin.order_pros_data.length > 1) {
-                if (form.field.dcl_currcd != admin.order_pros_data[0].dcl_currcd) {
+                if (form.field.dcl_currcd !== admin.order_pros_data[0].dcl_currcd) {
                     return layer.msg("币制不一致！");
                 }
             }
-            if (form.field.gdecd.toString().length != 10) {
+            if (form.field.gdecd.toString().length !== 10) {
                 return layer.msg("商品编号必须为10位！");
             }
             let data = form.field;
             annotation_item_data(data);
             order_pros_index = null;
             $("#order_pros_form input").each(function () {
-                if ($(this).attr("id") == "gds_seqno") {
+                if ($(this).attr("id") === "gds_seqno") {
                     $(this).val(admin.order_pros_data.length + 1)
                 } else {
                     if (!($(this).is("[no_empty]"))) {
@@ -171,7 +178,7 @@
                 case 'add':
                     order_pros_index = null;
                     $("#order_pros_form input").each(function () {
-                        if ($(this).attr("id") == "gds_seqno") {
+                        if ($(this).attr("id") === "gds_seqno") {
                             $(this).val(admin.order_pros_data.length + 1)
                         } else {
                             if (!($(this).is("[no_empty]"))) {
@@ -190,8 +197,7 @@
                     }, async (index) => {
                         let sup_data = admin.order_pros_data.filter(item => {
                             return checkData.every(item2 => {
-                                return item.gds_seqno != item2
-                                    .gds_seqno;
+                                return item.gds_seqno !== item2.gds_seqno;
                             })
                         });
                         if (checkData[0].id) {
@@ -216,7 +222,7 @@
                         });
                         order_pros_index = null;
                         $("#order_pros_form input").each(function () {
-                            if ($(this).attr("id") == "gds_seqno") {
+                            if ($(this).attr("id") === "gds_seqno") {
                                 $(this).val(admin.order_pros_data.length + 1)
                             } else {
                                 if (!($(this).is("[no_empty]"))) {
@@ -265,7 +271,7 @@
                         .click();
                     break;
                 case 'search':
-                    if (cusIEFlag == 'I') {
+                    if (cusIEFlag === 'I') {
                         if (admin.ann_materials_data.length === 0) {
                             return layer.msg('手(账)册编号不能为空');
                         }
@@ -437,7 +443,7 @@
             if (parent.layui.admin.get_iframe_index()) {
                 parent.layui.admin.get_iframe_index().find("span").append(order_i_edit_data
                     .etps_inner_invt_no);
-                if (order_i_edit_data.status_string != '已完成') {
+                if (order_i_edit_data.status_string !== '已完成') {
                     const lay_id = parent.layui.admin.get_iframe_index().attr("lay-id").replace("/create",
                         "");
                     parent.layui.admin.get_iframe_index().attr("lay-id",
@@ -618,8 +624,7 @@
                     order_i_edit_data = order_save_data.data;
                 }
             } else {
-                if (order_i_edit_data.status_string == '审核通过' || order_i_edit_data.status_string ==
-                    '待派单') {
+                if (order_i_edit_data.status_string === '审核通过' || order_i_edit_data.status_string === '待派单') {
                     layer.closeAll('loading');
                     return layer.msg('该订单已经通过审核');
                 }
@@ -654,14 +659,12 @@
             if (!order_id) {
                 return layer.msg("请先保存订单！")
             }
-            window.open(
-                `/annotation/i/${order_id}/downloads/prints?margin_top=1cm&margin_left=0cm&margin_right=0cm&margin_bottom=1cm`
-            );
+            window.open(`/annotation/i/${order_id}/downloads/prints?margin_top=1cm&margin_left=0cm&margin_right=0cm&margin_bottom=1cm`);
         });
         /**表单验证规则**/
         form.verify({});
-        /**根据屏幕等比例缩小**/
-        admin.sideFlexible_window();
+
+
 
         /**保税清单（进口）自动完成汇总**/
         $("body").on("click", "#order_rebase", async function () {
@@ -679,10 +682,11 @@
             }
         });
 
-        layuicomplete.render({
+        //手册数据
+        await layuicomplete.render({
             elem: $('#putrec_no')[0],
             url: '/handbook/datagrid',
-            cache: true,
+            cache: false,
             response: {
                 code: 'code',
                 data: 'rows'
@@ -707,5 +711,13 @@
                 admin.ann_goods_data = resp.HandBookGoods;
             }
         });
+
+        const invt_type_name = {
+            layuicomplete:layuicomplete,
+            elem:"#invt_type_name",
+            type:"清单类型",
+            cache:false,
+        }
+        await admin.autoFnClearanceData(invt_type_name);
     });
 </script>

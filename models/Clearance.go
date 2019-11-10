@@ -43,6 +43,7 @@ type Clearance struct {
 // ClearanceQueryParam 用于查询的类
 type ClearanceQueryParam struct {
 	BaseQueryParam
+
 	Type     string //模糊查询
 	NameLike string //模糊查询
 }
@@ -75,22 +76,20 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	}
 
 	clearanceTypeStrings = xlsx.FilpValueString(clearanceTypeStrings)
-	clearanceType := clearanceTypeStrings["关区代码"]
-
+	clearanceType := "关区代码"
 	if len(params.Type) > 0 {
 		clearanceType = params.Type
 	}
 
-	query = query.Filter("type", clearanceType)
-
+	cond := orm.NewCondition()
+	cond1 := cond.And("type", clearanceTypeStrings[clearanceType])
 	if len(params.NameLike) > 0 {
-		cond := orm.NewCondition()
-		cond1 := cond.And("customs_code__istartswith", params.NameLike).
+		cond1 = cond.AndCond(cond1).AndCond(cond.And("customs_code__istartswith", params.NameLike).
 			Or("name__istartswith", params.NameLike).
 			Or("short_name__istartswith", params.NameLike).
-			Or("en_name__istartswith", params.NameLike)
-		query = query.SetCond(cond1)
+			Or("en_name__istartswith", params.NameLike))
 	}
+	query = query.SetCond(cond1)
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
