@@ -323,7 +323,7 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 			xlsx.SetObjValue(k, v, t)
 		}
 		handBookGood, err := models.GetHandBookGoodBySerial(handBookUllage.FinishProNo)
-		if err != nil && err.Error() != "<QuerySeter> no row found" {
+		if err != nil {
 			return err
 		}
 
@@ -364,7 +364,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 	}
 
 	hB, err := models.GetHandBookByContractNumber(hIP.HandBook.ContractNumber)
-	if err != nil && err.Error() != "<QuerySeter> no row found" {
+	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 

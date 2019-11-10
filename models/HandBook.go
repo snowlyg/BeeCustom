@@ -190,7 +190,7 @@ func HandBookOne(id int64, relations string) (*HandBook, error) {
 func GetHandBookByContractNumber(contractNumber string) (*HandBook, error) {
 	m := NewHandBook(0)
 	o := orm.NewOrm()
-	if err := o.QueryTable(HandBookTBName()).Filter("ContractNumber", contractNumber).One(&m); err != nil {
+	if err := o.QueryTable(HandBookTBName()).Filter("ContractNumber", contractNumber).One(&m); err != nil && err.Error() != "<QuerySeter> no row found" {
 		utils.LogDebug(fmt.Sprintf("GetHandBookByContractNumber:%v", err))
 		return nil, err
 	}

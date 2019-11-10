@@ -130,7 +130,7 @@ func HandBookGoodOne(id int64, relations string) (*HandBookGood, error) {
 func GetHandBookGoodBySerial(serial string) (*HandBookGood, error) {
 	m := NewHandBookGood(0)
 	o := orm.NewOrm()
-	if err := o.QueryTable(HandBookGoodTBName()).Filter("Serial", serial).Filter("Type", 1).One(&m); err != nil {
+	if err := o.QueryTable(HandBookGoodTBName()).Filter("Serial", serial).Filter("Type", 1).One(&m); err != nil && err.Error() != "<QuerySeter> no row found" {
 		return nil, err
 	}
 

@@ -72,6 +72,7 @@ func init() {
 	//基础参数
 	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
 	beego.Router("/clearance/get_clearance_update_time", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTime")
+	beego.Router("/clearance/last_update_time/?:type", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTimeByType")
 	beego.Router("/clearance/create/?:type", &controllers.ClearanceController{}, "Get:Create")
 	beego.Router("/clearance/store", &controllers.ClearanceController{}, "Post:Store")
 	beego.Router("/clearance/datagrid", &controllers.ClearanceController{}, "Post:DataGrid")

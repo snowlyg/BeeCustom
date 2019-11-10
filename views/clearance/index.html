@@ -11,14 +11,14 @@
                             @{{if .canImport}}
                             <span class="custom-upload_btn" id="clearance_upload">导入</span>
                             @{{end}}
-                            <span class="custom-update">最近更新：@{{ .lastUpdateTime }}</span>
+                            <span id="lastUpdateTime" class="custom-update"></span>
                         </div>
                         <div class="layui-col-md3 layui-col-md-offset3">
                             <div class="custom-tool-right">
                                 <div class="layui-card layui-form width-25">
                                     <select id="clearance_type_select" lay-filter="type">
                                         @{{ range $i,$v := .type }}
-                                    <option value="@{{$v}}">@{{$v}}</option>
+                                    <option value="@{{$i}}">@{{$v}}</option>
                                     @{{end}}
                                     </select>
                                 </div>

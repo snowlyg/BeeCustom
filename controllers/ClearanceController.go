@@ -30,19 +30,16 @@ func (c *ClearanceController) Prepare() {
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
 	//c.checkLogin()
-	clearanceType, err := beego.AppConfig.GetSection("clearance_type")
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("clearance_type:%v", err))
-	}
-
-	c.clearanceType = clearanceType
 
 }
 
 func (c *ClearanceController) Index() {
 
-	c.Data["type"] = c.clearanceType
-	c.Data["lastUpdateTime"] = c.GetLastUpdteTime()
+	clearanceType, err := beego.AppConfig.GetSection("clearance_type")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("clearance_type:%v", err))
+	}
+	c.Data["type"] = clearanceType
 
 	//页面模板设置
 	c.setTpl()
@@ -82,6 +79,25 @@ func (c *ClearanceController) GetClearanceUpdateTime() {
 	result["total"] = 0
 	result["rows"] = lastUpdateTime
 	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
+//通关参数更新时间
+func (c *ClearanceController) GetClearanceUpdateTimeByType() {
+	clearanceType, _ := c.GetInt8(":type")
+	format := "超过一个月未更新"
+	lastUpdateTime, err := models.GetLastUpdteTimeByClearanceType(clearanceType)
+	if err == nil {
+		if lastUpdateTime != nil {
+			format = lastUpdateTime.LastUpdatedAt.Format("2006-01-02 15:04:05")
+		}
+	}
+
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["data"] = format
 	c.Data["json"] = result
 
 	c.ServeJSON()
@@ -277,12 +293,14 @@ func (c *ClearanceController) GetLastUpdteTime() []*models.ClearanceUpdateTime {
 func (c *ClearanceController) SetLastUpdteTime(cType int8) {
 
 	oldLastUpdateTime, err := models.GetLastUpdteTimeByClearanceType(cType)
-	if err != nil && err.Error() != "<QuerySeter> no row found" {
+	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)
 	}
 
 	if oldLastUpdateTime == nil {
 		lastUpdateTime := models.NewClearanceUpdateTime(0)
+		lastUpdateTime.LastUpdatedAt = time.Now()
+		lastUpdateTime.Type = cType
 		_, err = models.ClearanceUpdateTimeSave(&lastUpdateTime)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)

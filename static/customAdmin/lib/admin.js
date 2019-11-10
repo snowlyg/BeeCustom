@@ -1020,7 +1020,7 @@ layui.define('view', function (exports) {
                     request: {
                         keywords: 'NameLike'
                     },
-                    params: {Limit: 5,Type:data.type},
+                    params: {Limit: 5,TypeString:data.type},
                     method: 'post',
                     template_val: '{{d.CustomsCode}}',
                     template_txt: '{{d.CustomsCode}}' + "-" + '{{d.Name}}',

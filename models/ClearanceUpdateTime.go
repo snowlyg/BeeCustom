@@ -54,7 +54,7 @@ func ClearanceUpdateTimePageList(params *ClearanceUpdateTimeQueryParam) ([]*Clea
 func ClearanceUpdateTimeOne(id int64) (*ClearanceUpdateTime, error) {
 	m := NewClearanceUpdateTime(0)
 	o := orm.NewOrm()
-	if err := o.QueryTable(ClearanceUpdateTimeTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
+	if err := o.QueryTable(ClearanceUpdateTimeTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil && err.Error() != "<QuerySeter> no row found" {
 		return nil, err
 	}
 
@@ -69,7 +69,7 @@ func ClearanceUpdateTimeOne(id int64) (*ClearanceUpdateTime, error) {
 func GetLastUpdteTimeByClearanceType(cType int8) (*ClearanceUpdateTime, error) {
 	m := NewClearanceUpdateTime(0)
 	o := orm.NewOrm()
-	if err := o.QueryTable(ClearanceUpdateTimeTBName()).Filter("Type", cType).RelatedSel().One(&m); err != nil {
+	if err := o.QueryTable(ClearanceUpdateTimeTBName()).Filter("Type", cType).RelatedSel().One(&m); err != nil && err.Error() != "<QuerySeter> no row found" {
 		utils.LogDebug(fmt.Sprintf("GetLastUpdteTimeByClearanceType:%v", err))
 		return nil, err
 	}

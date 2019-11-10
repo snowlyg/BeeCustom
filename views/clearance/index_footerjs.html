@@ -3,8 +3,8 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'table', 'admin',  'upload'], async () => {
-        const table = layui.table,form =layui.form , admin = layui.admin , upload = layui.upload , $ = layui.$;
+    }).use(['index', 'table', 'admin', 'upload'], async () => {
+        const table = layui.table, form = layui.form, admin = layui.admin, upload = layui.upload, $ = layui.$;
 
         const upload_clearance = upload.render({
             elem: '#clearance_upload'
@@ -44,17 +44,17 @@
             , skin: 'line'
             , method: 'post'
             , where: {
-                order:'desc',
-                sort:'CreatedAt'
+                order: 'desc',
+                sort: 'CreatedAt'
             }
-            ,contentType:'application/json'
+            , contentType: 'application/json'
             , url: @{{ urlfor "ClearanceController.DataGrid" }}
             , request: {
                 pageName: 'offset' //页码的参数名称，默认：page
                 , limitName: 'limit' //每页数据量的参数名，默认：limit
-            },response:{
-                statusName : 'code',
-                statusCode : 0,
+            }, response: {
+                statusName: 'code',
+                statusCode: 0,
             }
             , parseData: function (res) {
                 return {
@@ -95,7 +95,7 @@
             if (eCode === 13) {
                 table.reload('clearance_lists', {
                     where: {
-                        CustomsCodeLike : $(this).val()
+                        CustomsCodeLike: $(this).val()
                     },
                     page: {
                         curr: 1
@@ -135,12 +135,19 @@
             }
         });
 
-        form.on('select(type)', function (data) {
+        let lastUpdateTime = await admin.get("/clearance/last_update_time/1");
+        $("#lastUpdateTime").text("最近更新：" + lastUpdateTime.data);
+
+        form.on('select(type)', async function (data) {
+            let lastUpdateTime = await admin.get("/clearance/last_update_time/" + data.value);
+            $("#lastUpdateTime").text("最近更新：" + lastUpdateTime.data);
             table.reload('clearance_lists', {
                 where: {
                     Type: data.value ? `${data.value}` : ''
                 }
             });
+
+
         });
     });
 </script>
