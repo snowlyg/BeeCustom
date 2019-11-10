@@ -60,7 +60,6 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
     },
     job.prototype.render = function() {
 
-        console.log("render")
         var _self = this, _config = _self.config;
         if (_config.elem = $(_config.elem), _config.where = _config.where || {}, !_config.elem[0]) return _self;
         var _elem = _config.elem,
@@ -104,9 +103,9 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
         _config.temp_data = [];
         layui.each(resp, function (i, e) {
         	if (_config.cache) {
-        		if (e instanceof Object) {
+                if (e instanceof Object) {
 	                layui.each(e, function (_i, _e) {
-	                    if(_e.toString().toLowerCase().indexOf(_config.filter.toLowerCase()) > -1) {
+	                    if(_e && _e.toString().toLowerCase().indexOf(_config.filter.toLowerCase()) > -1) {
 	                        _config.temp_data.push(e), _list.push(laytpl(_config.layout).render({index: i, text: laytpl(_config.template_txt).render(e)}));
 	                        return true;
 	                    }
@@ -144,6 +143,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
             _elem = _config.elem,
             _container = _elem.next('.' + container),
             _dom = _container.find('dl');
+
         _elem.unbind('focus').unbind('input propertychange').on('focus', function () {
             _config.filter = this.value, _self.renderData(_config.data)
         }).on('input propertychange', function (e) {
@@ -152,6 +152,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
                 _config.filter = _value, _self.pullData()
             }, _config.time_limit)
         }),
+
         $(document).on('click', function (e) {
             var _target = e.target, _item = _dom.find(_target), _e = _item.length > 0 ? _item.closest('dd') : undefined;
             if (_target === _elem[0]) return false;
@@ -162,6 +163,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
             }
             _container.removeClass(container_focus);
         })
+
     };
     system.init = function (e, c) {
         var c = c || {}, _self = this, _elems = $(e ? 'input[lay-filter="' + e + '"]': 'input[' + filter + ']');

@@ -672,7 +672,7 @@
                     admin.annotations_complete_data[item] = [];
                     layui.data(item, null);
                 }
-                await admin.annotations_auto();
+
                 layer.closeAll('loading');
             } catch (err) {
                 console.log(err)
@@ -695,14 +695,17 @@
             template_val: '{{d.ContractNumber}}',
             template_txt: '{{d.ContractNumber}}' + "-" + '{{d.CompanyManageName}}',
             onselect: function (resp) {
-                console.log(resp)
+                $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
+                $("#bizop_etpsno").val(resp.CompanyManageCode);
+                $("#bizop_etps_nm").val(resp.CompanyManage_name);
+
+                $("#rvsngd_etps_sccd").val(resp.CompanyClientCreditCode);
+                $("#rcvgd_etpsno").val(resp.CompanyClientCode);
+                $("#rcvgd_etps_nm").val(resp.CompanyClientName);
+
+                admin.ann_materials_data = resp.HandBookGoods;
+                admin.ann_goods_data = resp.HandBookGoods;
             }
         });
-
-        try {
-            await admin.annotations_auto();
-        } catch (err) {
-            console.log(err)
-        }
     });
 </script>
