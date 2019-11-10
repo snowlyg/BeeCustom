@@ -1025,7 +1025,8 @@ layui.define('view', function (exports) {
                     template_val: '{{d.CustomsCode}}',
                     template_txt: '{{d.CustomsCode}}' + "-" + '{{d.Name}}',
                     onselect: function (resp) {
-                        // $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
+                        $(data.elem).val(resp.Name);
+                        $(data.hideElem).val(resp.CustomsCode);
                     }
                 });
 

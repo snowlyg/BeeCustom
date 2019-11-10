@@ -277,7 +277,7 @@ func (c *ClearanceController) GetLastUpdteTime() []*models.ClearanceUpdateTime {
 func (c *ClearanceController) SetLastUpdteTime(cType int8) {
 
 	oldLastUpdateTime, err := models.GetLastUpdteTimeByClearanceType(cType)
-	if err != nil {
+	if err != nil && err.Error() != "<QuerySeter> no row found" {
 		c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)
 	}
 
@@ -294,7 +294,5 @@ func (c *ClearanceController) SetLastUpdteTime(cType int8) {
 			c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)
 		}
 	}
-
-	c.jsonResult(enums.JRCodeSucc, "设置最后更新时间成功", nil)
 
 }

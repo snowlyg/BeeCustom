@@ -1,7 +1,9 @@
 package models
 
 import (
+	"BeeCustom/utils"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -68,6 +70,7 @@ func GetLastUpdteTimeByClearanceType(cType int8) (*ClearanceUpdateTime, error) {
 	m := NewClearanceUpdateTime(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(ClearanceUpdateTimeTBName()).Filter("Type", cType).RelatedSel().One(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("GetLastUpdteTimeByClearanceType:%v", err))
 		return nil, err
 	}
 
@@ -83,10 +86,12 @@ func ClearanceUpdateTimeSave(m *ClearanceUpdateTime) (*ClearanceUpdateTime, erro
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("ClearanceUpdateTimeSave:%v", err))
 			return nil, err
 		}
 	} else {
 		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("ClearanceUpdateTimeSave:%v", err))
 			return nil, err
 		}
 	}

@@ -665,7 +665,6 @@
         form.verify({});
 
 
-
         /**保税清单（进口）自动完成汇总**/
         $("body").on("click", "#order_rebase", async function () {
             try {
@@ -713,10 +712,11 @@
         });
 
         const invt_type_name = {
-            layuicomplete:layuicomplete,
-            elem:"#invt_type_name",
-            type:"清单类型",
-            cache:false,
+            layuicomplete: layuicomplete,
+            elem: "#invt_type_name",
+            hideElem: "#invt_type",
+            type: "清单类型",
+            cache: false,
         }
         await admin.autoFnClearanceData(invt_type_name);
     });
