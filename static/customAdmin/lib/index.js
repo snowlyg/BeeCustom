@@ -4,7 +4,8 @@ layui.extend({
     , view: 'lib/view' //视图渲染模块
     , tablePlug: 'lib/tablePlug/tablePlug'
     , AutoComplete: 'lib/AutoComplete'
-}).define(['setter', 'tablePlug', 'admin', 'AutoComplete'], function (exports) {
+    , layuicomplete: 'lib/autocomplete/autocomplete'
+}).define(['setter', 'tablePlug', 'admin', 'AutoComplete','layuicomplete'], function (exports) {
     var setter = layui.setter
         , element = layui.element
         , admin = layui.admin

@@ -1,6 +1,6 @@
 /*
 * layui.$.autocomplete.js (v1.1.2)
-* authored by nswish (nswish@gmail.com)
+* authored by nswish (@gmail.com)
 * layui.$ 1.7.1+ support
 * compatible: ie/chrome/firefox/opera/safari
 *

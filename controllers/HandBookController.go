@@ -84,6 +84,24 @@ func (c *HandBookController) GoodDataGrid() {
 }
 
 //列表数据
+func (c *HandBookController) DataGrid() {
+	//直接获取参数 GoodDataGrid()
+	params := models.NewHandBookQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, total := models.HandBookPageList(&params)
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = total
+	result["rows"] = data
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
+//列表数据
 func (c *HandBookController) UllageDataGrid() {
 	//直接获取参数 getDataGridData()
 	params := models.NewHandBookUllageQueryParam()

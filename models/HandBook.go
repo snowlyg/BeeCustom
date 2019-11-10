@@ -102,8 +102,14 @@ type HandBook struct {
 // HandBookQueryParam 用于查询的类
 type HandBookQueryParam struct {
 	BaseQueryParam
-	Type     string //模糊查询
-	NameLike string //模糊查询
+
+	Type           string //模糊查询
+	ContractNumber string //模糊查询
+}
+
+//查询参数
+func NewHandBookQueryParam() HandBookQueryParam {
+	return HandBookQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
 
 // HandBookImportParam 用于导入的类
@@ -141,6 +147,21 @@ func HandBookGetRelations(v *HandBook, relations string) (*HandBook, error) {
 	}
 
 	return v, nil
+}
+
+// HandBookPageList 获取分页数据
+func HandBookPageList(params *HandBookQueryParam) ([]*HandBook, int64) {
+	query := orm.NewOrm().QueryTable(HandBookTBName())
+	data := make([]*HandBook, 0)
+
+	query = query.Distinct().Filter("ContractNumber__istartswith", params.ContractNumber)
+
+	total, _ := query.Count()
+	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
+
+	_, _ = query.All(&data)
+
+	return data, total
 }
 
 // HandBookOne 根据id获取单条

@@ -189,7 +189,7 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'AutoComplete'], async () => {
+    }).use(['index'], async () => {
         const {$, form, layer, admin} = layui;
         let edit_password_index;
         $("body").on("click", ".edit_password", function () {

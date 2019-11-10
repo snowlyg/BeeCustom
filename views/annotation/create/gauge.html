@@ -24,7 +24,7 @@
                 <td class="td-scale-01 text-align-right">手(账)册编号</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty required" name="putrec_no" id="putrec_no" autocomplete="off" lay-verify="required" lay-vertype="tips" data-flag="I" onchange="layui.admin.putrec_no_change(this)">
+                        <input type="text" class="non-empty required" name="putrec_no" id="putrec_no" lay-verify="required" lay-vertype="tips"  >
                     </div>
                 </td>
             </tr>
@@ -32,7 +32,7 @@
                 <td class="td-scale-01 text-align-right">经营单位编码</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty required" name="bizop_etpsno" id="bizop_etpsno" autocomplete="off" lay-verify="required" lay-vertype="tips" onblur="layui.admin.bizop_etpsno_change(this)">
+                        <input type="text" class="non-empty required" name="bizop_etpsno" id="bizop_etpsno" autocomplete="off" lay-verify="required"  lay-vertype="tips" onblur="layui.admin.bizop_etpsno_change(this)">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">经营单位社会信用代码</td>
@@ -118,13 +118,13 @@
                 <td class="td-scale-01 text-align-right">录入日期</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty" name="input_time" id="input_time" autocomplete="off" oninput="layui.admin.is_onlynumber(this)">
+                        <input type="text" class="non-empty required" name="input_time" id="input_time" autocomplete="off" lay-verify="required" lay-vertype="tips" oninput="layui.admin.is_onlynumber(this)">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">清单申报日期</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty" name="invt_dcl_time" id="invt_dcl_time" autocomplete="off" oninput="layui.admin.is_onlynumber(this)">
+                        <input type="text" class="non-empty required" name="invt_dcl_time" id="invt_dcl_time" autocomplete="off" lay-verify="required" lay-vertype="tips" oninput="layui.admin.is_onlynumber(this)">
                     </div>
                 </td>
             </tr>
@@ -132,31 +132,31 @@
                 <td class="td-scale-01 text-align-right">料件、成品标志</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="hidden" name="mtpck_endprd_markcd" id="mtpck_endprd_markcd" value="I">
-                        <input type="text" class="non-empty" name="mtpck_endprd_markcd_name" id="mtpck_endprd_markcd_name" autocomplete="off" value="料件">
+                        <input type="hidden" name="mtpck_endprd_markcd" id="mtpck_endprd_markcd">
+                        <input type="text" class="non-empty required" name="mtpck_endprd_markcd_name" id="mtpck_endprd_markcd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">监管方式</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
                         <input type="hidden" name="supv_modecd" id="supv_modecd">
-                        <input type="text" class="non-empty" name="supv_modecd_name" id="supv_modecd_name" autocomplete="off">
+                        <input type="text" class="non-empty required" name="supv_modecd_name" id="supv_modecd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">运输方式</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
                         <input type="hidden" name="trsp_modecd" id="trsp_modecd">
-                        <input type="text" class="non-empty" name="trsp_modecd_name" id="trsp_modecd_name" autocomplete="off">
+                        <input type="text" class="non-empty required" name="trsp_modecd_name" id="trsp_modecd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="td-scale-01 text-align-right">进境关别</td>
+                <td class="td-scale-01 text-align-right">出境关别</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
                         <input type="hidden" name="impexp_portcd" id="impexp_portcd">
-                        <input type="text" class="non-empty" name="impexp_portcd_name" id="impexp_portcd_name" autocomplete="off">
+                        <input type="text" class="non-empty required" name="impexp_portcd_name" id="impexp_portcd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">主管海关</td>
@@ -176,7 +176,7 @@
                 <td class="td-scale-04">
                     <div class="input-group valid">
                         <input type="hidden" name="stship_trsarv_natcd" id="stship_trsarv_natcd">
-                        <input type="text" class="non-empty" name="stship_trsarv_natcd_name" id="stship_trsarv_natcd_name" autocomplete="off">
+                        <input type="text" class="non-empty required" name="stship_trsarv_natcd_name" id="stship_trsarv_natcd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
             </tr>
@@ -205,14 +205,14 @@
                 <td class="td-scale-01 text-align-right">报关标志</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="hidden" name="dclcus_flag" id="dclcus_flag" value="1">
-                        <input type="text" class="non-empty" name="dclcus_flag_name" id="dclcus_flag_name" autocomplete="off" value="报关">
+                        <input type="hidden" name="dclcus_flag" id="dclcus_flag">
+                        <input type="text" class="non-empty required" name="dclcus_flag_name" id="dclcus_flag_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">是否系统生成报关单</td>
                 <td class="td-scale-04">
                     <input type="hidden" name="gen_dec_flag" id="gen_dec_flag">
-                    <input type="text" name="gen_dec_flag_name" id="gen_dec_flag_name" class="non-empty">
+                    <input type="text" name="gen_dec_flag_name" id="gen_dec_flag_name" class="non-empty required">
                 </td>
 
                 <td class="td-scale-01 text-align-right">报关类型</td>
@@ -222,8 +222,8 @@
                 </td>
                 <td class="td-scale-01 text-align-right">报关单类型</td>
                 <td class="td-scale-04" colspan="2">
-                    <input type="hidden" name="dec_type" id="dec_type" value="1">
-                    <input type="text" name="dec_type_name" id="dec_type_name" class="non-empty" value="进口报关单">
+                    <input type="hidden" name="dec_type" id="dec_type">
+                    <input type="text" name="dec_type_name" id="dec_type_name" class="non-empty">
                 </td>
             </tr>
             <tr>
@@ -235,18 +235,18 @@
                 </td>
                 <td class="td-scale-01 text-align-right">对应报关单申报单位编码</td>
                 <td class="td-scale-04" colspan="2">
-                    <input type="text" name="corr_entry_dcl_etps_no" id="corr_entry_dcl_etps_no" class="non-empty" value="4419986507">
+                    <input type="text" name="corr_entry_dcl_etps_no" id="corr_entry_dcl_etps_no" class="non-empty">
                 </td>
                 <td class="td-scale-01 text-align-right">对应报关单申报单位社会信用代码</td>
                 <td class="td-scale-04" colspan="2">
-                    <input type="text" name="corr_entry_dcl_etps_sccd" id="corr_entry_dcl_etps_sccd" class="non-empty" value="914419007962277606">
+                    <input type="text" name="corr_entry_dcl_etps_sccd" id="corr_entry_dcl_etps_sccd" class="non-empty">
                 </td>
             </tr>
             <tr>
                 <td class="td-scale-04 text-align-right">对应报关单申报单位名称</td>
                 <td class="td-scale-04" colspan="7">
                     <div class="input-group valid">
-                        <input type="text" name="corr_entry_dcl_etps_nm" id="corr_entry_dcl_etps_nm" class="non-empty" autocomplete="off" value="广东东华报关服务有限公司">
+                        <input type="text" name="corr_entry_dcl_etps_nm" id="corr_entry_dcl_etps_nm" class="non-empty" autocomplete="off">
                     </div>
                 </td>
             </tr>
@@ -357,5 +357,6 @@
     <button type="button" id="annotation_save" lay-submit lay-filter="annotation_save" style="display: none;"></button>
     <button type="button" id="annotation_save_pass" lay-submit lay-filter="annotation_save_pass" style="display: none;"></button>
     <button type="button" id="annotation_application_review" lay-submit lay-filter="annotation_application_review" style="display: none;"></button>
+    <button type="button" id="annotation_save_reload" lay-submit lay-filter="annotation_save_reload" style="display: none;"></button>
 </form>
 <input type="hidden" id="is_websocket" value="1">

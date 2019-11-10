@@ -3,16 +3,8 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'form', 'admin', 'table', 'AutoComplete', 'laydate', 'laytpl', 'upload'], async () => {
-        const {
-            form,
-            admin,
-            table,
-            $,
-            laydate,
-            laytpl,
-            upload
-        } = layui;
+    }).use(['index', 'form', 'admin', 'table', 'layuicomplete', 'laydate', 'laytpl'], async () => {
+        const {form, admin, table, $, laytpl, layuicomplete} = layui;
         const cusIEFlag = 'I';
         let order_i_edit_data;
         let order_pros_data_filter = []
@@ -33,7 +25,7 @@
         /**清单产品/报关草稿列表**/
         admin.getAnnotationTable(admin.order_pros_data, admin.decListData);
         /**光标进入全选**/
-        $('body').on('focus', 'input,textarea', function(e) {
+        $('body').on('focus', 'input,textarea', function (e) {
             $(this).select();
             let tipText = "";
             for (let item of admin.tipsJson) {
@@ -50,7 +42,7 @@
         admin.table_mousedown();
 
         /**备注回车保存商品**/
-        $("body").on("keyup", "#body_rmk", function(event) {
+        $("body").on("keyup", "#body_rmk", function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
             if (event.shiftKey != 1 && eCode == 13) {
                 $("#order_pros_submit").click();
@@ -135,7 +127,7 @@
                 limit: admin.order_pros_data.length
             });
         };
-        form.on('submit(order_pros_submit)', function(form) {
+        form.on('submit(order_pros_submit)', function (form) {
             if (admin.order_pros_data.length > 1) {
                 if (form.field.dcl_currcd != admin.order_pros_data[0].dcl_currcd) {
                     return layer.msg("币制不一致！");
@@ -147,7 +139,7 @@
             let data = form.field;
             annotation_item_data(data);
             order_pros_index = null;
-            $("#order_pros_form input").each(function() {
+            $("#order_pros_form input").each(function () {
                 if ($(this).attr("id") == "gds_seqno") {
                     $(this).val(admin.order_pros_data.length + 1)
                 } else {
@@ -159,12 +151,12 @@
             $("#putrec_seqno").focus();
         });
         /**商品--点击行反填数据**/
-        table.on('row(order_pros)', function(obj) {
+        table.on('row(order_pros)', function (obj) {
             for (let item in obj.data) {
                 if ($.inArray(item, admin.annotaion_items_arr) >= 0) {
                     $(`#${item}`).val(obj.data[item + '_string'])
                 } else if (item === 'rmk') {
-                    $(`#${'body_'+item}`).val(obj.data[item])
+                    $(`#${'body_' + item}`).val(obj.data[item])
                 } else {
                     $(`#${item}`).val(obj.data[item])
                 }
@@ -172,13 +164,13 @@
             order_pros_index = obj.data.gds_seqno;
         });
         /**商品列表--按钮操作**/
-        table.on('toolbar(order_pros)', async function(obj) {
+        table.on('toolbar(order_pros)', async function (obj) {
             let checkStatus = table.checkStatus(obj.config.id);
             let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
                     order_pros_index = null;
-                    $("#order_pros_form input").each(function() {
+                    $("#order_pros_form input").each(function () {
                         if ($(this).attr("id") == "gds_seqno") {
                             $(this).val(admin.order_pros_data.length + 1)
                         } else {
@@ -223,7 +215,7 @@
                             limit: admin.order_pros_data.length
                         });
                         order_pros_index = null;
-                        $("#order_pros_form input").each(function() {
+                        $("#order_pros_form input").each(function () {
                             if ($(this).attr("id") == "gds_seqno") {
                                 $(this).val(admin.order_pros_data.length + 1)
                             } else {
@@ -269,7 +261,7 @@
                         data: admin.order_pros_data,
                         limit: admin.order_pros_data.length
                     });
-                    $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${admin.order_pros_data.length-1}]`)
+                    $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${admin.order_pros_data.length - 1}]`)
                         .click();
                     break;
                 case 'search':
@@ -381,7 +373,7 @@
         });
 
         /**商品快速查询--保存反填**/
-        $("body").on("click", "#annotation_search_save", function() {
+        $("body").on("click", "#annotation_search_save", function () {
             const checkData = table.checkStatus("annotation_search_table").data;
             if (checkData.length === 0) {
                 return layer.msg('请选择')
@@ -409,7 +401,7 @@
 
         /**新建进口报关保存刷新后反填数据**/
         async function order_i_edit_back_filling(order_i_edit_data) {
-            $("#order_i_form input, #order_i_form textarea").each(function() {
+            $("#order_i_form input, #order_i_form textarea").each(function () {
                 for (let item in order_i_edit_data) {
                     if ($(this).attr("id") == item) {
                         if (item == 'input_time' || item == 'invt_dcl_time') {
@@ -422,7 +414,7 @@
                 }
             });
             if (order_i_edit_data.promise_itmes) {
-                $(`input[name='promise_itmes[]']`).each(function(index, element) {
+                $(`input[name='promise_itmes[]']`).each(function (index, element) {
                     for (let item in order_i_edit_data.promise_itmes) {
                         if (index == item) {
                             $(this).next('div').click();
@@ -431,7 +423,7 @@
                 });
             }
             if (!(order_i_edit_data.type)) {
-                $(`input[name='type[]']`).each(function(index, element) {
+                $(`input[name='type[]']`).each(function (index, element) {
                     if (index == 1) {
                         $(this).next('div').click();
                     }
@@ -478,7 +470,7 @@
             admin.annotation_items_delete_ids = [];
         };
         /**进口清单保存**/
-        $("body").on("click", "#order_save", function() {
+        $("body").on("click", "#order_save", function () {
             $("#annotation_save").click();
         });
         form.on('submit(annotation_save)', async (data) => {
@@ -491,7 +483,7 @@
             }
             data.field.items = admin.order_pros_data;
             if (!order_id) {
-                const order_save_data = await admin.post("{{ route('i.annotation.store') }}", data
+                const order_save_data = await admin.post("/", data
                     .field);
                 if (order_save_data.status) {
                     order_id = order_save_data.data.id;
@@ -503,7 +495,7 @@
             } else {
                 data.field.id = order_id;
                 data.field.status = order_i_edit_data.status_string;
-                const order_save_data = await admin.post("{{ route('i.annotation.store') }}", data
+                const order_save_data = await admin.post("/", data
                     .field);
                 if (order_save_data.status) {
                     await order_i_add_back_filling(order_save_data.data);
@@ -514,7 +506,7 @@
         });
         /**派单**/
         let distribute_index;
-        $("body").on("click", "#order_dispatch", async function() {
+        $("body").on("click", "#order_dispatch", async function () {
             if (!order_id) {
                 return layer.msg("请先保存订单！")
             }
@@ -529,7 +521,7 @@
             $("select[name='user_id']").find(`option[value=${user_id}]`).prop("selected", true);
             form.render();
         });
-        $("body").on("input", "#remark_distribute", function() {
+        $("body").on("input", "#remark_distribute", function () {
             $("#remark_distribute_number span").text($(this).val().length);
         });
         /**派单保存**/
@@ -539,7 +531,7 @@
         });
         /**附注**/
         let order_note_index;
-        $("body").on("click", "#order_note", async function() {
+        $("body").on("click", "#order_note", async function () {
             if (!order_id) {
                 return layer.msg("请先保存订单！")
             }
@@ -556,7 +548,7 @@
             }
             $("#order_note_dot").hide();
         });
-        $("body").on("input", "#remark_note", function() {
+        $("body").on("input", "#remark_note", function () {
             $("#remark_note_number span").text($(this).val().length);
         });
         /**附注保存**/
@@ -571,10 +563,10 @@
             order_i_edit_data = JSON.parse($("#order_i_edit_data").val())
 
             order_id = order_i_edit_data.id;
-            laytpl($("#order_button_template").html()).render(order_i_edit_data.status_string, function(html) {
+            laytpl($("#order_button_template").html()).render(order_i_edit_data.status_string, function (html) {
                 $("#order_button").html(html)
             });
-            laytpl($("#order_edit_bill_template").html()).render(order_i_edit_data, function(html) {
+            laytpl($("#order_edit_bill_template").html()).render(order_i_edit_data, function (html) {
                 $("#order_edit_bill").html(html)
             });
             await order_i_edit_back_filling(order_i_edit_data);
@@ -596,66 +588,13 @@
             }
             layer.closeAll('loading');
         } else {
-            laytpl($("#order_button_template").html()).render('新建', function(html) {
+            laytpl($("#order_button_template").html()).render('新建', function (html) {
                 $("#order_button").html(html)
             });
         }
-        /**导入**/
-        const upload_order_i = upload.render({
-            elem: '#order_i_import',
-            url: '/annotation/i/import',
-            accept: 'file',
-            acceptMime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-excel.sheet.macroEnabled.12',
-            exts: 'xlsx|xls|xlsm',
-            field: 'order_file',
-            before: function(obj) {
-                layer.load(2);
-            },
-            done: async (res) => {
-                if (res.status) {
-                    layer.msg(res.msg, {
-                        offset: '15px',
-                        icon: 1,
-                        time: 2000,
-                        id: 'Message'
-                    });
-                } else {
-                    layer.msg(res.msg, {
-                        offset: '15px',
-                        icon: 2,
-                        time: 2000,
-                        id: 'Message'
-                    });
-                }
-                layer.closeAll('loading');
-                if (!order_id) {
-                    order_id = res.data.id;
-                    let url = document.URL;
-                    let index = url.lastIndexOf("\/");
-                    let url_first = url.substring(0, index + 1);
-                    let url_str = url.substring(index + 1, url.length);
-                    if (admin.isNumber(url_str)) {
-                        history.pushState(null, null, `${url_first}${order_id}`);
-                    } else {
-                        history.pushState(null, null, `${url}/${order_id}`);
-                    }
-                }
-                upload_order_i.reload({
-                    data: {
-                        order_id: order_id
-                    }
-                });
 
-                await order_i_edit_back_filling(res.data);
-                order_i_edit_data = res.data;
-                $("#order_dispatch").data("user", order_i_edit_data.company.user_id);
-            },
-            error: function() {
-                layer.closeAll('loading');
-            }
-        });
         /**审核通过**/
-        $("body").on("click", "#order_save_pass", function() {
+        $("body").on("click", "#order_save_pass", function () {
             $("#annotation_save_pass").click();
         });
         form.on('submit(annotation_save_pass)', async (data) => {
@@ -669,7 +608,7 @@
             data.field.items = admin.order_pros_data;
             data.field.status = '审核通过';
             if (!order_id) {
-                const order_save_data = await admin.post("{{ route('i.annotation.store') }}", data
+                const order_save_data = await admin.post("/", data
                     .field);
                 if (order_save_data.status) {
                     order_id = order_save_data.data.id;
@@ -689,7 +628,7 @@
             layer.closeAll('loading');
         });
         /**办理记录**/
-        $("body").on("click", "#order_take", async function() {
+        $("body").on("click", "#order_take", async function () {
             if (!order_id) {
                 return layer.msg("请先保存订单！")
             }
@@ -699,7 +638,7 @@
             const data = {
                 data_order: data_order
             };
-            laytpl($("#order_take_template").html()).render(data, function(html) {
+            laytpl($("#order_take_template").html()).render(data, function (html) {
                 $("#order_take_list").html(html)
             });
             layer.open({
@@ -711,7 +650,7 @@
             });
         });
         /**打印**/
-        $("body").on("click", "#order_print", async function() {
+        $("body").on("click", "#order_print", async function () {
             if (!order_id) {
                 return layer.msg("请先保存订单！")
             }
@@ -725,7 +664,7 @@
         admin.sideFlexible_window();
 
         /**保税清单（进口）自动完成汇总**/
-        $("body").on("click", "#order_rebase", async function() {
+        $("body").on("click", "#order_rebase", async function () {
             try {
                 layer.load(2);
                 for (let item in admin.annotations_complete_data) {
@@ -737,6 +676,26 @@
                 layer.closeAll('loading');
             } catch (err) {
                 console.log(err)
+            }
+        });
+
+        layuicomplete.render({
+            elem: $('#putrec_no')[0],
+            url: '/handbook/datagrid',
+            cache: true,
+            response: {
+                code: 'code',
+                data: 'rows'
+            },
+            request: {
+                keywords: 'ContractNumber'
+            },
+            params: {Limit: 5},
+            method: 'post',
+            template_val: '{{d.ContractNumber}}',
+            template_txt: '{{d.ContractNumber}}' + "-" + '{{d.CompanyManageName}}',
+            onselect: function (resp) {
+                console.log(resp)
             }
         });
 
