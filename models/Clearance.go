@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"BeeCustom/xlsx"
@@ -89,11 +90,12 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 
 	cond := orm.NewCondition()
 	cond1 := cond.And("type", cType)
-	if len(params.NameLike) > 0 {
-		cond1 = cond.AndCond(cond1).AndCond(cond.And("customs_code__istartswith", params.NameLike).
-			Or("name__istartswith", params.NameLike).
-			Or("short_name__istartswith", params.NameLike).
-			Or("en_name__istartswith", params.NameLike))
+	pNameLike := strings.Replace(params.NameLike, " ", "", -1)
+	if len(pNameLike) > 0 {
+		cond1 = cond.AndCond(cond1).AndCond(cond.And("customs_code__istartswith", pNameLike).
+			Or("name__istartswith", pNameLike).
+			Or("short_name__istartswith", pNameLike).
+			Or("en_name__istartswith", pNameLike))
 	}
 	query = query.SetCond(cond1)
 

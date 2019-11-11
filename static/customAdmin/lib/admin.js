@@ -1007,7 +1007,6 @@ layui.define('view', function (exports) {
 
             //自动完成
             async autoFnClearanceData(data) {
-
                 //通关参数
                 data.layuicomplete.render({
                     elem: $(data.elem)[0],
@@ -1020,7 +1019,7 @@ layui.define('view', function (exports) {
                     request: {
                         keywords: 'NameLike'
                     },
-                    params: {Limit: 5,TypeString:data.type},
+                    params: {Limit: 5, TypeString: data.type},
                     method: 'post',
                     template_val: '{{d.CustomsCode}}',
                     template_txt: '{{d.CustomsCode}}' + "-" + '{{d.Name}}',
@@ -1029,6 +1028,7 @@ layui.define('view', function (exports) {
                         $(data.hideElem).val(resp.CustomsCode);
                     }
                 });
+
 
                 // if (data.elem) {
                 //     //参数默认规则
@@ -2069,7 +2069,7 @@ layui.define('view', function (exports) {
                 });
                 $("body #val0Name").focus();
                 $("#selectCodeTs").val($("#g_name").val());
-                let brand_type = await admin.post(`/clearance/no_paginate`,{Type:"品牌类型"});
+                let brand_type = await admin.post(`/clearance/no_paginate`, {Type: "品牌类型"});
                 let data_filter = [];
                 for (let item of brand_type) {
                     data_filter.push({
@@ -2093,7 +2093,7 @@ layui.define('view', function (exports) {
                     }
                 });
 
-                let export_benefits = await admin.post(`/clearance/no_paginate`,{Type:"出口享惠情况"});
+                let export_benefits = await admin.post(`/clearance/no_paginate`, {Type: "出口享惠情况"});
                 let data_filter_benefits = [];
                 for (let item of export_benefits) {
                     data_filter_benefits.push({
@@ -2405,7 +2405,7 @@ layui.define('view', function (exports) {
                                 let value = `${item.Name}`;
                                 let label = `${item.CustomsCode}-${value}`;
                                 //清单币制原产国使用老代码
-                                if(obj.data_name_ann == "country_area_ann" || obj.data_name_ann == "currency_ann"){
+                                if (obj.data_name_ann == "country_area_ann" || obj.data_name_ann == "currency_ann") {
                                     label = `${item.OldCustomCode}-${value}`;
                                 }
 
@@ -2966,139 +2966,245 @@ layui.define('view', function (exports) {
             ,
 
             //清单自动完成汇总
-            async annotations_auto() {
+            async annotations_auto(layuicomplete) {
                 /**自动完成--清单类型**/
-                 admin.auto_fn({
-                    data: admin.all_complete_data.list_types,
-                    listDirection: false,
-                    id: ['#invt_type_name'],
-                    after: ['#invt_type']
-                });
+                const invt_type_name = {
+                    layuicomplete: layuicomplete,
+                    elem: "#invt_type_name",
+                    hideElem: "#invt_type",
+                    type: "清单类型",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(invt_type_name);
+
 
                 /**自动完成--料件、成品标志**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.finished_product,
-                    listDirection: false,
-                    id: ['#mtpck_endprd_markcd_name'],
-                    after: ['#mtpck_endprd_markcd']
-                });
+                const mtpck_endprd_markcd = {
+                    layuicomplete: layuicomplete,
+                    elem: "#mtpck_endprd_markcd_name",
+                    hideElem: "#mtpck_endprd_markcd",
+                    type: "料件成品标记",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(mtpck_endprd_markcd);
+
 
                 /**自动完成--监管方式**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.objectives_based_ann,
-                    listDirection: false,
-                    id: ['#supv_modecd_name'],
-                    after: ['#supv_modecd'],
-                });
+                const supv_modecd = {
+                    layuicomplete: layuicomplete,
+                    elem: "#supv_modecd_name",
+                    hideElem: "#supv_modecd",
+                    type: "监管方式代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(supv_modecd);
+
 
                 /**自动完成--运输方式**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.mode_shipping_ann,
-                    listDirection: false,
-                    id: ['#trsp_modecd_name'],
-                    after: ['#trsp_modecd'],
-                });
+                const trsp_modecd = {
+                    layuicomplete: layuicomplete,
+                    elem: "#trsp_modecd_name",
+                    hideElem: "#trsp_modecd",
+                    type: "运输方式代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(trsp_modecd);
+
 
                 /**自动完成--进境关别--主管海关**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.entry_clearance,
-                    listDirection: false,
-                    id: ['#impexp_portcd_name', '#dcl_plc_cuscd_name'],
-                    after: ['#impexp_portcd', '#dcl_plc_cuscd'],
-                });
+                const impexp_portcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#impexp_portcd_name'],
+                    hideElem: ['#impexp_portcd'],
+                    type: "关区代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(impexp_portcd);
+
+                const dcl_plc_cuscd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#dcl_plc_cuscd_name'],
+                    hideElem: ['#dcl_plc_cuscd'],
+                    type: "关区代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(dcl_plc_cuscd);
 
                 /**自动完成--启运国（地区）/最终目的国(地区)/原产国（地区）**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.country_area_ann,
-                    listDirection: false,
-                    id: ['#stship_trsarv_natcd_name', '#destination_natcd_name', '#natcd_name'],
-                    after: ['#stship_trsarv_natcd', '#destination_natcd', '#natcd'],
-                });
+                const stship_trsarv_natcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#stship_trsarv_natcd_name'],
+                    hideElem: ['#stship_trsarv_natcd'],
+                    type: "国别地区代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(stship_trsarv_natcd);
+
+                const destination_natcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#destination_natcd_name'],
+                    hideElem: ['#destination_natcd'],
+                    type: "国别地区代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(destination_natcd);
+
+                const natcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#natcd_name'],
+                    hideElem: ['#natcd'],
+                    type: "国别地区代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(natcd);
 
                 /**自动完成--流转类型**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.types_transfer,
-                    listDirection: false,
-                    id: ['#list_type_name'],
-                    after: ['#list_type'],
-                });
+                const types_transfer = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#list_type_name'],
+                    hideElem: ['#list_type'],
+                    type: "流转类型",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(types_transfer);
 
                 /**自动完成--清单报关标志**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.nuclear_declaration_lis,
-                    listDirection: false,
-                    id: ['#dclcus_flag_name'],
-                    after: ['#dclcus_flag'],
-                });
+                const dclcus_flag = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#dclcus_flag_name'],
+                    hideElem: ['#dclcus_flag'],
+                    type: "清单报关标志",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(dclcus_flag);
+
 
                 /**自动完成--报关类型**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.customs_declaration_type,
-                    listDirection: false,
-                    id: ['#dclcus_typecd_name'],
-                    after: ['#dclcus_typecd'],
-                });
+                const dclcus_typecd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#dclcus_typecd_name'],
+                    hideElem: ['#dclcus_typecd'],
+                    type: "报关类型",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(dclcus_typecd);
 
                 /**自动完成--清单报关单类型**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.type_declaration_list,
-                    listDirection: false,
-                    id: ['#dec_type_name'],
-                    after: ['#dec_type'],
-                });
+                const dec_type = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#dec_type_name'],
+                    hideElem: ['#dec_type'],
+                    type: "清单报关单类型",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(dec_type);
+
 
                 /**自动完成--生成报关单标志**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.gen_dec_flag_list,
-                    listDirection: false,
-                    id: ['#gen_dec_flag_name'],
-                    after: ['#gen_dec_flag'],
-                });
+                const gen_dec_flag = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#gen_dec_flag_name'],
+                    hideElem: ['#gen_dec_flag'],
+                    type: "生成报关单标志",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(gen_dec_flag);
 
                 /**自动完成--清单表体修改标志**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.modf_markcd_list,
-                    listDirection: false,
-                    id: ['#modf_markcd_name'],
-                    after: ['#modf_markcd'],
-                });
+                const modf_markcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#modf_markcd_name'],
+                    hideElem: ['#modf_markcd'],
+                    type: "清单表体修改标志",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(modf_markcd);
 
                 /**自动完成--币制**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.currency_ann,
-                    listDirection: false,
-                    id: ['#dcl_currcd_name'],
-                    after: ['#dcl_currcd'],
-                });
+                const dcl_currcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#dcl_currcd_name'],
+                    hideElem: ['#dcl_currcd'],
+                    type: "货币代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(dcl_currcd);
+
 
                 /**自动完成--申报计量单位**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.unit_measurement,
-                    listDirection: false,
-                    id: ['#dcl_unitcd_name', '#lawf_unitcd_name', '#secd_lawf_unitcd_name'],
-                    after: ['#dcl_unitcd', '#lawf_unitcd', 'secd_lawf_unitcd'],
-                });
+                const unit_measurement = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#dcl_unitcd_name'],
+                    hideElem: ['#dcl_unitcd'],
+                    type: "计量单位代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(unit_measurement);
+
+                const lawf_unitcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#lawf_unitcd_name'],
+                    hideElem: ['#lawf_unitcd'],
+                    type: "计量单位代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(lawf_unitcd);
+
+                const secd_lawf_unitcd = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#secd_lawf_unitcd_name'],
+                    hideElem: ['#secd_lawf_unitcd'],
+                    type: "计量单位代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(secd_lawf_unitcd);
 
                 /**自动完成--征免方式**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.exempting_method,
-                    listDirection: false,
-                    id: ['#lvyrlf_modecd_name'],
-                    after: ['#lvyrlf_modecd']
-                });
+                const exempting_method = {
+                    layuicomplete: layuicomplete,
+                    elem: ['#lvyrlf_modecd_name'],
+                    hideElem: ['#lvyrlf_modecd'],
+                    type: "征减免税方式代码",
+                    cache: false,
+                };
+                await admin.autoFnClearanceData(exempting_method);
 
-                /**自动完成--海关编码**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.company_list,
-                    listDirection: false,
-                    id: ['#bizop_etpsno', '#rcvgd_etpsno'],
-                });
+                /**自动完成--客户海关编码**/
+                // admin.auto_fn({
+                //     data: admin.all_complete_data.company_list,
+                //     listDirection: false,
+                //     id: ['#bizop_etpsno', '#rcvgd_etpsno'],
+                // });
 
                 /**自动完成--手帐册**/
-                admin.auto_fn({
-                    data: admin.all_complete_data.putrec_no_data,
-                    listDirection: false,
-                    id: ['#putrec_no'],
+                //手册数据
+                await layuicomplete.render({
+                    elem: $('#putrec_no')[0],
+                    url: '/handbook/datagrid',
+                    cache: false,
+                    response: {
+                        code: 'code',
+                        data: 'rows'
+                    },
+                    request: {
+                        keywords: 'ContractNumber'
+                    },
+                    params: {Limit: 5},
+                    method: 'post',
+                    template_val: '{{d.ContractNumber}}',
+                    template_txt: '{{d.ContractNumber}}' + "-" + '{{d.CompanyManageName}}',
+                    onselect: function (resp) {
+                        $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
+                        $("#bizop_etpsno").val(resp.CompanyManageCode);
+                        $("#bizop_etps_nm").val(resp.CompanyManage_name);
+
+                        $("#rvsngd_etps_sccd").val(resp.CompanyClientCreditCode);
+                        $("#rcvgd_etpsno").val(resp.CompanyClientCode);
+                        $("#rcvgd_etps_nm").val(resp.CompanyClientName);
+
+                        admin.ann_materials_data = resp.HandBookGoods;
+                        admin.ann_goods_data = resp.HandBookGoods;
+                    }
                 });
             },
 
@@ -4230,9 +4336,9 @@ layui.define('view', function (exports) {
                     admin.list_limit = local_limit;
                 }
                 /**订单列表**/
-                order_import_list = await admin.post(url,{
-                    Offset:admin.list_page,
-                    Limit:admin.list_limit,
+                order_import_list = await admin.post(url, {
+                    Offset: admin.list_page,
+                    Limit: admin.list_limit,
                 });
 
                 /**订单状态数量**/

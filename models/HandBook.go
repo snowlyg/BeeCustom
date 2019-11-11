@@ -154,7 +154,10 @@ func HandBookPageList(params *HandBookQueryParam) ([]*HandBook, int64) {
 	query := orm.NewOrm().QueryTable(HandBookTBName())
 	data := make([]*HandBook, 0)
 
-	query = query.Distinct().Filter("ContractNumber__istartswith", params.ContractNumber)
+	pContractNumber := strings.Replace(params.ContractNumber, " ", "", -1)
+	if len(pContractNumber) > 0 {
+		query = query.Distinct().Filter("ContractNumber__istartswith", pContractNumber)
+	}
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
