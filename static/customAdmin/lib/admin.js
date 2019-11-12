@@ -3196,7 +3196,7 @@ layui.define('view', function (exports) {
                     onselect: function (resp) {
                         $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
                         $("#bizop_etpsno").val(resp.CompanyManageCode);
-                        $("#bizop_etps_nm").val(resp.CompanyManage_name);
+                        $("#bizop_etps_nm").val(resp.CompanyManageName);
 
                         $("#rvsngd_etps_sccd").val(resp.CompanyClientCreditCode);
                         $("#rcvgd_etpsno").val(resp.CompanyClientCode);
