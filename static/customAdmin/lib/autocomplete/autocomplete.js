@@ -74,7 +74,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
                 _elem = _config.elem,
                 _container = _elem.next('.' + container),
                 _dom = _container.find('dl');
-            if (!_config.filter) return _self.renderData([]);
+            // if (!_config.filter) return _self.renderData([]);
             if (_config.cache && Object.keys(_config.data).length > 0) return _self.renderData(_config.data);
 
             return new Promise(async (resolve, reject) => {
@@ -88,12 +88,10 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
                         _container.addClass(container_focus), _dom.html(['<dd style="text-align: center" autocomplete-load>', _config.text.loading, '</dd>'].join(''))
                     },
                     success: function (resp) {
-                        return 0 != eval('resp.' + _config.response.code) ? layer.msg(eval('resp.' + _config.response.data)) : _config.data = eval('resp.' + _config.response.data), _self.renderData(_config.data)
-                        resolve(resp);
+                        return 0 !== eval('resp.' + _config.response.code) ? layer.msg(eval('resp.' + _config.response.data)) : _config.data = eval('resp.' + _config.response.data), _self.renderData(_config.data)
                     },
                     error: function (error) {
                         hint.error("请求失败")
-                        reject(error.responseJSON);
                     }
                 }, _config.ajaxParams))
             })
@@ -135,6 +133,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
             });
             _dom.html(_list.join('')), _list.length > 0 ? _container.addClass(container_focus) : _container.removeClass(container_focus)
         },
+
         job.prototype.handles = {
             addData(data) {
                 var _self = this,
@@ -151,6 +150,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
                 _config.data = data;
             }
         },
+
         job.prototype.events = function () {
             var _self = this,
                 _config = _self.config,
@@ -159,9 +159,13 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
                 _dom = _container.find('dl');
 
             _elem.unbind('focus').unbind('input propertychange').on('focus', function () {
+                let _value = this.value;
+                clearTimeout(_config.pullTimer), _config.pullTimer = setTimeout(function () {
+                    _config.filter = _value, _self.pullData()
+                }, _config.time_limit)
                 _config.filter = this.value, _self.renderData(_config.data)
             }).on('input propertychange', function (e) {
-                var _value = this.value;
+                let _value = this.value;
                 clearTimeout(_config.pullTimer), _config.pullTimer = setTimeout(function () {
                     _config.filter = _value, _self.pullData()
                 }, _config.time_limit)
@@ -174,12 +178,24 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
                     if (_e !== undefined) {
                         if (_e.attr('autocomplete-load') !== undefined) return false;
                         var curr_data = _config.temp_data[_e.index()]
-                        _elem.val(laytpl(_config.template_val).render(curr_data)), _config.onselect == undefined || _config.onselect(curr_data)
+                        _elem.val(laytpl(_config.template_val).render(curr_data)), _config.onselect === undefined || _config.onselect(curr_data)
                     }
                     _container.removeClass(container_focus);
-                })
+                }),
+                _elem.on('blur', function (e) {
+                var _target = e.target.nextSibling.firstChild.firstChild, _item = _dom.find(_target),
+                    _e = _item.length > 0 ? _item.closest('dd') : undefined;
+                if (_target === _elem[0]) return false;
+                if (_e !== undefined) {
+                    if (_e.attr('autocomplete-load') !== undefined) return false;
+                    var curr_data = _config.temp_data[_e.index()]
+                    _elem.val(laytpl(_config.template_val).render(curr_data)), _config.onselect === undefined || _config.onselect(curr_data)
+                }
+                _container.removeClass(container_focus);
+            })
 
         };
+
     system.init = function (e, c) {
         var c = c || {}, _self = this, _elems = $(e ? 'input[lay-filter="' + e + '"]' : 'input[' + filter + ']');
         _elems.each(function (_i, _e) {
@@ -192,7 +208,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
             }
             var _config = $.extend({elem: this}, system.config, c, _lay_data);
 
-            _config.url == undefined && (_config.data == undefined || _config.length === 0) && hint.error("autocomplete配置有误，缺少获取数据方式");
+            _config.url === undefined && (_config.data === undefined || _config.length === 0) && hint.error("autocomplete配置有误，缺少获取数据方式");
             system.render(_config);
         })
     },

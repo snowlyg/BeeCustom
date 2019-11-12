@@ -3014,8 +3014,8 @@ layui.define('view', function (exports) {
                 /**自动完成--进境关别--主管海关**/
                 const impexp_portcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#impexp_portcd_name'],
-                    hideElem: ['#impexp_portcd'],
+                    elem: '#impexp_portcd_name',
+                    hideElem: '#impexp_portcd',
                     type: "关区代码",
                     cache: false,
                 };
@@ -3023,8 +3023,8 @@ layui.define('view', function (exports) {
 
                 const dcl_plc_cuscd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#dcl_plc_cuscd_name'],
-                    hideElem: ['#dcl_plc_cuscd'],
+                    elem: '#dcl_plc_cuscd_name',
+                    hideElem: '#dcl_plc_cuscd',
                     type: "关区代码",
                     cache: false,
                 };
@@ -3033,8 +3033,8 @@ layui.define('view', function (exports) {
                 /**自动完成--启运国（地区）/最终目的国(地区)/原产国（地区）**/
                 const stship_trsarv_natcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#stship_trsarv_natcd_name'],
-                    hideElem: ['#stship_trsarv_natcd'],
+                    elem: '#stship_trsarv_natcd_name',
+                    hideElem: '#stship_trsarv_natcd',
                     type: "国别地区代码",
                     cache: false,
                 };
@@ -3042,8 +3042,8 @@ layui.define('view', function (exports) {
 
                 const destination_natcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#destination_natcd_name'],
-                    hideElem: ['#destination_natcd'],
+                    elem: '#destination_natcd_name',
+                    hideElem: '#destination_natcd',
                     type: "国别地区代码",
                     cache: false,
                 };
@@ -3051,8 +3051,8 @@ layui.define('view', function (exports) {
 
                 const natcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#natcd_name'],
-                    hideElem: ['#natcd'],
+                    elem: '#natcd_name',
+                    hideElem: '#natcd',
                     type: "国别地区代码",
                     cache: false,
                 };
@@ -3061,8 +3061,8 @@ layui.define('view', function (exports) {
                 /**自动完成--流转类型**/
                 const types_transfer = {
                     layuicomplete: layuicomplete,
-                    elem: ['#list_type_name'],
-                    hideElem: ['#list_type'],
+                    elem: '#list_type_name',
+                    hideElem: '#list_type',
                     type: "流转类型",
                     cache: false,
                 };
@@ -3071,8 +3071,8 @@ layui.define('view', function (exports) {
                 /**自动完成--清单报关标志**/
                 const dclcus_flag = {
                     layuicomplete: layuicomplete,
-                    elem: ['#dclcus_flag_name'],
-                    hideElem: ['#dclcus_flag'],
+                    elem: '#dclcus_flag_name',
+                    hideElem: '#dclcus_flag',
                     type: "清单报关标志",
                     cache: false,
                 };
@@ -3082,8 +3082,8 @@ layui.define('view', function (exports) {
                 /**自动完成--报关类型**/
                 const dclcus_typecd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#dclcus_typecd_name'],
-                    hideElem: ['#dclcus_typecd'],
+                    elem: '#dclcus_typecd_name',
+                    hideElem: '#dclcus_typecd',
                     type: "报关类型",
                     cache: false,
                 };
@@ -3092,8 +3092,8 @@ layui.define('view', function (exports) {
                 /**自动完成--清单报关单类型**/
                 const dec_type = {
                     layuicomplete: layuicomplete,
-                    elem: ['#dec_type_name'],
-                    hideElem: ['#dec_type'],
+                    elem: '#dec_type_name',
+                    hideElem: '#dec_type',
                     type: "清单报关单类型",
                     cache: false,
                 };
@@ -3103,8 +3103,8 @@ layui.define('view', function (exports) {
                 /**自动完成--生成报关单标志**/
                 const gen_dec_flag = {
                     layuicomplete: layuicomplete,
-                    elem: ['#gen_dec_flag_name'],
-                    hideElem: ['#gen_dec_flag'],
+                    elem: '#gen_dec_flag_name',
+                    hideElem: '#gen_dec_flag',
                     type: "生成报关单标志",
                     cache: false,
                 };
@@ -3113,8 +3113,8 @@ layui.define('view', function (exports) {
                 /**自动完成--清单表体修改标志**/
                 const modf_markcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#modf_markcd_name'],
-                    hideElem: ['#modf_markcd'],
+                    elem: '#modf_markcd_name',
+                    hideElem: '#modf_markcd',
                     type: "清单表体修改标志",
                     cache: false,
                 };
@@ -3123,8 +3123,8 @@ layui.define('view', function (exports) {
                 /**自动完成--币制**/
                 const dcl_currcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#dcl_currcd_name'],
-                    hideElem: ['#dcl_currcd'],
+                    elem: '#dcl_currcd_name',
+                    hideElem: '#dcl_currcd',
                     type: "货币代码",
                     cache: false,
                 };
@@ -3134,8 +3134,8 @@ layui.define('view', function (exports) {
                 /**自动完成--申报计量单位**/
                 const unit_measurement = {
                     layuicomplete: layuicomplete,
-                    elem: ['#dcl_unitcd_name'],
-                    hideElem: ['#dcl_unitcd'],
+                    elem: '#dcl_unitcd_name',
+                    hideElem: '#dcl_unitcd',
                     type: "计量单位代码",
                     cache: false,
                 };
@@ -3143,8 +3143,8 @@ layui.define('view', function (exports) {
 
                 const lawf_unitcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#lawf_unitcd_name'],
-                    hideElem: ['#lawf_unitcd'],
+                    elem: '#lawf_unitcd_name',
+                    hideElem: '#lawf_unitcd',
                     type: "计量单位代码",
                     cache: false,
                 };
@@ -3152,8 +3152,8 @@ layui.define('view', function (exports) {
 
                 const secd_lawf_unitcd = {
                     layuicomplete: layuicomplete,
-                    elem: ['#secd_lawf_unitcd_name'],
-                    hideElem: ['#secd_lawf_unitcd'],
+                    elem: '#secd_lawf_unitcd_name',
+                    hideElem: '#secd_lawf_unitcd',
                     type: "计量单位代码",
                     cache: false,
                 };
@@ -3162,8 +3162,8 @@ layui.define('view', function (exports) {
                 /**自动完成--征免方式**/
                 const exempting_method = {
                     layuicomplete: layuicomplete,
-                    elem: ['#lvyrlf_modecd_name'],
-                    hideElem: ['#lvyrlf_modecd'],
+                    elem: '#lvyrlf_modecd_name',
+                    hideElem: '#lvyrlf_modecd',
                     type: "征减免税方式代码",
                     cache: false,
                 };
@@ -3207,88 +3207,6 @@ layui.define('view', function (exports) {
                     }
                 });
             },
-
-            //清单-自动完成所有数据
-            all_complete_data: {
-                list_types: layui.data('list_types').data || [],
-                finished_product:
-                    layui.data('finished_product').data || [],
-                objectives_based_ann:
-                    layui.data('objectives_based_ann').data || [],
-                mode_shipping_ann:
-                    layui.data('mode_shipping_ann').data || [],
-                entry_clearance:
-                    layui.data('entry_clearance').data || [],
-                country_area_ann:
-                    layui.data('country_area_ann').data || [],
-                types_transfer:
-                    layui.data('types_transfer').data || [],
-                nuclear_declaration_lis:
-                    layui.data('nuclear_declaration_lis').data || [],
-                customs_declaration_type:
-                    layui.data('customs_declaration_type').data || [],
-                type_declaration_list:
-                    layui.data('type_declaration_list').data || [],
-                currency_ann:
-                    layui.data('currency_ann').data || [],
-                unit_measurement:
-                    layui.data('unit_measurement').data || [],
-                exempting_method:
-                    layui.data('exempting_method').data || [],
-                company_list:
-                    layui.data('company_list').data || [],
-                putrec_no_data:
-                    layui.data('putrec_no_data').data || [],
-                documents_attached:
-                    layui.data('documents_attached').data || [],
-                type_container:
-                    layui.data('type_container').data || [],
-                use:
-                    layui.data('use').data || [],
-                destination:
-                    layui.data('destination').data || [],
-                domestic_area:
-                    layui.data('domestic_area').data || [],
-                origin_area:
-                    layui.data('origin_area').data || [],
-                gen_dec_flag_list:
-                    layui.data('gen_dec_flag_list').data || [],
-                related_reasons:
-                    layui.data('related_reasons').data || [],
-                inspection_quarantine:
-                    layui.data('inspection_quarantine').data || [],
-                types_customs:
-                    layui.data('types_customs').data || [],
-                domestic_ports:
-                    layui.data('domestic_ports').data || [],
-                kind_packages:
-                    layui.data('kind_packages').data || [],
-                currency:
-                    layui.data('currency').data || [],
-                cost_tag_two:
-                    layui.data('cost_tag_two').data || [],
-                cost_tag_one:
-                    layui.data('cost_tag_one').data || [],
-                terms_delivery:
-                    layui.data('terms_delivery').data || [],
-                harbour:
-                    layui.data('harbour').data || [],
-                country_area:
-                    layui.data('country_area').data || [],
-                nature_exemption:
-                    layui.data('nature_exemption').data || [],
-                objectives_based:
-                    layui.data('objectives_based').data || [],
-                mode_shipping:
-                    layui.data('mode_shipping').data || [],
-                enterprise_product:
-                    layui.data('enterprise_product').data || [],
-                site_code:
-                    layui.data('site_code').data || [],
-                modf_markcd_list:
-                    layui.data('modf_markcd_list').data || [],
-            }
-            ,
 
             //数组上移、下移
             swapItems(arr, index1, index2) {
@@ -3395,7 +3313,7 @@ layui.define('view', function (exports) {
                     let data_judge = [],
                         item_edoc_id = null;
                     for (let item_edoc of data) {
-                        if (item_edoc.edoc_code == item_print.code) {
+                        if (item_edoc.edoc_code === item_print.code) {
                             data_judge.push(1);
                             item_edoc_id = item_edoc.id
                         } else {
