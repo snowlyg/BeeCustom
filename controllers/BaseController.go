@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/file"
@@ -228,4 +229,16 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 			return fileNamePath, nil
 		}
 	}
+}
+
+func (c *BaseController) GetDateTime(timeString, timeFormatString string) (*time.Time, error) {
+	tS := c.GetString(timeString)
+	fTimeFormat, err := time.ParseInLocation(timeFormatString, tS, time.Local)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("ParseInLocation:%v", err))
+
+		return nil, err
+	}
+
+	return &fTimeFormat, nil
 }

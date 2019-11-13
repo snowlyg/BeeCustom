@@ -112,8 +112,8 @@ layui.define('view', function (exports) {
                  */
                 let data;
                 if (
-                    (cusIEFlag == 'I' && $.inArray($("#supv_modecd").val(), admin.i_account_manual_items_arr) >= 0) ||
-                    (cusIEFlag == 'E' && $.inArray($("#supv_modecd").val(), admin.e_account_manual_items_arr) < 0)
+                    (cusIEFlag === 'I' && $.inArray($("#supv_modecd").val(), admin.i_account_manual_items_arr) >= 0) ||
+                    (cusIEFlag === 'E' && $.inArray($("#supv_modecd").val(), admin.e_account_manual_items_arr) < 0)
                 ) {
                     data = admin.ann_goods_data;
                 } else {
@@ -1646,24 +1646,24 @@ layui.define('view', function (exports) {
                     if ($(dom).val().trim()) {
                         const flag = $(dom).data('flag');
                         const data = admin.get_ann_goods_materials_data(flag);
-                        if (data.some((item) => item.serial == $(dom).val())) {
+                        if (data.some((item) => item.serial === $(dom).val())) {
                             for (let item of data) {
-                                if (item.serial == $(dom).val()) {
-                                    $("#gds_mtno").val(item.record_no);
-                                    $("#gdecd").val(item.hs_code);
-                                    $("#gds_nm").val(item.name);
-                                    $("#gds_spcf_model_desc").val(item.special);
+                                if (item.serial === $(dom).val()) {
+                                    $("#gds_mtno").val(item.RecordNo);
+                                    $("#gdecd").val(item.HsCode);
+                                    $("#gds_nm").val(item.Name);
+                                    $("#gds_spcf_model_desc").val(item.Special);
 
-                                    $("#dcl_currcd").val(item.moneyunit_code);
-                                    $("#dcl_currcd_name").val(item.moneyunit);
+                                    $("#dcl_currcd").val(item.MoneyunitCode);
+                                    $("#dcl_currcd_name").val(item.Moneyunit);
 
-                                    $("#dcl_unitcd").val(item.unit_one_code);
-                                    $("#dcl_unitcd_name").val(item.unit_one);
+                                    $("#dcl_unitcd").val(item.UnitOneCode);
+                                    $("#dcl_unitcd_name").val(item.UnitOne);
 
-                                    $("#dcl_uprc_amt").val(item.price);
+                                    $("#dcl_uprc_amt").val(item.Price);
 
-                                    $("#lawf_unitcd").val(item.unit_two_code);
-                                    $("#lawf_unitcd_name").val(item.unit_two);
+                                    $("#lawf_unitcd").val(item.UnitTwoCode);
+                                    $("#lawf_unitcd_name").val(item.UnitTwo);
 
                                     $("#entry_gds_seqno").focus();
                                 }

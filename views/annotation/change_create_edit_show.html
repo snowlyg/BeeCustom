@@ -7,7 +7,7 @@
                 <i class="iconfont icon-save"></i>保存
             </button>
 
-            {{# if(d != '已完成'){ }}
+            {{# if(d.Status != '已完成'){ }}
             <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
                 <i class="iconfont icon-checkcircle"></i>审核通过
             </button>
@@ -15,7 +15,6 @@
             <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                 <i class="iconfont icon-folder-shared"></i>派单
             </button>
-
 
             <button class="layui-btn custom-create_btn" id="order_i_import" type="button">
                 <i class="iconfont icon-input"></i>导入

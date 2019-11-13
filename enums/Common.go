@@ -24,7 +24,8 @@ const (
 	Enabled  = true
 )
 
-const BaseFormat = "2006-01-02 15:04:05"
+const BaseDateTimeFormat = "2006-01-02 15:04:05"
+const BaseDateFormat = "20060102"
 
 //根据中文查询对应参数
 func GetSectionWithString(wordCh, configSection string) (int8, error) {

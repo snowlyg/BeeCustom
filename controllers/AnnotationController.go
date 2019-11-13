@@ -3,8 +3,10 @@ package controllers
 import (
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type AnnotationController struct {
@@ -68,11 +70,40 @@ func (c *AnnotationController) Create() {
 
 // Store 添加 新建 页面
 func (c *AnnotationController) Store() {
+
 	m := models.NewAnnotation(0)
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("ParseForm:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
+
+	iT, err := c.GetDateTime("InputTime", enums.BaseDateFormat)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	iDT, err := c.GetDateTime("InvtDclTime", enums.BaseDateFormat)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	aStatus, err := enums.GetSectionWithString("待审核", "annotation_status")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	company, err := models.CompanyByManageCode(m.BizopEtpsno)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取客户出错", nil)
+	}
+
+	m.InputTime = *iT
+	m.InputTime = *iDT
+	m.Status = aStatus
+	m.StatusUpdatedAt = time.Now()
+	m.BackendUser = &c.curUser
+	m.Company = company
 
 	c.validRequestData(m)
 

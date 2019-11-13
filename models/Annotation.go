@@ -25,7 +25,6 @@ type Annotation struct {
 	BaseModel
 
 	Status                 int8         `orm:"column(status)" description:"核注清单状态"`
-	StatusUpdatedAt        time.Time    `orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
 	BondInvtNo             string       `orm:"column(bond_invt_no);size(64);null" description:"清单编号 (返填)"`
 	SeqNo                  string       `orm:"column(seq_no);size(18);null" description:"清单预录入统一编号 (返填)"`
 	PutrecNo               string       `orm:"column(putrec_no);size(64)" description:"备案编号（手(账)册编号）"`
@@ -39,8 +38,6 @@ type Annotation struct {
 	DclEtpsSccd            string       `orm:"column(dcl_etps_sccd);size(18);null" description:"申报企业社会信用代码"`
 	DclEtpsno              string       `orm:"column(dcl_etpsno);size(10)" description:"申报企业编号"`
 	DclEtpsNm              string       `orm:"column(dcl_etps_nm);size(512)" description:"申报企业名称"`
-	InvtDclTime            time.Time    `orm:"column(invt_dcl_time);type(datetime);null" description:"清单申报时间(清单申报日期)(返填)"`
-	EntryDclTime           time.Time    `orm:"column(entry_dcl_time);type(datetime);null" description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
 	EntryNo                string       `orm:"column(entry_no);size(64);null" description:"对应报关单编号(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
 	ImpexpPortcd           string       `orm:"column(impexp_portcd);size(4);null" description:"进/出境关别"`
 	ImpexpPortcdName       string       `orm:"column(impexp_portcd_name);size(100);null" description:"进/出境关别名称"`
@@ -113,14 +110,17 @@ type Annotation struct {
 	Creator                string       `orm:"column(creator);size(50);null" description:"创建人"`
 	GenDecFlag             string       `orm:"column(gen_dec_flag);size(2);null" description:"是否生成报关单 1 生成，2 不生成"`
 	GenDecFlagName         string       `orm:"column(gen_dec_flag_name);size(100);null" description:"是否生成报关单名称"`
-	InputTime              time.Time    `orm:"column(input_time);type(datetime);null" description:"录入日期"`
-	PrevdTime              time.Time    `orm:"column(prevd_time);type(datetime);null" description:"预核扣时间"`
-	FormalVrfdedTime       time.Time    `orm:"column(formal_vrfded_time);type(datetime);null" description:"正式核扣时间 (返填)"`
-	DeletedAt              time.Time    `orm:"column(deleted_at);type(timestamp);null"`
+	InputTime              time.Time    `form:"-" orm:"column(input_time);type(datetime);null" description:"录入日期"`
+	PrevdTime              time.Time    `form:"-" orm:"column(prevd_time);type(datetime);null" description:"预核扣时间"`
+	FormalVrfdedTime       time.Time    `form:"-" orm:"column(formal_vrfded_time);type(datetime);null" description:"正式核扣时间 (返填)"`
+	DeletedAt              time.Time    `form:"-" orm:"column(deleted_at);type(timestamp);null" `
+	StatusUpdatedAt        time.Time    `form:"-" orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
+	InvtDclTime            time.Time    `form:"-" orm:"column(invt_dcl_time);type(datetime);null" description:"清单申报时间(清单申报日期)(返填)"`
+	EntryDclTime           time.Time    `form:"-" orm:"column(entry_dcl_time);type(datetime);null" description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
 	BackendUser            *BackendUser `orm:"column(user_id);rel(fk)"`
 	Company                *Company     `orm:"column(company_id);rel(fk)"`
-	UserId                 int64        `orm:"-" form:"UserId" valid:"Required"`    //关联管理会自动生成 role_id 字段，此处不生成字段
-	CompanyId              int64        `orm:"-" form:"CompanyId" valid:"Required"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	UserId                 int64        `orm:"-" form:"UserId"`    //关联管理会自动生成 UserId 字段，此处不生成字段
+	CompanyId              int64        `orm:"-" form:"CompanyId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
 }
 
 func NewAnnotation(id int64) Annotation {
@@ -196,11 +196,13 @@ func AnnotationSave(m *Annotation) (*Annotation, error) {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 			return nil, err
 		}
 	} else {
 
 		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 			return nil, err
 		}
 	}
