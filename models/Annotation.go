@@ -145,25 +145,20 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64) {
 }
 
 func AnnotationGetRelations(ms []*Annotation, relations string) ([]*Annotation, error) {
-	o := orm.NewOrm()
-	rs := strings.Split(relations, ",")
-	for _, v := range ms {
-		for _, rv := range rs {
-			_, err := o.LoadRelated(v, rv)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
-				return nil, err
+	if len(relations) > 0 {
+		o := orm.NewOrm()
+		rs := strings.Split(relations, ",")
+		for _, v := range ms {
+			for _, rv := range rs {
+				_, err := o.LoadRelated(v, rv)
+				if err != nil {
+					utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+					return nil, err
+				}
 			}
 		}
 	}
-
 	return ms, nil
-}
-
-// AnnotationDataList 获取用户列表
-func AnnotationDataList(params *AnnotationQueryParam) []*Annotation {
-	data, _ := AnnotationPageList(params)
-	return data
 }
 
 // AnnotationOne 根据id获取单条

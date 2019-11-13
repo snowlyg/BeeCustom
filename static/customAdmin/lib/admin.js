@@ -3481,14 +3481,14 @@ layui.define('view', function (exports) {
                     //判断新增或修改的数据是否可进行归并
                     for (let i = 0; i < invtDecListData.length; i++) {
                         let decList = invtDecListData[i];
-                        if (invtListData.gdecd == decList.gdecd &&
-                            invtListData.gds_nm == decList.gds_nm &&
-                            invtListData.dcl_unitcd == decList.dcl_unitcd &&
-                            invtListData.natcd == decList.natcd &&
+                        if (invtListData.gdecd === decList.gdecd &&
+                            invtListData.gds_nm === decList.gds_nm &&
+                            invtListData.dcl_unitcd === decList.dcl_unitcd &&
+                            invtListData.natcd === decList.natcd &&
                             //20181018 优化 新增目的国
-                            invtListData.destination_natcd == decList.destination_natcd &&
-                            invtListData.dcl_currcd == decList.dcl_currcd) {
-                            if (invtListData.entry_gds_seqno && invtListData.entry_gds_seqno != decList.entry_gds_seqno) {
+                            invtListData.destination_natcd === decList.destination_natcd &&
+                            invtListData.dcl_currcd === decList.dcl_currcd) {
+                            if (invtListData.entry_gds_seqno && invtListData.entry_gds_seqno !== decList.entry_gds_seqno) {
                                 if (i == 49) {
                                     return false;
                                 }
@@ -3516,29 +3516,29 @@ layui.define('view', function (exports) {
             combineDec(decList, tmpDecList) {
                 if (!!decList.dcl_qty) {
                     let __t = new BigDecimal(decList.dcl_qty.toString())
-                        .add(new BigDecimal(tmpDecList.dcl_qty.toString() == "" ? "0" : tmpDecList.dcl_qty.toString()))
+                        .add(new BigDecimal(tmpDecList.dcl_qty.toString() === "" ? "0" : tmpDecList.dcl_qty.toString()))
                         .setScale(5, MathContext.ROUND_HALF_UP).toString();
                     tmpDecList.dcl_qty = admin.cutZero(__t);
                 }
                 if (!!decList.dcl_total_amt) {
                     let __t = new BigDecimal(decList.dcl_total_amt.toString())
-                        .add(new BigDecimal(tmpDecList.dcl_total_amt.toString() == "" ? "0" : tmpDecList.dcl_total_amt.toString()))
+                        .add(new BigDecimal(tmpDecList.dcl_total_amt.toString() === "" ? "0" : tmpDecList.dcl_total_amt.toString()))
                         .setScale(2, MathContext.ROUND_HALF_UP).toString();
                     tmpDecList.dcl_total_amt = admin.cutZero(__t);
                 }
                 if (!!decList.lawf_qty) {
                     let __t = new BigDecimal(decList.lawf_qty.toString())
-                        .add(new BigDecimal(tmpDecList.lawf_qty.toString() == "" ? "0" : tmpDecList.lawf_qty.toString()))
+                        .add(new BigDecimal(tmpDecList.lawf_qty.toString() === "" ? "0" : tmpDecList.lawf_qty.toString()))
                         .setScale(5, MathContext.ROUND_HALF_UP).toString();
                     tmpDecList.lawf_qty = admin.cutZero(__t);
                 }
                 if (!!decList.secd_lawf_qty) {
                     let __t = new BigDecimal(decList.secd_lawf_qty.toString())
-                        .add(new BigDecimal(tmpDecList.secd_lawf_qty.toString() == "" ? "0" : tmpDecList.secd_lawf_qty.toString()))
+                        .add(new BigDecimal(tmpDecList.secd_lawf_qty.toString() === "" ? "0" : tmpDecList.secd_lawf_qty.toString()))
                         .setScale(5, MathContext.ROUND_HALF_UP).toString();
                     tmpDecList.secd_lawf_qty = admin.cutZero(__t);
                 }
-                if (!!tmpDecList.dcl_qty && tmpDecList.dcl_qty.toString() != "0" && !!tmpDecList.dcl_total_amt) {
+                if (!!tmpDecList.dcl_qty && tmpDecList.dcl_qty.toString() !== "0" && !!tmpDecList.dcl_total_amt) {
                     let __t = new BigDecimal(tmpDecList.dcl_total_amt).divide(new BigDecimal(tmpDecList.dcl_qty.toString()), 5, MathContext.ROUND_HALF_UP)
                         .setScale(4, MathContext.ROUND_HALF_UP).toString();
                     tmpDecList.dcl_uprc_amt = admin.cutZero(__t);
@@ -3559,10 +3559,10 @@ layui.define('view', function (exports) {
                     // 循环小数部分
                     for (let i = leng; i > 0; i--) {
                         // 如果newstr末尾有0
-                        if (newstr.lastIndexOf("0") > -1 && newstr.substr(newstr.length - 1, 1) == 0) {
+                        if (newstr.lastIndexOf("0") > -1 && newstr.substr(newstr.length - 1, 1) === 0) {
                             let k = newstr.lastIndexOf("0");
                             // 如果小数点后只有一个0 去掉小数点
-                            if (newstr.charAt(k - 1) == ".") {
+                            if (newstr.charAt(k - 1) === ".") {
                                 return newstr.substring(0, k - 1);
                             } else {
                                 // 否则 去掉一个0
@@ -4243,9 +4243,9 @@ layui.define('view', function (exports) {
 
             //订单列表
             list_page: 1,
-            list_limit:
-                10,
-            async get_data_list(url, order_import_list, sum) {
+            list_limit: 10,
+            async get_data_list(url, list_datas, sum) {
+
                 let i_e_type = window.location.pathname;
 
                 /** 缓存列表数量 **/
@@ -4254,35 +4254,38 @@ layui.define('view', function (exports) {
                     admin.list_limit = local_limit;
                 }
                 /**订单列表**/
-                order_import_list = await admin.post(url, {
+                list_datas = await admin.post(url, {
                     Offset: admin.list_page,
                     Limit: admin.list_limit,
                 });
 
                 /**订单状态数量**/
-                if (sum != '1') {
+                if (sum !== '1') {
                     $("#status_flex_list div").each(function () {
-                        if ($(this).text().trim() != '全部订单') {
+                        if ($(this).text().trim() !== '全部订单') {
                             $(this).remove();
                         }
                     });
-                    laytpl($("#status_flex_list_template").html()).render(order_import_list.counts, function (html) {
+                    laytpl($("#status_flex_list_template").html()).render(list_datas.total, function (html) {
                         $("#status_flex_list").append(html);
                     });
                 }
+
                 $("#order-i-table tbody").remove();
-                if (order_import_list.total === 0) {
+                if (list_datas.total === 0) {
                     $("#order-i-table").append(`<tbody><tr class="sep-row"><td colspan="5"><div class="no_data">无数据</div></td></tr></tbody>`);
                 } else {
-                    layui.laytpl($("#order_i_list").html()).render(order_import_list.rows, function (html) {
+                    layui.laytpl($("#order_i_list").html()).render(list_datas.rows, function (html) {
                         $("#order-i-table").append(html);
                     });
                 }
+
                 layui.form.render('select');
+
                 /**订单列表分页**/
                 layui.laypage.render({
                     elem: 'order_page',
-                    count: order_import_list.total,
+                    count: list_datas.total,
                     limit: admin.list_limit,
                     limits: [10, 20, 30, 40, 50, 100, 200],
                     theme: '#1E9FFF',
@@ -4291,12 +4294,12 @@ layui.define('view', function (exports) {
                         if (!first) {
                             admin.list_page = obj.curr;
                             admin.list_limit = obj.limit;
-                            order_import_list = await admin.get(`${url}&page=${admin.list_page}&limit=${admin.list_limit}`);
+                            list_datas = await admin.get(`${url}&page=${admin.list_page}&limit=${admin.list_limit}`);
                             $("#order-i-table tbody").remove();
-                            if (order_import_list.total === 0) {
+                            if (list_datas.total === 0) {
                                 $("#order-i-table").append(`<tbody><tr class="sep-row"><td colspan="5"><div class="no_data">无数据</div></td></tr></tbody>`);
                             } else {
-                                layui.laytpl($("#order_i_list").html()).render(order_import_list.rows, function (html) {
+                                layui.laytpl($("#order_i_list").html()).render(list_datas.rows, function (html) {
                                     $("#order-i-table").append(html);
                                 });
                             }
@@ -4304,33 +4307,28 @@ layui.define('view', function (exports) {
                         localStorage.setItem(i_e_type + "_limit", obj.limit);
                     }
                 });
-                return order_import_list;
-            }
-            ,
+                return list_datas;
+            },
 
             //只允许数字
             is_onlynumber(dom) {
                 $(dom).val($(dom).val().replace(/\D/g, ''));
-            }
-            ,
+            },
 
             //只能输入数字，小数点，不能有空格
             is_nolyNorD(dom) {
                 $(dom).val($(dom).val().replace(/[^0-9\.\/]/g, ''));
-            }
-            ,
+            },
 
             //不允许中文和空格
             is_noCork(dom) {
                 $(dom).val($(dom).val().replace(/[\u4E00-\u9FA5\s]/g, ''));
-            }
-            ,
+            },
 
             //只允许数字和-
             is_onlynumberLine(dom) {
                 $(dom).val($(dom).val().replace(/[^\d-]/g, ''));
-            }
-            ,
+            },
 
             //只能输入小数点后两位的数字
             is_onlyNumFloat(dom, number) {
@@ -4349,8 +4347,7 @@ layui.define('view', function (exports) {
                     value = value.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d).*$/, '$1$2.$3'); //只能输入十六个小数
                 }
                 $(dom).val(value);
-            }
-            ,
+            },
 
             //监听进出口货物申报业务选项
             promise_items_change(dom) {
@@ -4423,22 +4420,7 @@ layui.define('view', function (exports) {
                 });
                 $("#dcl_currcd_name_batch").focus();
 
-                /**自动完成--批量修改--币制**/
-                admin.auto_fn({
-                    data: admin.annotations_complete_data.currency_ann,
-                    listDirection: false,
-                    id: ['#dcl_currcd_name_batch'],
-                    after: ['#dcl_currcd_batch']
-                });
-                /**自动完成--批量修改--原产国（地区）--境内目的地代码**/
-                admin.auto_fn({
-                    data: admin.annotations_complete_data.country_area_ann,
-                    listDirection: false,
-                    id: ['#destination_natcd_name_batch', '#natcd_name_batch'],
-                    after: ['#destination_natcd_batch', '#natcd_batch']
-                });
-            }
-            ,
+            },
 
             //核注清单批量修改-保存
             order_pros_data: [],
@@ -4476,7 +4458,7 @@ layui.define('view', function (exports) {
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', 'auto'],
                     content: `<div class="manual_no_list">
-                    <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+                    <form class="layui-form" onkeydown="if(event.keyCode===13){return false}">
                         <p>请向客户获取关务通的核注清单订单号，格式为：D012345678912345</p>
                         <table class="layui-table order_table_form">
                             <tbody>

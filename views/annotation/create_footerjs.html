@@ -491,48 +491,23 @@
             layer.load(2);
 
             /**表体商品数据**/
-            // for (let item of admin.annotation_items_delete_ids) {
-            //     admin.order_pros_data.push({
-            //         ID: item
-            //     })
-            // }
-
-            // data.field.items = admin.order_pros_data;
-
-            const order_save_data = await admin.post(@{{ urlfor "AnnotationController.Store" }}, data.field);
-            if (order_save_data.Status) {
-                // await order_i_add_back_filling(order_save_data.data);
-                // order_i_edit_data = order_save_data.data;
+                // data.field.items = admin.order_pros_data;
+            const annotation_data = await admin.post(@{{ urlfor "AnnotationController.Store" }}, data.field);
+            if (annotation_data.Status) {
+                admin.location.href = "/annotation/edit/" + annotation_data.obj.Id
             }
 
-            if (!order_id) {
-
-                {{/*const order_save_data = await admin.post(@{{ urlfor "AnnotationController.Save" }}, data.field);*/}}
-
-                // if (order_save_data.Status) {
-                //
-                //     order_id = order_save_data.data.Id;
-                //
-                //     const url = document.URL;
-                //
-                //     history.pushState(null, null, `${url}/${order_id}`);
-                //
-                //     await order_i_add_back_filling(order_save_data.data);
-                //
-                //     order_i_edit_data = order_save_data.data;
-                // }
-
+            if (@{{ .m.Id }}) {
+                const annotation_data = await admin.post("/annotation/update" + @{{ .m.Id }}, data.field);
+                if (annotation_data.Status) {
+                    admin.location.href = "/annotation/edit/" + annotation_data.obj.Id
+                }
             } else {
+                const annotation_data = await admin.post(@{{ urlfor "AnnotationController.Store" }}, data.field);
+                if (annotation_data.Status) {
+                    admin.location.href = "/annotation/edit/" + annotation_data.obj.Id
+                }
 
-                // data.field.Id = order_id;
-                // data.field.Status = order_i_edit_data.StatusString;
-
-                {{/*const order_save_data = await admin.post(@{{ urlfor "AnnotationController.Save" }}, data.field);*/}}
-
-                // if (order_save_data.Status) {
-                    // await order_i_add_back_filling(order_save_data.data);
-                    // order_i_edit_data = order_save_data.data;
-                // }
             }
 
             layer.closeAll('loading');

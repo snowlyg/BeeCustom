@@ -3,55 +3,25 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'table', 'admin', 'laydate', 'form', 'upload'], async () => {
-        const { $, laydate, form,  layer, admin,  upload, table } = layui;
+    }).use(['index', 'table', 'admin', 'laydate', 'form'], async () => {
+        const { $, laydate, form,  layer, admin, table } = layui;
         /**根据屏幕等比例缩小**/
         admin.sideFlexible_window();
 
-        let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index, order_import_list, status = '全部订单',
+        /**table点击行选中**/
+        admin.table_radio_click();
+
+        let person_tips_index,
+            returns_tips_index,
+            audit_reject_logs_tips_index,
+            reject_logs_tips_index,
+            order_import_list,
             search_input = '',
             invt_dcl_time_start = '',
             invt_dcl_time_end = '',
             month_time = '今天',
+            status = '全部订单',
             order_distribute = 0;
-
-        const upload_order_i = upload.render({
-            elem: '#order_import_upload',
-            url: '/annotation/i/import',
-            accept: 'file',
-            acceptMime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-excel.sheet.macroEnabled.12',
-            exts: 'xlsx|xls|xlsm',
-            field: 'order_file',
-            before: function(obj) {
-                layer.load(2);
-            },
-            done: async function(res) {
-                if (res.status) {
-                    layer.msg(res.msg, {
-                        offset: '15px',
-                        icon: 1,
-                        time: 2000,
-                        id: 'Message'
-                    });
-                    // await admin.get_data_list(`/annotation/datagrid?month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-                    await admin.get_data_list("/annotation/datagrid", order_import_list);
-                } else {
-                    layer.msg(res.msg, {
-                        offset: '15px',
-                        icon: 2,
-                        time: 2000,
-                        id: 'Message'
-                    });
-                }
-                layer.closeAll('loading');
-            },
-            error: function() {
-                layer.closeAll('loading');
-            }
-        });
-
-        /**table点击行选中**/
-        admin.table_radio_click();
 
         /**table左右拖动**/
         admin.table_mousedown(); /**派单**/
@@ -91,6 +61,7 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['750px', '600px'],
                 content: $('#pdf_lists_template').html()
             });
+
             table.render({
                 elem: '#pdf_lists',
                 skin: 'line',
@@ -170,7 +141,7 @@
                 search_input = search_input.substr(0, search_input.length - 1);
             }
             admin.list_page = 1;
-            if (status == '全部订单') {
+            if (status === '全部订单') {
                 status = ''
             }
             order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&search=${search_input}&month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
@@ -180,7 +151,7 @@
         form.on('select(time_table)', async function(data) {
             month_time = data.value;
             admin.list_page = 1;
-            if (status == '全部订单') {
+            if (status === '全部订单') {
                 status = ''
             }
             order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&search=${search_input}&month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
@@ -196,9 +167,9 @@
         /**简单搜索**/
         $("#order_import_search").on('keydown', async function(e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
-            if (eCode == 13) {
+            if (eCode === 13) {
                 admin.list_page = 1;
-                if (status == '全部订单') {
+                if (status === '全部订单') {
                     status = ''
                 }
                 search_input = $(this).val();
@@ -210,7 +181,7 @@
         $("body").on("click", ".status_flex_list_item", async function() {
             admin.list_page = 1;
             status = $(this).data("status");
-            if (status == '全部订单') {
+            if (status === '全部订单') {
                 status = ''
             }
             $(this).addClass('active').siblings().removeClass('active');
@@ -226,7 +197,7 @@
         /**查看联系人信息**/
         $("body").on("click", ".person_tips", function() {
             const index = $(this).data('index');
-            if (order_import_list.datas.data[index].company_admin_name) {
+            if (order_import_list.datas.data[index].CompanyAdminName) {
                 const txt = `<div class="person-tips person_tips_close"><h1 class="person-tips-h1">${order_import_list.datas.data[index].company_admin_name}</h1><p>电子邮箱：${order_import_list.datas.data[index].company_admin_email}</p><p>手机号码：${order_import_list.datas.data[index].company_admin_phone}</p></div>`;
                 person_tips_index = layer.tips(txt, this, {
                     tips: [4, '#FFFFFF'],
@@ -506,7 +477,7 @@
         });
 
         form.on('radio(order_error_logging_type)', function(data) {
-            if (data.value == 0) {
+            if (data.value === 0) {
                 $("#order_error_logging_user_id").show()
             } else {
                 $("#order_error_logging_user_id").hide()
@@ -576,14 +547,14 @@
         });
 
         /**运输方式**/
-        try {
-            const data = await admin.post(`/clearance/no_paginate`,{Type:"运输方式代码"});
-            laytpl($("#trsp_modecd_template").html()).render(data, function(html) {
-                $("#annotation_trsp_modecd").html(html);
-            });
-            form.render('select');
-        } catch (e) {
-            console.log(e);
-        }
+        // try {
+        //     const data = await admin.post(`/clearance/no_paginate`,{Type:"运输方式代码"});
+        //     laytpl($("#trsp_modecd_template").html()).render(data, function(html) {
+        //         $("#annotation_trsp_modecd").html(html);
+        //     });
+        //     form.render('select');
+        // } catch (e) {
+        //     console.log(e);
+        // }
     });
 </script>

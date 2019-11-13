@@ -45,7 +45,7 @@ func (c *AnnotationController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.AnnotationPageList(&params)
-	ms, err := models.AnnotationGetRelations(data, "Role")
+	ms, err := models.AnnotationGetRelations(data, "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
