@@ -3,7 +3,9 @@ package enums
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"strconv"
+	"time"
 
 	"BeeCustom/utils"
 	"github.com/astaxie/beego"
@@ -25,6 +27,7 @@ const (
 )
 
 const BaseDateTimeFormat = "2006-01-02 15:04:05"
+const BaseDateTimeSecondFormat = "20060102150405"
 const BaseDateFormat = "20060102"
 
 //根据中文查询对应参数
@@ -72,4 +75,8 @@ func GetSectionWithInt(wordInt int8, configSection string) (string, error) {
 	}
 
 	return "", errors.New("查询参数错误")
+}
+
+func CreateCaptcha() string {
+	return fmt.Sprintf("%04v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
 }

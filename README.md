@@ -60,6 +60,9 @@ git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
 ```
 bee run 
 ```
+111
+# 使用组件
+ 1. 数据格式化 [https://github.com/IamBusy/amoeba](https://github.com/IamBusy/amoeba)
 
 在浏览器里打开 http://localhost:8080 进行访问
 

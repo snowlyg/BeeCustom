@@ -45,14 +45,38 @@ func (c *AnnotationController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.AnnotationPageList(&params)
-	ms, err := models.AnnotationGetRelations(data, "")
+	ms, err := models.AnnotationGetRelations(data, "Company")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
+
+	annotationList := make(map[int]interface{})
+	for i, v := range ms {
+		annotationItem := make(map[string]string)
+		aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
+		}
+
+		annotationItem["StatusString"] = aStatus
+		annotationItem["PutrecNo"] = v.PutrecNo
+		annotationItem["ImpexpPortcd"] = v.ImpexpPortcd
+		annotationItem["ImpexpPortcdName"] = v.ImpexpPortcdName
+		annotationItem["BondInvtNo"] = v.BondInvtNo
+		annotationItem["EntryNo"] = v.EntryNo
+		annotationItem["SupvModecdName"] = v.SupvModecdName
+		annotationItem["TrspModecdName"] = v.TrspModecdName
+		annotationItem["InvtDclTime"] = v.InvtDclTime.Format(enums.BaseDateTimeFormat)
+		annotationItem["EtpsInnerInvtNo"] = v.EtpsInnerInvtNo
+		annotationItem["CompanyName"] = v.Company.Name
+
+		annotationList[i] = annotationItem
+	}
+
 	//定义返回的数据结构
 	result := make(map[string]interface{})
 	result["total"] = total
-	result["rows"] = ms
+	result["rows"] = annotationList
 	result["code"] = 0
 	c.Data["json"] = result
 
@@ -104,6 +128,8 @@ func (c *AnnotationController) Store() {
 	m.StatusUpdatedAt = time.Now()
 	m.BackendUser = &c.curUser
 	m.Company = company
+	m.InvtDclTime = time.Now()
+	m.EtpsInnerInvtNo = c.GetEtpsInnerInvtNo(m.ImpexpMarkcd, m.DclPlcCuscd)
 
 	c.validRequestData(m)
 
@@ -186,4 +212,11 @@ func (c *AnnotationController) Delete() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
+}
+
+//清单订单号
+func (c *AnnotationController) GetEtpsInnerInvtNo(iEFlag, customMasterName string) string {
+	eiin := "QD" + iEFlag + customMasterName + time.Now().Format(enums.BaseDateTimeSecondFormat) + enums.CreateCaptcha()
+
+	return eiin
 }

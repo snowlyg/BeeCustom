@@ -121,6 +121,7 @@ type Annotation struct {
 	Company                *Company     `orm:"column(company_id);rel(fk)"`
 	UserId                 int64        `orm:"-" form:"UserId"`    //关联管理会自动生成 UserId 字段，此处不生成字段
 	CompanyId              int64        `orm:"-" form:"CompanyId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
+	OrderId                int64        `orm:"-" form:"OrderId"`   //关联管理会自动生成 OrderId 字段，此处不生成字段
 }
 
 func NewAnnotation(id int64) Annotation {

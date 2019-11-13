@@ -72,7 +72,7 @@
                             <script type="text/html" id="trsp_modecd_template">
                                 <select name="trsp_modecd" lay-filter="trsp_modecd">
                                     <option value="">请选择</option>
-                                    <option value="@{{ .m.customs_code }}">@{{ .m.name }}</option>
+                                    <option value="{{ d.customs_code }}">{{ d.name }}</option>
                                 </select>
 
                             </script>
@@ -207,12 +207,11 @@
                                         <p>
                                             <span style="color:#999999;">清单编码/关联报关单号：</span>
                                             <span style="color:#101010;">{{ item.BondInvtNo || '无' }}</span>/
-                                            {{# if(item.OrderEntryId){ }}
-                                            <span style="color:#101010;" lay-href="/order/i/{{ item.OrderId }}/show"
-                                                  lay-text="订单详情{{ item.OrderEntryId }}">{{ item.OrderEntryId }}</span>
-                                        {{# }else{ }}
-                                        <span style="color:#101010;">无</span>
-                                        {{# } }}
+                                            {{# if(item.EntryNo !== ""){ }}
+                                                <span style="color:#101010;" lay-href="/order/i/{{ item.OrderId }}/show"  lay-text="订单详情{{ item.EntryNo }}">{{ item.EntryNo }}</span>
+                                            {{# }else{ }}
+                                                <span style="color:#101010;">无</span>
+                                            {{# } }}
                                         </p>
                                     </div>
                                 </div>

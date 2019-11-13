@@ -492,10 +492,6 @@
 
             /**表体商品数据**/
                 // data.field.items = admin.order_pros_data;
-            const annotation_data = await admin.post(@{{ urlfor "AnnotationController.Store" }}, data.field);
-            if (annotation_data.Status) {
-                admin.location.href = "/annotation/edit/" + annotation_data.obj.Id
-            }
 
             if (@{{ .m.Id }}) {
                 const annotation_data = await admin.post("/annotation/update" + @{{ .m.Id }}, data.field);
