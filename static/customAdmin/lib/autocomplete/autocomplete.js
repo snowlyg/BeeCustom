@@ -159,10 +159,6 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
                 _dom = _container.find('dl');
 
             _elem.unbind('focus').unbind('input propertychange').on('focus', function () {
-                // let _value = this.value;
-                // clearTimeout(_config.pullTimer), _config.pullTimer = setTimeout(function () {
-                //     _config.filter = _value, _self.pullData()
-                // }, _config.time_limit)
                 _config.filter = this.value, _self.renderData(_config.data)
             }).on('input propertychange', function (e) {
                 let _value = this.value;

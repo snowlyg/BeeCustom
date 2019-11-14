@@ -9,8 +9,9 @@ import (
 func init() {
 
 	//清单管理
-	beego.Router("/annotation/index", &controllers.AnnotationController{}, "Get:Index")
-	beego.Router("/annotation/create", &controllers.AnnotationController{}, "Get:Create")
+	beego.Router("/annotation/index/i", &controllers.AnnotationController{}, "Get:IIndex")
+	beego.Router("/annotation/index/e", &controllers.AnnotationController{}, "Get:EIndex")
+	beego.Router("/annotation/create/?:ieflag", &controllers.AnnotationController{}, "Get:Create")
 	beego.Router("/annotation/datagrid", &controllers.AnnotationController{}, "Post:DataGrid")
 	beego.Router("/annotation/store", &controllers.AnnotationController{}, "Post:Store")
 	beego.Router("/annotation/edit/?:id", &controllers.AnnotationController{}, "Get:Edit")

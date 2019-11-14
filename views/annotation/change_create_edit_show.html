@@ -36,22 +36,22 @@
 
         </script>
         <script type="text/html" id="order_edit_bill_template">
-@{{/*            @{{# if(d.status_string == '已完成.html" .}}{ }}*/}}
-@{{/*            @{{# if(d.annotation_change_logs.length > 0){ }}*/}}
-@{{/*            <div class="order_edit_bill_string">*/}}
-@{{/*                <p class="order_edit_bill_string_p">*/}}
-@{{/*                    <i class="iconfont icon-edit"></i>*/}}
-@{{/*                    <span>@{{ d.annotation_change_logs[d.annotation_change_logs.length-1].content }}</span>*/}}
-@{{/*                </p>*/}}
-@{{/*            </div>*/}}
-@{{/*            @{{# } }}*/}}
-@{{/*            @{{# } }}*/}}
+            {{# if(d.status_string == '已完成' .}}{ }}
+            {{# if(d.annotation_change_logs.length > 0){ }}
+            <div class="order_edit_bill_string">
+                <p class="order_edit_bill_string_p">
+                    <i class="iconfont icon-edit"></i>
+                    <span>{{ d.annotation_change_logs[d.annotation_change_logs.length-1].content }}</span>
+                </p>
+            </div>
+            {{# } }}
+            {{# } }}
         </script>
         <div id="order_edit_bill"></div>
-        <div class="layui-tab">
+        <div class="layui-tab" lay-filter="annotation_header_item">
             <ul class="layui-tab-title template_list">
                 <li class="layui-this">表头</li>
-                <li>表体</li>
+                <li id="annotation_item_tab">表体</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -68,5 +68,4 @@
 @{{template "/common/order_annotation/distribute.html" .}}
 @{{template "/annotation/create/remark_note.html" .}}
 @{{template "/common/order_annotation/take.html" .}}
-@{{template "/annotation/create/edit_data.html" .}}
 @{{template "/annotation/create/annotation_search.html" .}}

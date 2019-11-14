@@ -7,6 +7,6 @@ import (
 func TestRandomString(t *testing.T) {
 	str := RandomString(10)
 	InitLogs()
-	LogDebug("asdfasdfasdf")
+	LogDebug("testing")
 	t.Error(str)
 }

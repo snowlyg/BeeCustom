@@ -6,6 +6,7 @@ import (
 	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -25,14 +26,30 @@ func (c *AnnotationController) Prepare() {
 	//c.checkLogin()
 
 }
-func (c *AnnotationController) Index() {
+
+func (c *AnnotationController) IIndex() {
 	//页面模板设置
-	c.setTpl()
+	c.setTpl("annotation/index.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create", "Freeze")
+	c.getActionData("Edit", "Delete", "Create")
+	c.Data["ImpexpMarkcd"] = "I"
+	c.Data["ImpexpMarkcdName"] = "进口"
+
+	c.GetXSRFToken()
+}
+func (c *AnnotationController) EIndex() {
+	//页面模板设置
+	c.setTpl("annotation/index.html")
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
+
+	//页面里按钮权限控制
+	c.getActionData("Edit", "Delete", "Create")
+	c.Data["ImpexpMarkcd"] = "E"
+	c.Data["ImpexpMarkcdName"] = "出口"
 
 	c.GetXSRFToken()
 }
@@ -58,6 +75,7 @@ func (c *AnnotationController) DataGrid() {
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
 		}
 
+		annotationItem["Id"] = strconv.FormatInt(v.Id, 10)
 		annotationItem["StatusString"] = aStatus
 		annotationItem["PutrecNo"] = v.PutrecNo
 		annotationItem["ImpexpPortcd"] = v.ImpexpPortcd
@@ -85,6 +103,8 @@ func (c *AnnotationController) DataGrid() {
 
 // Create 添加 新建 页面
 func (c *AnnotationController) Create() {
+	ImpexpMarkcd := c.GetString(":ieflag")
+	c.Data["ImpexpMarkcd"] = ImpexpMarkcd
 
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
@@ -156,6 +176,7 @@ func (c *AnnotationController) Store() {
 // Edit 添加 编辑 页面
 func (c *AnnotationController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
+
 	m, err := models.AnnotationOne(Id)
 	if m != nil && Id > 0 {
 		if err != nil {
@@ -167,7 +188,7 @@ func (c *AnnotationController) Edit() {
 
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "annotation/edit_footerjs.html"
+	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
 	c.GetXSRFToken()
 }
 

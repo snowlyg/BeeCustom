@@ -10,24 +10,27 @@
         let order_pros_data_filter = [],
             order_id  /**订单ID**/
             , order_note_data /**附注数据**/
-            , annotation_searc_index;  /**商品快速查询index**/
+            , AnnotationSearcIndex;/**商品快速查询index**/
 
+        await admin.annotations_auto(layuicomplete);
+        //禁用 表头表体 tab 点击
+        if (!@{{.m.Id}}) {
+            let $annotationItemTab = $("#annotation_item_tab");
+            $annotationItemTab.click(function(event) {
+                return false;
+            });
+        }
         /**根据屏幕等比例缩小**/
         admin.sideFlexible_window();
-
         /**回车键光标跳转**/
         admin.keydown_input_textarea();
-
         /**首次进入自动聚焦 and 初始数据赋值**/
         const first_name = $("#invt_type_name").val();
-
         $("#invt_type_name").val("").focus().val(first_name);
         $("#input_time").val(admin.getCurrDate());
         $("#invt_dcl_time").val(admin.getCurrDate());
-
         /**清单产品/报关草稿列表**/
         admin.getAnnotationTable(admin.order_pros_data, admin.decListData);
-
         /**光标进入全选**/
         $('body').on('focus', 'input,textarea', function (e) {
             $(this).select();
@@ -136,6 +139,7 @@
                 limit: admin.order_pros_data.length
             });
         };
+
         form.on('submit(order_pros_submit)', function (form) {
             if (admin.order_pros_data.length > 1) {
                 if (form.field.DclCurrcd !== admin.order_pros_data[0].DclCurrcd) {
@@ -285,7 +289,7 @@
                             return layer.msg('手(账)册编号不能为空');
                         }
                     }
-                    annotation_searc_index = layer.open({
+                    AnnotationSearcIndex = layer.open({
                         type: 1,
                         title: '商品快速查询',
                         shadeClose: true,
@@ -407,7 +411,7 @@
             $("#natcd_name").val(checkData[0].Manuplace);
 
             $("#entry_gds_seqno").focus();
-            layer.close(annotation_searc_index);
+            layer.close(AnnotationSearcIndex);
         });
 
         /**新建进口报关保存刷新后反填数据**/
@@ -487,16 +491,14 @@
         });
 
         form.on('submit(annotation_save)', async (data) => {
-
             layer.load(2);
-
             /**表体商品数据**/
-                // data.field.items = admin.order_pros_data;
-
+            // data.field.items = admin.order_pros_data;
+            data.field.ImpexpMarkcd ="@{{.ImpexpMarkcd}}"
             if (@{{ .m.Id }}) {
                 const annotation_data = await admin.post("/annotation/update" + @{{ .m.Id }}, data.field);
                 if (annotation_data.Status) {
-                    admin.location.href = "/annotation/edit/" + annotation_data.obj.Id
+                    admin.location.reload()
                 }
             } else {
                 const annotation_data = await admin.post(@{{ urlfor "AnnotationController.Store" }}, data.field);
@@ -569,42 +571,6 @@
             await admin.post(`/annotation/i/${order_id}/extra_remark`, data.field);
             layer.close(order_note_index);
         });
-
-        /**新建保存后刷新提取数据**/
-        if ($("#order_i_edit_data").val()) {
-            layer.load(2);
-            order_i_edit_data = JSON.parse($("#order_i_edit_data").val())
-
-            order_id = order_i_edit_data.id;
-            laytpl($("#order_button_template").html()).render(order_i_edit_data.StatusString, function (html) {
-                $("#order_button").html(html)
-            });
-            laytpl($("#order_edit_bill_template").html()).render(order_i_edit_data, function (html) {
-                $("#order_edit_bill").html(html)
-            });
-            await order_i_edit_back_filling(order_i_edit_data);
-            const data = await admin.get(
-                `/annotation/two_account_manual?limit=0&search=${$("#putrec_no").val()}`);
-            if (data.length === 0) {
-                layer.msg(`手(账)册编号：${$("#putrec_no").val()} 不存在！`, {
-                    offset: '15px',
-                    icon: 2,
-                    time: 1000,
-                    id: 'Message'
-                });
-            } else {
-                if (cusIEFlag == 'I') {
-                    admin.ann_materials_data = data[0].Materials.data
-                } else {
-                    admin.ann_goods_data = data[0].Goods.data
-                }
-            }
-            layer.closeAll('loading');
-        } else {
-            laytpl($("#order_button_template").html()).render('新建', function (html) {
-                $("#order_button").html(html)
-            });
-        }
 
         /**审核通过**/
         $("body").on("click", "#order_save_pass", function () {
@@ -689,6 +655,5 @@
         });
 
 
-        await admin.annotations_auto(layuicomplete);
     });
 </script>

@@ -4244,20 +4244,19 @@ layui.define('view', function (exports) {
             //订单列表
             list_page: 1,
             list_limit: 10,
-            async get_data_list(url, list_datas, sum) {
-
-                let i_e_type = window.location.pathname;
+            async get_data_list(url, filterData, sum) {
 
                 /** 缓存列表数量 **/
-                let local_limit = localStorage.getItem(i_e_type + '_limit');
+                let local_limit = localStorage.getItem(filterData.ImpexpMarkcd + '_limit');
                 if (local_limit) {
                     admin.list_limit = local_limit;
                 }
+
                 /**订单列表**/
-                list_datas = await admin.post(url, {
-                    Offset: admin.list_page,
-                    Limit: admin.list_limit,
-                });
+                let ListDatas = await admin.post(url, JSON.stringify($.extend(filterData, {
+                    offset: admin.list_page,
+                    limit: admin.list_limit,
+                })));
 
                 /**订单状态数量**/
                 if (sum !== '1') {
@@ -4266,16 +4265,16 @@ layui.define('view', function (exports) {
                             $(this).remove();
                         }
                     });
-                    laytpl($("#status_flex_list_template").html()).render(list_datas.total, function (html) {
+                    laytpl($("#status_flex_list_template").html()).render(ListDatas.total, function (html) {
                         $("#status_flex_list").append(html);
                     });
                 }
 
                 $("#order-i-table tbody").remove();
-                if (list_datas.total === 0) {
+                if (ListDatas.total === 0) {
                     $("#order-i-table").append(`<tbody><tr class="sep-row"><td colspan="5"><div class="no_data">无数据</div></td></tr></tbody>`);
                 } else {
-                    layui.laytpl($("#order_i_list").html()).render(list_datas.rows, function (html) {
+                    layui.laytpl($("#order_i_list").html()).render(ListDatas.rows, function (html) {
                         $("#order-i-table").append(html);
                     });
                 }
@@ -4285,7 +4284,7 @@ layui.define('view', function (exports) {
                 /**订单列表分页**/
                 layui.laypage.render({
                     elem: 'order_page',
-                    count: list_datas.total,
+                    count: ListDatas.total,
                     limit: admin.list_limit,
                     limits: [10, 20, 30, 40, 50, 100, 200],
                     theme: '#1E9FFF',
@@ -4294,20 +4293,23 @@ layui.define('view', function (exports) {
                         if (!first) {
                             admin.list_page = obj.curr;
                             admin.list_limit = obj.limit;
-                            list_datas = await admin.get(`${url}&page=${admin.list_page}&limit=${admin.list_limit}`);
+                            ListDatas = await admin.post(`${url}`, JSON.stringify({
+                                offset: admin.list_page,
+                                limit: admin.list_limit,
+                            }));
                             $("#order-i-table tbody").remove();
-                            if (list_datas.total === 0) {
+                            if (ListDatas.total === 0) {
                                 $("#order-i-table").append(`<tbody><tr class="sep-row"><td colspan="5"><div class="no_data">无数据</div></td></tr></tbody>`);
                             } else {
-                                layui.laytpl($("#order_i_list").html()).render(list_datas.rows, function (html) {
+                                layui.laytpl($("#order_i_list").html()).render(ListDatas.rows, function (html) {
                                     $("#order-i-table").append(html);
                                 });
                             }
                         }
-                        localStorage.setItem(i_e_type + "_limit", obj.limit);
+                        localStorage.setItem(filterData.ImpexpMarkcd + "_limit", obj.limit);
                     }
                 });
-                return list_datas;
+                return ListDatas;
             },
 
             //只允许数字

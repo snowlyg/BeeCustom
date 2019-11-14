@@ -18,6 +18,8 @@ func (u *Annotation) TableName() string {
 // AnnotationQueryParam 用于查询的类
 type AnnotationQueryParam struct {
 	BaseQueryParam
+
+	ImpexpMarkcd string
 }
 
 // Annotation 实体类
@@ -137,6 +139,8 @@ func NewAnnotationQueryParam() AnnotationQueryParam {
 func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64) {
 	query := orm.NewOrm().QueryTable(AnnotationTBName())
 	datas := make([]*Annotation, 0)
+
+	query = query.Distinct().Filter("ImpexpMarkcd", params.ImpexpMarkcd)
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
