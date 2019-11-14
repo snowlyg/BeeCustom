@@ -26,10 +26,9 @@ git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
 3.加载依赖管理包 使用 gopm 管理包
 
  ``` 
- 
+
   go get -v -u github.com/gpmgo/gopm
   
-
   // 拉取依赖到缓存目录
   gopm get 
 
@@ -59,8 +58,21 @@ git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
 在 BeeCustom 目录使用 `beego` 官方提供的命令运行
 ```
 bee run 
+
+改用 gowatch 解决修改前端文件不热加载问题， gowatch 打包效率更快
 ```
-111
+
+# 增加了grunt 打包前端资源
+```
+npm install --save-dev grunt-contrib-cssmin grunt-contrib-uglify grunt-contrib-watch grunt-contrib-copy
+
+
+npm install
+
+grunt
+
+```
+
 # 使用组件
  1. 数据格式化 [https://github.com/IamBusy/amoeba](https://github.com/IamBusy/amoeba)
 
