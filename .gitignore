@@ -33,5 +33,6 @@ BeeCustom.exe
 BeeCustom
 /.vendor
 app.conf
+/node_modules
 
 
