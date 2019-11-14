@@ -80,3 +80,12 @@ func GetSectionWithInt(wordInt int8, configSection string) (string, error) {
 func CreateCaptcha() string {
 	return fmt.Sprintf("%04v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
 }
+
+func GetDateTimeString(v *time.Time, format string) string {
+	if v.IsZero() {
+		return ""
+	} else {
+		v.Format(format)
+	}
+	return fmt.Sprintf("%04v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
+}

@@ -15,6 +15,7 @@ func init() {
 	beego.Router("/annotation/datagrid", &controllers.AnnotationController{}, "Post:DataGrid")
 	beego.Router("/annotation/store", &controllers.AnnotationController{}, "Post:Store")
 	beego.Router("/annotation/edit/?:id", &controllers.AnnotationController{}, "Get:Edit")
+	beego.Router("/annotation/cancel/?:id", &controllers.AnnotationController{}, "Get:Cancel")
 	beego.Router("/annotation/update/?:id", &controllers.AnnotationController{}, "Patch:Update")
 	beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:Delete")
 

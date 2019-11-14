@@ -365,24 +365,22 @@
 
         /**取消订单**/
         $("body").on("click", ".cancel_order", function() {
-            const id = $(this).data('id');
             layer.confirm('真的要取消订单吗？一旦取消，订单将被关闭！', {
                 title: '提示'
             }, async (index) => {
-                const data = await admin.post(`/annotation/i/${id}/cancel`);
+                const data = await admin.get(`/annotation/cancel/${$(this).data('id')}`);
                 layer.close(index);
                 if (data.status) {
-                    await admin.get_data_list(`/annotation/i/list?month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+                    window.location.reload()
                 }
             });
         });
 
         /**开始制单/继续制单/修改**/
         $(document).on("click", ".order_start_maker, .order_keep_maker, .order_revise, .order_check_success_reload", async function() {
-            const id = $(this).data('id');
             const topLayui = parent === self ? layui : top.layui,
-                href = `/annotation/i/${id}/#/id=${id}`,
-                text = `制单/修改保税清单（进口）`;
+                href = `/annotation/edit/${$(this).data('id')}`,
+                text = `制单/修改保税清单（`+ @{{.ImpexpMarkcdName}} +`）`;
             topLayui.index.openTabsPage(href, text);
         });
 
