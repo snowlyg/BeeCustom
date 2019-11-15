@@ -24,8 +24,8 @@ type Role struct {
 	BaseModel
 
 	Name         string         `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
-	Resources    []*Resource    `orm:"rel(m2m)"`      // 设置一对多的反向关系
-	BackendUsers []*BackendUser `orm:"reverse(many)"` //设置一对多关系
+	Resources    []*Resource    `orm:"rel(m2m);rel_table(role_resource)"` // 设置多对多的反向关系
+	BackendUsers []*BackendUser `orm:"reverse(many)"`                     //设置一对多关系
 }
 
 //初始化角色

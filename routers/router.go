@@ -19,6 +19,7 @@ func init() {
 	beego.Router("/annotation/cancel/?:id", &controllers.AnnotationController{}, "Get:Cancel")
 	beego.Router("/annotation/audit/?:id", &controllers.AnnotationController{}, "Get:Audit")
 	beego.Router("/annotation/update/?:id", &controllers.AnnotationController{}, "Patch:Update")
+	beego.Router("/annotation/distribute/?:id", &controllers.AnnotationController{}, "Post:Distribute")
 	beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:Delete")
 
 	//手账册

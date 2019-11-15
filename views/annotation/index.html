@@ -262,7 +262,7 @@
                                     {{# } }}
                                 {{# if(item.StatusString == '审核通过'){ }}
                                     <button class="layui-btn tr-bd-{{ status }} order_distribute"
-                                    type="button" data-id="{{ item.Id }}" data-user="{{ item.CompanyUserId }}">
+                                    type="button" data-id="{{ item.Id }}">
                                 派单
                                 </button>
                                     <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
@@ -274,14 +274,14 @@
                                 {{# if(item.StatusString == '待派单'){ }}
 
                                     <button class="layui-btn tr-bd-{{ status }} order_distribute"
-                                    type="button" data-id="{{ item.Id }}" data-user="{{ item.CompanyUserId }}">
+                                    type="button"  onclick="layui.admin.distribute('.order_distribute',{{ item.Id }})">
                                     派单
                                     </button>
 
                                     {{# } }}
                                 {{# if(item.StatusString == '已派单'){ }}
                                     <button class="layui-btn tr-bd-{{ status }} order_distribute"
-                                    type="button" data-id="{{ item.Id }}" data-user="{{ item.CompanyUserId }}">
+                                    type="button"    onclick="layui.admin.distribute('.order_distribute',{{ item.Id }})">
                                     重新派单
                                     </button>
 
@@ -372,30 +372,8 @@
     <a class="custom-edit" lay-event="preview">预览</a>
     <a class="custom-edit" lay-event="download">下载</a>
 </script>
-<script type="text/html" id="distribute_template">
-    <div class="custom-order_import-distribute">
-        <form class="layui-form">
-            <div class="layui-form-item">
-                <select name="user_id" lay-filter="user_id" lay-search>
-                    <option value="">请选择制单人</option>
 
-                    <option value=""></option>
-
-                </select>
-            </div>
-            <div class="layui-form-item">
-                <textarea name="remark" id="remark" placeholder="备注" class="layui-textarea" maxlength="300"></textarea>
-                <p class="custom-order_import-distribute-number"><span>0</span>/300</p>
-            </div>
-            <div class="layui-form-item distribute_submit">
-                <button class="layui-btn custom-create_btn" lay-submit lay-filter="distribute_submit"
-                        id="distribute_submit" type="button">
-                    提交
-                </button>
-            </div>
-        </form>
-    </div>
-</script>
+@{{template "/common/order_annotation/distribute.html" .}}
 
 @{{template "/common/order_annotation/application_change.html" .}}
 @{{template "/common/order_annotation/error_logging.html" .}}

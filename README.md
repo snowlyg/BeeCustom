@@ -66,7 +66,7 @@ bee run
 ```
 npm install
 
-grunt
+gulp
 
 ```
 

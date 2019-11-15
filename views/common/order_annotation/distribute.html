@@ -2,21 +2,16 @@
     <div class="custom-order_import-distribute">
         <form class="layui-form">
             <div class="layui-form-item">
-                <select name="user_id" lay-filter="user_id" lay-search lay-verify="required" lay-vertype="tips">
+                <select name="BackendUserId" lay-filter="user_id" lay-search lay-verify="required" lay-vertype="tips">
                     <option value="">请选择制单人</option>
                     @{{ range .BackendUsers }}
                     <option value="@{{ .Id }}">@{{ .RealName }}</option>
                     @{{end}}
                 </select>
             </div>
+
             <div class="layui-form-item">
-                    <textarea name="remark" id="remark_distribute" placeholder="备注" class="layui-textarea"
-                              maxlength="300"></textarea>
-                <p class="custom-order_import-distribute-number" id="remark_distribute_number"><span>0</span>/300</p>
-            </div>
-            <div class="layui-form-item distribute_submit">
-                <button class="layui-btn custom-create_btn" lay-submit lay-filter="distribute_submit"
-                        id="distribute_submit" type="button">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="distribute_submit" id="distribute_submit" type="button">
                     提交
                 </button>
             </div>

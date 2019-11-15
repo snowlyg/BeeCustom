@@ -777,7 +777,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         success: function (res) {
                             if (show) {
-                                if (res.status) {
+                                if (res.status === 1) {
                                     layer.msg(res.msg, {
                                         offset: '15px',
                                         icon: 1,
@@ -810,7 +810,7 @@ layui.define('view', function (exports) {
                             reject(error.responseJSON);
                         },
                         complete: function (XMLHttpRequest, status) {
-                            if (status == 'timeout') {
+                            if (status === 'timeout') {
                                 ajax_abort.abort();
                                 layer.msg("会话请求超时，请重新登录！", {
                                     offset: '15px',
@@ -836,7 +836,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status) {
+                            if (res.status === 1) {
                                 layer.msg(res.msg, {
                                     offset: '15px',
                                     icon: 1,
@@ -868,7 +868,7 @@ layui.define('view', function (exports) {
                             reject(error.responseJSON);
                         },
                         complete: function (XMLHttpRequest, status) {
-                            if (status == 'timeout') {
+                            if (status === 'timeout') {
                                 ajax_abort.abort();
                                 layer.msg("会话请求超时，请重新登录！", {
                                     offset: '15px',
@@ -894,7 +894,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status) {
+                            if (res.status === 1) {
                                 layer.msg(res.msg, {
                                     offset: '15px',
                                     icon: 1,
@@ -926,7 +926,7 @@ layui.define('view', function (exports) {
                             reject(error.responseJSON);
                         },
                         complete: function (XMLHttpRequest, status) {
-                            if (status == 'timeout') {
+                            if (status === 'timeout') {
                                 ajax_abort.abort();
                                 layer.msg("会话请求超时，请重新登录！", {
                                     offset: '15px',
@@ -954,7 +954,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status) {
+                            if (res.status === 1) {
                                 layer.msg(res.msg, {
                                     offset: '15px',
                                     icon: 1,
@@ -986,7 +986,7 @@ layui.define('view', function (exports) {
                             reject(error.responseJSON);
                         },
                         complete: function (XMLHttpRequest, status) {
-                            if (status == 'timeout') {
+                            if (status === 'timeout') {
                                 ajax_abort.abort();
                                 layer.msg("会话请求超时，请重新登录！", {
                                     offset: '15px',
@@ -1266,6 +1266,38 @@ layui.define('view', function (exports) {
                     page: true,
                     height: 550
                 });
+            },
+            //派单
+            distribute(clickEnum,id){
+
+                /**派单**/
+                $(document).on("click", clickEnum, function() {
+                    layer.open({
+                        type: 1,
+                        title: '派单',
+                        shadeClose: true,
+                        area: admin.screen() < 2 ? ['80%', '300px'] : ['450px', '340px'],
+                        content: $('#distribute_template').html()
+                    });
+
+                    layui.form.render();
+                });
+
+                layui.form.on('submit(distribute_submit)', async (data) => {
+
+                    let url = `/annotation/distribute/${id}`;
+                    let result = await admin.post(url, data.field);
+                    if (result.status === 1){
+                        setTimeout(() => {
+                            window.location.reload();
+                            if (clickEnum === "#order_dispatch") {
+                                admin.reloadFrame('进口核注清单iframe');
+                            }
+                        },500);
+                        layer.closeAll();
+                    }
+                });
+
             },
 
             //保存合同备案号

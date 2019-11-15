@@ -6,6 +6,7 @@ import (
 	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego/orm"
 	"strconv"
 	"time"
 )
@@ -38,6 +39,10 @@ func (c *AnnotationController) IIndex() {
 	c.Data["ImpexpMarkcd"] = "I"
 	c.Data["ImpexpMarkcdName"] = "进口"
 
+	// 获取制单人
+	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
+	c.Data["BackendUsers"] = backendUsers
+
 	c.GetXSRFToken()
 }
 func (c *AnnotationController) EIndex() {
@@ -45,6 +50,10 @@ func (c *AnnotationController) EIndex() {
 	c.setTpl("annotation/index.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
+
+	// 获取制单人
+	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
+	c.Data["BackendUsers"] = backendUsers
 
 	//页面里按钮权限控制
 	c.getActionData("Edit", "Delete", "Create")
@@ -62,7 +71,7 @@ func (c *AnnotationController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.AnnotationPageList(&params)
-	ms, err := models.AnnotationGetRelations(data, "Company")
+	ms, err := models.AnnotationGetRelations(data, "Company,BackendUsers")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
@@ -82,12 +91,30 @@ func (c *AnnotationController) DataGrid() {
 
 // TransformAnnotationList 格式化列表数据
 func (c *AnnotationController) TransformAnnotationList(ms []*models.Annotation) map[int]interface{} {
+	var annotationCreatorName string //制单人
 	annotationList := make(map[int]interface{})
 	for i, v := range ms {
 		annotationItem := make(map[string]string)
 		aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
+		}
+
+		userType, err := enums.GetSectionWithString("制单人", "annotation_user_type")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
+		}
+		if len(v.BackendUsers) > 0 {
+			for _, bu := range v.BackendUsers {
+				abur, err := models.AnnotationUserRelByUserIdAndAnnotationId(bu.Id, v.Id, userType)
+				if err != nil {
+					c.jsonResult(enums.JRCodeFailed, "获取制单人出错", nil)
+				}
+				if abur.Id != 0 {
+					annotationCreatorName = bu.RealName
+				}
+
+			}
 		}
 
 		annotationItem["Id"] = strconv.FormatInt(v.Id, 10)
@@ -102,6 +129,7 @@ func (c *AnnotationController) TransformAnnotationList(ms []*models.Annotation) 
 		annotationItem["InvtDclTime"] = v.InvtDclTime.Format(enums.BaseDateTimeFormat)
 		annotationItem["EtpsInnerInvtNo"] = v.EtpsInnerInvtNo
 		annotationItem["CompanyName"] = v.Company.Name
+		annotationItem["DeclareName"] = annotationCreatorName
 
 		annotationList[i] = annotationItem
 	}
@@ -122,21 +150,26 @@ func (c *AnnotationController) Create() {
 
 // Store 添加 新建 页面
 func (c *AnnotationController) Store() {
+	o := orm.NewOrm()
+	err := o.Begin()
 
 	m := models.NewAnnotation(0)
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
 		utils.LogDebug(fmt.Sprintf("ParseForm:%v", err))
+		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "获取数据出错", m)
 	}
 
 	iT, err := c.GetDateTime("InputTime", enums.BaseDateFormat)
 	if err != nil {
+		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "格式时间出错", m)
 	}
 
 	iDT, err := c.GetDateTime("InvtDclTime", enums.BaseDateFormat)
 	if err != nil {
+		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "格式时间出错", m)
 	}
 
@@ -145,14 +178,17 @@ func (c *AnnotationController) Store() {
 		c.jsonResult(enums.JRCodeFailed, "获取客户出错", nil)
 	}
 
-	c.UpdateAnnotaionStatus(&m, "待审核")
+	if err = c.updateAnnotaionStatus(&m, "待审核"); err != nil {
+		err = o.Rollback()
+		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
+	}
 
 	m.InputTime = *iT
 	m.InputTime = *iDT
-	m.BackendUser = &c.curUser
+	//m.BackendUser = &c.curUser
 	m.Company = company
 	m.InvtDclTime = time.Now()
-	m.EtpsInnerInvtNo = c.GetEtpsInnerInvtNo(m.ImpexpMarkcd, m.DclPlcCuscd)
+	m.EtpsInnerInvtNo = c.getEtpsInnerInvtNo(m.ImpexpMarkcd, m.DclPlcCuscd)
 
 	c.validRequestData(m)
 
@@ -170,8 +206,16 @@ func (c *AnnotationController) Store() {
 	//}
 
 	if _, err := models.AnnotationSave(&m); err != nil {
+		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
+		_, err := c.setAnnotaionUserRelType(&m, &c.curUser, "创建人")
+		if err != nil {
+			err = o.Rollback()
+			c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+		}
+
+		err = o.Commit()
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
@@ -189,11 +233,9 @@ func (c *AnnotationController) Edit() {
 
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
-
-	utils.LogDebug(fmt.Sprintf("backendUsers:%v", backendUsers))
+	c.Data["BackendUsers"] = backendUsers
 
 	c.Data["m"] = c.TransformAnnotation(m)
-	c.Data["BackendUsers"] = backendUsers
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
@@ -325,12 +367,14 @@ func (c *AnnotationController) Cancel() {
 		}
 	}
 
-	c.UpdateAnnotaionStatus(m, "订单关闭")
+	if err = c.updateAnnotaionStatus(m, "订单关闭"); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
+	}
 
 	if _, err := models.AnnotationSave(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	} else {
-		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
+		c.jsonResult(enums.JRCodeSucc, "取消成功", m)
 	}
 
 }
@@ -346,12 +390,65 @@ func (c *AnnotationController) Audit() {
 		}
 	}
 
-	c.UpdateAnnotaionStatus(m, "审核通过")
+	if err = c.updateAnnotaionStatus(m, "审核通过"); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+	}
 
 	if _, err := models.AnnotationSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "审核通过", m)
+	}
+
+}
+
+// Distribute 分配
+func (c *AnnotationController) Distribute() {
+	o := orm.NewOrm()
+	err := o.Begin()
+
+	BackendUserId, _ := c.GetInt64("BackendUserId")
+	bu, err := models.BackendUserOne(BackendUserId)
+	if bu != nil && BackendUserId > 0 {
+		if err != nil {
+			err = o.Rollback()
+			c.pageError("数据无效，请刷新后重试")
+		}
+
+	}
+
+	Id, _ := c.GetInt64(":id", 0)
+	m, err := models.AnnotationOne(Id)
+	if m != nil && Id > 0 {
+		if err != nil {
+			err = o.Rollback()
+			c.pageError("数据无效，请刷新后重试")
+		}
+
+	}
+
+	aur, err := c.setAnnotaionUserRelType(m, bu, "制单人")
+	if err != nil {
+		err = o.Rollback()
+		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+	}
+
+	if err = models.AnnotationUserRelSave(aur); err != nil {
+		err = o.Rollback()
+		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+	}
+
+	if err = c.updateAnnotaionStatus(m, "已派单"); err != nil {
+		err = o.Rollback()
+		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+	}
+
+	if _, err := models.AnnotationSave(m); err != nil {
+		err = o.Rollback()
+		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+	} else {
+		err = o.Commit()
+		c.jsonResult(enums.JRCodeSucc, "派单通过", m)
 	}
 
 }
@@ -400,19 +497,40 @@ func (c *AnnotationController) Delete() {
 }
 
 //清单订单号
-func (c *AnnotationController) GetEtpsInnerInvtNo(iEFlag, customMasterName string) string {
+func (c *AnnotationController) getEtpsInnerInvtNo(iEFlag, customMasterName string) string {
 	eiin := "QD" + iEFlag + customMasterName + time.Now().Format(enums.BaseDateTimeSecondFormat) + enums.CreateCaptcha()
 
 	return eiin
 }
 
 //更新状态和状态更新时间
-func (c *AnnotationController) UpdateAnnotaionStatus(m *models.Annotation, StatusString string) {
+func (c *AnnotationController) updateAnnotaionStatus(m *models.Annotation, StatusString string) error {
 	aStatus, err := enums.GetSectionWithString(StatusString, "annotation_status")
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "转换清单状态出错", m)
+		utils.LogDebug(fmt.Sprintf("转换清单状态出错:%v", err))
+		return err
 	}
 
 	m.Status = aStatus
 	m.StatusUpdatedAt = time.Now()
+
+	return nil
+}
+
+//更新状态和状态更新时间
+func (c *AnnotationController) setAnnotaionUserRelType(m *models.Annotation, bu *models.BackendUser, StatusString string) (*models.AnnotationUserRel, error) {
+	aur := models.NewAnnotationUserRel(0)
+
+	aStatus, err := enums.GetSectionWithString(StatusString, "annotation_user_type")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
+		return nil, err
+	}
+
+	aur.Annotation = m
+	aur.BackendUser = bu
+
+	aur.UserType = aStatus
+
+	return &aur, nil
 }

@@ -13,6 +13,10 @@
             <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                 <i class="iconfont icon-folder-shared"></i>派单
             </button>
+            @{{ else if eq .m.StatusString  "已派单" }}
+            <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
+                <i class="iconfont icon-folder-shared"></i>重新派单
+            </button>
             @{{ end }}
 
             @{{if  .m.Id }}

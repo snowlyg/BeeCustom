@@ -516,35 +516,7 @@
 
 
         /**派单**/
-        let distribute_index;
-        $("body").on("click", "#order_dispatch", async function () {
-
-            distribute_index = layer.open({
-                type: 1,
-                title: '派单',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
-                content: $('#distribute_template').html()
-            });
-
-            const user_id = $(this).data("user");
-
-            $("select[name='user_id']").find(`option[value=${user_id}]`).prop("selected", true);
-
-            form.render();
-        });
-
-        $("body").on("input", "#remark_distribute", function () {
-            $("#remark_distribute_number span").text($(this).val().length);
-        });
-
-        /**派单保存**/
-        form.on('submit(distribute_submit)', async (data) => {
-            await admin.post(`/annotation/distribute/` +@{{.m.Id}}, {
-
-            });
-            layer.close(distribute_index);
-        });
+        admin.distribute("#order_dispatch", @{{.m.Id}});
 
         /**附注**/
         let order_note_index;

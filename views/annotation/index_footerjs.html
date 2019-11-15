@@ -26,31 +26,6 @@
         /**table左右拖动**/
         admin.table_mousedown();
 
-        /**派单**/
-        $("body").on("click", ".order_distribute", function() {
-            order_distribute = $(this).data("id");
-            layer.open({
-                type: 1,
-                title: '派单',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
-                content: $('#distribute_template').html()
-            });
-            const user_id = $(this).data("user");
-            $("select[name='user_id']").find(`option[value=${user_id}]`).prop("selected", true);
-            form.render();
-        });
-        $("body").on("input", "#remark", function() {
-            $(".custom-order_import-distribute-number span").text($(this).val().length);
-        });
-        form.on('submit(distribute_submit)', async (data) => {
-            await admin.post(`/annotation/i/${order_distribute}/distribute`, data.field);
-            await admin.get_data_list(`/annotation/i/list?month_time=${month_time}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-            setTimeout(() => {
-                layer.closeAll();
-            }, 2000);
-        });
-
         /**附件下载列表**/
         $("body").on("click", ".icon-attach-file", function() {
             const id = $(this).data("id");

@@ -23,6 +23,7 @@ func init() {
 		new(HandBookUllage),
 		new(Annotation),
 		new(ClearanceUpdateTime),
+		new(AnnotationUserRel),
 	)
 }
 
@@ -105,4 +106,9 @@ func AnnotationTBName() string {
 // ClearanceUpdateTimeTBName 获取 ClearanceUpdateTime 对应的表名称
 func ClearanceUpdateTimeTBName() string {
 	return TableName("clearance_update_times")
+}
+
+// AnnotationUserRelTBName 获取 ClearanceUpdateTime 对应的表名称
+func AnnotationUserRelTBName() string {
+	return "annotation_user_rel"
 }
