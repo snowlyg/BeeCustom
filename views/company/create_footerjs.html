@@ -344,12 +344,12 @@
 
             if (companyId) {
                 const result = await admin.patch(`/company/update/${companyId}`, data.field);
-                if (result.status) {
+                if (result.status === 1) {
                     admin.reloadFrame('企业客户管理iframe');
                 }
             } else {
                 const result = await admin.post("@{{ urlfor "CompanyController.Store" }}", data.field);
-                if (result.status) {
+                if (result.status === 1) {
                     admin.reloadFrame('企业客户管理iframe');
                     setTimeout(() => {
                         parent.layui.admin.closeThisTabs()

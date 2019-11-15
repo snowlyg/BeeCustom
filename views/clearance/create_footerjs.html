@@ -7,7 +7,7 @@
         const admin = layui.admin , form = layui.form;
         form.on('submit(clearance_submit)', async (data) => {
             const clearance_new = await admin.post(@{{ urlfor "ClearanceController.Store" }}, data.field);
-            if(clearance_new.status) {
+            if(clearance_new.status === 1) {
                 const index = parent.layer.getFrameIndex(window.name);
                 setTimeout(() => {
                     parent.layui.table.reload('clearance_lists');

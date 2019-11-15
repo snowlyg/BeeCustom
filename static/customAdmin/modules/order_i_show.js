@@ -3361,7 +3361,7 @@ layui.define(function (exports) {
 
             if (!order_id) {
                 const order_save_data = await admin.post(`/order/i/`, data.field);
-                if (order_save_data.status) {
+                if (order_save_data.status === 1) {
                     order_id = order_save_data.data.id;
                     const url = document.URL;
                     history.pushState(null, null, `${url}/${order_id}`);
@@ -3372,7 +3372,7 @@ layui.define(function (exports) {
                 data.field.id = order_id;
                 data.field.order_status = order_i_edit_data.order_status_string;
                 const order_save_data = await admin.post(`/order/i/`, data.field);
-                if (order_save_data.status) {
+                if (order_save_data.status === 1) {
                     await order_i_add_back_filling(order_save_data.data);
                     order_i_edit_data = order_save_data.data;
                 }
@@ -3866,7 +3866,7 @@ layui.define(function (exports) {
                         layer.load(2);
                         const save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}${orientation_save}`, 'show');
                         layer.closeAll('loading');
-                        if (save_pdf_data.status) {
+                        if (save_pdf_data.status === 1) {
                             await admin.getPdf(order_id);
                             table.reload('print_lists');
                         }
@@ -3910,7 +3910,7 @@ layui.define(function (exports) {
                                 layer.load(2);
                                 const save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}${orientation_save}`, 'show');
                                 layer.closeAll('loading');
-                                if (save_pdf_data.status) {
+                                if (save_pdf_data.status === 1) {
                                     await admin.getPdf(order_id);
                                     table.reload('print_lists');
                                 }
@@ -3943,7 +3943,7 @@ layui.define(function (exports) {
                                 layer.load(2);
                                 const save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}${orientation_save}`, 'show');
                                 layer.closeAll('loading');
-                                if (save_pdf_data.status) {
+                                if (save_pdf_data.status === 1) {
                                     await admin.getPdf(order_id);
                                     table.reload('print_lists');
                                 }
@@ -4021,7 +4021,7 @@ layui.define(function (exports) {
                                 layer.load(2);
                                 const save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}${orientation_save}`, 'show');
                                 layer.closeAll('loading');
-                                if (save_pdf_data.status) {
+                                if (save_pdf_data.status === 1) {
                                     await admin.getPdf(order_id);
                                     table.reload('print_lists');
                                 }
@@ -4031,7 +4031,7 @@ layui.define(function (exports) {
                             layer.load(2);
                             const save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}${orientation_save}`, 'show');
                             layer.closeAll('loading');
-                            if (save_pdf_data.status) {
+                            if (save_pdf_data.status === 1) {
                                 await admin.getPdf(order_id);
                                 table.reload('print_lists');
                             }
@@ -4053,7 +4053,7 @@ layui.define(function (exports) {
                         layer.load(2);
                         const reload_save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}&pdf_id=${obj.data.pdf_id}${orientation_save}`, 'show');
                         layer.closeAll('loading');
-                        if (reload_save_pdf_data.status) {
+                        if (reload_save_pdf_data.status === 1) {
                             await admin.getPdf(order_id);
                             table.reload('print_lists');
                         }
@@ -4097,7 +4097,7 @@ layui.define(function (exports) {
                                 layer.load(2);
                                 const reload_save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}&pdf_id=${obj.data.pdf_id}${orientation_save}`, 'show');
                                 layer.closeAll('loading');
-                                if (reload_save_pdf_data.status) {
+                                if (reload_save_pdf_data.status === 1) {
                                     await admin.getPdf(order_id);
                                     table.reload('print_lists');
                                 }
@@ -4130,13 +4130,13 @@ layui.define(function (exports) {
                                 layer.load(2);
                                 const reload_save_pdf_data = await admin.get(`/order/i/${order_id}/downloads/save_pdf?file_type=${obj.data.id}&pdf_id=${obj.data.pdf_id}${orientation_save}`, 'show');
                                 layer.closeAll('loading');
-                                if (reload_save_pdf_data.status) {
+                                if (reload_save_pdf_data.status === 1) {
                                     await admin.getPdf(order_id);
                                     table.reload('print_lists');
                                 }
                             });
                         }
-                        if (obj.data.code == 'local_6') {
+                        if (obj.data.code === 'local_6') {
                             file_type_id = obj.data.id;
                             save_pdf_id = obj.data.pdf_id;
                             layer.confirm('是否需要修改内容？', {

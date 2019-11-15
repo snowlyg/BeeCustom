@@ -1,21 +1,19 @@
 <div class="custom-order_form">
     <div class="custom-order_form_annotation">
-        <div class="custom-order_form_top" id="order_button"></div>
-        <script type="text/html" id="order_button_template">
+        <div class="custom-order_form_top">
             <button class="layui-btn custom-create_btn" id="order_save" type="button">
                 <i class="iconfont icon-save"></i>保存
             </button>
-            {{# if(d.StatusString != '已完成'){ }}
+            @{{if compare .m.StatusString  "已完成" }}
             <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
                 <i class="iconfont icon-checkcircle"></i>审核通过
             </button>
             <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                 <i class="iconfont icon-folder-shared"></i>派单
             </button>
-            <button class="layui-btn custom-create_btn" id="order_i_import" type="button">
-                <i class="iconfont icon-input"></i>导入
-            </button>
-            {{# } }}
+            @{{ end }}
+
+            @{{if  .m.Id }}
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print" type="button">
                 <i class="iconfont icon-print"></i>打印
             </button>
@@ -26,20 +24,19 @@
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_take" type="button">
                 <i class="iconfont icon-assignment1"></i>办理记录
             </button>
-        </script>
+            @{{ end }}
 
-        <script type="text/html" id="order_edit_bill_template">
-            {{# if(d.StatusString == '已完成' .}}{ }}
-            {{# if(d.annotation_change_logs.length > 0){ }}
-            <div class="order_edit_bill_string">
-                <p class="order_edit_bill_string_p">
-                    <i class="iconfont icon-edit"></i>
-                    <span>{{ d.annotation_change_logs[d.annotation_change_logs.length-1].content }}</span>
-                </p>
-            </div>
-            {{# } }}
-            {{# } }}
-        </script>
+            @{{if compare .m.StatusString  "已完成"  }}
+        @{{if .m.annotation_change_logs }}
+        <div class="order_edit_bill_string">
+            <p class="order_edit_bill_string_p">
+                <i class="iconfont icon-edit"></i>
+                <span>@{{ .m.annotation_change_logs }}</span>
+            </p>
+        </div>
+        @{{end }}
+        @{{ end }}
+        </div>
 
         <div id="order_edit_bill"></div>
         <div class="layui-tab" lay-filter="annotation_header_item">

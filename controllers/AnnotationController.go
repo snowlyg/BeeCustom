@@ -127,17 +127,17 @@ func (c *AnnotationController) Store() {
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
 		utils.LogDebug(fmt.Sprintf("ParseForm:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+		c.jsonResult(enums.JRCodeFailed, "获取数据出错", m)
 	}
 
 	iT, err := c.GetDateTime("InputTime", enums.BaseDateFormat)
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+		c.jsonResult(enums.JRCodeFailed, "格式时间出错", m)
 	}
 
 	iDT, err := c.GetDateTime("InvtDclTime", enums.BaseDateFormat)
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+		c.jsonResult(enums.JRCodeFailed, "格式时间出错", m)
 	}
 
 	company, err := models.CompanyByManageCode(m.BizopEtpsno)
@@ -365,7 +365,7 @@ func (c *AnnotationController) GetEtpsInnerInvtNo(iEFlag, customMasterName strin
 func (c *AnnotationController) UpdateAnnotaionStatus(m *models.Annotation, StatusString string) {
 	aStatus, err := enums.GetSectionWithString(StatusString, "annotation_status")
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+		c.jsonResult(enums.JRCodeFailed, "转换清单状态出错", m)
 	}
 
 	m.Status = aStatus

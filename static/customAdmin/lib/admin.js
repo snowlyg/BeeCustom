@@ -4147,7 +4147,7 @@ layui.define('view', function (exports) {
                 layui.form.on('submit(order_add_entry_submit)', async (form) => {
                     try {
                         const data = await admin.post(`/order/${admin.add_entry.flag}/${admin.add_entry.id}/add_entry_id`, form.field);
-                        if (data.status) {
+                        if (data.status === 1) {
                             setTimeout(() => {
                                 layer.closeAll();
                             }, 2000)

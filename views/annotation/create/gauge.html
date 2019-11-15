@@ -17,8 +17,8 @@
                 <td class="td-scale-01 text-align-right">清单类型</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="hidden" name="InvtType" id="invt_type" value="0">
-                        <input type="text" class="non-empty required" value="@{{.m.InvtTypeName}}" name="InvtTypeName" id="invt_type_name" autocomplete="off" lay-verify="required" lay-vertype="tips" value="普通清单">
+                        <input type="hidden" name="InvtType" id="invt_type" value="@{{ if .m.InvtType}}@{{.m.InvtType}}@{{ else}}0@{{end}}">
+                        <input type="text" class="non-empty required" value="@{{ if .m.InvtTypeName}}@{{.m.InvtTypeName}}@{{ else}}普通清单@{{end}}" name="InvtTypeName" id="invt_type_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">手(账)册编号</td>
@@ -72,19 +72,19 @@
                 <td class="td-scale-01 text-align-right">申报单位编码</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty required"  name="DclEtpsno" id="dcl_etpsno" autocomplete="off" lay-verify="required" lay-vertype="tips" value="@{{ if .m.DclEtpsno}} @{{.m.DclEtpsno}} @{{ else}} 4419986507  @{{end}}">
+                        <input type="text" class="non-empty required"  name="DclEtpsno" id="dcl_etpsno" autocomplete="off" lay-verify="required" lay-vertype="tips" value="@{{ if .m.DclEtpsno}}@{{.m.DclEtpsno}}@{{ else}}4419986507@{{end}}">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">申报单位社会信用代码</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty"  name="DclEtpsSccd" value="@{{ if .m.DclEtpsSccd}} @{{.m.DclEtpsSccd}} @{{ else}} 914419007962277606  @{{end}}" id="dcl_etps_sccd" autocomplete="off" >
+                        <input type="text" class="non-empty"  name="DclEtpsSccd" value="@{{ if .m.DclEtpsSccd}}@{{.m.DclEtpsSccd}}@{{ else}}14419007962277606@{{end}}" id="dcl_etps_sccd" autocomplete="off" >
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">申报单位名称</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty required"  name="DclEtpsNm" id="dcl_etps_nm" autocomplete="off" lay-verify="required" lay-vertype="tips" value="@{{ if .m.DclEtpsNm}} @{{.m.DclEtpsNm}} @{{ else}} 广东东华报关服务有限公司  @{{end}}" >
+                        <input type="text" class="non-empty required"  name="DclEtpsNm" id="dcl_etps_nm" autocomplete="off" lay-verify="required" lay-vertype="tips" value="@{{ if .m.DclEtpsNm}}@{{.m.DclEtpsNm}}@{{ else}}广东东华报关服务有限公司@{{end}}" >
                     </div>
                 </td>
             </tr>
@@ -92,19 +92,19 @@
                 <td class="td-scale-01 text-align-right">录入单位编码</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty disabled" disabled  name="InputCode" id="input_code" autocomplete="off" value="@{{ if .m.InputCode}} @{{.m.InputCode}} @{{ else}} 4419986507  @{{end}}" >
+                        <input type="text" class="non-empty disabled" disabled  name="InputCode" id="input_code" autocomplete="off" value="@{{ if .m.InputCode}}@{{.m.InputCode}}@{{ else}}4419986507@{{end}}" >
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">录入单位社会信用代码</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty" name="InputCreditCode" id="input_credit_code" autocomplete="off" value="@{{ if .m.InputCreditCode}} @{{.m.InputCreditCode}} @{{ else}} 914419007962277606  @{{end}}">
+                        <input type="text" class="non-empty" name="InputCreditCode" id="input_credit_code" autocomplete="off" value="@{{ if .m.InputCreditCode}}@{{.m.InputCreditCode}}@{{ else}}914419007962277606@{{end}}">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">录入单位名称</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty required" name="InputName" id="input_name" autocomplete="off" lay-verify="required" lay-vertype="tips" value="@{{ if .m.InputName}} @{{.m.InputName}} @{{ else}} 广东东华报关服务有限公司  @{{end}}">
+                        <input type="text" class="non-empty required" name="InputName" id="input_name" autocomplete="off" lay-verify="required" lay-vertype="tips" value="@{{ if .m.InputName}}@{{.m.InputName}}@{{ else}}广东东华报关服务有限公司@{{end}}">
                     </div>
                 </td>
             </tr>
@@ -132,8 +132,8 @@
                 <td class="td-scale-01 text-align-right">料件、成品标志</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="hidden"  value="@{{.m.MtpckEndprdMarkcd}}" name="MtpckEndprdMarkcd" id="mtpck_endprd_markcd">
-                        <input type="text" class="non-empty required" value="@{{.m.MtpckEndprdMarkcdName}}" name="MtpckEndprdMarkcdName" id="mtpck_endprd_markcd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
+                        <input type="hidden"  value="@{{ if .m.MtpckEndprdMarkcd}}@{{.m.MtpckEndprdMarkcd}}@{{ else}}I@{{end}}" name="MtpckEndprdMarkcd" id="mtpck_endprd_markcd">
+                        <input type="text" class="non-empty required" value="@{{ if .m.MtpckEndprdMarkcdName}}@{{.m.MtpckEndprdMarkcdName}}@{{ else}}料件@{{end}}" name="MtpckEndprdMarkcdName" id="mtpck_endprd_markcd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">监管方式</td>
@@ -205,14 +205,14 @@
                 <td class="td-scale-01 text-align-right">报关标志</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="hidden"  value="@{{.m.DclcusFlag}}" name="DclcusFlag" id="dclcus_flag">
-                        <input type="text" class="non-empty required"  value="@{{.m.DclcusFlagName}}" name="DclcusFlagName" id="dclcus_flag_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
+                        <input type="hidden"  value="@{{ if .m.DclcusFlag}} @{{.m.DclcusFlag}} @{{ else}}1@{{end}}" name="DclcusFlag" id="dclcus_flag">
+                        <input type="text" class="non-empty required"  value="@{{ if .m.DclcusFlagName}}@{{.m.DclcusFlagName}}@{{ else}}报关@{{end}}" name="DclcusFlagName" id="dclcus_flag_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">是否系统生成报关单</td>
                 <td class="td-scale-04">
-                    <input type="hidden" value="@{{.m.GenDecFlag}}" name="GenDecFlag" id="gen_dec_flag">
-                    <input type="text" value="@{{.m.GenDecFlagName}}" name="GenDecFlagName" id="gen_dec_flag_name" class="non-empty required">
+                    <input type="hidden" value="@{{ if .m.GenDecFlag}}@{{.m.GenDecFlag}}@{{ else}}1@{{end}}" name="GenDecFlag" id="gen_dec_flag">
+                    <input type="text" value="@{{ if .m.GenDecFlagName}}@{{.m.GenDecFlagName}}@{{ else}}生成@{{end}}" name="GenDecFlagName" id="gen_dec_flag_name" class="non-empty required">
                 </td>
 
                 <td class="td-scale-01 text-align-right">报关类型</td>
@@ -222,8 +222,8 @@
                 </td>
                 <td class="td-scale-01 text-align-right">报关单类型</td>
                 <td class="td-scale-04" colspan="2">
-                    <input type="hidden" value="@{{.m.DecType}}" name="DecType" id="dec_type">
-                    <input type="text" value="@{{.m.DecTypeName}}" name="DecTypeName" id="dec_type_name" class="non-empty">
+                    <input type="hidden" value="@{{ if .m.DecType}}@{{.m.DecType}}@{{ else}}1@{{end}}" name="DecType" id="dec_type">
+                    <input type="text" value="@{{ if .m.DecTypeName}}@{{.m.DecTypeName}}@{{ else}}进口报关单@{{end}}" name="DecTypeName" id="dec_type_name" class="non-empty">
                 </td>
             </tr>
             <tr>
@@ -235,18 +235,18 @@
                 </td>
                 <td class="td-scale-01 text-align-right">对应报关单申报单位编码</td>
                 <td class="td-scale-04" colspan="2">
-                    <input type="text" value="@{{.m.CorrEntryDclEtpsNo}}" name="CorrEntryDclEtpsNo" id="corr_entry_dcl_etps_no" class="non-empty">
+                    <input type="text" value="@{{ if .m.CorrEntryDclEtpsNo}}@{{.m.CorrEntryDclEtpsNo}}@{{ else}}4419986507@{{end}}" name="CorrEntryDclEtpsNo" id="corr_entry_dcl_etps_no" class="non-empty">
                 </td>
                 <td class="td-scale-01 text-align-right">对应报关单申报单位社会信用代码</td>
                 <td class="td-scale-04" colspan="2">
-                    <input type="text" value="@{{.m.CorrEntryDclEtpsSccd}}" name="CorrEntryDclEtpsSccd" id="corr_entry_dcl_etps_sccd" class="non-empty">
+                    <input type="text" value="@{{ if .m.CorrEntryDclEtpsSccd}}@{{.m.CorrEntryDclEtpsSccd}}@{{ else}}914419007962277606@{{end}}" name="CorrEntryDclEtpsSccd" id="corr_entry_dcl_etps_sccd" class="non-empty">
                 </td>
             </tr>
             <tr>
                 <td class="td-scale-04 text-align-right">对应报关单申报单位名称</td>
                 <td class="td-scale-04" colspan="7">
                     <div class="input-group valid">
-                        <input type="text" value="@{{.m.CorrEntryDclEtpsNm}}" name="CorrEntryDclEtpsNm" id="corr_entry_dcl_etps_nm" class="non-empty" autocomplete="off">
+                        <input type="text" value="@{{ if .m.CorrEntryDclEtpsNm}}@{{.m.CorrEntryDclEtpsNm}}@{{ else}}广东东华报关服务有限公司@{{end}}" name="CorrEntryDclEtpsNm" id="corr_entry_dcl_etps_nm" class="non-empty" autocomplete="off">
                     </div>
                 </td>
             </tr>

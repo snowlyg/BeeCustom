@@ -7,7 +7,7 @@
         const admin = layui.admin  , form = layui.form ;
         form.on('submit(clearance_submit)', async (data) => {
             const clearance_edit = await admin.patch(`/clearance/edit/` + @{{ .m.Id}}, data.field);
-            if(clearance_edit.status) {
+            if(clearance_edit.status === 1) {
                 const index = parent.layer.getFrameIndex(window.name);
                 setTimeout(() => {
                     parent.layui.table.reload('clearance_lists');
