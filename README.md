@@ -62,11 +62,8 @@ bee run
 改用 gowatch 解决修改前端文件不热加载问题， gowatch 打包效率更快
 ```
 
-# 增加了grunt 打包前端资源
+# 增加了 gulp 打包前端资源
 ```
-npm install --save-dev grunt-contrib-cssmin grunt-contrib-uglify grunt-contrib-watch grunt-contrib-copy
-
-
 npm install
 
 grunt
