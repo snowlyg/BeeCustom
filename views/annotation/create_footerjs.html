@@ -500,12 +500,12 @@
             data.field.ImpexpMarkcd = "@{{.ImpexpMarkcd}}";
             if (@{{ .m.Id }}) {
                 const annotation_data = await admin.post("/annotation/update" + @{{ .m.Id }}, data.field);
-                if (annotation_data.status ===1 ) {
+                if (annotation_data.status === 1) {
                     window.location.reload()
                 }
             } else {
                 const annotation_data = await admin.post(@{{ urlfor "AnnotationController.Store" }}, data.field);
-                if (annotation_data.status ===1) {
+                if (annotation_data.status === 1) {
                     window.location.href = "/annotation/edit/" + annotation_data.obj.Id
                 }
 
@@ -518,9 +518,7 @@
         /**派单**/
         let distribute_index;
         $("body").on("click", "#order_dispatch", async function () {
-            if (!order_id) {
-                return layer.msg("请先保存订单！")
-            }
+
             distribute_index = layer.open({
                 type: 1,
                 title: '派单',
@@ -528,19 +526,26 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
                 content: $('#distribute_template').html()
             });
+
             const user_id = $(this).data("user");
+
             $("select[name='user_id']").find(`option[value=${user_id}]`).prop("selected", true);
+
             form.render();
         });
+
         $("body").on("input", "#remark_distribute", function () {
             $("#remark_distribute_number span").text($(this).val().length);
         });
 
         /**派单保存**/
         form.on('submit(distribute_submit)', async (data) => {
-            await admin.post(`/annotation/i/${order_id}/distribute`, data.field);
+            await admin.post(`/annotation/distribute/` +@{{.m.Id}}, {
+
+            });
             layer.close(distribute_index);
         });
+
         /**附注**/
         let order_note_index;
         $("body").on("click", "#order_note", async function () {
@@ -579,35 +584,19 @@
         $("body").on("click", "#order_save_pass", function () {
             $("#annotation_save_pass").click();
         });
+
         form.on('submit(annotation_save_pass)', async (data) => {
             layer.load(2);
-            /**表体商品数据**/
-            for (let item of admin.annotation_items_delete_ids) {
-                admin.order_pros_data.push({
-                    id: item
-                })
+
+            let result = await admin.get(`/annotation/audit/` + @{{.m.Id}}, 'show');
+            if (result.status === 1) {
+                window.location.reload();
+                admin.reloadFrame('进口核注清单iframe');
             }
-            data.field.items = admin.order_pros_data;
-            data.field.Status = '审核通过';
-            if (!order_id) {
-                const order_save_data = await admin.post("/", data
-                    .field);
-                if (order_save_data.Status) {
-                    order_id = order_save_data.data.Id;
-                    const url = document.URL;
-                    history.pushState(null, null, `${url}/${order_id}`);
-                    await order_i_add_back_filling(order_save_data.data);
-                    order_i_edit_data = order_save_data.data;
-                }
-            } else {
-                if (order_i_edit_data.StatusString === '审核通过' || order_i_edit_data.StatusString === '待派单') {
-                    layer.closeAll('loading');
-                    return layer.msg('该订单已经通过审核');
-                }
-                await admin.get(`/annotation/i/${order_id}/audit_pass`, 'show');
-            }
+
             layer.closeAll('loading');
         });
+
         /**办理记录**/
         $("body").on("click", "#order_take", async function () {
             if (!order_id) {

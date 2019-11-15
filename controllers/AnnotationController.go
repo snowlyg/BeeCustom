@@ -187,6 +187,30 @@ func (c *AnnotationController) Edit() {
 		}
 	}
 
+	// 获取制单人
+	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
+
+	utils.LogDebug(fmt.Sprintf("backendUsers:%v", backendUsers))
+
+	c.Data["m"] = c.TransformAnnotation(m)
+	c.Data["BackendUsers"] = backendUsers
+	c.setTpl("annotation/change_create_edit_show.html")
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
+	c.GetXSRFToken()
+}
+
+// Edit 添加 编辑 页面
+func (c *AnnotationController) Make() {
+	Id, _ := c.GetInt64(":id", 0)
+
+	m, err := models.AnnotationOne(Id)
+	if m != nil && Id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
+
 	c.Data["m"] = c.TransformAnnotation(m)
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
@@ -307,6 +331,27 @@ func (c *AnnotationController) Cancel() {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
+	}
+
+}
+
+// Audit 审核通过订单
+func (c *AnnotationController) Audit() {
+	Id, _ := c.GetInt64(":id", 0)
+
+	m, err := models.AnnotationOne(Id)
+	if m != nil && Id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
+
+	c.UpdateAnnotaionStatus(m, "审核通过")
+
+	if _, err := models.AnnotationSave(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
+	} else {
+		c.jsonResult(enums.JRCodeSucc, "审核通过", m)
 	}
 
 }

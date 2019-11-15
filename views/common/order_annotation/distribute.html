@@ -4,9 +4,9 @@
             <div class="layui-form-item">
                 <select name="user_id" lay-filter="user_id" lay-search lay-verify="required" lay-vertype="tips">
                     <option value="">请选择制单人</option>
-@{{/*                    @foreach($users as $item)*/}}
-@{{/*                        <option value="{{ $item->id }}">{{ $item->name }}</option>*/}}
-@{{/*                    @endforeach*/}}
+                    @{{ range .BackendUsers }}
+                    <option value="@{{ .Id }}">@{{ .RealName }}</option>
+                    @{{end}}
                 </select>
             </div>
             <div class="layui-form-item">

@@ -18,6 +18,7 @@ func (u *BackendUser) TableName() string {
 // BackendUserQueryParam 用于查询的类
 type BackendUserQueryParam struct {
 	BaseQueryParam
+
 	UserNameLike string //模糊查询
 	RealNameLike string //模糊查询
 	Mobile       string //精确查询
@@ -66,6 +67,29 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 	_, _ = query.All(&datas)
 
 	return datas, total
+}
+
+// GetCreateBackendUsers 制单人
+func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
+	datas := make([]*BackendUser, 0)
+	// 获取 QueryBuilder 对象. 需要指定数据库驱动参数。
+	// 第二个返回值是错误对象，在这里略过
+	qb, _ := orm.NewQueryBuilder("mysql")
+
+	// 构建查询对象
+	qb.Select("backend_users.name", "backend_users.id").
+		From("backend_users").
+		LeftJoin("roles").On("backend_users.id = roles.backend_user_id").
+		//Where("age > ?").
+		OrderBy("id").Desc().Limit(-1).Offset(0)
+
+	// 导出 SQL 语句
+	sql := qb.String()
+
+	o := orm.NewOrm()
+	_, _ = o.Raw(sql).QueryRows(&datas)
+
+	return datas
 }
 
 func BackendUserGetRelations(ms []*BackendUser, relations string) ([]*BackendUser, error) {

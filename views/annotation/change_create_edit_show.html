@@ -4,10 +4,12 @@
             <button class="layui-btn custom-create_btn" id="order_save" type="button">
                 <i class="iconfont icon-save"></i>保存
             </button>
-            @{{if compare .m.StatusString  "已完成" }}
+            @{{if eq .m.StatusString  "待审核" }}
             <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
                 <i class="iconfont icon-checkcircle"></i>审核通过
             </button>
+            @{{ end }}
+            @{{if eq .m.StatusString  "审核通过" }}
             <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                 <i class="iconfont icon-folder-shared"></i>派单
             </button>
@@ -26,16 +28,16 @@
             </button>
             @{{ end }}
 
-            @{{if compare .m.StatusString  "已完成"  }}
-        @{{if .m.annotation_change_logs }}
-        <div class="order_edit_bill_string">
-            <p class="order_edit_bill_string_p">
-                <i class="iconfont icon-edit"></i>
-                <span>@{{ .m.annotation_change_logs }}</span>
-            </p>
-        </div>
-        @{{end }}
-        @{{ end }}
+            @{{if eq .m.StatusString  "已完成"  }}
+                @{{if .m.annotation_change_logs }}
+                <div class="order_edit_bill_string">
+                    <p class="order_edit_bill_string_p">
+                        <i class="iconfont icon-edit"></i>
+                        <span>@{{ .m.annotation_change_logs }}</span>
+                    </p>
+                </div>
+                @{{end }}
+            @{{ end }}
         </div>
 
         <div id="order_edit_bill"></div>
