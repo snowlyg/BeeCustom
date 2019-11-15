@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -209,8 +210,7 @@ func (c *AnnotationController) Store() {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
-		_, err := c.setAnnotaionUserRelType(&m, &c.curUser, "创建人")
-		if err != nil {
+		if err := c.setAnnotaionUserRelType(&m, nil, "创建人"); err != nil {
 			err = o.Rollback()
 			c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 		}
@@ -381,22 +381,33 @@ func (c *AnnotationController) Cancel() {
 
 // Audit 审核通过订单
 func (c *AnnotationController) Audit() {
-	Id, _ := c.GetInt64(":id", 0)
+	o := orm.NewOrm()
+	err := o.Begin()
 
+	Id, _ := c.GetInt64(":id", 0)
 	m, err := models.AnnotationOne(Id)
 	if m != nil && Id > 0 {
 		if err != nil {
+			err = o.Rollback()
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
 
+	if err := c.setAnnotaionUserRelType(m, nil, "审单人"); err != nil {
+		err = o.Rollback()
+		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+	}
+
 	if err = c.updateAnnotaionStatus(m, "审核通过"); err != nil {
+		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
 	if _, err := models.AnnotationSave(m); err != nil {
+		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	} else {
+		err = o.Commit()
 		c.jsonResult(enums.JRCodeSucc, "审核通过", m)
 	}
 
@@ -427,13 +438,7 @@ func (c *AnnotationController) Distribute() {
 
 	}
 
-	aur, err := c.setAnnotaionUserRelType(m, bu, "制单人")
-	if err != nil {
-		err = o.Rollback()
-		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
-	}
-
-	if err = models.AnnotationUserRelSave(aur); err != nil {
+	if err = c.setAnnotaionUserRelType(m, bu, "制单人,派单人"); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
@@ -518,19 +523,28 @@ func (c *AnnotationController) updateAnnotaionStatus(m *models.Annotation, Statu
 }
 
 //更新状态和状态更新时间
-func (c *AnnotationController) setAnnotaionUserRelType(m *models.Annotation, bu *models.BackendUser, StatusString string) (*models.AnnotationUserRel, error) {
-	aur := models.NewAnnotationUserRel(0)
+func (c *AnnotationController) setAnnotaionUserRelType(m *models.Annotation, bu *models.BackendUser, userTypes string) error {
+	rs := strings.Split(userTypes, ",")
+	for _, v := range rs {
+		aur := models.NewAnnotationUserRel(0)
+		aStatus, err := enums.GetSectionWithString(v, "annotation_user_type")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
+			return err
+		}
 
-	aStatus, err := enums.GetSectionWithString(StatusString, "annotation_user_type")
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
-		return nil, err
+		//除了制单人，其他人都是当前用户
+		if v == "制单人" && bu != nil {
+			aur.BackendUser = bu
+		} else {
+			aur.BackendUser = &c.curUser
+		}
+		aur.Annotation = m
+		aur.UserType = aStatus
+
+		if err = models.AnnotationUserRelSave(&aur); err != nil {
+			return err
+		}
 	}
-
-	aur.Annotation = m
-	aur.BackendUser = bu
-
-	aur.UserType = aStatus
-
-	return &aur, nil
+	return nil
 }
