@@ -8,18 +8,32 @@ import (
 
 func init() {
 
-	//清单管理
+	/*清单管理*/
+	//进口清单
 	beego.Router("/annotation/index/i", &controllers.AnnotationController{}, "Get:IIndex")
+	//出口清单
 	beego.Router("/annotation/index/e", &controllers.AnnotationController{}, "Get:EIndex")
+	//代客下单
 	beego.Router("/annotation/create/?:ieflag", &controllers.AnnotationController{}, "Get:Create")
+	//列表
 	beego.Router("/annotation/datagrid", &controllers.AnnotationController{}, "Post:DataGrid")
+	//数量统计
+	beego.Router("/annotation/statuscount", &controllers.AnnotationController{}, "Post:StatusCount")
+	//保存
 	beego.Router("/annotation/store", &controllers.AnnotationController{}, "Post:Store")
+	//开始审单
 	beego.Router("/annotation/edit/?:id", &controllers.AnnotationController{}, "Get:Edit")
+	//开始制单
 	beego.Router("/annotation/make/?:id", &controllers.AnnotationController{}, "Get:Make")
+	//取消订单
 	beego.Router("/annotation/cancel/?:id", &controllers.AnnotationController{}, "Get:Cancel")
+	//审核通过
 	beego.Router("/annotation/audit/?:id", &controllers.AnnotationController{}, "Get:Audit")
+	//更新
 	beego.Router("/annotation/update/?:id", &controllers.AnnotationController{}, "Patch:Update")
+	//派单
 	beego.Router("/annotation/distribute/?:id", &controllers.AnnotationController{}, "Post:Distribute")
+	//删除
 	beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:Delete")
 
 	//手账册

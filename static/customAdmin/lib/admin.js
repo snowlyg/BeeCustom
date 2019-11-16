@@ -4313,33 +4313,35 @@ layui.define('view', function (exports) {
 
             //订单列表
             list_page: 1,
-            list_limit:
-                10,
-            async get_data_list(url, filterData, sum) {
-
+            list_limit: 10,
+            async get_data_list(OrderIndexRequestData) {
+                let url = OrderIndexRequestData.List.Url;
+                let impexpMarkcd = OrderIndexRequestData.ImpexpMarkcd;
                 /** 缓存列表数量 **/
-                let local_limit = localStorage.getItem(filterData.ImpexpMarkcd + '_limit');
+                let local_limit = localStorage.getItem(impexpMarkcd + '_limit');
                 if (local_limit) {
                     admin.list_limit = local_limit;
                 }
 
                 /**订单列表**/
-                let ListDatas = await admin.post(url, JSON.stringify($.extend(filterData, {
+                let ListDatas = await admin.post(url, JSON.stringify($.extend(OrderIndexRequestData.List.Request, {
+                    ImpexpMarkcd:impexpMarkcd,
                     offset: admin.list_page,
                     limit: admin.list_limit,
                 })));
 
+                let StatusCount = await admin.post(OrderIndexRequestData.StatusCount.Url, JSON.stringify($.extend(OrderIndexRequestData.StatusCount.Request, {
+                    ImpexpMarkcd:impexpMarkcd,
+                })));
                 /**订单状态数量**/
-                if (sum !== '1') {
                     $("#status_flex_list div").each(function () {
                         if ($(this).text().trim() !== '全部订单') {
                             $(this).remove();
                         }
                     });
-                    laytpl($("#status_flex_list_template").html()).render(ListDatas.total, function (html) {
+                    laytpl($("#status_flex_list_template").html()).render(StatusCount.rows, function (html) {
                         $("#status_flex_list").append(html);
                     });
-                }
 
                 $("#order-i-table tbody").remove();
                 if (ListDatas.total === 0) {
@@ -4364,6 +4366,7 @@ layui.define('view', function (exports) {
                         if (!first) {
                             admin.list_page = obj.curr;
                             admin.list_limit = obj.limit;
+
                             ListDatas = await admin.post(`${url}`, JSON.stringify({
                                 offset: admin.list_page,
                                 limit: admin.list_limit,
@@ -4377,7 +4380,7 @@ layui.define('view', function (exports) {
                                 });
                             }
                         }
-                        localStorage.setItem(filterData.ImpexpMarkcd + "_limit", obj.limit);
+                        localStorage.setItem(OrderIndexRequestData.ImpexpMarkcd + "_limit", obj.limit);
                     }
                 });
                 return ListDatas;

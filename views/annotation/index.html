@@ -8,16 +8,7 @@
                             全部订单
                         </div>
                     </div>
-
-                    <script type="text/html" id="status_flex_list_template">
-                        {{# for(let key in d){ }}
-                        <div class="status_flex_list_item" data-status="{{ key }}" data-sum="1">
-                            {{ key }}
-                            <span>{{ d[key] }}</span>
-                        </div>
-                        {{# } }}
-                    </script>
-
+                    @{{template "/common/order_annotation/status_count.html" }}
                     <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
                         <i class="iconfont icon-delete"></i>
                         <span>订单回收站</span>
@@ -44,13 +35,6 @@
                 <form class="custom-order_import-form layui-form" id="advanced_form">
                     <div class="custom-order_import-advanced">
                         <div class="advanced_list">
-                            <span>申报日期：</span>
-                            <div class="layui-input-inline">
-                                <input type="text" name="invt_dcl_time" class="layui-input" id="invt_dcl_time"
-                                       placeholder="请选择日期">
-                            </div>
-                        </div>
-                        <div class="advanced_list">
                             <span>客户名称：</span>
                             <div class="layui-input-inline">
                                 <input type="text" name="company.name" class="layui-input" id="company.name"
@@ -71,7 +55,7 @@
                             <script type="text/html" id="trsp_modecd_template">
                                 <select name="trsp_modecd" lay-filter="trsp_modecd">
                                     <option value="">请选择</option>
-                                    <option value="{{ d.customs_code }}">{{ d.name }}</option>
+                                    <option value="{{ d.CustomsCode }}">{{ d.Name }}</option>
                                 </select>
 
                             </script>
@@ -141,7 +125,7 @@
                         status =
                         'assigned'
                         }
-                        if(item.StatusString == '已派单' || item.StatusString == '待制单' ||
+                        if(item.StatusString == '待制单' || item.StatusString == '待制单' ||
                         item.StatusString == '制单中' || item.StatusString == '待复核' ||
                         item.StatusString == '复核中' || item.StatusString == '单一处理中'){
                         status ='making'
@@ -279,7 +263,7 @@
                                     </button>
 
                                     {{# } }}
-                                {{# if(item.StatusString == '已派单'){ }}
+                                {{# if(item.StatusString == '待制单'){ }}
                                     <button class="layui-btn tr-bd-{{ status }} order_distribute"
                                     type="button"    onclick="layui.admin.distribute('.order_distribute',{{ item.Id }})">
                                     重新派单

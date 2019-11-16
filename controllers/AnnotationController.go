@@ -26,10 +26,10 @@ func (c *AnnotationController) Prepare() {
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
 	//c.checkLogin()
-
 }
 
 func (c *AnnotationController) IIndex() {
+	//待派单  待制单  单一处理中  已完成
 	//页面模板设置
 	c.setTpl("annotation/index.html")
 	c.LayoutSections = make(map[string]string)
@@ -84,6 +84,27 @@ func (c *AnnotationController) DataGrid() {
 	result := make(map[string]interface{})
 	result["total"] = total
 	result["rows"] = annotationList
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
+//数据统计
+func (c *AnnotationController) StatusCount() {
+	//直接获取参数 getDataGridData()
+	params := models.NewAnnotationQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, err := models.AnnotationStatusCount(&params)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据列表和总数出错", nil)
+	}
+
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["rows"] = data
 	result["code"] = 0
 	c.Data["json"] = result
 
@@ -443,7 +464,7 @@ func (c *AnnotationController) Distribute() {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	if err = c.updateAnnotaionStatus(m, "已派单"); err != nil {
+	if err = c.updateAnnotaionStatus(m, "待制单"); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}

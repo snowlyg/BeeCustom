@@ -135,6 +135,40 @@ func NewAnnotationQueryParam() AnnotationQueryParam {
 }
 
 // AnnotationPageList 获取分页数据
+func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
+
+	var maps []orm.Params
+	rows := orm.Params{
+		"审核通过":  0,
+		"待制单":   0,
+		"待复核":   0,
+		"单一处理中": 0,
+		"已完成":   0,
+	}
+	o := orm.NewOrm()
+	sql := "SELECT "
+	sql += "count( CASE WHEN STATUS = 3 THEN 1 END ) AS '审核通过',"
+	sql += "count( CASE WHEN STATUS = 5 THEN 1 END ) AS '待制单',"
+	sql += "count( CASE WHEN STATUS = 7 THEN 1 END ) AS '待复核',"
+	sql += "count( CASE WHEN STATUS = 11 THEN 1 END ) AS '单一处理中',"
+	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '已完成' "
+	sql += "FROM bee_custom_annotations"
+
+	_, err := o.Raw(sql).Values(&maps)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("Raw:%v", err))
+		return nil, err
+	}
+
+	if len(maps) > 0 {
+		rows = maps[0]
+	}
+
+	return rows, nil
+
+}
+
+// AnnotationPageList 获取分页数据
 func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64) {
 	query := orm.NewOrm().QueryTable(AnnotationTBName())
 	datas := make([]*Annotation, 0)
@@ -177,16 +211,6 @@ func AnnotationOne(id int64) (*Annotation, error) {
 		return &m, errors.New("用户获取失败")
 	}
 
-	return &m, nil
-}
-
-// AnnotationOneByUserName 根据用户名密码获取单条
-func AnnotationOneByUserName(username, userpwd string) (*Annotation, error) {
-	m := NewAnnotation(0)
-	err := orm.NewOrm().QueryTable(AnnotationTBName()).Filter("username", username).Filter("userpwd", userpwd).One(&m)
-	if err != nil {
-		return nil, err
-	}
 	return &m, nil
 }
 
