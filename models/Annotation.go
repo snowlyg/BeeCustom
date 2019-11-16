@@ -177,8 +177,8 @@ func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
 // AnnotationPageList 获取分页数据
 func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, error) {
 
-	o := orm.NewOrm()
 	datas := make([]*Annotation, 0)
+
 	sql := "SELECT * FROM " + AnnotationTBName()
 	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
 	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
@@ -201,7 +201,21 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 		sql += " ASC "
 	}
 
+	o := orm.NewOrm()
+	//总数量
 	total, err := o.Raw(sql).QueryRows(&datas)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	if params.Limit != -1 {
+		limit := strconv.Itoa(int(params.Limit))
+		offset := strconv.Itoa(int((params.Offset - 1) * params.Limit))
+		sql += " LIMIT " + offset + "," + limit
+	}
+
+	//分页数据
+	_, err = o.Raw(sql).QueryRows(&datas)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -235,7 +249,7 @@ func AnnotationOne(id int64) (*Annotation, error) {
 	}
 
 	if &m == nil {
-		return &m, errors.New("用户获取失败")
+		return &m, errors.New("清单获取失败")
 	}
 
 	return &m, nil
@@ -255,16 +269,6 @@ func AnnotationSave(m *Annotation) (*Annotation, error) {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 			return nil, err
 		}
-	}
-
-	return m, nil
-}
-
-//Save 添加、编辑页面 保存
-func AnnotationFreeze(m *Annotation) (*Annotation, error) {
-	o := orm.NewOrm()
-	if _, err := o.Update(m, "Status"); err != nil {
-		return nil, err
 	}
 
 	return m, nil

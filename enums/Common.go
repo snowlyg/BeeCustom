@@ -118,6 +118,8 @@ func GetOrderAnnotationDateTime(timeString, filedName string) string {
 	case "去年":
 		sql = " WHERE YEAR(" + filedName + ") = YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR)) "
 	default:
+		sql = " WHERE TO_DAYS(" + filedName + ") = TO_DAYS(NOW()) "
 	}
+
 	return sql
 }
