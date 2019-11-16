@@ -1,8 +1,10 @@
 <script type="text/html" id="status_flex_list_template">
+    <div class="status_flex_list_item active" data-status="全部订单" data-sum="1">
+        全部订单
+    </div>
     {{# for(let key in d){ }}
-    <div class="status_flex_list_item" data-status="{{ key }}" data-sum="1">
-        {{ key }}
-        <span>{{ d[key] }}</span>
+    <div class="status_flex_list_item" data-status="{{ key }}" data-sum="0">
+        {{ key }}<span>{{ d[key] }}</span>
     </div>
     {{# } }}
 </script>

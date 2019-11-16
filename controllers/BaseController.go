@@ -231,6 +231,7 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 	}
 }
 
+//格式时间
 func (c *BaseController) GetDateTime(timeString, timeFormatString string) (*time.Time, error) {
 	tS := c.GetString(timeString)
 	fTimeFormat, err := time.ParseInLocation(timeFormatString, tS, time.Local)

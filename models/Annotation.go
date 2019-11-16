@@ -1,8 +1,10 @@
 package models
 
 import (
+	"BeeCustom/enums"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,7 +21,9 @@ func (u *Annotation) TableName() string {
 type AnnotationQueryParam struct {
 	BaseQueryParam
 
-	ImpexpMarkcd string
+	ImpexpMarkcd     string
+	StatusString     string
+	SearchTimeString string
 }
 
 // Annotation 实体类
@@ -146,13 +150,15 @@ func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
 		"已完成":   0,
 	}
 	o := orm.NewOrm()
+
 	sql := "SELECT "
 	sql += "count( CASE WHEN STATUS = 3 THEN 1 END ) AS '审核通过',"
 	sql += "count( CASE WHEN STATUS = 5 THEN 1 END ) AS '待制单',"
 	sql += "count( CASE WHEN STATUS = 7 THEN 1 END ) AS '待复核',"
 	sql += "count( CASE WHEN STATUS = 11 THEN 1 END ) AS '单一处理中',"
 	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '已完成' "
-	sql += "FROM bee_custom_annotations"
+	sql += " FROM bee_custom_annotations "
+	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
 
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
@@ -169,17 +175,38 @@ func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
 }
 
 // AnnotationPageList 获取分页数据
-func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64) {
-	query := orm.NewOrm().QueryTable(AnnotationTBName())
+func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, error) {
+
+	o := orm.NewOrm()
 	datas := make([]*Annotation, 0)
+	sql := "SELECT * FROM " + AnnotationTBName()
+	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
+	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
 
-	query = query.Distinct().Filter("ImpexpMarkcd", params.ImpexpMarkcd)
+	if len(params.StatusString) > 0 && params.StatusString != "全部订单" {
+		aStatus, _ := enums.GetSectionWithString(params.StatusString, "annotation_status")
+		sql += " AND status = " + strconv.Itoa(int(aStatus))
+	}
 
-	total, _ := query.Count()
-	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
-	_, _ = query.All(&datas)
+	//默认排序
+	sortorder := "Id"
+	if len(params.Sort) > 0 {
+		sortorder = params.Sort
+	}
 
-	return datas, total
+	sql += " ORDER BY " + sortorder
+	if params.Order == "desc" {
+		sql += " DESC "
+	} else {
+		sql += " ASC "
+	}
+
+	total, err := o.Raw(sql).QueryRows(&datas)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return datas, total, nil
 }
 
 func AnnotationGetRelations(ms []*Annotation, relations string) ([]*Annotation, error) {

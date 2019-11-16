@@ -27,6 +27,7 @@ const (
 )
 
 const BaseDateTimeFormat = "2006-01-02 15:04:05"
+const BaseDateFormatN = "2006-01-02"
 const BaseDateTimeSecondFormat = "20060102150405"
 const BaseDateFormat = "20060102"
 
@@ -77,10 +78,12 @@ func GetSectionWithInt(wordInt int8, configSection string) (string, error) {
 	return "", errors.New("查询参数错误")
 }
 
+//获取4位随机数
 func CreateCaptcha() string {
 	return fmt.Sprintf("%04v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
 }
 
+//判断时间，格式时间
 func GetDateTimeString(v *time.Time, format string) string {
 	if v.IsZero() {
 		return ""
@@ -88,4 +91,33 @@ func GetDateTimeString(v *time.Time, format string) string {
 		v.Format(format)
 	}
 	return fmt.Sprintf("%04v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
+}
+
+//获取时间段
+func GetOrderAnnotationDateTime(timeString, filedName string) string {
+	var sql string
+	switch timeString {
+	case "今天":
+		sql = " WHERE TO_DAYS(" + filedName + ") = TO_DAYS(NOW()) "
+	case "昨天":
+		sql = " WHERE  TO_DAYS(NOW()) - TO_DAYS(" + filedName + ") <= 1 "
+	case "最近三天":
+		sql = " WHERE  TO_DAYS(NOW()) - TO_DAYS(" + filedName + ") <= 3 "
+	case "本周":
+		sql = " WHERE YEARWEEK(DATE_FORMAT(" + filedName + ",'%Y-%m-%d')) = YEARWEEK(NOW()) "
+	case "本月":
+		sql = " WHERE DATE_FORMAT(" + filedName + ",'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') "
+	case "上月":
+		sql = " WHERE PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(" + filedName + ",'%Y%m')) = 1 "
+	case "本季度":
+		sql = " WHERE QUARTER(" + filedName + ") = QUARTER(NOW()) "
+	case "上季度":
+		sql = " WHERE QUARTER(" + filedName + ") = QUARTER(DATE_SUB(NOW(),INTERVAL 1 QUARTER)) "
+	case "今年":
+		sql = " WHERE YEAR(" + filedName + ")=YEAR(NOW()) "
+	case "去年":
+		sql = " WHERE YEAR(" + filedName + ") = YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR)) "
+	default:
+	}
+	return sql
 }

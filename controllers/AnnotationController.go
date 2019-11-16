@@ -71,7 +71,11 @@ func (c *AnnotationController) DataGrid() {
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
 	//获取数据列表和总数
-	data, total := models.AnnotationPageList(&params)
+	data, total, err := models.AnnotationPageList(&params)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据列表和总数失败", nil)
+	}
+
 	ms, err := models.AnnotationGetRelations(data, "Company,BackendUsers")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
@@ -84,7 +88,7 @@ func (c *AnnotationController) DataGrid() {
 	result := make(map[string]interface{})
 	result["total"] = total
 	result["rows"] = annotationList
-	result["code"] = 0
+	result["status"] = 1
 	c.Data["json"] = result
 
 	c.ServeJSON()
@@ -105,17 +109,17 @@ func (c *AnnotationController) StatusCount() {
 	//定义返回的数据结构
 	result := make(map[string]interface{})
 	result["rows"] = data
-	result["code"] = 0
+	result["status"] = 1
 	c.Data["json"] = result
 
 	c.ServeJSON()
 }
 
 // TransformAnnotationList 格式化列表数据
-func (c *AnnotationController) TransformAnnotationList(ms []*models.Annotation) map[int]interface{} {
+func (c *AnnotationController) TransformAnnotationList(ms []*models.Annotation) []*map[string]string {
 	var annotationCreatorName string //制单人
-	annotationList := make(map[int]interface{})
-	for i, v := range ms {
+	var annotationList []*map[string]string
+	for _, v := range ms {
 		annotationItem := make(map[string]string)
 		aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
 		if err != nil {
@@ -153,7 +157,7 @@ func (c *AnnotationController) TransformAnnotationList(ms []*models.Annotation) 
 		annotationItem["CompanyName"] = v.Company.Name
 		annotationItem["DeclareName"] = annotationCreatorName
 
-		annotationList[i] = annotationItem
+		annotationList = append(annotationList, &annotationItem)
 	}
 
 	return annotationList

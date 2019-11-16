@@ -827,7 +827,7 @@ layui.define('view', function (exports) {
             },
 
             //ajax-post
-            post: function (url, data) {
+            post: function (url, data, isNotShow) {
                 return new Promise(async (resolve, reject) => {
                     let ajax_abort = $.ajax({
                         url: url,
@@ -836,21 +836,24 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status === 1) {
-                                layer.msg(res.msg, {
-                                    offset: '15px',
-                                    icon: 1,
-                                    time: 1000,
-                                    id: 'Message'
-                                });
-                            } else {
-                                layer.msg(res.msg, {
-                                    offset: '15px',
-                                    icon: 2,
-                                    time: 1000,
-                                    id: 'Message'
-                                });
+                            if (!isNotShow) {
+                                if (res.status === 1) {
+                                    layer.msg(res.msg, {
+                                        offset: '15px',
+                                        icon: 1,
+                                        time: 1000,
+                                        id: 'Message'
+                                    });
+                                } else {
+                                    layer.msg(res.msg, {
+                                        offset: '15px',
+                                        icon: 2,
+                                        time: 1000,
+                                        id: 'Message'
+                                    });
+                                }
                             }
+
                             resolve(res);
                         },
                         error: function (error) {
@@ -1268,10 +1271,10 @@ layui.define('view', function (exports) {
                 });
             },
             //派单
-            distribute(clickEnum,id){
+            distribute(clickEnum, id) {
 
                 /**派单**/
-                $(document).on("click", clickEnum, function() {
+                $(document).on("click", clickEnum, function () {
                     layer.open({
                         type: 1,
                         title: '派单',
@@ -1287,13 +1290,13 @@ layui.define('view', function (exports) {
 
                     let url = `/annotation/distribute/${id}`;
                     let result = await admin.post(url, data.field);
-                    if (result.status === 1){
+                    if (result.status === 1) {
                         setTimeout(() => {
                             window.location.reload();
                             if (clickEnum === "#order_dispatch") {
                                 admin.reloadFrame('进口核注清单iframe');
                             }
-                        },500);
+                        }, 500);
                         layer.closeAll();
                     }
                 });
@@ -4315,33 +4318,49 @@ layui.define('view', function (exports) {
             list_page: 1,
             list_limit: 10,
             async get_data_list(OrderIndexRequestData) {
+
                 let url = OrderIndexRequestData.List.Url;
                 let impexpMarkcd = OrderIndexRequestData.ImpexpMarkcd;
+
                 /** 缓存列表数量 **/
                 let local_limit = localStorage.getItem(impexpMarkcd + '_limit');
                 if (local_limit) {
                     admin.list_limit = local_limit;
                 }
 
+                let StatusString = OrderIndexRequestData.StatusString;
                 /**订单列表**/
-                let ListDatas = await admin.post(url, JSON.stringify($.extend(OrderIndexRequestData.List.Request, {
-                    ImpexpMarkcd:impexpMarkcd,
-                    offset: admin.list_page,
-                    limit: admin.list_limit,
-                })));
+                let ListDatas = await admin.post(
+                    url,
+                    JSON.stringify(
+                        $.extend(
+                            OrderIndexRequestData.List.Request, {
+                                ImpexpMarkcd: impexpMarkcd,
+                                StatusString: StatusString,
+                                Offset: admin.list_page,
+                                Limit: admin.list_limit,
+                            }
+                        )
+                    ), true
+                );
 
-                let StatusCount = await admin.post(OrderIndexRequestData.StatusCount.Url, JSON.stringify($.extend(OrderIndexRequestData.StatusCount.Request, {
-                    ImpexpMarkcd:impexpMarkcd,
-                })));
+                //列表数量
+                let StatusCount = await admin.post(
+                    OrderIndexRequestData.StatusCount.Url,
+                    JSON.stringify(
+                        $.extend(
+                            OrderIndexRequestData.StatusCount.Request, {
+                                StatusString: StatusString,
+                                ImpexpMarkcd: impexpMarkcd,
+                            }
+                        )
+                    ), true
+                );
+
                 /**订单状态数量**/
-                    $("#status_flex_list div").each(function () {
-                        if ($(this).text().trim() !== '全部订单') {
-                            $(this).remove();
-                        }
-                    });
-                    laytpl($("#status_flex_list_template").html()).render(StatusCount.rows, function (html) {
-                        $("#status_flex_list").append(html);
-                    });
+                layui.laytpl($("#status_flex_list_template").html()).render(StatusCount.rows, function (html) {
+                    $("#status_flex_list").html(html);
+                });
 
                 $("#order-i-table tbody").remove();
                 if (ListDatas.total === 0) {
@@ -4371,7 +4390,9 @@ layui.define('view', function (exports) {
                                 offset: admin.list_page,
                                 limit: admin.list_limit,
                             }));
+
                             $("#order-i-table tbody").remove();
+
                             if (ListDatas.total === 0) {
                                 $("#order-i-table").append(`<tbody><tr class="sep-row"><td colspan="5"><div class="no_data">无数据</div></td></tr></tbody>`);
                             } else {
@@ -4380,9 +4401,11 @@ layui.define('view', function (exports) {
                                 });
                             }
                         }
+
                         localStorage.setItem(OrderIndexRequestData.ImpexpMarkcd + "_limit", obj.limit);
                     }
                 });
+
                 return ListDatas;
             }
             ,

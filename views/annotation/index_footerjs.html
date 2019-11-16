@@ -18,7 +18,7 @@
             order_import_list,
             search_input = '',
             MonthTime = '今天',
-            status = '全部订单';
+            annotationStatusString = '全部订单';
 
         /**table左右拖动**/
         admin.table_mousedown();
@@ -113,9 +113,7 @@
                 search_input = search_input.substr(0, search_input.length - 1);
             }
             admin.list_page = 1;
-            if (status === '全部订单') {
-                status = ''
-            }
+
             order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&search=${search_input}&MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
         });
 
@@ -123,28 +121,24 @@
         form.on('select(time_table)', async function (data) {
             MonthTime = data.value;
             admin.list_page = 1;
-            if (status === '全部订单') {
-                status = ''
-            }
 
             let OrderIndexRequestData = {
                 ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
+                StatusString: annotationStatusString,
                 List: {
                     Url: `/annotation/datagrid`,
                     Request: {
-                        MonthTime: MonthTime,
-                        orderBy: "Id",
-                        sortedBy: "desc",
-
+                        SearchTimeString: MonthTime,
+                        Sort: "Id",
+                        Order: "desc",
                     }
 
                 },
                 StatusCount: {
                     Url: `/annotation/statuscount`,
                     Request: {
-                        MonthTime: MonthTime,
+                        SearchTimeString: MonthTime,
                     }
-
                 },
 
             };
@@ -164,9 +158,7 @@
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
             if (eCode === 13) {
                 admin.list_page = 1;
-                if (status === '全部订单') {
-                    status = ''
-                }
+
                 search_input = $(this).val();
                 order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&search=${search_input}&MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
             }
@@ -175,12 +167,30 @@
         /**状态筛选**/
         $(document).on("click", ".status_flex_list_item", async function () {
             admin.list_page = 1;
-            status = $(this).data("status");
-            if (status === '全部订单') {
-                status = ''
-            }
+            annotationStatusString = $(this).data("status");
             $(this).addClass('active').siblings().removeClass('active');
-            order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&MonthTime=${MonthTime}&search=${search_input}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list, $(this).data('sum'));
+            let OrderIndexRequestData = {
+                ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
+                StatusString: annotationStatusString,
+                List: {
+                    Url: `/annotation/datagrid`,
+                    Request: {
+                        SearchTimeString: MonthTime,
+                        Sort: "Id",
+                        Order: "desc",
+                    }
+
+                },
+                StatusCount: {
+                    Url: `/annotation/statuscount`,
+                    Request: {
+                        SearchTimeString: MonthTime,
+                    }
+                },
+
+            };
+
+            order_import_list = await admin.get_data_list(OrderIndexRequestData);
         });
 
         /**显示隐藏高级搜索**/
@@ -342,27 +352,24 @@
         /**订单列表**/
         let OrderIndexRequestData = {
             ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
+            StatusString: annotationStatusString,
             List: {
                 Url: `/annotation/datagrid`,
                 Request: {
-                    MonthTime: MonthTime,
-                    orderBy: "Id",
-                    sortedBy: "desc",
-
+                    SearchTimeString: MonthTime,
+                    Sort: "Id",
+                    Order: "desc",
                 }
-
             },
             StatusCount: {
                 Url: `/annotation/statuscount`,
                 Request: {
-                    MonthTime: MonthTime,
+                    SearchTimeString: MonthTime,
                 }
-
             },
-
         };
 
-        order_import_list = await admin.get_data_list(OrderIndexRequestData);
+        order_import_list = await admin.get_data_list(OrderIndexRequestData,true);
 
         /**审核清单，清单详情，核中**/
         $(document).on("click", ".order_detail, .order_keep_auth, .order_start_auth", function () {
@@ -562,7 +569,7 @@
 
         /**运输方式**/
         try {
-            const data = await admin.post(`/clearance/datagrid`, {TypeString: "运输方式代码"});
+            const data = await admin.post(`/clearance/datagrid`, {TypeString: "运输方式代码"}, true);
             laytpl($("#trsp_modecd_template").html()).render(data.rows, function (html) {
                 $("#annotation_trsp_modecd").html(html);
             });
