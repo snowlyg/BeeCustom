@@ -21,9 +21,11 @@ func (u *Annotation) TableName() string {
 type AnnotationQueryParam struct {
 	BaseQueryParam
 
-	ImpexpMarkcd     string
-	StatusString     string
-	SearchTimeString string
+	ImpexpMarkcd        string
+	TrspModecd          string
+	StatusString        string
+	SearchTimeString    string
+	EtpsInnerInvtNoLike string
 }
 
 // Annotation 实体类
@@ -157,9 +159,7 @@ func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
 	sql += "count( CASE WHEN STATUS = 7 THEN 1 END ) AS '待复核',"
 	sql += "count( CASE WHEN STATUS = 11 THEN 1 END ) AS '单一处理中',"
 	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '已完成' "
-	sql += " FROM bee_custom_annotations "
-	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
-	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
+	sql = GetCommonListSql(sql, params)
 
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
@@ -180,10 +180,8 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 
 	datas := make([]*Annotation, 0)
 
-	sql := "SELECT * FROM " + AnnotationTBName()
-	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
-	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
-
+	sql := "SELECT * "
+	sql = GetCommonListSql(sql, params)
 	if len(params.StatusString) > 0 && params.StatusString != "全部订单" {
 		aStatus, _ := enums.GetSectionWithString(params.StatusString, "annotation_status")
 		sql += " AND status = " + strconv.Itoa(int(aStatus))
@@ -283,4 +281,20 @@ func AnnotationDelete(id int64) (num int64, err error) {
 	} else {
 		return num, nil
 	}
+}
+
+//列表公用sql
+func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
+	sql += " FROM " + AnnotationTBName()
+	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
+	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
+	if len(params.EtpsInnerInvtNoLike) > 0 {
+		sql += " AND etps_inner_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "'"
+		sql += " OR bond_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "'"
+	}
+	if len(params.TrspModecd) > 0 {
+		sql += " AND trsp_modecd = '" + params.TrspModecd + "'"
+	}
+
+	return sql
 }

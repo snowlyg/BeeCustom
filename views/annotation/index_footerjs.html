@@ -128,18 +128,41 @@
         $("#order_import_search").on('keydown', async function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
             if (eCode === 13) {
-                admin.list_page = 1;
 
-                search_input = $(this).val();
-                order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&search=${search_input}&MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+                let OrderIndexRequestData = {
+                    ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
+                    StatusString: annotationStatusString,
+                    List: {
+                        Url: `/annotation/datagrid`,
+                        Request: {
+                            EtpsInnerInvtNoLike: $(this).val(),
+                            SearchTimeString: MonthTime,
+                            sort: "impexp_markcd",
+                            order: "desc",
+                        }
+
+                    },
+                    StatusCount: {
+                        Url: `/annotation/statuscount`,
+                        Request: {
+                            EtpsInnerInvtNoLike: $(this).val(),
+                            SearchTimeString: MonthTime,
+                        }
+                    },
+
+                };
+
+                order_import_list = await admin.get_data_list(OrderIndexRequestData);
             }
         });
 
         /**状态筛选**/
         $(document).on("click", ".status_flex_list_item", async function () {
             admin.list_page = 1;
+
             annotationStatusString = $(this).data("status");
             $(this).addClass('active').siblings().removeClass('active');
+
             let OrderIndexRequestData = {
                 ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
                 StatusString: annotationStatusString,
@@ -543,5 +566,30 @@
         } catch (e) {
             console.log(e);
         }
+
+        form.on('select(trsp_modecd)', async (data) => {
+            let OrderIndexRequestData = {
+                ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
+                StatusString: annotationStatusString,
+                List: {
+                    Url: `/annotation/datagrid`,
+                    Request: {
+                        TrspModecd: data.value ? data.value : '',
+                        SearchTimeString: MonthTime,
+                        sort: "impexp_markcd",
+                        order: "desc",
+                    }
+                },
+                StatusCount: {
+                    Url: `/annotation/statuscount`,
+                    Request: {
+                        TrspModecd: data.value ? data.value : '',
+                        SearchTimeString: MonthTime,
+                    }
+                },
+            };
+
+            order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
+        });
     });
 </script>

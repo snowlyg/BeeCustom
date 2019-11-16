@@ -97,7 +97,7 @@
         form.on('select(status)', function (data) {
             table.reload('user_lists', {
                 where: {
-                    SearchStatus: data.value ? `${data.value}` : ''
+                    SearchStatus: data.value ? data.value : ''
                 }
             });
         });

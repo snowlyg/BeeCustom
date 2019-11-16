@@ -13,7 +13,6 @@
                     <div class="layui-col-md6">
                         <span class="custom-new_btn"
                               lay-href="/annotation/create/@{{.ImpexpMarkcd}}" lay-text="新建@{{.ImpexpMarkcdName}}清单" id="order_import_new">代客下单</span>
-                        <span class="custom-upload_btn" id="order_import_upload">导入</span>
                     </div>
                     <div class="layui-col-md4 layui-col-md-offset2">
                         <div class="custom-tool-right">
@@ -22,7 +21,7 @@
                             </div>
                             <div class="width-75">
                                 <label class="custom-tool-right-search iconfont iconsearch"></label>
-                                <input type="text" name="order_import_search" id="order_import_search" placeholder="搜索订单号/客户名称" class="custom-tool-right-input layui-input">
+                                <input type="text" name="order_import_search" id="order_import_search" placeholder="搜索订单号/清单号" class="custom-tool-right-input layui-input">
                             </div>
                         </div>
                     </div>
@@ -84,24 +83,15 @@
 
                         if(item.StatusString == '待派单' || item.StatusString ==
                         '待审核' || item.StatusString == '审核中' || item.StatusString == '审核通过' ||
-                        item.StatusString == '复核通过' || item.StatusString == '待暂存'){
-                        status =
-                        'assigned'
-                        }
+                        item.StatusString == '复核通过' || item.StatusString == '待暂存'){status ='assigned'}
 
                         if(item.StatusString == '待制单' || item.StatusString == '待制单' ||
                         item.StatusString == '制单中' || item.StatusString == '待复核' ||
-                        item.StatusString == '复核中' || item.StatusString == '单一处理中'){
-                        status ='making'
-                        }
+                        item.StatusString == '复核中' || item.StatusString == '单一处理中'){status ='making'}
 
-                        if(item.StatusString == '审核不通过' || item.StatusString =='复核不通过'){
-                        status ='fail'
-                        }
+                        if(item.StatusString == '审核不通过' || item.StatusString =='复核不通过'){status ='fail'}
 
-                        if(item.StatusString == '已完成' || item.StatusString == '订单关闭'){
-                        status ='success'
-                        }
+                        if(item.StatusString == '已完成' || item.StatusString == '订单关闭'){status ='success'}
 
                         }}
                         <tr class="tr-th {{ status }}">
@@ -227,12 +217,6 @@
                                     type="button"  onclick="layui.admin.distribute('.order_distribute',{{ item.Id }})">
                                     派单</button>
                                 {{# } }}
-
-                                {{# if(item.StatusString == '待制单'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_distribute"
-                                    type="button"    onclick="layui.admin.distribute('.order_distribute',{{ item.Id }})">
-                                    重新派单</button>
-                                 {{# } }}
 
                                 {{# if(item.StatusString == '待制单'){ }}
                                     <button class="layui-btn tr-bd-{{ status }} order_start_maker"
