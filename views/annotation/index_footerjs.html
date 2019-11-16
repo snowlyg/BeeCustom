@@ -88,35 +88,6 @@
             });
         });
 
-        /**高级搜索**/
-        form.on('submit(advanced_search_btn)', async (data) => {
-            search_input = '';
-            if (data.field.invt_dcl_time) {
-                let invt_dcl_time = data.field.invt_dcl_time.split(" - ");
-                invt_dcl_time_start = invt_dcl_time[0];
-                invt_dcl_time_end = invt_dcl_time[1];
-                MonthTime = "";
-                $("#time_table").val("");
-                form.render('select');
-            } else {
-                invt_dcl_time_start = '';
-                invt_dcl_time_end = '';
-            }
-            for (let item in data.field) {
-                if (!(data.field[item].trim())) {
-                    data.field[item] = null;
-                } else {
-                    search_input += `${item}:${data.field[item]}`
-                }
-            }
-            if (search_input) {
-                search_input = search_input.substr(0, search_input.length - 1);
-            }
-            admin.list_page = 1;
-
-            order_import_list = await admin.get_data_list(`/annotation/i/list?status=${status}&search=${search_input}&MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-        });
-
         /**时间筛选**/
         form.on('select(time_table)', async function (data) {
             MonthTime = data.value;
@@ -191,12 +162,6 @@
             };
 
             order_import_list = await admin.get_data_list(OrderIndexRequestData,true);
-        });
-
-        /**显示隐藏高级搜索**/
-        $("#advanced_search").on("click", function () {
-            $("#advanced_form").slideToggle();
-            $("#advanced_search_i").toggleClass('selected');
         });
 
         /**查看联系人信息**/

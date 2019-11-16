@@ -3,10 +3,7 @@
         <div class="layui-card-body">
             <div class="custom-order_import">
                 <div class="status_flex">
-                    <div class="status_flex_list" id="status_flex_list">
-
-                    </div>
-
+                    <div class="status_flex_list" id="status_flex_list"></div>
                     <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
                         <i class="iconfont icon-delete"></i>
                         <span>订单回收站</span>
@@ -18,44 +15,19 @@
                               lay-href="/annotation/create/@{{.ImpexpMarkcd}}" lay-text="新建@{{.ImpexpMarkcdName}}清单" id="order_import_new">代客下单</span>
                         <span class="custom-upload_btn" id="order_import_upload">导入</span>
                     </div>
-                    <div class="layui-col-md5">
+                    <div class="layui-col-md4 layui-col-md-offset2">
                         <div class="custom-tool-right">
-                            <label class="custom-tool-right-search iconfont icon-search"></label>
-                            <input type="text" name="order_import_search" id="order_import_search"
-                                   placeholder="搜索订单号/客户名称" class="custom-tool-right-input layui-input">
+                            <div class="layui-form width-25">
+                                <div class="layui-input-inline" id="annotation_trsp_modecd"></div>
+                            </div>
+                            <div class="width-75">
+                                <label class="custom-tool-right-search iconfont iconsearch"></label>
+                                <input type="text" name="order_import_search" id="order_import_search" placeholder="搜索订单号/客户名称" class="custom-tool-right-input layui-input">
+                            </div>
                         </div>
-                    </div>
-                    <div class="layui-col-md1">
-                        <span class="advanced_search" id="advanced_search">高级搜索</span>
-                        <i class="iconfont icon-keyboardarrowdown" id="advanced_search_i"></i>
                     </div>
                 </div>
-                <form class="custom-order_import-form layui-form" id="advanced_form">
-                    <div class="custom-order_import-advanced">
-                        <div class="advanced_list">
-                            <span>客户名称：</span>
-                            <div class="layui-input-inline">
-                                <input type="text" name="company.name" class="layui-input" id="company.name"
-                                       placeholder="搜索">
-                            </div>
-                        </div>
-                        <div class="advanced_list">
-                            <span>清单号：</span>
-                            <div class="layui-input-inline">
-                                <input type="text" name="bond_invt_no" class="layui-input" id="bond_invt_no"
-                                       placeholder="搜索">
-                            </div>
-                        </div>
-                        <div class="advanced_list">
-                            <span>运输方式：</span>
-                            <div class="layui-input-inline" id="annotation_trsp_modecd"></div>
-                        </div>
-                        <div class="advanced_list">
-                            <span class="custom-new_btn" lay-submit lay-filter="advanced_search_btn"
-                                  id="advanced_search_btn">搜索</span>
-                        </div>
-                    </div>
-                </form>
+
                 <div class="custom-order_import-table">
                     <table class="layui-table" lay-skin="nob" id="order-i-table">
                         <colgroup>
