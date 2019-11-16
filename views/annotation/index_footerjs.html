@@ -557,7 +557,7 @@
 
         /**运输方式**/
         try {
-            const data = await admin.post(`/clearance/datagrid`, {TypeString: "运输方式代码"}, true);
+            const data = await admin.post(`/clearance/datagrid`,JSON.stringify({TypeString: "运输方式代码"}), true);
             laytpl($("#trsp_modecd_template").html()).render(data.rows, function (html) {
                 $("#annotation_trsp_modecd").html(html);
             });

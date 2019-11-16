@@ -832,7 +832,7 @@ layui.define('view', function (exports) {
                     let ajax_abort = $.ajax({
                         url: url,
                         type: 'POST',
-                        data: JSON.stringify(data),
+                        data: data,
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
@@ -1553,9 +1553,9 @@ layui.define('view', function (exports) {
             //监听进出口清单经营单位海关编码
             async bizop_etpsno_change(dom) {
                 if ($("#rvsngd_etps_sccd").val() == "" || $("#rcvgd_etps_nm").val() == "") {
-                    let CompanyList = await admin.post("/company/datagrid", {
+                    let CompanyList = await admin.post("/company/datagrid", JSON.stringify({
                         NameLike: $(dom).val(),
-                    });
+                    }));
                     if (CompanyList.rows.length > 0) {
                         $("#bizop_etps_sccd").val(CompanyList.rows[0].CreditCode);
                         $("#bizop_etps_nm").val(CompanyList.rows[0].Name);
@@ -1566,9 +1566,9 @@ layui.define('view', function (exports) {
             //监听进出口清单加工单位海关编码
             async rcvgd_etpsno_change(dom) {
                 if ($("#rvsngd_etps_sccd").val() == "" || $("#rcvgd_etps_nm").val() == "") {
-                    let CompanyList = await admin.post("/company/datagrid", {
+                    let CompanyList = await admin.post("/company/datagrid", JSON.stringify({
                         NameLike: $(dom).val(),
-                    });
+                    }));
                     if (CompanyList.rows.length > 0) {
 
                         $("#rvsngd_etps_sccd").val(CompanyList.rows[0].CreditCode);
@@ -2127,7 +2127,7 @@ layui.define('view', function (exports) {
                 });
                 $("body #val0Name").focus();
                 $("#selectCodeTs").val($("#g_name").val());
-                let brand_type = await admin.post(`/clearance/no_paginate`, {Type: "品牌类型"});
+                let brand_type = await admin.post(`/clearance/no_paginate`, JSON.stringify({Type: "品牌类型"}));
                 let data_filter = [];
                 for (let item of brand_type) {
                     data_filter.push({
@@ -4330,14 +4330,14 @@ layui.define('view', function (exports) {
 
 
                 /**订单列表**/
-                let OrderIndexRequestListData = $.extend(
+                let OrderIndexRequestListData = JSON.stringify($.extend(
                     OrderIndexRequestData.List.Request, {
                         ImpexpMarkcd: impexpMarkcd,
                         StatusString: StatusString,
                         offset: admin.list_page,
                         limit: admin.list_limit,
                     }
-                );
+                ));
                 let ListDatas = await admin.post(url, OrderIndexRequestListData, true);
 
                 //点击状态 tab 不触发
@@ -4345,12 +4345,12 @@ layui.define('view', function (exports) {
                     //列表数量
                     let StatusCount = await admin.post(
                         OrderIndexRequestData.StatusCount.Url,
-                        $.extend(
+                        JSON.stringify($.extend(
                             OrderIndexRequestData.StatusCount.Request, {
                                 StatusString: StatusString,
                                 ImpexpMarkcd: impexpMarkcd,
                             }
-                        ), true
+                        )), true
                     );
 
                     /**订单状态数量**/
@@ -4382,14 +4382,14 @@ layui.define('view', function (exports) {
                         if (!first) {
                             admin.list_page = obj.curr;
                             admin.list_limit = obj.limit;
-                            OrderIndexRequestListData = $.extend(
+                            OrderIndexRequestListData = JSON.stringify($.extend(
                                 OrdrIndexRequestData.List.Request, {
                                     ImpexpMarkcd: impexpMarkcd,
                                     StatusString: StatusString,
                                     offset: admin.list_page,
                                     limit: admin.list_limit,
                                 }
-                            );
+                            ));
                             ListDatas = await admin.post(`${url}`, OrderIndexRequestListData, true);
                             $("#order-i-table tbody").remove();
                             if (ListDatas.total === 0) {

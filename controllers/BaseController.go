@@ -63,9 +63,9 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 	bu, ok := user.(models.BackendUser)
 	if ok {
 		//如果是超级管理员，则直接通过
-		if bu.IsSuper {
-			return true
-		}
+		//if bu.IsSuper {
+		//	return true
+		//}
 
 		//遍历用户所负责的资源列表
 		for _, resource := range bu.Role.Resources {
@@ -92,13 +92,16 @@ func (c *BaseController) getActionData(actionNames ...string) {
 // checkLogin判断用户是否有权访问某地址，无权则会跳转到错误页面
 //一定要在BaseController.Prepare()后执行
 // 会调用checkLogin
-// 传入的参数为忽略权限控制的Action
+// 传入的参数为需要权限控制的Action
 func (c *BaseController) checkAuthor(actionNames ...string) {
 	//先判断是否登录
 	c.checkLogin()
 	dActionNames := append(actionNames, "Index", "Create", "Edit", "Delete") //默认需要验证的权限
 	//如果Action在忽略列表里，则直接通用
 	for _, actionName := range dActionNames {
+		if c.actionName == "EIndex" {
+			utils.LogDebug(fmt.Sprintf("hasAuthor=%v ，%v", actionName == c.actionName, actionName))
+		}
 		if actionName == c.actionName {
 			hasAuthor := c.checkActionAuthor(c.controllerName, c.actionName)
 			if !hasAuthor {
@@ -113,7 +116,7 @@ func (c *BaseController) checkAuthor(actionNames ...string) {
 				}
 			}
 		} else {
-			return
+			continue
 		}
 	}
 

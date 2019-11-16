@@ -40,13 +40,11 @@
         });
 
         form.on('submit(login_submit)', async (data) => {
-           const res = await admin.post(@{{ urlfor "HomeController.DoLogin"}}, data.field,@{{ urlfor "HomeController.Index"}});
+           const res = await admin.post(@{{ urlfor "HomeController.DoLogin"}}, data.field);
             if (res.status === 1) {
                 parent.location.href = @{{ urlfor "HomeController.Index"}};
             }
-
         })
-
     });
 </script>
 </body>

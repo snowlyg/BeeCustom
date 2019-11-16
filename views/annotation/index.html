@@ -11,8 +11,12 @@
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6">
-                        <span class="custom-new_btn"
-                              lay-href="/annotation/create/@{{.ImpexpMarkcd}}" lay-text="新建@{{.ImpexpMarkcdName}}清单" id="order_import_new">代客下单</span>
+                        @{{if .canCreate }}
+                        <span class="custom-new_btn" lay-href="/annotation/create/@{{.ImpexpMarkcd}}"
+                              lay-text="新建@{{.ImpexpMarkcdName}}清单" id="order_import_new">代客下单</span>
+                        @{{else}}
+                        <span class="custom-new_btn hidden" style="visibility:hidden;"></span>
+                        @{{end}}
                     </div>
                     <div class="layui-col-md4 layui-col-md-offset2">
                         <div class="custom-tool-right">
@@ -191,84 +195,91 @@
                             <td rowspan="1">
                                 <div class="center tr-bd-operate">
                                  {{# if(item.StatusString == '待审核'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_start_auth" type="button" data-id="{{ item.Id }}"> 开始审核
-                                    </button>
-                                    <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
+                                    @{{ if .canEdit}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_start_auth" type="button" data-id="{{ item.Id }}">开始审核</button>
+                                    @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == '审核中'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_keep_auth"
-                                    type="button" data-id="{{ item.Id }}"> 继续审核 </button>
-                                    <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
+                                    @{{ if .canEdit}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_keep_auth" type="button" data-id="{{ item.Id }}">继续审核</button>
+                                    @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == '审核通过'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_distribute"
-                                    type="button" data-id="{{ item.Id }}"> 派单 </button>
-                                    <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
-                                {{# } }}
-
-                                {{# if(item.StatusString == '审核不通过'){ }}
-                                    <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
-                                {{# } }}
-
-                                {{# if(item.StatusString == '待派单'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_distribute"
-                                    type="button"  onclick="layui.admin.distribute('.order_distribute',{{ item.Id }})">
-                                    派单</button>
+                                    @{{ if .canDistribute}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_distribute"type="button" data-id="{{ item.Id }}">派单</button>
+                                    @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == '待制单'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_start_maker"
-                                    type="button" data-id="{{ item.Id }}">
-                                    开始制单</button>
+                                    @{{ if .canMake}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_start_maker" type="button" data-id="{{ item.Id }}">开始制单</button>
+                                    @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == '制单中'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_keep_maker" type="button" data-id="{{ item.Id }}"> 继续制单 </button>
+                                    @{{ if .canMake}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_keep_maker" type="button" data-id="{{ item.Id }}">继续制单</button>
+                                    @{{end}}
                                 {{# } }}
 
-                                {{# if(item.StatusString == '待复核'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_check" type="button" data-id="{{ item.Id }}"> 复核</button>
+                                {{# if(item.StatusString == '待复核' || item.StatusString == '复核中'){ }}
+                                    @{{ if .canRecheck}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_check" type="button" data-id="{{ item.Id }}">复核</button>
+                                    @{{end}}
+                                    @{{ if .canPush}}
+                                    <a class="margin_top_10 order_reminder" data-id="{{ item.Id }}">催单</a>
+                                    @{{end}}
                                  {{# } }}
 
-                                {{# if(item.StatusString == '复核中'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_check"
-                                    type="button" data-id="{{ item.Id }}"> 复核  </button>
-                                    <a class="margin_top_10 order_reminder" data-id="{{ item.Id }}">催单</a>
-                                {{# } }}
-
                                 {{# if(item.StatusString == '复核通过'  || item.StatusString == '复核不通过'){ }}
+                                    @{{ if .canReturn}}
                                     <a class="order_recall" data-id="{{ item.Id }}">撤回</a>
+                                    @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == '复核不通过'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_revise"
-                                    type="button" data-id="{{ item.Id }}">修改</button>
-                                    <a class="margin_top_10 order_again_check" data-id="{{ item.Id }}">重新提交复核</a>
+                                    @{{if .canEdit}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_revise" type="button" data-id="{{ item.Id }}">修改</button>
+                                    @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == '待暂存'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_check_success" type="button"
-                                    data-id="{{ item.Id }}">暂存到单一窗口</button>
+                                    @{{if .canPushXml}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_check_success" type="button" data-id="{{ item.Id }}">暂存到单一窗口</button>
+                                    @{{end}}
+                                    @{{if .canEdit}}
                                     <a class="order_revise" data-id="{{ item.Id }}">修改</a>
+                                    @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == '单一处理中'){ }}
-                                    <button class="layui-btn tr-bd-{{ status }} order_check_success_reload"
-                                    type="button" data-id="{{ item.Id }}">重新发送</button>
+                                    @{{if .canPushXml}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_check_success_reload" type="button" data-id="{{ item.Id }}">重新发送</button>
+                                    @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == '已完成'){ }}
+                                    @{{if .canStoreError}}
                                     <a class="order_error_log" data-id="{{ item.Id }}">差错登记</a>
+                                    @{{end}}
+                                    @{{if .canChange}}
                                     <a class="order_switch_bill" data-id="{{ item.Id }}">改单</a>
-                                    <a class="order_apply_switch_bill" data-id="{{ item.Id }}">申请改单</a>
+                                    @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == '订单关闭'){ }}
+                                    @{{if .canRestart}}
                                     <a class="blue again_open_order" data-id="{{ item.Id }}">重新开启订单</a>
-                                 {{# } }}
+                                    @{{end}}
+                                {{# } }}
 
+                                {{# if(item.StatusString !== '已完成' || item.StatusString !== '订单关闭' ||item.StatusString !== '单一处理中' ){ }}
+                                    @{{ if .canCancel}}
+                                        <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
+                                    @{{end}}
+                                {{# } }}
                                 </div>
                             </td>
                         </tr>
