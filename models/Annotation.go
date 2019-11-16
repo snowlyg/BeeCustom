@@ -289,8 +289,8 @@ func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
 	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
 	if len(params.EtpsInnerInvtNoLike) > 0 {
-		sql += " AND etps_inner_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "'"
-		sql += " OR bond_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "'"
+		sql += " AND etps_inner_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%'"
+		sql += " OR bond_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%'"
 	}
 	if len(params.TrspModecd) > 0 {
 		sql += " AND trsp_modecd = '" + params.TrspModecd + "'"
