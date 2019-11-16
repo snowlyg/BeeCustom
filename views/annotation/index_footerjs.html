@@ -143,7 +143,7 @@
 
             };
 
-            order_import_list = await admin.get_data_list(OrderIndexRequestData);
+            order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
         });
 
         /**复制订单**/
@@ -190,7 +190,7 @@
 
             };
 
-            order_import_list = await admin.get_data_list(OrderIndexRequestData);
+            order_import_list = await admin.get_data_list(OrderIndexRequestData,true);
         });
 
         /**显示隐藏高级搜索**/
@@ -369,7 +369,7 @@
             },
         };
 
-        order_import_list = await admin.get_data_list(OrderIndexRequestData,true);
+        order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
 
         /**审核清单，清单详情，核中**/
         $(document).on("click", ".order_detail, .order_keep_auth, .order_start_auth", function () {

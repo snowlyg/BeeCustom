@@ -4317,7 +4317,7 @@ layui.define('view', function (exports) {
             //订单列表
             list_page: 1,
             list_limit: 10,
-            async get_data_list(OrderIndexRequestData) {
+            async get_data_list(OrderIndexRequestData,isClickStatusTab) {
 
                 let url = OrderIndexRequestData.List.Url;
                 let impexpMarkcd = OrderIndexRequestData.ImpexpMarkcd;
@@ -4344,23 +4344,26 @@ layui.define('view', function (exports) {
                 );
                 let ListDatas = await admin.post(url, OrderIndexRequestListData, true);
 
-                //列表数量
-                let StatusCount = await admin.post(
-                    OrderIndexRequestData.StatusCount.Url,
-                    JSON.stringify(
-                        $.extend(
-                            OrderIndexRequestData.StatusCount.Request, {
-                                StatusString: StatusString,
-                                ImpexpMarkcd: impexpMarkcd,
-                            }
-                        )
-                    ), true
-                );
+                //点击状态 tab 不触发
+                if(!isClickStatusTab){
+                    //列表数量
+                    let StatusCount = await admin.post(
+                        OrderIndexRequestData.StatusCount.Url,
+                        JSON.stringify(
+                            $.extend(
+                                OrderIndexRequestData.StatusCount.Request, {
+                                    StatusString: StatusString,
+                                    ImpexpMarkcd: impexpMarkcd,
+                                }
+                            )
+                        ), true
+                    );
 
-                /**订单状态数量**/
-                layui.laytpl($("#status_flex_list_template").html()).render(StatusCount.rows, function (html) {
-                    $("#status_flex_list").html(html);
-                });
+                    /**订单状态数量**/
+                    layui.laytpl($("#status_flex_list_template").html()).render(StatusCount.rows, function (html) {
+                        $("#status_flex_list").html(html);
+                    });
+                }
 
                 $("#order-i-table tbody").remove();
                 if (ListDatas.total === 0) {

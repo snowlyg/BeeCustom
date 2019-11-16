@@ -159,6 +159,7 @@ func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
 	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '已完成' "
 	sql += " FROM bee_custom_annotations "
 	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
+	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
 
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
