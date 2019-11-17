@@ -94,26 +94,22 @@
             admin.list_page = 1;
 
             let OrderIndexRequestData = {
-                ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
                 StatusString: annotationStatusString,
                 List: {
-                    Url: `/annotation/datagrid`,
+                    Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                         sort: "impexp_markcd",
                         order: "desc",
                     }
-
                 },
                 StatusCount: {
-                    Url: `/annotation/statuscount`,
+                    Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                     }
                 },
-
             };
-
             order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
         });
 
@@ -130,28 +126,24 @@
             if (eCode === 13) {
 
                 let OrderIndexRequestData = {
-                    ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
                     StatusString: annotationStatusString,
                     List: {
-                        Url: `/annotation/datagrid`,
+                        Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
                         Request: {
                             EtpsInnerInvtNoLike: $(this).val(),
                             SearchTimeString: MonthTime,
                             sort: "impexp_markcd",
                             order: "desc",
                         }
-
                     },
                     StatusCount: {
-                        Url: `/annotation/statuscount`,
+                        Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
                         Request: {
                             EtpsInnerInvtNoLike: $(this).val(),
                             SearchTimeString: MonthTime,
                         }
                     },
-
                 };
-
                 order_import_list = await admin.get_data_list(OrderIndexRequestData);
             }
         });
@@ -164,24 +156,21 @@
             $(this).addClass('active').siblings().removeClass('active');
 
             let OrderIndexRequestData = {
-                ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
                 StatusString: annotationStatusString,
                 List: {
-                    Url: `/annotation/datagrid`,
+                    Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                         sort: "impexp_markcd",
                         order: "desc",
                     }
-
                 },
                 StatusCount: {
-                    Url: `/annotation/statuscount`,
+                    Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                     }
                 },
-
             };
 
             order_import_list = await admin.get_data_list(OrderIndexRequestData,true);
@@ -339,10 +328,9 @@
 
         /**订单列表**/
         let OrderIndexRequestData = {
-            ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
             StatusString: annotationStatusString,
             List: {
-                Url: `/annotation/datagrid`,
+                Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
                 Request: {
                     SearchTimeString: MonthTime,
                     sort: "impexp_markcd",
@@ -350,7 +338,7 @@
                 }
             },
             StatusCount: {
-                Url: `/annotation/statuscount`,
+                Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
                 Request: {
                     SearchTimeString: MonthTime,
                 }
@@ -569,10 +557,9 @@
 
         form.on('select(trsp_modecd)', async (data) => {
             let OrderIndexRequestData = {
-                ImpexpMarkcd: "@{{.ImpexpMarkcd}}",//进出口
                 StatusString: annotationStatusString,
                 List: {
-                    Url: `/annotation/datagrid`,
+                    Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
                     Request: {
                         TrspModecd: data.value ? data.value : '',
                         SearchTimeString: MonthTime,
