@@ -16,7 +16,7 @@ func init() {
 		//清单
 		beego.Router("/annotation/index/"+lFkag, &controllers.AnnotationController{}, "Get:"+flag+"Index")
 		//代客下单
-		beego.Router("/annotation/create/"+lFkag+"/?:ieflag", &controllers.AnnotationController{}, "Get:"+flag+"Create")
+		beego.Router("/annotation/create/"+lFkag, &controllers.AnnotationController{}, "Get:"+flag+"Create")
 		//列表
 		beego.Router("/annotation/datagrid/"+lFkag, &controllers.AnnotationController{}, "Post:"+flag+"DataGrid")
 		//数量统计

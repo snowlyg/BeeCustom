@@ -46,12 +46,12 @@ func (c *AnnotationController) EStatusCount() {
 
 // Create 添加 新建 页面
 func (c *AnnotationController) ICreate() {
-	c.bCreate("I")
+	c.bCreate("i")
 }
 
 // Create 添加 新建 页面
 func (c *AnnotationController) ECreate() {
-	c.bCreate("E")
+	c.bCreate("e")
 }
 
 // Store 添加 新建 页面
@@ -61,7 +61,7 @@ func (c *AnnotationController) IStore() {
 
 // Store 添加 新建 页面
 func (c *AnnotationController) EStore() {
-	c.bStore("I")
+	c.bStore("E")
 }
 
 // Edit 添加 编辑 页面
