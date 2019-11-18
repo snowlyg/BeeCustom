@@ -18,6 +18,7 @@ func init() {
 	utils.InitLogs()
 	//初始化缓存
 	utils.InitCache()
+	//初始化权限
 	utils.InitRabc()
 	//初始化数据库
 	InitDatabase()

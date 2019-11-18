@@ -79,6 +79,7 @@ func (c *BackendUserController) Create() {
 
 // Store 添加 新建 页面
 func (c *BackendUserController) Store() {
+	roleIds := c.GetStrings("RoleIds")
 	m := models.NewBackendUser(0)
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
@@ -100,7 +101,7 @@ func (c *BackendUserController) Store() {
 		}
 	}
 
-	if _, err := models.BackendUserSave(&m); err != nil {
+	if _, err := models.BackendUserSave(&m, roleIds); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
@@ -151,6 +152,7 @@ func (c *BackendUserController) Freeze() {
 // Update 添加 编辑 页面
 func (c *BackendUserController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
+	roleIds := c.GetStrings("RoleIds")
 	m := models.NewBackendUser(Id)
 
 	//获取form里的值
@@ -174,7 +176,7 @@ func (c *BackendUserController) Update() {
 		}
 	}
 
-	if _, err := models.BackendUserSave(&m); err != nil {
+	if _, err := models.BackendUserSave(&m, roleIds); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)

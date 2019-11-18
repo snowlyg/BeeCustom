@@ -4,19 +4,16 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	_ "github.com/astaxie/beego/cache/redis"
-	"github.com/astaxie/beego/plugins/auth"
-	"github.com/astaxie/beego/plugins/authz"
 	beegoormadapter "github.com/casbin/beego-orm-adapter"
 	"github.com/casbin/casbin"
 )
 
 var E *casbin.Enforcer
+var dns string
+var err error
 
 //初始化数据连接
 func InitRabc() {
-
-	var dns string
-
 	//数据库类别
 	dbType := beego.AppConfig.DefaultString("db_type", "mysql")
 	//数据库名称
@@ -32,35 +29,24 @@ func InitRabc() {
 	switch dbType {
 	case "sqlite3":
 		dns = fmt.Sprintf("%s.db", dbName)
-		a := beegoormadapter.NewAdapter("sqlite3", dns, true)
-		//E, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
-		E, _ = casbin.NewEnforcer("rbac_model.conf", a)
-
-		authPlugin := auth.NewBasicAuthenticator(SecretAuth, "Authorization Required")
-		beego.InsertFilter("[^/home/login]", beego.BeforeRouter, authPlugin)
-		beego.InsertFilter("[^/home/login]", beego.BeforeRouter, authz.NewAuthorizer(E))
-
 		break
 	case "mysql":
 		dns = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPwd, dbHost, dbPort, dbName)
-
-		a := beegoormadapter.NewAdapter("mysql", dns)
-		//E, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
-
-		E, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
-
-		authPlugin := auth.NewBasicAuthenticator(SecretAuth, "Authorization Required")
-		beego.InsertFilter("*", beego.BeforeRouter, authPlugin)
-		beego.InsertFilter("[^/home/login]", beego.BeforeRouter, authz.NewAuthorizer(E))
-
+		break
 	default:
 		LogCritical(fmt.Sprintf("Database driver is not allowed:%v", dbType))
 	}
 
-	_ = E.LoadPolicy()
+	a := beegoormadapter.NewAdapter(dbType, dns)
+	E, err = casbin.NewEnforcer("conf/rbac_model.conf", a)
+	if err != nil {
+		LogDebug(fmt.Sprintf("NewEnforcer error:%v", err))
+	}
 
-}
+	err = E.LoadPolicy()
 
-func SecretAuth(username, password string) bool {
-	return username == "astaxie" && password == "helloBeego"
+	if err != nil {
+		LogDebug(fmt.Sprintf("LoadPolicy error:%v", err))
+	}
+
 }

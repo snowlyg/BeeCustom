@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -30,21 +31,19 @@ type BackendUserQueryParam struct {
 // BackendUser 实体类
 type BackendUser struct {
 	BaseModel
-	RealName string `orm:"size(32)" valid:"Required;MaxSize(32)"`
-	UserName string `orm:"size(24)" valid:"Required;MaxSize(24)"`
-	UserPwd  string `orm:"size(256)"`
-	Mobile   string `orm:"size(16)" valid:"Required;Mobile"`
-	Email    string `orm:"size(256)" valid:"Required;Email"`
-	Avatar   string `orm:"size(256)"`
-	ICCode   string `orm:"column(i_c_code);size(255);null"`
-	Chapter  string `orm:"column(chapter);size(255);null" description:"签章"`
-	IsSuper  bool   `valid:"Required"`
-	Status   bool   `valid:"Required"`
-	RoleId   int64  `orm:"-" form:"RoleId" valid:"Required"` //关联管理会自动生成 role_id 字段，此处不生成字段
-	//Role        *Role         `orm:"_"`                          // fk 的反向关系
+	RealName    string        `orm:"size(32)" valid:"Required;MaxSize(32)"`
+	UserName    string        `orm:"size(24)" valid:"Required;MaxSize(24)"`
+	UserPwd     string        `orm:"size(256)"`
+	Mobile      string        `orm:"size(16)" valid:"Required;Mobile"`
+	Email       string        `orm:"size(256)" valid:"Required;Email"`
+	Avatar      string        `orm:"size(256)"`
+	ICCode      string        `orm:"column(i_c_code);size(255);null"`
+	Chapter     string        `orm:"column(chapter);size(255);null" description:"签章"`
+	IsSuper     bool          `valid:"Required"`
+	Status      bool          `valid:"Required"`
 	Companies   []*Company    `orm:"reverse(many)"` //设置一对多关系
 	Annotations []*Annotation `orm:"reverse(many)"` // 设置多对多的反向关系
-	Role        string        `json:"Role"`
+	Role        string        `orm:"_"`
 }
 
 func NewBackendUser(id int64) BackendUser {
@@ -136,7 +135,7 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 func BackendUserGetRelations(ms []*BackendUser) ([]*BackendUser, error) {
 	if len(ms) > 0 {
 		for _, v := range ms {
-			names, err := utils.E.GetRolesForUser(v.RealName)
+			names, err := utils.E.GetRolesForUser(strconv.FormatInt(v.Id, 10))
 			if err != nil {
 				utils.LogDebug(fmt.Sprintf("GetRolesForUser:%v", err))
 			}
@@ -161,11 +160,27 @@ func BackendUserOne(id int64) (*BackendUser, error) {
 		return nil, err
 	}
 
-	names, err := utils.E.GetRolesForUser(m.RealName)
+	roleIdStrings, err := utils.E.GetRolesForUser(strconv.FormatInt(m.Id, 10))
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetRolesForUser:%v", err))
+		utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
 	}
-	m.Role = strings.Join(names, ",")
+
+	var roleNames string
+	for _, roleId := range roleIdStrings {
+		id64, err := strconv.ParseInt(roleId, 10, 64)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+		}
+
+		role, err := RoleOne(id64, false)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+		}
+
+		roleNames += role.Name + ","
+	}
+
+	m.Role = roleNames
 
 	if &m == nil {
 		return &m, errors.New("用户获取失败")
@@ -185,13 +200,13 @@ func BackendUserOneByUserName(username, userpwd string) (*BackendUser, error) {
 }
 
 //Save 添加、编辑页面 保存
-func BackendUserSave(m *BackendUser) (*BackendUser, error) {
+func BackendUserSave(m *BackendUser, roleIds []string) (*BackendUser, error) {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
 
-		if err := getBackendUserRole(m); err != nil {
+		if err := setBackendUserRole(m, roleIds); err != nil {
 			return nil, err
 		}
 
@@ -215,7 +230,7 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 			m.Avatar = oM.Avatar
 		}
 
-		if err := getBackendUserRole(m); err != nil {
+		if err := setBackendUserRole(m, roleIds); err != nil {
 			return nil, err
 		}
 
@@ -228,12 +243,13 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 }
 
 //获取关联模型
-func getBackendUserRole(m *BackendUser) error {
-	if oR, err := RoleOne(m.RoleId, ""); err != nil {
-		return err
-	} else {
-		_, _ = utils.E.AddRoleForUser(m.RealName, oR.Name)
-		//m.Role = oR
+func setBackendUserRole(m *BackendUser, roleIds []string) error {
+	for _, roleId := range roleIds {
+		_, err := utils.E.AddRoleForUser(strconv.FormatInt(m.Id, 10), roleId)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("AddRoleForUser error:%v", err))
+			return err
+		}
 	}
 
 	return nil

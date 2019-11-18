@@ -108,7 +108,7 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>选择角色：</label>
                         <div class="layui-input-block">
-                            <select name="RoleId" lay-verify="required"  lay-vertype="tips">
+                            <select name="RoleIds" lay-verify="required"  lay-vertype="tips">
                                 <option value="">选择角色</option>
                                 @{{ range .roles }}
                                     @{{if eq $.m.Role .Name }}

@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -74,7 +76,7 @@ func (c *RoleController) Store() {
 
 	c.validRequestData(m)
 
-	permIds := c.GetString("perm_ids")
+	permIds := c.GetStrings("perm_ids")
 
 	err := models.RoleSave(&m, permIds)
 	if err == nil {
@@ -119,11 +121,12 @@ func (c *RoleController) PermLists() {
 
 	Id, _ := c.GetInt64(":id", 0)
 	if Id > 0 {
-		m, err = models.RoleOne(Id, "Resources")
+		m, err = models.RoleOne(Id, true)
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
+
 	//直接反序化获取json格式的requestbody里的值
 	params := models.NewResourceQueryParam()
 	params.IsParent = true
@@ -163,13 +166,19 @@ func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
 
 //是否有权限
 func getChecked(v *models.Resource, m *models.Role) bool {
-	//if m != nil && m.Resources != nil {
-	//	for _, rv := range m.Resources {
-	//		if rv != nil && rv.Id == v.Id {
-	//			return true
-	//		}
-	//	}
-	//}
+	if m != nil && len(m.Resources) > 0 {
+		resources := strings.Split(m.Resources, ",")
+		for _, rvId := range resources {
+			resourceId, err := strconv.ParseInt(rvId, 10, 64)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("ParseInt resourceId error:%v", err))
+			}
+
+			if resourceId == v.Id {
+				return true
+			}
+		}
+	}
 
 	return false
 }
@@ -179,7 +188,7 @@ func (c *RoleController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
 	if Id > 0 {
 
-		m, err := models.RoleOne(Id, "")
+		m, err := models.RoleOne(Id, false)
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
@@ -197,7 +206,7 @@ func (c *RoleController) Edit() {
 func (c *RoleController) Update() {
 
 	id, _ := c.GetInt64(":id", 0)
-	ResourceIds := c.GetString("ResourceIds")
+	ResourceIds := c.GetStrings("ResourceIds")
 
 	//获取form里的值
 	if id == 0 {

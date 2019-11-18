@@ -17,7 +17,7 @@
         });
 
         form.on('submit(role_submit)', async (data) => {
-            data.field.ResourceIds = permission.GetChecked().toString();
+            data.field.ResourceIds = permission.GetChecked();
             await admin.post(@{{ urlfor "RoleController.Store" }}, data.field);
         })
     });
