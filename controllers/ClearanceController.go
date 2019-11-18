@@ -24,8 +24,14 @@ func (c *ClearanceController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
-	//默认认证 "Index", "Create", "Edit", "Delete"
-	c.checkAuthor()
+	perms := []string{
+		"Index",
+		"Create",
+		"Edit",
+		"Delete",
+		"Import",
+	}
+	c.checkAuthor(perms)
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -47,7 +53,7 @@ func (c *ClearanceController) Index() {
 	c.LayoutSections["footerjs"] = "clearance/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create", "Import")
+	c.getActionData("", "Edit", "Delete", "Create", "Import")
 
 	c.GetXSRFToken()
 }
@@ -73,7 +79,7 @@ func (c *ClearanceController) DataGrid() {
 //通关参数更新时间
 func (c *ClearanceController) GetClearanceUpdateTime() {
 
-	lastUpdateTime := c.GetLastUpdteTime()
+	lastUpdateTime := c.getLastUpdteTime()
 	//定义返回的数据结构
 	result := make(map[string]interface{})
 	result["total"] = 0
@@ -125,7 +131,7 @@ func (c *ClearanceController) Store() {
 	if _, err := models.ClearanceSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
-		c.SetLastUpdteTime(m.Type)
+		c.setLastUpdteTime(m.Type)
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
@@ -163,7 +169,7 @@ func (c *ClearanceController) Update() {
 	if _, err := models.ClearanceSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
-		c.SetLastUpdteTime(m.Type)
+		c.setLastUpdteTime(m.Type)
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	}
 }
@@ -173,7 +179,7 @@ func (c *ClearanceController) Delete() {
 	id, _ := c.GetInt64(":id")
 	m, _ := models.ClearanceOne(id)
 	if num, err := models.ClearanceDelete(id); err == nil {
-		c.SetLastUpdteTime(m.Type)
+		c.setLastUpdteTime(m.Type)
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
@@ -217,7 +223,7 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	c.SetLastUpdteTime(clearanceType)
+	c.setLastUpdteTime(clearanceType)
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("导入成功 %d 项基础参数", mun), mun)
 
 }
@@ -277,7 +283,7 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 }
 
 //获取最后更新时间
-func (c *ClearanceController) GetLastUpdteTime() []*models.ClearanceUpdateTime {
+func (c *ClearanceController) getLastUpdteTime() []*models.ClearanceUpdateTime {
 
 	//直接获取参数 getDataGridData()
 	params := models.NewClearanceUpdateTimeQueryParam()
@@ -290,7 +296,7 @@ func (c *ClearanceController) GetLastUpdteTime() []*models.ClearanceUpdateTime {
 }
 
 //设置最后更新时间
-func (c *ClearanceController) SetLastUpdteTime(cType int8) {
+func (c *ClearanceController) setLastUpdteTime(cType int8) {
 
 	oldLastUpdateTime, err := models.GetLastUpdteTimeByClearanceType(cType)
 	if err != nil {

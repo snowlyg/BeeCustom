@@ -18,8 +18,14 @@ func (c *ResourceController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的少数Action需要权限控制，则将验证放到需要控制的Action里
-	//默认认证 "Index", "Create", "Edit", "Delete"
-	c.checkAuthor()
+
+	perms := []string{
+		"Index",
+		"Create",
+		"Edit",
+		"Delete",
+	}
+	c.checkAuthor(perms)
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//这里注释了权限控制，因此这里需要登录验证
 	c.checkLogin()
@@ -32,7 +38,7 @@ func (c *ResourceController) Index() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "resource/index_footerjs.html"
 	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create")
+	c.getActionData("", "Edit", "Delete", "Create")
 	c.GetXSRFToken()
 }
 

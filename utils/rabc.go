@@ -1,24 +1,23 @@
-package sysinit
+package utils
 
 import (
 	"fmt"
 
-	"BeeCustom/utils"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
-	//_ "github.com/mattn/go-sqlite3"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/astaxie/beego/cache/redis"
+	beegoormadapter "github.com/casbin/beego-orm-adapter"
+	"github.com/casbin/casbin"
 )
 
+var E *casbin.Enforcer
+
 //初始化数据连接
-func InitDatabase() {
+func InitRabc() {
 
 	var dns string
 
 	//数据库类别
 	dbType := beego.AppConfig.DefaultString("db_type", "mysql")
-	//连接名称
-	dbAlias := beego.AppConfig.DefaultString(dbType+"::db_alias", "default")
 	//数据库名称
 	dbName := beego.AppConfig.DefaultString(dbType+"::db_name", "bee_custom")
 	//数据库连接用户名
@@ -32,23 +31,22 @@ func InitDatabase() {
 	switch dbType {
 	case "sqlite3":
 
-		_ = orm.RegisterDataBase(dbAlias, dbType, dbName)
-
+		dns = fmt.Sprintf("%s.db", dbName)
+		// 注册casbin
+		a := beegoormadapter.NewAdapter("sqlite3", dns, true)
+		E, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
 		break
 	case "mysql":
-		dbCharset := beego.AppConfig.DefaultString(dbType+"::db_charset", "")
+
 		dns = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPwd, dbHost, dbPort, dbName)
-		_ = orm.RegisterDataBase(dbAlias, dbType, dns+"?charset="+dbCharset, 30)
+
+		a := beegoormadapter.NewAdapter("mysql", dns)
+		E, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
 
 	default:
-		utils.LogCritical(fmt.Sprintf("Database driver is not allowed:%v", dbType))
+		LogCritical(fmt.Sprintf("Database driver is not allowed:%v", dbType))
 	}
 
-	//如果是开发模式，则显示命令信息
-	isDev := beego.AppConfig.DefaultString("runmode", "dev") == "dev"
-	//自动建表
-	_ = orm.RunSyncdb("default", false, isDev)
-	if isDev {
-		orm.Debug = isDev
-	}
+	_ = E.LoadPolicy()
+
 }

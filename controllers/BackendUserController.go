@@ -16,8 +16,15 @@ func (c *BackendUserController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
-	//默认认证 "Index", "Create", "Edit", "Delete"
-	c.checkAuthor("Freeze")
+
+	perms := []string{
+		"Index",
+		"Create",
+		"Edit",
+		"Delete",
+		"Freeze",
+	}
+	c.checkAuthor(perms)
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -31,7 +38,7 @@ func (c *BackendUserController) Index() {
 	c.LayoutSections["footerjs"] = "backenduser/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create", "Freeze")
+	c.getActionData("", "Edit", "Delete", "Create", "Freeze")
 
 	c.GetXSRFToken()
 }
@@ -103,7 +110,7 @@ func (c *BackendUserController) Store() {
 // Edit 添加 编辑 页面
 func (c *BackendUserController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.BackendUserOne(Id)
+	m, err := models.BackendUserOne(Id, "")
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -126,7 +133,7 @@ func (c *BackendUserController) Edit() {
 // 禁用 启用
 func (c *BackendUserController) Freeze() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.BackendUserOne(Id)
+	m, err := models.BackendUserOne(Id, "")
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -187,7 +194,7 @@ func (c *BackendUserController) Delete() {
 // Edit 添加 编辑 页面
 func (c *BackendUserController) Profile() {
 
-	m, err := models.BackendUserOne(c.curUser.Id)
+	m, err := models.BackendUserOne(c.curUser.Id, "")
 	if m != nil && c.curUser.Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")

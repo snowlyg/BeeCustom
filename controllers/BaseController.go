@@ -57,48 +57,69 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 	if c.curUser.Id == 0 {
 		return false
 	}
+
 	//从session获取用户信息
 	user := c.GetSession("backenduser")
 	//类型断言
 	bu, ok := user.(models.BackendUser)
 	if ok {
 		//如果是超级管理员，则直接通过
-		//if bu.IsSuper {
-		//	return true
-		//}
+		if bu.IsSuper {
+			return true
+		}
 
 		//遍历用户所负责的资源列表
-		for _, resource := range bu.Role.Resources {
-			urlfor := resource.UrlFor
-			if len(urlfor) == 0 {
-				continue
-			}
-			if len(urlfor) > 0 && urlfor == (ctrlName+"."+ActName) {
-				return true
-			}
-		}
+		//uRole, err := models.RoleOne(bu.Role.Id, "Resources")
+		//if err != nil {
+		//	utils.LogDebug(fmt.Sprintf("获取用户角色出错=%v", err))
+		//	return false
+		//}
+		//
+		//for _, resource := range uRole.Resources {
+		//	urlfor := resource.UrlFor
+		//	if len(urlfor) == 0 {
+		//		continue
+		//	}
+		//	if len(urlfor) > 0 && urlfor == (ctrlName+"."+ActName) {
+		//		return true
+		//	}
+		//}
 	}
 
 	return false
 }
 
 // 判断某 Controller.Action 当前用户是否有权访问
-func (c *BaseController) getActionData(actionNames ...string) {
-	for _, v := range actionNames {
-		c.Data["can"+v] = c.checkActionAuthor(c.controllerName, v)
+func (c *BaseController) getActionData(actionIndex string, actionNames ...string) {
+
+	//进出口分离权限
+	if len(actionIndex) > 0 {
+		actions := make(map[string]interface{})
+		upper := strings.ToUpper(actionIndex)
+		action := make(map[string]bool)
+		for _, v := range actionNames {
+			isAction := c.checkActionAuthor(c.controllerName, upper+v)
+			action["can"+v] = isAction
+		}
+		actions[upper] = action
+		c.Data["actions"] = actions
+	} else {
+		for _, v := range actionNames {
+			c.Data["can"+v] = c.checkActionAuthor(c.controllerName, v)
+		}
 	}
+
 }
 
 // checkLogin判断用户是否有权访问某地址，无权则会跳转到错误页面
 //一定要在BaseController.Prepare()后执行
 // 会调用checkLogin
 // 传入的参数为需要权限控制的Action
-func (c *BaseController) checkAuthor(actionNames ...string) {
+func (c *BaseController) checkAuthor(actionNames []string) {
 	//先判断是否登录
 	c.checkLogin()
-	dActionNames := append(actionNames, "Index", "Create", "Edit", "Delete") //默认需要验证的权限
 	//如果Action在忽略列表里，则直接通用
-	for _, actionName := range dActionNames {
+	for _, actionName := range actionNames {
 		if c.actionName == "EIndex" {
 			utils.LogDebug(fmt.Sprintf("hasAuthor=%v ，%v", actionName == c.actionName, actionName))
 		}
@@ -133,7 +154,7 @@ func (c *BaseController) adapterUserInfo() {
 
 //SetBackendUser2Session 获取用户信息（包括资源UrlFor）保存至Session
 func (c *BaseController) setBackendUser2Session(userId int64) error {
-	m, err := models.BackendUserOne(userId)
+	m, err := models.BackendUserOne(userId, "")
 	if err != nil {
 		return err
 	}

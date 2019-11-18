@@ -16,8 +16,15 @@ func (c *HsCodeController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
-	//默认认证 "Index", "Create", "Edit", "Delete"
-	c.checkAuthor()
+
+	perms := []string{
+		"Index",
+		"Create",
+		"Edit",
+		"Delete",
+		"Import",
+	}
+	c.checkAuthor(perms)
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -33,7 +40,7 @@ func (c *HsCodeController) Index() {
 	c.LayoutSections["footerjs"] = "hscode/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("Import")
+	c.getActionData("", "Import")
 
 	c.GetXSRFToken()
 }

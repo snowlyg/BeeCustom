@@ -10,6 +10,7 @@
             if(clearance_new.status === 1) {
                 const index = parent.layer.getFrameIndex(window.name);
                 setTimeout(() => {
+                    admin.reloadFrame("权限管理iframe");
                     parent.layui.table.reload('clearance_lists');
                     parent.layer.close(index);
                 }, 2000);

@@ -32,7 +32,13 @@ func (c *RoleController) Prepare() {
 
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
 	//默认认证 "Index", "Create", "Edit", "Delete"
-	c.checkAuthor()
+	perms := []string{
+		"Index",
+		"Create",
+		"Edit",
+		"Delete",
+	}
+	c.checkAuthor(perms)
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	//c.checkLogin()//权限控制里会进行登录验证，因此这里不用再作登录验证
@@ -45,7 +51,7 @@ func (c *RoleController) Index() {
 	c.LayoutSections["footerjs"] = "role/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData("Edit", "Delete", "Create")
+	c.getActionData("", "Edit", "Delete", "Create")
 	c.GetXSRFToken()
 }
 
@@ -70,7 +76,7 @@ func (c *RoleController) Store() {
 
 	permIds := c.GetString("perm_ids")
 
-	_, err := models.RoleSave(&m, permIds)
+	err := models.RoleSave(&m, permIds)
 	if err == nil {
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	} else {
@@ -113,7 +119,7 @@ func (c *RoleController) PermLists() {
 
 	Id, _ := c.GetInt64(":id", 0)
 	if Id > 0 {
-		m, err = models.RoleOne(Id)
+		m, err = models.RoleOne(Id, "Resources")
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
@@ -157,13 +163,13 @@ func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
 
 //是否有权限
 func getChecked(v *models.Resource, m *models.Role) bool {
-	if m != nil && m.Resources != nil {
-		for _, rv := range m.Resources {
-			if rv != nil && rv.Id == v.Id {
-				return true
-			}
-		}
-	}
+	//if m != nil && m.Resources != nil {
+	//	for _, rv := range m.Resources {
+	//		if rv != nil && rv.Id == v.Id {
+	//			return true
+	//		}
+	//	}
+	//}
 
 	return false
 }
@@ -173,7 +179,7 @@ func (c *RoleController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
 	if Id > 0 {
 
-		m, err := models.RoleOne(Id)
+		m, err := models.RoleOne(Id, "")
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}

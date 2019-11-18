@@ -53,12 +53,12 @@ func (c *BaseAnnotationController) bIndex(impexpMarkcd, impexpMarkcdName string)
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
 
+	//页面里按钮权限控制
+	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Aduit", "Delete")
+
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
 	c.Data["BackendUsers"] = backendUsers
-
-	//页面里按钮权限控制
-	c.getActionData("Create")
 	c.Data["ImpexpMarkcd"] = impexpMarkcd
 	c.Data["ImpexpMarkcdName"] = impexpMarkcdName
 
@@ -407,7 +407,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 	o := orm.NewOrm()
 	err := o.Begin()
 
-	bu, err := models.BackendUserOne(backendUserId)
+	bu, err := models.BackendUserOne(backendUserId, "")
 	if bu != nil && backendUserId > 0 {
 		if err != nil {
 			err = o.Rollback()

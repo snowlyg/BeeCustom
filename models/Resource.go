@@ -36,7 +36,7 @@ type Resource struct {
 	ParentId     int64       `orm:"-" form:"ParentId"` //关联管理会自动生成 ParentId 字段，此处不生成字段
 	Parent       *Resource   `orm:"null;rel(fk)"`      // RelForeignKey relation
 	Sons         []*Resource `orm:"reverse(many)"`     // fk 的反向关系
-	Roles        []*Role     `orm:"reverse(many)"`     // 设置多对多的反向关系
+	//Roles        []*Role     `orm:"_"`     // 设置多对多的反向关系
 }
 
 func NewResource(id int64) Resource {

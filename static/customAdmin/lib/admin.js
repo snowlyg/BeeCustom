@@ -893,7 +893,7 @@ layui.define('view', function (exports) {
                     let ajax_abort = $.ajax({
                         url: url,
                         type: 'PATCH',
-                        data: JSON.stringify(data),
+                        data: data,
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {

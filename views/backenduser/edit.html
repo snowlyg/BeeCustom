@@ -111,7 +111,7 @@
                             <select name="RoleId" lay-verify="required"  lay-vertype="tips">
                                 <option value="">选择角色</option>
                                 @{{ range .roles }}
-                                    @{{if eq $.m.Role.Id .Id }}
+                                    @{{if eq $.m.Role .Name }}
                                         <option selected value="@{{ .Id }}">@{{ .Name }}</option>
                                     @{{ else }}
                                         <option value="@{{ .Id }}">@{{ .Name }}</option>

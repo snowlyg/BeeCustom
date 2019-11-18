@@ -1,10 +1,12 @@
 package models
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
+	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -23,9 +25,9 @@ type RoleQueryParam struct {
 type Role struct {
 	BaseModel
 
-	Name         string         `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
-	Resources    []*Resource    `orm:"rel(m2m);rel_table(role_resource)"` // 设置多对多的反向关系
-	BackendUsers []*BackendUser `orm:"reverse(many)"`                     //设置一对多关系
+	Name string `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
+	//Resources    []*Resource    `orm:"_"` // 设置多对多的反向关系
+	//BackendUsers []*BackendUser `orm:"_"`                     //设置一对多关系
 }
 
 //初始化角色
@@ -60,8 +62,27 @@ func RoleDataList(params *RoleQueryParam) []*Role {
 	return data
 }
 
+func RoleGetRelations(ms []*Role, relations string) ([]*Role, error) {
+	o := orm.NewOrm()
+
+	if len(relations) > 0 {
+		rs := strings.Split(relations, ",")
+		for _, v := range ms {
+			for _, rv := range rs {
+				_, err := o.LoadRelated(v, rv)
+				if err != nil {
+					utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+					return nil, err
+				}
+			}
+		}
+	}
+
+	return ms, nil
+}
+
 // RoleOne 获取单条
-func RoleOne(id int64) (*Role, error) {
+func RoleOne(id int64, relations string) (*Role, error) {
 	o := orm.NewOrm()
 	m := NewRole(id)
 	err := o.Read(&m)
@@ -69,38 +90,45 @@ func RoleOne(id int64) (*Role, error) {
 		return nil, err
 	}
 
-	// 获取关系字段，o.LoadRelated(v, "Roles") 这是关键
-	// 查找该用户所属的角色
-	if _, err := o.LoadRelated(&m, "Resources"); err != nil {
-		return nil, err
+	if len(relations) > 0 {
+		rs := strings.Split(relations, ",")
+		for _, rv := range rs {
+			_, err := o.LoadRelated(&m, rv)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+				return nil, err
+			}
+
+		}
 	}
+
 	return &m, nil
 }
 
 //Save 添加、编辑页面 保存
-func RoleSave(m *Role, permIds string) (*Role, error) {
+func RoleSave(m *Role, permIds string) error {
 	o := orm.NewOrm()
 	if _, err := o.Insert(m); err != nil {
-		return nil, err
+		return err
 	}
 
 	m2m := o.QueryM2M(m, "Resources")
 	if _, err := m2m.Clear(); err != nil {
-		return nil, err
+		return err
 	}
 
 	for _, permId := range permIds {
 		s, err := ResourceOne(int64(permId))
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		_, err = m2m.Add(s)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return m, nil
+	return nil
 }
 
 //Save 添加、编辑页面 保存
@@ -138,6 +166,7 @@ func RoleUpdate(m *Role, permIds string) (*Role, error) {
 func RoleDelete(id int64) (num int64, err error) {
 	m := NewRole(id)
 	if num, err := BaseDelete(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("Delete Role:%v", err))
 		return num, err
 	} else {
 		return num, nil

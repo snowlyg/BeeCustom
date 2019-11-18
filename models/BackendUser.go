@@ -2,10 +2,10 @@ package models
 
 import (
 	"errors"
-	"fmt"
-	"github.com/astaxie/beego"
 	"strings"
 	"time"
+
+	"github.com/astaxie/beego"
 
 	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
@@ -29,20 +29,21 @@ type BackendUserQueryParam struct {
 // BackendUser 实体类
 type BackendUser struct {
 	BaseModel
-	RealName    string        `orm:"size(32)" valid:"Required;MaxSize(32)"`
-	UserName    string        `orm:"size(24)" valid:"Required;MaxSize(24)"`
-	UserPwd     string        `orm:"size(256)"`
-	Mobile      string        `orm:"size(16)" valid:"Required;Mobile"`
-	Email       string        `orm:"size(256)" valid:"Required;Email"`
-	Avatar      string        `orm:"size(256)"`
-	ICCode      string        `orm:"column(i_c_code);size(255);null"`
-	Chapter     string        `orm:"column(chapter);size(255);null" description:"签章"`
-	IsSuper     bool          `valid:"Required"`
-	Status      bool          `valid:"Required"`
-	RoleId      int64         `orm:"-" form:"RoleId" valid:"Required"` //关联管理会自动生成 role_id 字段，此处不生成字段
-	Role        *Role         `orm:"rel(fk)"`                          // fk 的反向关系
-	Companies   []*Company    `orm:"reverse(many)"`                    //设置一对多关系
-	Annotations []*Annotation `orm:"reverse(many)"`                    // 设置多对多的反向关系
+	RealName string `orm:"size(32)" valid:"Required;MaxSize(32)"`
+	UserName string `orm:"size(24)" valid:"Required;MaxSize(24)"`
+	UserPwd  string `orm:"size(256)"`
+	Mobile   string `orm:"size(16)" valid:"Required;Mobile"`
+	Email    string `orm:"size(256)" valid:"Required;Email"`
+	Avatar   string `orm:"size(256)"`
+	ICCode   string `orm:"column(i_c_code);size(255);null"`
+	Chapter  string `orm:"column(chapter);size(255);null" description:"签章"`
+	IsSuper  bool   `valid:"Required"`
+	Status   bool   `valid:"Required"`
+	RoleId   int64  `orm:"-" form:"RoleId" valid:"Required"` //关联管理会自动生成 role_id 字段，此处不生成字段
+	//Role        *Role         `orm:"_"`                          // fk 的反向关系
+	Companies   []*Company    `orm:"reverse(many)"` //设置一对多关系
+	Annotations []*Annotation `orm:"reverse(many)"` // 设置多对多的反向关系
+	Role        string        `json:"Role"`
 }
 
 func NewBackendUser(id int64) BackendUser {
@@ -132,16 +133,19 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 }
 
 func BackendUserGetRelations(ms []*BackendUser, relations string) ([]*BackendUser, error) {
-	o := orm.NewOrm()
-	rs := strings.Split(relations, ",")
+	//o := orm.NewOrm()
+	//rs := strings.Split(relations, ",")
 	for _, v := range ms {
-		for _, rv := range rs {
-			_, err := o.LoadRelated(v, rv)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
-				return nil, err
-			}
-		}
+		names, _ := utils.E.GetRolesForUser(v.RealName)
+		//	for _, rv := range rs {
+		//		_, err := o.LoadRelated(v, rv)
+		//		if err != nil {
+		//			utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+		//			return nil, err
+		//		}
+		//	}
+
+		v.Role = strings.Join(names, ",")
 	}
 
 	return ms, nil
@@ -154,25 +158,22 @@ func BackenduserDataList(params *BackendUserQueryParam) []*BackendUser {
 }
 
 // BackendUserOne 根据id获取单条
-func BackendUserOne(id int64) (*BackendUser, error) {
+func BackendUserOne(id int64, relations string) (*BackendUser, error) {
 	m := NewBackendUser(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(BackendUserTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
 		return nil, err
 	}
 
-	if m.Role != nil {
-		mr := m.Role
-		// 获取关系字段，o.LoadRelated(v, "Roles") 这是关键
-		// 查找该用户所属的角色
-		if _, err := o.LoadRelated(mr, "Resources"); err != nil {
-			return nil, err
-		}
-
-		m.Role = mr
-	} else {
-		return &m, errors.New("用户获取失败")
-	}
+	//if m.Role != nil {
+	//	mr := m.Role
+	//	mrs := []*Role{m.Role}
+	//	_, _ = RoleGetRelations(mrs, relations)
+	//
+	//	m.Role = mr
+	//} else {
+	//	return &m, errors.New("用户获取失败")
+	//}
 
 	if &m == nil {
 		return &m, errors.New("用户获取失败")
@@ -206,7 +207,7 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 			return nil, err
 		}
 	} else {
-		if oM, err := BackendUserOne(m.Id); err != nil {
+		if oM, err := BackendUserOne(m.Id, ""); err != nil {
 			return nil, err
 		} else {
 			m.UserPwd = strings.TrimSpace(m.UserPwd)
@@ -236,11 +237,13 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 
 //获取关联模型
 func getBackendUserRole(m *BackendUser) error {
-	if oR, err := RoleOne(m.RoleId); err != nil {
+	if oR, err := RoleOne(m.RoleId, ""); err != nil {
 		return err
 	} else {
-		m.Role = oR
+		_, _ = utils.E.AddRoleForUser(m.RealName, oR.Name)
+		//m.Role = oR
 	}
+
 	return nil
 }
 

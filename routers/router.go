@@ -9,6 +9,19 @@ import (
 
 func init() {
 
+	//beego.Router("/rabc/test", &controllers.RABCController{}, "*:Test")
+	////新建角色
+	//beego.Router("/rabc/post", &controllers.RABCController{}, "post:Post")
+	//beego.Router("/rabc/update", &controllers.RABCController{}, "put:Update")
+	//beego.Router("/rabc/delete", &controllers.RABCController{}, "post:Delete")
+	//beego.Router("/rabc/get/?:id:string", &controllers.RABCController{}, "get:Get")
+	////添加用户角色
+	//beego.Router("/rabc/userrole", &controllers.RABCController{}, "post:UserRole")
+	////添加角色对项目目录文件操作权限
+	////beego.Router("/rabc/permission", &controllers.RABCController{}, "post:RolePermission")
+	////查询角色对项目目录文件操作的权限
+	//beego.Router("/rabc/getpermission", &controllers.RABCController{}, "get:GetRolePermission")
+
 	flags := [2]string{"I", "E"}
 	/*清单管理*/
 	for _, flag := range flags {
