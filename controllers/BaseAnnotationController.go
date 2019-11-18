@@ -407,7 +407,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 	o := orm.NewOrm()
 	err := o.Begin()
 
-	bu, err := models.BackendUserOne(backendUserId, "")
+	bu, err := models.BackendUserOne(backendUserId)
 	if bu != nil && backendUserId > 0 {
 		if err != nil {
 			err = o.Rollback()

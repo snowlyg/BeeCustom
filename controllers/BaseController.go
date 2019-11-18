@@ -154,7 +154,7 @@ func (c *BaseController) adapterUserInfo() {
 
 //SetBackendUser2Session 获取用户信息（包括资源UrlFor）保存至Session
 func (c *BaseController) setBackendUser2Session(userId int64) error {
-	m, err := models.BackendUserOne(userId, "")
+	m, err := models.BackendUserOne(userId)
 	if err != nil {
 		return err
 	}

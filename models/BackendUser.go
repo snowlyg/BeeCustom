@@ -154,7 +154,7 @@ func BackenduserDataList(params *BackendUserQueryParam) []*BackendUser {
 }
 
 // BackendUserOne 根据id获取单条
-func BackendUserOne(id int64, relations string) (*BackendUser, error) {
+func BackendUserOne(id int64) (*BackendUser, error) {
 	m := NewBackendUser(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(BackendUserTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
@@ -199,7 +199,7 @@ func BackendUserSave(m *BackendUser) (*BackendUser, error) {
 			return nil, err
 		}
 	} else {
-		if oM, err := BackendUserOne(m.Id, ""); err != nil {
+		if oM, err := BackendUserOne(m.Id); err != nil {
 			return nil, err
 		} else {
 			m.UserPwd = strings.TrimSpace(m.UserPwd)

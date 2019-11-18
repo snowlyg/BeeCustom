@@ -110,7 +110,7 @@ func (c *BackendUserController) Store() {
 // Edit 添加 编辑 页面
 func (c *BackendUserController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.BackendUserOne(Id, "")
+	m, err := models.BackendUserOne(Id)
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -133,7 +133,7 @@ func (c *BackendUserController) Edit() {
 // 禁用 启用
 func (c *BackendUserController) Freeze() {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.BackendUserOne(Id, "")
+	m, err := models.BackendUserOne(Id)
 	if m != nil && Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -194,7 +194,7 @@ func (c *BackendUserController) Delete() {
 // Edit 添加 编辑 页面
 func (c *BackendUserController) Profile() {
 
-	m, err := models.BackendUserOne(c.curUser.Id, "")
+	m, err := models.BackendUserOne(c.curUser.Id)
 	if m != nil && c.curUser.Id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")

@@ -198,7 +198,7 @@ func CompanySave(m *Company) (*Company, error) {
 
 //获取关联模型
 func getCompanyBackendUser(m *Company) error {
-	if bU, err := BackendUserOne(m.BackendUserId, ""); err != nil {
+	if bU, err := BackendUserOne(m.BackendUserId); err != nil {
 		return err
 	} else {
 		m.BackendUser = bU

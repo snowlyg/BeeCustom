@@ -31,9 +31,7 @@ func InitDatabase() {
 	dbPort := beego.AppConfig.DefaultString(dbType+"::db_port", "3306")
 	switch dbType {
 	case "sqlite3":
-
 		_ = orm.RegisterDataBase(dbAlias, dbType, dbName)
-
 		break
 	case "mysql":
 		dbCharset := beego.AppConfig.DefaultString(dbType+"::db_charset", "")
