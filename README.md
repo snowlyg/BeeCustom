@@ -96,6 +96,8 @@ beego.BConfig.WebConfig.Session.SessionOn = true
 ```
 sessionon = true
 ```
+
 # 参考项目
  - [lhtzbj12/sdrms](https://gitee.com/lhtzbj12/sdrms/tree/master)
+ 
 
