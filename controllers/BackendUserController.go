@@ -51,7 +51,7 @@ func (c *BackendUserController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.BackendUserPageList(&params)
-	ms, err := models.BackendUserGetRelations(data, "Role")
+	ms, err := models.BackendUserGetRelations(data)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}

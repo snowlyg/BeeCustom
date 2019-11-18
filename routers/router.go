@@ -151,12 +151,6 @@ func init() {
 	beego.Router("/resource/update/?:id", &controllers.ResourceController{}, "PATCH:Update")
 	beego.Router("/resource/delete/?:id", &controllers.ResourceController{}, "Delete:Delete")
 
-	//通用选择面板
-	//beego.Router("/resource/select", &controllers.ResourceController{}, "Get:Select")
-	//用户有权管理的菜单列表（包括区域）
-	//beego.Router("/resource/usermenutree", &controllers.ResourceController{}, "POST:UserMenuTree")
-	//beego.Router("/resource/checkurlfor", &controllers.ResourceController{}, "POST:CheckUrlFor")
-
 	beego.Router("/home/control", &controllers.HomeController{}, "*:Control")
 	beego.Router("/home/login", &controllers.HomeController{}, "*:Login")
 	beego.Router("/home/dologin", &controllers.HomeController{}, "Post:DoLogin")

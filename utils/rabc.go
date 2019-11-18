@@ -2,10 +2,10 @@ package utils
 
 import (
 	"fmt"
+	"github.com/astaxie/beego/plugins/auth"
 
 	"github.com/astaxie/beego"
 	_ "github.com/astaxie/beego/cache/redis"
-	"github.com/astaxie/beego/plugins/auth"
 	"github.com/astaxie/beego/plugins/authz"
 	beegoormadapter "github.com/casbin/beego-orm-adapter"
 	"github.com/casbin/casbin"
@@ -37,7 +37,7 @@ func InitRabc() {
 		a := beegoormadapter.NewAdapter("sqlite3", dns, true)
 		E, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
 		enforcer, _ := casbin.NewEnforcer("rbac_model.conf", a)
-		beego.InsertFilter("*", beego.BeforeRouter, auth.Basic("username", "secretpassword"))
+		//beego.InsertFilter("*", beego.BeforeRouter, auth.Basic("username", "secretpassword"))
 		beego.InsertFilter("*", beego.BeforeRouter, authz.NewAuthorizer(enforcer))
 		break
 	case "mysql":
@@ -46,13 +46,20 @@ func InitRabc() {
 		a := beegoormadapter.NewAdapter("mysql", dns)
 		E, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
 
-		enforcer, _ := casbin.NewEnforcer("rbac_model.conf", a)
-		beego.InsertFilter("*", beego.BeforeRouter, auth.Basic("username", "secretpassword"))
-		beego.InsertFilter("*", beego.BeforeRouter, authz.NewAuthorizer(enforcer))
+		enforcer, _ := casbin.NewEnforcer("conf/rbac_model.conf", a)
+		//beego.InsertFilter("*", beego.BeforeRouter, auth.Basic("username", "secretpassword"))
+		beego.InsertFilter("[^/home/login/*]", beego.BeforeRouter, authz.NewAuthorizer(enforcer))
 	default:
 		LogCritical(fmt.Sprintf("Database driver is not allowed:%v", dbType))
 	}
 
+	authPlugin := auth.NewBasicAuthenticator(SecretAuth, "Authorization Required")
+	beego.InsertFilter("[^/home/login/*]", beego.BeforeRouter, authPlugin)
+
 	_ = E.LoadPolicy()
 
+}
+
+func SecretAuth(username, password string) bool {
+	return username == "astaxie" && password == "helloBeego"
 }

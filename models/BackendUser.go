@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -132,20 +133,15 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 	return datas
 }
 
-func BackendUserGetRelations(ms []*BackendUser, relations string) ([]*BackendUser, error) {
-	//o := orm.NewOrm()
-	//rs := strings.Split(relations, ",")
-	for _, v := range ms {
-		names, _ := utils.E.GetRolesForUser(v.RealName)
-		//	for _, rv := range rs {
-		//		_, err := o.LoadRelated(v, rv)
-		//		if err != nil {
-		//			utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
-		//			return nil, err
-		//		}
-		//	}
-
-		v.Role = strings.Join(names, ",")
+func BackendUserGetRelations(ms []*BackendUser) ([]*BackendUser, error) {
+	if len(ms) > 0 {
+		for _, v := range ms {
+			names, err := utils.E.GetRolesForUser(v.RealName)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("GetRolesForUser:%v", err))
+			}
+			v.Role = strings.Join(names, ",")
+		}
 	}
 
 	return ms, nil
@@ -165,15 +161,11 @@ func BackendUserOne(id int64, relations string) (*BackendUser, error) {
 		return nil, err
 	}
 
-	//if m.Role != nil {
-	//	mr := m.Role
-	//	mrs := []*Role{m.Role}
-	//	_, _ = RoleGetRelations(mrs, relations)
-	//
-	//	m.Role = mr
-	//} else {
-	//	return &m, errors.New("用户获取失败")
-	//}
+	names, err := utils.E.GetRolesForUser(m.RealName)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetRolesForUser:%v", err))
+	}
+	m.Role = strings.Join(names, ",")
 
 	if &m == nil {
 		return &m, errors.New("用户获取失败")
