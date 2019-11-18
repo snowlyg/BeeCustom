@@ -3,7 +3,7 @@
         base: '/static/customAdmin/'
     }).extend({
         index: 'lib/index'
-    }).use(['index', 'form', 'admin'], async () => {
+    }).use(['index', 'form', 'admin','formSelects'], async () => {
         const form = layui.form , admin = layui.admin;
 
         await form.verify({

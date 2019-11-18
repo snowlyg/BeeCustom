@@ -43,7 +43,8 @@ type BackendUser struct {
 	Status      bool          `valid:"Required"`
 	Companies   []*Company    `orm:"reverse(many)"` //设置一对多关系
 	Annotations []*Annotation `orm:"reverse(many)"` // 设置多对多的反向关系
-	Role        string        `orm:"_"`
+	RoleIds     []interface{} `orm:"-"`
+	RoleNames   string        `orm:"-"`
 }
 
 func NewBackendUser(id int64) BackendUser {
@@ -135,11 +136,25 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 func BackendUserGetRelations(ms []*BackendUser) ([]*BackendUser, error) {
 	if len(ms) > 0 {
 		for _, v := range ms {
-			names, err := utils.E.GetRolesForUser(strconv.FormatInt(v.Id, 10))
+			roleIdStrings, err := utils.E.GetRolesForUser(strconv.FormatInt(v.Id, 10))
 			if err != nil {
-				utils.LogDebug(fmt.Sprintf("GetRolesForUser:%v", err))
+				utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
 			}
-			v.Role = strings.Join(names, ",")
+
+			var roleNames string
+			for _, roleId := range roleIdStrings {
+				id64, err := strconv.ParseInt(roleId, 10, 64)
+				if err != nil {
+					utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+				}
+
+				role, err := RoleOne(id64, false)
+				if err != nil {
+					utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+				}
+
+				roleNames += role.Name + ","
+			}
 		}
 	}
 
@@ -159,28 +174,6 @@ func BackendUserOne(id int64) (*BackendUser, error) {
 	if err := o.QueryTable(BackendUserTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
 		return nil, err
 	}
-
-	roleIdStrings, err := utils.E.GetRolesForUser(strconv.FormatInt(m.Id, 10))
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
-	}
-
-	var roleNames string
-	for _, roleId := range roleIdStrings {
-		id64, err := strconv.ParseInt(roleId, 10, 64)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
-		}
-
-		role, err := RoleOne(id64, false)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
-		}
-
-		roleNames += role.Name + ","
-	}
-
-	m.Role = roleNames
 
 	if &m == nil {
 		return &m, errors.New("用户获取失败")

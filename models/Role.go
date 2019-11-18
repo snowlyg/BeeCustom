@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"BeeCustom/utils"
@@ -25,8 +24,8 @@ type RoleQueryParam struct {
 type Role struct {
 	BaseModel
 
-	Name      string `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
-	Resources string `orm:"_"` // 设置多对多的反向关系
+	Name        string   `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
+	ResourceIds []string `orm:"-"` // 设置多对多的反向关系
 	//BackendUsers []*BackendUser `orm:"_"`                     //设置一对多关系
 }
 
@@ -74,7 +73,7 @@ func RoleOne(id int64, hasResource bool) (*Role, error) {
 	if hasResource {
 		perms := utils.E.GetPermissionsForUser(strconv.FormatInt(m.Id, 10))
 		if len(perms) > 0 {
-			m.Resources = strings.Join(perms[0], ",")
+			m.ResourceIds = perms[0]
 		}
 	}
 

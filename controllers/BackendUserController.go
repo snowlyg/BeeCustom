@@ -3,9 +3,11 @@ package controllers
 import (
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego/validation"
+	"strconv"
 )
 
 type BackendUserController struct {
@@ -120,7 +122,19 @@ func (c *BackendUserController) Edit() {
 		m.Status = enums.Enabled
 	}
 
+	roleIds, err := utils.E.GetRolesForUser(strconv.FormatInt(m.Id, 10))
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
+	}
+
+	var roleIds64 []interface{}
+	for _, roleId := range roleIds {
+		roleId64, _ := strconv.ParseInt(roleId, 10, 64)
+		roleIds64 = append(roleIds64, roleId64)
+	}
+	m.RoleIds = roleIds64
 	c.Data["m"] = m
+
 	params := models.NewRoleQueryParam()
 	roles := models.RoleDataList(&params)
 	c.Data["roles"] = roles

@@ -1,14 +1,12 @@
 package controllers
 
 import (
+	"BeeCustom/enums"
+	"BeeCustom/models"
 	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
-
-	"BeeCustom/enums"
-	"BeeCustom/models"
 )
 
 type PermList struct {
@@ -166,9 +164,8 @@ func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
 
 //是否有权限
 func getChecked(v *models.Resource, m *models.Role) bool {
-	if m != nil && len(m.Resources) > 0 {
-		resources := strings.Split(m.Resources, ",")
-		for _, rvId := range resources {
+	if m != nil {
+		for _, rvId := range m.ResourceIds {
 			resourceId, err := strconv.ParseInt(rvId, 10, 64)
 			if err != nil {
 				utils.LogDebug(fmt.Sprintf("ParseInt resourceId error:%v", err))

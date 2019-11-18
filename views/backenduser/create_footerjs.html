@@ -4,7 +4,7 @@
     }).extend({
         index: 'lib/index'
     }).use(['index', 'form', 'admin', 'formSelects'], async () => {
-        const form = layui.form , admin = layui.admin;
+        const form = layui.form , admin = layui.admin, formSelects = layui.formSelects;
         await form.verify({
            password: [
                 /^[\S]{6,16}$/
