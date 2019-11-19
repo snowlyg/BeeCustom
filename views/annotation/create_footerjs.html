@@ -6,14 +6,14 @@
     }).use(['index', 'form', 'admin', 'table', 'layuicomplete', 'laydate', 'laytpl'], async () => {
         const {form, admin, table, $, laytpl, layuicomplete} = layui;
         const cusIEFlag = 'I';
-        let order_i_edit_data;
         let order_pros_data_filter = [],
             order_id  /**订单ID**/
             , order_note_data /**附注数据**/
-            , AnnotationSearcIndex;
-        /**商品快速查询index**/
+            , AnnotationSearcIndex;  /**商品快速查询index**/
+
 
         await admin.annotations_auto(layuicomplete);
+
         //禁用 表头表体 tab 点击
         if (!@{{.m.Id}}) {
             let $annotationItemTab = $("#annotation_item_tab");
@@ -21,6 +21,7 @@
                 return false;
             });
         }
+
         /**根据屏幕等比例缩小**/
         admin.sideFlexible_window();
         /**回车键光标跳转**/
@@ -250,7 +251,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    if (checkData.length != 1) {
+                    if (checkData.length !== 1) {
                         return layer.msg('只能选择一条数据复制');
                     }
                     if (admin.DecListCountCheck(checkData[0], admin.decListData) === false) {
@@ -421,8 +422,8 @@
         async function order_i_edit_back_filling(order_i_edit_data) {
             $("#order_i_form input, #order_i_form textarea").each(function () {
                 for (let item in order_i_edit_data) {
-                    if ($(this).attr("id") == item) {
-                        if (item == 'input_time' || item == 'invt_dcl_time') {
+                    if ($(this).attr("id") === item) {
+                        if (item === 'input_time' || item === 'invt_dcl_time') {
                             const time = admin.getyyyymmdd(order_i_edit_data[item]);
                             $(this).val(time);
                         } else {
@@ -434,7 +435,7 @@
             if (order_i_edit_data.PromiseItmes) {
                 $(`input[name='promise_itmes[]']`).each(function (index, element) {
                     for (let item in order_i_edit_data.PromiseItmes) {
-                        if (index == item) {
+                        if (index === item) {
                             $(this).next('div').click();
                         }
                     }
@@ -442,7 +443,7 @@
             }
             if (!(order_i_edit_data.type)) {
                 $(`input[name='type[]']`).each(function (index, element) {
-                    if (index == 1) {
+                    if (index === 1) {
                         $(this).next('div').click();
                     }
                 });
@@ -494,21 +495,21 @@
         });
 
         form.on('submit(annotation_save)', async (data) => {
+            console.log("order_pros_data");
             layer.load(2);
             /**表体商品数据**/
             // data.field.items = admin.order_pros_data;
             data.field.ImpexpMarkcd = "@{{.ImpexpMarkcd}}";
             if (@{{ .m.Id }}) {
-                const annotation_data = await admin.post("/annotation/update" + @{{ .m.Id }}, data.field);
+                const annotation_data = await admin.post("/annotation/update/" + @{{ .m.Id }}, data.field);
                 if (annotation_data.status === 1) {
                     window.location.reload()
                 }
             } else {
-                const annotation_data = await admin.post(@{{ urlfor "AnnotationController.Store" }}, data.field);
+                const annotation_data = await admin.post("/annotation/store/" + @{{ .ImpexpMarkcd }}, data.field);
                 if (annotation_data.status === 1) {
                     window.location.href = "/annotation/edit/" + annotation_data.obj.Id
                 }
-
             }
 
             layer.closeAll('loading');
@@ -517,7 +518,6 @@
 
         /**派单**/
         admin.distribute("#order_dispatch", @{{.m.Id}});
-
         /**附注**/
         let order_note_index;
         $("body").on("click", "#order_note", async function () {
@@ -603,20 +603,20 @@
 
 
         /**保税清单（进口）自动完成汇总**/
-        $("body").on("click", "#order_save", async function () {
-            try {
-                layer.load(2);
-                for (let item in admin.annotations_complete_data) {
-
-                    admin.annotations_complete_data[item] = [];
-                    layui.data(item, null);
-                }
-
-                layer.closeAll('loading');
-            } catch (err) {
-                console.log(err)
-            }
-        });
+        // $("body").on("click", "#order_save", async function () {
+        //     try {
+        //         layer.load(2);
+        //         for (let item in admin.annotations_complete_data) {
+        //
+        //             admin.annotations_complete_data[item] = [];
+        //             layui.data(item, null);
+        //         }
+        //
+        //         layer.closeAll('loading');
+        //     } catch (err) {
+        //         console.log(err)
+        //     }
+        // });
 
 
     });

@@ -87,12 +87,11 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 }
 
 // 判断某 Controller.Action 当前用户是否有权访问
-func (c *BaseController) getActionData(actionIndex string, actionNames ...string) {
+func (c *BaseController) getActionData(upper string, actionNames ...string) {
 
 	//清单，货物进出口分离权限
-	if len(actionIndex) > 0 {
+	if len(upper) > 0 {
 		actions := make(map[string]map[string]bool)
-		upper := strings.ToUpper(actionIndex)
 		action := make(map[string]bool)
 		for _, v := range actionNames {
 			isAction := c.checkActionAuthor(c.controllerName, upper+v)

@@ -2,8 +2,6 @@ package routers
 
 import (
 	"BeeCustom/controllers"
-	"strings"
-
 	"github.com/astaxie/beego"
 )
 
@@ -12,31 +10,30 @@ func init() {
 	flags := [2]string{"I", "E"}
 	/*清单管理*/
 	for _, flag := range flags {
-		lFkag := strings.ToLower(flag)
 		//清单
-		beego.Router("/annotation/index/"+lFkag, &controllers.AnnotationController{}, "Get:"+flag+"Index")
+		beego.Router("/annotation/index/"+flag, &controllers.AnnotationController{}, "Get:"+flag+"Index")
 		//代客下单
-		beego.Router("/annotation/create/"+lFkag, &controllers.AnnotationController{}, "Get:"+flag+"Create")
+		beego.Router("/annotation/create/"+flag, &controllers.AnnotationController{}, "Get:"+flag+"Create")
 		//列表
-		beego.Router("/annotation/datagrid/"+lFkag, &controllers.AnnotationController{}, "Post:"+flag+"DataGrid")
+		beego.Router("/annotation/datagrid/"+flag, &controllers.AnnotationController{}, "Post:"+flag+"DataGrid")
 		//数量统计
-		beego.Router("/annotation/statuscount/"+lFkag, &controllers.AnnotationController{}, "Post:"+flag+"StatusCount")
+		beego.Router("/annotation/statuscount/"+flag, &controllers.AnnotationController{}, "Post:"+flag+"StatusCount")
 		//保存
-		beego.Router("/annotation/store/"+lFkag, &controllers.AnnotationController{}, "Post:"+flag+"Store")
+		beego.Router("/annotation/store/"+flag, &controllers.AnnotationController{}, "Post:"+flag+"Store")
 		//开始审单
-		beego.Router("/annotation/edit/"+lFkag+"/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Edit")
+		beego.Router("/annotation/edit/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Edit")
 		//开始制单
-		beego.Router("/annotation/make/"+lFkag+"/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Make")
+		beego.Router("/annotation/make/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Make")
 		//取消订单
-		beego.Router("/annotation/cancel/"+lFkag+"/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Cancel")
+		beego.Router("/annotation/cancel/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Cancel")
 		//审核通过
-		beego.Router("/annotation/audit/"+lFkag+"/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Audit")
+		beego.Router("/annotation/audit/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Audit")
 		//更新
-		beego.Router("/annotation/update/"+lFkag+"/?:id", &controllers.AnnotationController{}, "Patch:"+flag+"Update")
+		beego.Router("/annotation/update/?:id", &controllers.AnnotationController{}, "Patch:"+flag+"Update")
 		//派单
-		beego.Router("/annotation/distribute/"+lFkag+"/?:id", &controllers.AnnotationController{}, "Post:"+flag+"Distribute")
+		beego.Router("/annotation/distribute/?:id", &controllers.AnnotationController{}, "Post:"+flag+"Distribute")
 		//删除
-		beego.Router("/annotation/delete/"+lFkag+"/?:id", &controllers.AnnotationController{}, "Delete:"+flag+"Delete")
+		beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:"+flag+"Delete")
 	}
 
 	//手账册

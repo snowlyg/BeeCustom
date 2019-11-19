@@ -255,22 +255,22 @@ func AnnotationOne(id int64) (*Annotation, error) {
 }
 
 //Save 添加、编辑页面 保存
-func AnnotationSave(m *Annotation) (*Annotation, error) {
+func AnnotationSave(m *Annotation) error {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
-			return nil, err
+			return err
 		}
 	} else {
 
 		if _, err := o.Update(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
-			return nil, err
+			return err
 		}
 	}
 
-	return m, nil
+	return nil
 }
 
 //删除

@@ -202,13 +202,13 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 	//	}
 	//}
 
-	if _, err := models.AnnotationSave(&m); err != nil {
+	if err := models.AnnotationSave(&m); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
 		if err := c.setAnnotaionUserRelType(&m, nil, "创建人"); err != nil {
 			err = o.Rollback()
-			c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
 
 		err = o.Commit()
@@ -361,7 +361,7 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
-	if _, err := models.AnnotationSave(m); err != nil {
+	if err := models.AnnotationSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "取消成功", m)
@@ -392,7 +392,7 @@ func (c *BaseAnnotationController) bAudit(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	if _, err := models.AnnotationSave(m); err != nil {
+	if err := models.AnnotationSave(m); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	} else {
@@ -435,7 +435,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	if _, err := models.AnnotationSave(m); err != nil {
+	if err := models.AnnotationSave(m); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	} else {
@@ -470,7 +470,7 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 	//	}
 	//}
 
-	if _, err := models.AnnotationSave(&m); err != nil {
+	if err := models.AnnotationSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)

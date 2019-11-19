@@ -64,7 +64,7 @@ func AnnotationUserRelByUserIdAndAnnotationId(userId, annotationId int64, userTy
 func AnnotationUserRelSave(m *AnnotationUserRel) error {
 	o := orm.NewOrm()
 
-	if err := o.Read(m); err != nil {
+	if err := o.Read(m); err != nil && err.Error() != "<QuerySeter> no row found" {
 		utils.LogDebug(fmt.Sprintf("AnnotationUserRelRead:%v", err))
 		return err
 	}

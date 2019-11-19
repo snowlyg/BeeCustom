@@ -5,7 +5,7 @@
                 <i class="iconfont icon-save"></i>保存
             </button>
             @{{if .m.StatusString }}
-                @{{if  .m.StatusString  "待审核" }}
+                @{{if eq  .m.StatusString  "待审核" }}
                 <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
                     <i class="iconfont icon-checkcircle"></i>审核通过
                 </button>

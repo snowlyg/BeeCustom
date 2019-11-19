@@ -30,11 +30,11 @@ func (c *AnnotationController) Prepare() {
 }
 
 func (c *AnnotationController) IIndex() {
-	c.bIndex("i", "进口")
+	c.bIndex("I", "进口")
 }
 
 func (c *AnnotationController) EIndex() {
-	c.bIndex("e", "出口")
+	c.bIndex("E", "出口")
 }
 
 //列表数据
@@ -59,12 +59,12 @@ func (c *AnnotationController) EStatusCount() {
 
 // Create 添加 新建 页面
 func (c *AnnotationController) ICreate() {
-	c.bCreate("i")
+	c.bCreate("I")
 }
 
 // Create 添加 新建 页面
 func (c *AnnotationController) ECreate() {
-	c.bCreate("e")
+	c.bCreate("E")
 }
 
 // Store 添加 新建 页面
