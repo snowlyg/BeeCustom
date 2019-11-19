@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/validation"
 	"strconv"
+	"strings"
 )
 
 type BackendUserController struct {
@@ -81,7 +82,8 @@ func (c *BackendUserController) Create() {
 
 // Store 添加 新建 页面
 func (c *BackendUserController) Store() {
-	roleIds := c.GetStrings("RoleIds")
+	roleIdStrings := c.GetString("RoleIds")
+	roleIds := strings.Split(roleIdStrings, ",")
 	m := models.NewBackendUser(0)
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
@@ -166,7 +168,8 @@ func (c *BackendUserController) Freeze() {
 // Update 添加 编辑 页面
 func (c *BackendUserController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
-	roleIds := c.GetStrings("RoleIds")
+	roleIdStrings := c.GetString("RoleIds")
+	roleIds := strings.Split(roleIdStrings, ",")
 	m := models.NewBackendUser(Id)
 
 	//获取form里的值

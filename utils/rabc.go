@@ -2,9 +2,9 @@ package utils
 
 import (
 	"fmt"
+
+	"BeeCustom/middleware/beego-orm-adapter"
 	"github.com/astaxie/beego"
-	_ "github.com/astaxie/beego/cache/redis"
-	beegoormadapter "github.com/casbin/beego-orm-adapter"
 	"github.com/casbin/casbin"
 )
 

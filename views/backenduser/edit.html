@@ -6,7 +6,7 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>姓名：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="RealName"  lay-verify="required"
+                            <input type="text" name="RealName" lay-verify="required"
                                    lay-verType="tips"
                                    placeholder="输入使用者的姓名，不超过32个字符" autocomplete="off" class="layui-input"
                                    value="@{{ .m.RealName }}" maxlength="32">
@@ -17,7 +17,7 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>姓名：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="UserName"  lay-verify="required"
+                            <input type="text" name="UserName" lay-verify="required"
                                    lay-verType="tips"
                                    placeholder="输入使用者的姓名，不超过24个字符" autocomplete="off" class="layui-input"
                                    value="@{{ .m.UserName }}" maxlength="24">
@@ -28,7 +28,7 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>邮箱：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="Email"  lay-verify="email" lay-verType="tips"
+                            <input type="text" name="Email" lay-verify="email" lay-verType="tips"
                                    placeholder="邮箱地址将作为登录系统的账号名，字符不限" autocomplete="off" class="layui-input"
                                    value="@{{ .m.Email }}">
                         </div>
@@ -38,7 +38,7 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>手机号：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="Mobile"  lay-verify="phone" lay-verType="tips"
+                            <input type="text" name="Mobile" lay-verify="phone" lay-verType="tips"
                                    placeholder="输入使用者的11位手机号码" autocomplete="off" class="layui-input"
                                    value="@{{ .m.Mobile }}" maxlength="11">
                         </div>
@@ -48,7 +48,8 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label">密码：</label>
                         <div class="layui-input-block">
-                            <input type="password" name="UserPwd" placeholder="8~16个字符，区分大小写" autocomplete="off" class="layui-input"
+                            <input type="password" name="UserPwd" placeholder="8~16个字符，区分大小写" autocomplete="off"
+                                   class="layui-input"
                                    maxlength="16">
                         </div>
                     </div>
@@ -57,7 +58,7 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label">IC卡号：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="ICCode"  placeholder="输入报关员的IC卡号"
+                            <input type="text" name="ICCode" placeholder="输入报关员的IC卡号"
                                    autocomplete="off" class="layui-input" value="@{{ .m.ICCode }}">
                         </div>
                     </div>
@@ -68,16 +69,16 @@
                         <div class="layui-input-block">
                             <select name="IsSuper" lay-verify="required" lay-vertype="tips">
                                 @{{ if eq .m.IsSuper true }}
-                                    <option   selected    value="1">是</option>
-                                @{{ else }}
-                                    <option  value="1">是</option>
-                                 @{{ end }}
+                            <option selected value="1">是</option>
+                            @{{ else }}
+                            <option value="1">是</option>
+                            @{{ end }}
 
                                 @{{ if eq .m.IsSuper false }}
-                                    <option  selected  value="1">否</option>
-                                @{{ else }}
-                                    <option  value="0">否</option>
-                                @{{ end }}
+                            <option selected value="1">否</option>
+                            @{{ else }}
+                            <option value="0">否</option>
+                            @{{ end }}
 
                             </select>
                         </div>
@@ -89,16 +90,16 @@
                         <div class="layui-input-block">
                             <select name="Status" lay-verify="required" lay-vertype="tips">
                                 @{{ if eq .m.Status true }}
-                                    <option   selected    value="1">启用</option>
-                                @{{ else}}
-                                    <option  value="1">启用</option>
-                                @{{ end }}
+                            <option selected value="1">启用</option>
+                            @{{ else}}
+                            <option value="1">启用</option>
+                            @{{ end }}
 
                                 @{{ if eq .m.Status false }}
-                                    <option  selected  value="1">禁用</option>
-                                @{{ else }}
-                                    <option  value="0">禁用</option>
-                                @{{ end }}
+                            <option selected value="1">禁用</option>
+                            @{{ else }}
+                            <option value="0">禁用</option>
+                            @{{ end }}
 
                             </select>
                         </div>
@@ -108,16 +109,13 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>选择角色：</label>
                         <div class="layui-input-block">
-                            <select name="RoleIds"  xm-select="RoleIds" xm-select-skin="normal"
-                                    lay-verify="required" lay-vertype="tips">
+                            <select name="RoleIds" xm-select="RoleIds" xm-select-skin="normal" lay-verify="required" lay-vertype="tips">
                                 <option value="">选择角色</option>
-                                @{{ range $role := .roles }}
-                                    @{{ range $.m.RoleIds }}
-                                        @{{if eq $role.Id . }}
-                                            <option selected value="@{{ $role.Id }}">@{{ $role.Name }}</option>
-                                        @{{ else }}
-                                            <option value="@{{ $role.Id }}">@{{ $role.Name }}</option>
-                                        @{{ end }}
+                                @{{ range $index, $role := .roles }}
+                                    @{{if inArray $role.Id  $.m.RoleIds }}
+                                    <option selected value="@{{ $role.Id }}">@{{ $role.Name }}</option>
+                                    @{{ else }}
+                                    <option value="@{{ $role.Id }}">@{{ $role.Name }}</option>
                                     @{{ end }}
                                 @{{ end }}
                             </select>

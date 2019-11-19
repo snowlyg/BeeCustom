@@ -1,12 +1,11 @@
 package controllers
 
 import (
-	"BeeCustom/enums"
-	"BeeCustom/models"
-	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
-	"strconv"
+
+	"BeeCustom/enums"
+	"BeeCustom/models"
 )
 
 type PermList struct {
@@ -74,9 +73,7 @@ func (c *RoleController) Store() {
 
 	c.validRequestData(m)
 
-	permIds := c.GetStrings("perm_ids")
-
-	err := models.RoleSave(&m, permIds)
+	err := models.RoleSave(&m)
 	if err == nil {
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	} else {
@@ -143,19 +140,16 @@ func (c *RoleController) PermLists() {
 func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
 	pl := PermList{}
 	pl.Title = v.Name
-	pl.Value = strconv.FormatInt(v.Id, 10)
+	pl.Value = v.UrlFor
 	pl.Checked = getChecked(v, m) //是否有权限
 
 	if v.Sons != nil {
 		for _, sv := range v.Sons {
 			pls := PermList{}
-
 			pls.Title = sv.Name
-			pls.Value = strconv.FormatInt(sv.Id, 10)
+			pls.Value = sv.UrlFor
 			pls.Checked = getChecked(v, m) //是否有权限
-
 			pl.Data = append(pl.Data, &pls)
-
 		}
 	}
 
@@ -164,16 +158,17 @@ func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
 
 //是否有权限
 func getChecked(v *models.Resource, m *models.Role) bool {
-	if m != nil {
-		for _, rvId := range m.ResourceIds {
-			resourceId, err := strconv.ParseInt(rvId, 10, 64)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("ParseInt resourceId error:%v", err))
-			}
+	if m == nil {
+		return false
+	}
 
-			if resourceId == v.Id {
-				return true
-			}
+	if len(m.UrlFors) == 0 {
+		return false
+	}
+
+	for _, urlFor := range m.UrlFors {
+		if urlFor == v.UrlFor {
+			return true
 		}
 	}
 
@@ -203,8 +198,6 @@ func (c *RoleController) Edit() {
 func (c *RoleController) Update() {
 
 	id, _ := c.GetInt64(":id", 0)
-	ResourceIds := c.GetStrings("ResourceIds")
-
 	//获取form里的值
 	if id == 0 {
 		c.jsonResult(enums.JRCodeFailed, "参数错误", id)
@@ -219,7 +212,7 @@ func (c *RoleController) Update() {
 
 	c.validRequestData(m)
 
-	_, err := models.RoleUpdate(&m, ResourceIds)
+	_, err := models.RoleUpdate(&m)
 	if err == nil {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	} else {

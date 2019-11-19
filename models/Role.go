@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"BeeCustom/utils"
@@ -24,8 +25,9 @@ type RoleQueryParam struct {
 type Role struct {
 	BaseModel
 
-	Name        string   `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
-	ResourceIds []string `orm:"-"` // 设置多对多的反向关系
+	Name          string   `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
+	UrlFors       []string `orm:"-" `
+	UrlForstrings string   `orm:"-" form:"urlForstrings"`
 	//BackendUsers []*BackendUser `orm:"_"`                     //设置一对多关系
 }
 
@@ -73,7 +75,11 @@ func RoleOne(id int64, hasResource bool) (*Role, error) {
 	if hasResource {
 		perms := utils.E.GetPermissionsForUser(strconv.FormatInt(m.Id, 10))
 		if len(perms) > 0 {
-			m.ResourceIds = perms[0]
+			for _, value := range perms {
+				if len(value) == 2 {
+					m.UrlFors = append(m.UrlFors, value[1])
+				}
+			}
 		}
 	}
 
@@ -81,13 +87,14 @@ func RoleOne(id int64, hasResource bool) (*Role, error) {
 }
 
 //Save 添加、编辑页面 保存
-func RoleSave(m *Role, permIds []string) error {
+func RoleSave(m *Role) error {
 	o := orm.NewOrm()
 	if _, err := o.Insert(m); err != nil {
 		return err
 	}
 
-	for _, permId := range permIds {
+	urlFors := strings.Split(m.UrlForstrings, ",")
+	for _, permId := range urlFors {
 		_, err := utils.E.AddPermissionForUser(strconv.FormatInt(m.Id, 10), permId)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("AddPermissionForUser error:%v", err))
@@ -99,13 +106,15 @@ func RoleSave(m *Role, permIds []string) error {
 }
 
 //Save 添加、编辑页面 保存
-func RoleUpdate(m *Role, permIds []string) (*Role, error) {
+func RoleUpdate(m *Role) (*Role, error) {
 	o := orm.NewOrm()
 	if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
 		return nil, err
 	}
-	for _, permId := range permIds {
-		_, err := utils.E.AddPermissionForUser(strconv.FormatInt(m.Id, 10), permId)
+
+	urlFors := strings.Split(m.UrlForstrings, ",")
+	for _, urlFor := range urlFors {
+		_, err := utils.E.AddPermissionForUser(strconv.FormatInt(m.Id, 10), urlFor)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("AddPermissionForUser error:%v", err))
 			return nil, err
