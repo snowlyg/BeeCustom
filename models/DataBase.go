@@ -34,7 +34,7 @@ func DataReset() (bool, error) {
 
 	if err != nil {
 
-		fmt.Println(err)
+		return false, err
 	}
 
 	fmt.Printf(out.String())
@@ -61,5 +61,5 @@ func DataReset() (bool, error) {
 	//		return false, err
 	//	}
 	//}
-
+	return true, nil
 }

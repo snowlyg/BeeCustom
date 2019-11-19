@@ -1673,88 +1673,58 @@ layui.define('view', function (exports) {
             ,
 
             //新建--清单--料件数据--成品数据
-            ann_materials_data: [],
-            ann_goods_data:
-                [],
+            /* 监听进出口清单备案序号*/
+            putrec_seqno_change: async function (dom, flag,handBookId) {
 
-            //监听进出口清单备案序号
-            putrec_seqno_change:
+                    let type = 0
+                    if (flag === "I") {
+                        type = 2
+                    } else if (flag === "E") {
+                        type = 1
+                    }
 
-                async function (dom) {
-                    setTimeout(() => {
-                        if ($(dom).val().trim()) {
-                            const flag = $(dom).data('flag');
-                            const data = admin.get_ann_goods_materials_data(flag);
-                            if (data.some((item) => item.serial === $(dom).val())) {
-                                for (let item of data) {
-                                    if (item.serial === $(dom).val()) {
-                                        $("#gds_mtno").val(item.RecordNo);
-                                        $("#gdecd").val(item.HsCode);
-                                        $("#gds_nm").val(item.Name);
-                                        $("#gds_spcf_model_desc").val(item.Special);
-
-                                        $("#dcl_currcd").val(item.MoneyunitCode);
-                                        $("#dcl_currcd_name").val(item.Moneyunit);
-
-                                        $("#dcl_unitcd").val(item.UnitOneCode);
-                                        $("#dcl_unitcd_name").val(item.UnitOne);
-
-                                        $("#dcl_uprc_amt").val(item.Price);
-
-                                        $("#lawf_unitcd").val(item.UnitTwoCode);
-                                        $("#lawf_unitcd_name").val(item.UnitTwo);
-
-                                        $("#entry_gds_seqno").focus();
-                                    }
-                                }
-                            } else {
-                                layer.msg('查询失败！', {
-                                    offset: '15px',
-                                    icon: 2,
-                                    time: 1000,
-                                    id: 'Message'
-                                });
-                            }
-                        }
-                    }, 100);
-                }
-
-            ,
-
-            //监听清单手(账)册编号
-            putrec_no_change(dom) {
-                setTimeout(async () => {
                     if ($(dom).val().trim()) {
-                        const data = await admin.get(`/annotation/two_account_manual?limit=0&search=${$(dom).val()}`);
-                        if (data.length === 0) {
-                            layer.msg(`手(账)册编号：${$(dom).val()} 不存在！`, {
+                        let data = {
+                            HandBookId: handBookId,
+                            Type: type,
+                            Serial: $(dom).val(),
+                        };
+                        let handbookgoods = await admin.post("/handbook/get_hand_book_good_by_hand_book_id", JSON.stringify(data),true);
+
+                        if (handbookgoods.rows.length === 1) {
+                            let item = handbookgoods.rows[0]
+                            $("#gds_mtno").val(item.RecordNo);
+                            $("#gdecd").val(item.HsCode);
+                            $("#gds_nm").val(item.Name);
+                            $("#gds_spcf_model_desc").val(item.Special);
+
+                            $("#dcl_currcd").val(item.MoneyunitCode);
+                            $("#dcl_currcd_name").val(item.Moneyunit);
+
+                            $("#dcl_unitcd").val(item.UnitOneCode);
+                            $("#dcl_unitcd_name").val(item.UnitOne);
+
+                            $("#dcl_uprc_amt").val(item.Price);
+
+                            $("#lawf_unitcd").val(item.UnitTwoCode);
+                            $("#lawf_unitcd_name").val(item.UnitTwo);
+
+                            $("#entry_gds_seqno").focus();
+                        } else {
+                            setTimeout(async () => {
+                            layer.msg('查询失败！', {
                                 offset: '15px',
                                 icon: 2,
                                 time: 1000,
                                 id: 'Message'
                             });
-                            $(dom).val('');
-                            $(dom).focus();
-                        } else {
-                            const flag = $(dom).data('flag');
-                            $("#bizop_etps_sccd").val(data[0].company_manage_credit_code);
-                            $("#bizop_etpsno").val(data[0].company_manage_code);
-                            $("#bizop_etps_nm").val(data[0].company_manage_name);
-
-                            $("#rvsngd_etps_sccd").val(data[0].company_client_credit_code);
-                            $("#rcvgd_etpsno").val(data[0].company_client_code);
-                            $("#rcvgd_etps_nm").val(data[0].company_client_name);
-
-                            admin.ann_materials_data = data[0].materials.data;
-                            admin.ann_goods_data = data[0].goods.data;
-
+                            }, 100);
                         }
                     }
-                }, 100);
-            }
-            ,
+            },
 
-            //货物申报-监听修改成交单位
+
+            /*货物申报-监听修改成交单位*/
             g_unit_name_change(dom) {
                 setTimeout(() => {
                     if ($("#first_unit").val() && $("#g_unit").val() == $("#first_unit").val() && $("#g_qty").val() && !($("#first_qty").val())) {
@@ -1767,7 +1737,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //货物申报-监听修改成交数量
+            /*货物申报-监听修改成交数量*/
             g_qty_change_index: '',
             g_qty_change(dom) {
                 if (admin.cutZero($("#decl_price").val().trim()) > 0 && admin.cutZero($("#decl_total").val().trim()) > 0) {
@@ -1847,7 +1817,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //货物申报-单价修改
+//货物申报-单价修改
             priceChange() {
                 let gQty = $.trim($('#g_qty').val());
                 let declPrice = $.trim($('#decl_price').val());
@@ -1861,7 +1831,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //货物申报-总价修改
+//货物申报-总价修改
             totalChange() {
                 let gQty = $.trim($('#g_qty').val());
                 let declTotal = $.trim($('#decl_total').val());
@@ -1876,7 +1846,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //清单-监听修改成交数量
+//清单-监听修改成交数量
             dcl_qty_change_index: '',
             dcl_qty_change(dom) {
                 if (admin.cutZero($("#dcl_uprc_amt").val().trim()) > 0 && admin.cutZero($("#dcl_total_amt").val().trim()) > 0) {
@@ -1957,7 +1927,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //清单-单价修改
+//清单-单价修改
             priceChange_ann() {
                 let gQty = $.trim($('#dcl_qty').val());
                 let declPrice = $.trim($('#dcl_uprc_amt').val());
@@ -1971,7 +1941,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //清单-总价修改
+//清单-总价修改
             totalChange_ann() {
                 let gQty = $.trim($('#dcl_qty').val());
                 let declTotal = $.trim($('#dcl_total_amt').val());
@@ -2093,7 +2063,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //选中商品编码申报要素
+//选中商品编码申报要素
             declaration_data: "",
 
             //标志是否已经打开了窗口
@@ -2177,7 +2147,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //编辑商品申报要素-规格型号
+//编辑商品申报要素-规格型号
             elements_change(dom) {
                 const data = $(dom).val().split("|");
                 for (let item in data) {
@@ -2196,7 +2166,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //非危险化学品/集装箱规格
+//非危险化学品/集装箱规格
             chemicals_data: [{
                 id: '0',
                 label: '0-否',
@@ -2276,7 +2246,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //规格型号校验
+//规格型号校验
             checkGModel(str) {
                 var charCode;
                 var realLength = 0;
@@ -2306,7 +2276,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //表体商品编号弹窗
+//表体商品编号弹窗
             async openGoodsWindow(e) {
                 if (admin.isOpenGoodsWindow) {
                     return false
@@ -2380,7 +2350,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //编辑检验检疫货物规格回车
+//编辑检验检疫货物规格回车
             changeFoucsTogoodsAttr(event) {
                 const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
                 if (event.shiftKey != 1 && eCode == 13) {
@@ -2390,7 +2360,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //编辑货物危险信息回车
+//编辑货物危险信息回车
             changeFoucsDanger(event) {
                 const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
                 if (event.shiftKey != 1 && eCode == 13) {
@@ -2400,7 +2370,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //tips计算总价/成交数量合计/法定第一数量/法定第二数量
+//tips计算总价/成交数量合计/法定第一数量/法定第二数量
             is_total_number(order_pros_data) {
                 let totalPrice = 0,
                     totalGQty = 0,
@@ -2431,7 +2401,7 @@ layui.define('view', function (exports) {
             ,
 
             async base_clearance_data_auto(obj, clearance_update_times) {
-                if ((layui.data(obj.data_name).data == undefined || layui.data(obj.index).data == undefined) || clearance_update_times[obj.name] != layui.data(obj.index).data) {
+                if ((layui.data(obj.data_name).data === undefined || layui.data(obj.index).data === undefined) || clearance_update_times[obj.name] != layui.data(obj.index).data) {
 
                     //货物
                     admin.auto_fn({
@@ -2441,16 +2411,16 @@ layui.define('view', function (exports) {
                         filter: function (data, data_filter) {
                             for (let item of data) {
                                 let value = `${item.Name}`;
-                                if (`${item.ShortName}` != "null") {
+                                if (`${item.ShortName}` !== "null") {
                                     value = `${item.ShortName}`;
-                                } else if (`${item.Name}` != "null") {
+                                } else if (`${item.Name}` !== "null") {
                                     value = `${item.Name}`;
                                 }
 
                                 let label = `${item.CustomsCode}-${value}`;
-                                if (obj.filter_type == "s") {
+                                if (obj.filter_type === "s") {
                                     label = `${item.CustomsCode}-${value}`;
-                                } else if (obj.filter_type == "l") {
+                                } else if (obj.filter_type === "l") {
                                     label = `<span class="auto_list_p_left">${item.CustomsCode}-${value}</span><span class="auto_list_p_right"><i>${item.OldCustomCode}</i><i>${item.OldCiqCode}</i></span>`;
                                 }
 
@@ -2475,7 +2445,7 @@ layui.define('view', function (exports) {
                                 let value = `${item.Name}`;
                                 let label = `${item.CustomsCode}-${value}`;
                                 //清单币制原产国使用老代码
-                                if (obj.data_name_ann == "country_area_ann" || obj.data_name_ann == "currency_ann") {
+                                if (obj.data_name_ann === "country_area_ann" || obj.data_name_ann === "currency_ann") {
                                     label = `${item.OldCustomCode}-${value}`;
                                 }
 
@@ -2826,7 +2796,7 @@ layui.define('view', function (exports) {
             ,
 
 
-            //报关整合申报自动完成汇总
+//报关整合申报自动完成汇总
             async order_auto(auto_fn) {
                 /**自动完成--申报地海关--进境关别**/
                 auto_fn({
@@ -3037,7 +3007,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //清单自动完成汇总
+//清单自动完成汇总
             async annotations_auto(layuicomplete) {
                 /**自动完成--清单类型**/
                 const invt_type_name = {
@@ -3266,6 +3236,7 @@ layui.define('view', function (exports) {
                     template_val: '{{d.ContractNumber}}',
                     template_txt: '{{d.ContractNumber}}' + "-" + '{{d.CompanyManageName}}',
                     onselect: function (resp) {
+                        $("#hand_book_id").val(resp.Id);
                         $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
                         $("#bizop_etpsno").val(resp.CompanyManageCode);
                         $("#bizop_etps_nm").val(resp.CompanyManageName);
@@ -3273,22 +3244,19 @@ layui.define('view', function (exports) {
                         $("#rvsngd_etps_sccd").val(resp.CompanyClientCreditCode);
                         $("#rcvgd_etpsno").val(resp.CompanyClientCode);
                         $("#rcvgd_etps_nm").val(resp.CompanyClientName);
-
-                        admin.ann_materials_data = resp.HandBookGoods;
-                        admin.ann_goods_data = resp.HandBookGoods;
                     }
                 });
             }
             ,
 
-            //数组上移、下移
+//数组上移、下移
             swapItems(arr, index1, index2) {
                 arr[index1] = arr.splice(index2, 1, arr[index1])[0];
                 return arr;
             }
             ,
 
-            //进口报关打印列表
+//进口报关打印列表
             order_i_print_list: [{
                 id: 1,
                 code: '00000004',
@@ -3403,7 +3371,7 @@ layui.define('view', function (exports) {
                 layer.closeAll('loading');
             }
             ,
-            // 重载PDF列表表格
+// 重载PDF列表表格
             async render_pdf_list(order_id, i_e_flag) {
                 if (i_e_flag == 'i') {
                     print_list = admin.order_i_print_list;
@@ -3417,7 +3385,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //判断一个字符串是否为数字
+//判断一个字符串是否为数字
             isNumber(val) {
                 var regPos = /^\d+(\.\d+)?$/; //非负浮点数
                 var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
@@ -3429,7 +3397,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //当前日期
+//当前日期
             getCurrDate() {
                 let now = new Date();
                 let year = now.getFullYear(); //年
@@ -3445,7 +3413,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //日期格式化
+//日期格式化
             getyyyymmdd(item) {
                 let now = new Date(item);
                 let year = now.getFullYear(); //年
@@ -3461,7 +3429,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //图片base64 转 blob
+//图片base64 转 blob
             dataURItoBlob(dataURI) {
                 // convert base64/URLEncoded data component to raw binary data held in a string
                 let byteString;
@@ -3623,7 +3591,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //去除末尾多余的零
+//去除末尾多余的零
             cutZero(old) {
                 let newstr = old;
                 let leng = old.length - old.indexOf(".") - 1
@@ -4079,7 +4047,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //货物申报--备注双击弹出
+//货物申报--备注双击弹出
             note_s_index: '',
             note_s_dbclick() {
                 admin.note_s_index = layer.open({
@@ -4094,7 +4062,7 @@ layui.define('view', function (exports) {
                 });
             }
             ,
-            //货物申报--备注双击弹出选择
+//货物申报--备注双击弹出选择
             note_s_selset_p(dom) {
                 $("#note_s_fu").val($(dom).text());
                 $("#note_s").val($(dom).text());
@@ -4104,7 +4072,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //排序数字从小到大规则
+//排序数字从小到大规则
             compare(prop) {
                 return (obj1, obj2) => {
                     let val1 = obj1[prop];
@@ -4124,7 +4092,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //小数点自动补零
+//小数点自动补零
             formatnumber(value, num) {
                 let a, b, c, i;
                 a = value.toString();
@@ -4151,7 +4119,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //货物申报-办理记录
+//货物申报-办理记录
             async order_jilu_click(dom, type) {
                 const id = $(dom).data("id");
                 layer.load(2);
@@ -4173,7 +4141,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //核注清单-办理记录
+//核注清单-办理记录
             async annotation_jilu_click(dom, type) {
                 const id = $(dom).data("id");
                 layer.load(2);
@@ -4195,7 +4163,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //补录报关单
+//补录报关单
             add_entry: {
                 id: '',
                 flag:
@@ -4215,7 +4183,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //提交补录报关单
+//提交补录报关单
             order_add_entry_submit() {
                 layui.form.on('submit(order_add_entry_submit)', async (form) => {
                     try {
@@ -4237,7 +4205,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //发送验证码
+//发送验证码
             sendAuthCode: function (options) {
                 options = $.extend({
                     seconds: 60,
@@ -4302,7 +4270,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //屏幕根据分辨率等比例缩小--收缩侧边栏
+//屏幕根据分辨率等比例缩小--收缩侧边栏
             sideFlexible_window() {
                 const s = (window.screen.width - 270) / 1920;
                 document.body.style.zoom = s;
@@ -4314,20 +4282,15 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //订单列表
+//订单列表
             list_page: 1,
-            list_limit: 10,
+            list_limit:
+                10,
             async get_data_list(OrderIndexRequestData, isClickStatusTab) {
 
                 let url = OrderIndexRequestData.List.Url;
                 let impexpMarkcd = OrderIndexRequestData.ImpexpMarkcd;
                 let StatusString = OrderIndexRequestData.StatusString;
-                /** 缓存列表数量 **/
-                // let local_limit = localStorage.getItem(impexpMarkcd + '_limit');
-                // if (local_limit) {
-                //     admin.list_limit = local_limit;
-                // }
-
 
                 /**订单列表**/
                 let OrderIndexRequestListData = JSON.stringify($.extend(
@@ -4401,7 +4364,6 @@ layui.define('view', function (exports) {
                             }
                         }
 
-                        // localStorage.setItem(OrderIndexRequestData.ImpexpMarkcd + "_limit", obj.limit);
                     }
                 });
 
@@ -4409,31 +4371,31 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //只允许数字
+//只允许数字
             is_onlynumber(dom) {
                 $(dom).val($(dom).val().replace(/\D/g, ''));
             }
             ,
 
-            //只能输入数字，小数点，不能有空格
+//只能输入数字，小数点，不能有空格
             is_nolyNorD(dom) {
                 $(dom).val($(dom).val().replace(/[^0-9\.\/]/g, ''));
             }
             ,
 
-            //不允许中文和空格
+//不允许中文和空格
             is_noCork(dom) {
                 $(dom).val($(dom).val().replace(/[\u4E00-\u9FA5\s]/g, ''));
             }
             ,
 
-            //只允许数字和-
+//只允许数字和-
             is_onlynumberLine(dom) {
                 $(dom).val($(dom).val().replace(/[^\d-]/g, ''));
             }
             ,
 
-            //只能输入小数点后两位的数字
+//只能输入小数点后两位的数字
             is_onlyNumFloat(dom, number) {
                 let value = $(dom).val();
                 value = value.replace(/[^\d.]/g, ""); //清理"数字"和"."以外的字符
@@ -4453,7 +4415,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //监听进出口货物申报业务选项
+//监听进出口货物申报业务选项
             promise_items_change(dom) {
                 const first = $(dom).data('first');
                 if (first == 0) {
@@ -4467,7 +4429,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //获取cookie
+//获取cookie
             getCookie(name) {
                 let arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
                 if (arr = document.cookie.match(reg)) {
@@ -4478,7 +4440,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //异地报关
+//异地报关
             is_other_change(dom) {
                 const is_other = $(dom).prop("checked") ? 1 : 0;
                 if (is_other) {
@@ -4495,7 +4457,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //货物申报添加提运单号
+//货物申报添加提运单号
             bill_no_create() {
                 layer.open({
                     type: 2,
@@ -4507,7 +4469,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //核注清单商品批量修改
+//核注清单商品批量修改
             annotation_batch_edit(dom) {
                 const flag = $(dom).data("flag");
                 if (admin.order_pros_data.length === 0) {
@@ -4527,7 +4489,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //核注清单批量修改-保存
+//核注清单批量修改-保存
             order_pros_data: [],
             batch_edit_save(dom) {
                 layui.form.on('submit(batch_edit_save)', async (data) => {
@@ -4555,7 +4517,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //同步关务通--填写平台单证号
+//同步关务通--填写平台单证号
             sync_annotation_to_order(dom) {
                 layer.open({
                     type: 1,
@@ -4591,7 +4553,7 @@ layui.define('view', function (exports) {
                 $("#docNo").focus();
             }
             ,
-            //同步关务通--填写平台单证号-保存
+//同步关务通--填写平台单证号-保存
             sync_annotation_to_order_save(dom) {
                 layui.form.on('submit(sync_annotation_to_order_save)', async (data) => {
                     try {
@@ -4613,7 +4575,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //屏幕类型
+//屏幕类型
             screen: function () {
                 var width = $win.width()
                 if (width > 1200) {
@@ -4628,7 +4590,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //侧边伸缩
+//侧边伸缩
             sideFlexible: function (status) {
                 var app = container,
                     iconElem = $('#' + APP_FLEXIBLE),
@@ -4667,7 +4629,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //弹出面板
+//弹出面板
             popup: view.popup,
 
             //右侧面板
@@ -4691,7 +4653,7 @@ layui.define('view', function (exports) {
 
             ,
 
-            //主题设置
+//主题设置
             theme: function (options) {
                 var theme = setter.theme,
                     local = layui.data(setter.tableName),
@@ -4739,7 +4701,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //初始化主题
+//初始化主题
             initTheme: function (index) {
                 var theme = setter.theme;
                 index = index || 0;
@@ -4752,17 +4714,17 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //记录最近一次点击的页面标签数据
+//记录最近一次点击的页面标签数据
             tabsPage: {}
             ,
 
-            //获取页面标签主体元素
+//获取页面标签主体元素
             tabsBody: function (index) {
                 return $(APP_BODY).find('.' + TABS_BODY).eq(index || 0);
             }
             ,
 
-            //切换页面标签主体
+//切换页面标签主体
             tabsBodyChange: function (index, options) {
                 options = options || {};
 
@@ -4777,7 +4739,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //resize事件管理
+//resize事件管理
             resize: function (fn) {
                 var router = layui.router(),
                     key = router.path.join('-');
@@ -4806,21 +4768,21 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //关闭当前 pageTabs
+//关闭当前 pageTabs
             closeThisTabs: function () {
                 if (!admin.tabsPage.index) return;
                 $(TABS_HEADER).eq(admin.tabsPage.index).find('.layui-tab-close').trigger('click');
             }
             ,
 
-            //获取当前iframe的标签
+//获取当前iframe的标签
             get_iframe_index() {
                 if (!admin.tabsPage.index) return;
                 return $(TABS_HEADER).eq(admin.tabsPage.index);
             }
             ,
 
-            //全屏
+//全屏
             fullScreen: function () {
                 var ele = document.documentElement,
                     reqFullScreen = ele.requestFullScreen || ele.webkitRequestFullScreen ||
@@ -4831,7 +4793,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-            //退出全屏
+//退出全屏
             exitScreen: function () {
                 var ele = document.documentElement
                 if (document.exitFullscreen) {
@@ -4845,8 +4807,9 @@ layui.define('view', function (exports) {
                 }
             }
 
-            //……
-        };
+//……
+        }
+    ;
 
 //事件
     var events = admin.events = {

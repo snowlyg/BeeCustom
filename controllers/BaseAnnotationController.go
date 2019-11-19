@@ -29,13 +29,13 @@ func (c *BaseAnnotationController) bDataGrid(impexpMarkcd string) {
 		c.jsonResult(enums.JRCodeFailed, "获取数据列表和总数失败", nil)
 	}
 
-	ms, err := models.AnnotationGetRelations(data, "Company,BackendUsers")
+	err = models.AnnotationGetRelations(data, "Company,BackendUsers")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
 
 	//格式化数据
-	annotationList := c.TransformAnnotationList(ms)
+	annotationList := c.TransformAnnotationList(data)
 
 	//定义返回的数据结构
 	result := make(map[string]interface{})
@@ -181,6 +181,13 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
 	}
 
+	handbook, err := models.HandBookOne(m.HandBookId, "")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取手账册关联数据失败", m)
+	}
+
+	m.HandBook = handbook
+
 	m.InputTime = *iT
 	m.InputTime = *iDT
 	m.Company = company
@@ -218,7 +225,7 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 
 // Edit 添加 编辑 页面
 func (c *BaseAnnotationController) bEdit(id int64) {
-	m, err := models.AnnotationOne(id)
+	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -238,7 +245,7 @@ func (c *BaseAnnotationController) bEdit(id int64) {
 
 // Edit 添加 编辑 页面
 func (c *BaseAnnotationController) bMake(id int64) {
-	m, err := models.AnnotationOne(id)
+	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -338,6 +345,7 @@ func (c *BaseAnnotationController) TransformAnnotation(v *models.Annotation) map
 	annotationItem["Creator"] = v.Creator
 	annotationItem["GenDecFlag"] = v.GenDecFlag
 	annotationItem["GenDecFlagName"] = v.GenDecFlagName
+	annotationItem["HandBookId"] = strconv.FormatInt(v.HandBook.Id, 10)
 
 	annotationItem["InputTime"] = enums.GetDateTimeString(&v.InputTime, enums.BaseDateTimeFormat)
 	annotationItem["PrevdTime"] = enums.GetDateTimeString(&v.PrevdTime, enums.BaseDateTimeFormat)
@@ -350,7 +358,7 @@ func (c *BaseAnnotationController) TransformAnnotation(v *models.Annotation) map
 
 // Cancel 取消订单
 func (c *BaseAnnotationController) bCancel(id int64) {
-	m, err := models.AnnotationOne(id)
+	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
@@ -374,7 +382,7 @@ func (c *BaseAnnotationController) bAudit(id int64) {
 	o := orm.NewOrm()
 	err := o.Begin()
 
-	m, err := models.AnnotationOne(id)
+	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
 		if err != nil {
 			err = o.Rollback()
@@ -416,7 +424,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 
 	}
 
-	m, err := models.AnnotationOne(id)
+	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
 		if err != nil {
 			err = o.Rollback()
@@ -447,11 +455,22 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 
 // Update 添加 编辑 页面
 func (c *BaseAnnotationController) bUpdate(id int64) {
-	m := models.NewAnnotation(id)
+
+	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	handbook, err := models.HandBookOne(m.HandBook.Id, "")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取手账册关联数据失败", m)
+	}
+
+	m.HandBook = handbook
 
 	//获取form里的值
-	if err := c.ParseForm(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	if err := c.ParseForm(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "ParseForm", m)
 	}
 
 	c.validRequestData(m)
@@ -470,7 +489,7 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 	//	}
 	//}
 
-	if err := models.AnnotationSave(&m); err != nil {
+	if err := models.AnnotationSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)

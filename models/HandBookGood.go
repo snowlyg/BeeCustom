@@ -61,8 +61,10 @@ type HandBookGood struct {
 // HandBookGoodQueryParam 用于查询的类
 type HandBookGoodQueryParam struct {
 	BaseQueryParam
-	Type       int8  //模糊查询
-	HandBookId int64 //模糊查询
+
+	Type       int8
+	HandBookId string
+	Serial     string
 }
 
 func NewHandBookGood(id int64) HandBookGood {
@@ -79,7 +81,12 @@ func HandBookGoodPageList(params *HandBookGoodQueryParam) ([]*HandBookGood, int6
 	query := orm.NewOrm().QueryTable(HandBookGoodTBName())
 	data := make([]*HandBookGood, 0)
 
+	utils.LogDebug(params)
+
 	query = query.Distinct().Filter("hand_book_id", params.HandBookId).Filter("Type", params.Type)
+	if len(params.Serial) > 0 {
+		query = query.Filter("Serial", params.Serial)
+	}
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)

@@ -89,6 +89,23 @@ func (c *HandBookController) GoodDataGrid() {
 }
 
 //列表数据
+func (c *HandBookController) GetHandBookGoodByHandBookId() {
+
+	params := models.NewHandBookGoodQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, _ := models.HandBookGoodPageList(&params)
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["rows"] = data
+	result["status"] = 1
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
+//列表数据
 func (c *HandBookController) DataGrid() {
 	//直接获取参数 GoodDataGrid()
 	params := models.NewHandBookQueryParam()

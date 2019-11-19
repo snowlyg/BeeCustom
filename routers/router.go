@@ -7,6 +7,11 @@ import (
 
 func init() {
 
+	//客户关联公司管理
+	beego.Router("/annotation_item/store", &controllers.AnnotationItemController{}, "Post:Store")
+	beego.Router("/annotation_item/update/?:id", &controllers.AnnotationItemController{}, "Patch:Update")
+	beego.Router("/annotation_item/delete/?:id", &controllers.AnnotationItemController{}, "Delete:Delete")
+
 	flags := [2]string{"I", "E"}
 	/*清单管理*/
 	for _, flag := range flags {
@@ -39,6 +44,7 @@ func init() {
 	//手账册
 	beego.Router("/handbook/index", &controllers.HandBookController{}, "*:Index")
 	beego.Router("/handbook/show/?:id", &controllers.HandBookController{}, "Get:Show")
+	beego.Router("/handbook/get_hand_book_good_by_hand_book_id", &controllers.HandBookController{}, "Post:GetHandBookGoodByHandBookId")
 	beego.Router("/handbook/delete/?:id", &controllers.HandBookController{}, "Delete:Delete")
 	beego.Router("/handbook/datagrid", &controllers.HandBookController{}, "Post:DataGrid")
 	beego.Router("/handbook/gooddatagrid", &controllers.HandBookController{}, "Post:GoodDataGrid")

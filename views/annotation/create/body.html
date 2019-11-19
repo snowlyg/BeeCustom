@@ -13,15 +13,14 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty" name="PutrecSeqno" id="putrec_seqno" autocomplete="off"
-                           onchange="layui.admin.putrec_seqno_change(this)" data-flag="I"
+                           onchange="layui.admin.putrec_seqno_change(this,'@{{.m.ImpexpMarkcd}}','@{{.m.HandBookId}}')"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">商品料号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled name="GdsMtno" id="gds_mtno"
-                           autocomplete="off">
+                    <input type="text" class="non-empty disabled" disabled name="GdsMtno" id="gds_mtno" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -69,7 +68,7 @@
                 <div class="input-group valid">
                     <input type="hidden" name="DclCurrcd" id="dcl_currcd" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="dcl_currcd_name" id="DclCurrcdName" autocomplete="off" no_empty>
+                           name="DclCurrcdName" id="dcl_currcd_name" autocomplete="off" no_empty>
                 </div>
             </td>
         </tr>
@@ -79,7 +78,7 @@
                 <div class="input-group valid">
                     <input type="hidden" name="DclUnitcd" id="dcl_unitcd">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="dcl_unitcd_name" id="DclUnitcdName" autocomplete="off">
+                           name="DclUnitcdName" id="dcl_unitcd_name" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">法定计量单位</td>
@@ -130,7 +129,7 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="dcl_uprc_amt" id="DclUprcAmt" autocomplete="off"
+                           name="DclUprcAmt" id="dcl_uprc_amt" autocomplete="off"
                            onchange="layui.admin.priceChange_ann()" oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
@@ -281,7 +280,7 @@
 
 
                         <div class="input-group valid">
-                            <input type="hidden" name="dcl_currcd" id="dcl_currcd_batch">
+                            <input type="hidden" name="DclCurrcd" id="dcl_currcd_batch">
                             <input type="text" class="non-empty" name="DclCurrcdName" id="dcl_currcd_name_batch"
                                    autocomplete="off">
                         </div>

@@ -92,11 +92,14 @@ type HandBook struct {
 	ManualChangTimes        string    `orm:"column(manual_chang_times);size(255);null" description:"手册变更次数"`
 	ManualType              string    `orm:"column(manual_type);size(255);null" description:"手册类型"`
 
-	UsefulLifeDays int             `orm:"-" `
-	PreentryDate   time.Time       `orm:"column(preentry_date);type(datetime)" description:"录入日期"`
-	Company        *Company        `orm:"column(company_id);rel(fk)"`
-	CompanyId      int64           `orm:"-" form:"CompanyId"`
-	HandBookGoods  []*HandBookGood `orm:"reverse(many)"` //设置一对多关系
+	UsefulLifeDays int       `orm:"-" `
+	PreentryDate   time.Time `orm:"column(preentry_date);type(datetime)" description:"录入日期"`
+
+	Company   *Company `orm:"column(company_id);rel(fk)"`
+	CompanyId int64    `orm:"-" form:"CompanyId"`
+
+	HandBookGoods []*HandBookGood `orm:"reverse(many)"` //设置一对多关系
+	Annotations   []*Annotation   `orm:"reverse(many)"` //设置一对多关系
 }
 
 // HandBookQueryParam 用于查询的类
@@ -172,6 +175,7 @@ func HandBookOne(id int64, relations string) (*HandBook, error) {
 	m := NewHandBook(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(HandBookTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("HandBookOne error:%v：%d", err, id))
 		return nil, err
 	}
 

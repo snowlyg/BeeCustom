@@ -24,6 +24,7 @@
                 <td class="td-scale-01 text-align-right">手(账)册编号</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
+                        <input type="hidden" name="HandBookId" id="hand_book_id" value="@{{.m.HandBookId}}">
                         <input type="text" class="non-empty required" value="@{{.m.PutrecNo}}" name="PutrecNo" id="putrec_no" lay-verify="required" lay-vertype="tips"  >
                     </div>
                 </td>
@@ -205,7 +206,7 @@
                 <td class="td-scale-01 text-align-right">报关标志</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="hidden"  value="@{{ if .m.DclcusFlag}} @{{.m.DclcusFlag}} @{{ else}}1@{{end}}" name="DclcusFlag" id="dclcus_flag">
+                        <input type="hidden"  value="@{{ if .m.DclcusFlag}}@{{.m.DclcusFlag}}@{{ else}}1@{{end}}" name="DclcusFlag" id="dclcus_flag">
                         <input type="text" class="non-empty required"  value="@{{ if .m.DclcusFlagName}}@{{.m.DclcusFlagName}}@{{ else}}报关@{{end}}" name="DclcusFlagName" id="dclcus_flag_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>

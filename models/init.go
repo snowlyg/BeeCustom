@@ -24,6 +24,8 @@ func init() {
 		new(Annotation),
 		new(ClearanceUpdateTime),
 		new(AnnotationUserRel),
+		new(AnnotationItem),
+		new(AnnotationRecord),
 	)
 }
 
@@ -108,7 +110,17 @@ func ClearanceUpdateTimeTBName() string {
 	return TableName("clearance_update_times")
 }
 
-// AnnotationUserRelTBName 获取 ClearanceUpdateTime 对应的表名称
+// AnnotationUserRelTBName 获取 AnnotationUserRelTBName 对应的表名称
 func AnnotationUserRelTBName() string {
 	return "annotation_user_rel"
+}
+
+// AnnotationItemTBName 获取 AnnotationItemTBName 对应的表名称
+func AnnotationItemTBName() string {
+	return "annotation_items"
+}
+
+// AnnotationRecordTBName 获取 AnnotationRecordTBName 对应的表名称
+func AnnotationRecordTBName() string {
+	return "annotation_records"
 }

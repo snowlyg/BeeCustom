@@ -145,18 +145,23 @@
         };
 
         form.on('submit(order_pros_submit)', function (form) {
+
             if (admin.order_pros_data.length > 1) {
                 if (form.field.DclCurrcd !== admin.order_pros_data[0].DclCurrcd) {
                     return layer.msg("币制不一致！");
                 }
             }
+
             if (form.field.Gdecd.toString().length !== 10) {
                 return layer.msg("商品编号必须为10位！");
             }
 
             let data = form.field;
+
             annotation_item_data(data);
+
             order_pros_index = null;
+
             $("#order_pros_form input").each(function () {
                 if ($(this).attr("id") === "GdsSeqno") {
                     $(this).val(admin.order_pros_data.length + 1)
@@ -166,6 +171,7 @@
                     }
                 }
             });
+
             $("#putrec_seqno").focus();
         });
 
@@ -495,20 +501,25 @@
         });
 
         form.on('submit(annotation_save)', async (data) => {
-            console.log("order_pros_data");
             layer.load(2);
             /**表体商品数据**/
             // data.field.items = admin.order_pros_data;
             data.field.ImpexpMarkcd = "@{{.ImpexpMarkcd}}";
             if (@{{ .m.Id }}) {
-                const annotation_data = await admin.post("/annotation/update/" + @{{ .m.Id }}, data.field);
+                const annotation_data = await admin.patch("/annotation/update/" + @{{ .m.Id }}, data.field);
                 if (annotation_data.status === 1) {
-                    window.location.reload()
+                    setTimeout(() => {
+                        window.location.reload()
+                    },300);
+
                 }
             } else {
                 const annotation_data = await admin.post("/annotation/store/" + @{{ .ImpexpMarkcd }}, data.field);
                 if (annotation_data.status === 1) {
-                    window.location.href = "/annotation/edit/" + annotation_data.obj.Id
+                    setTimeout(() => {
+                        window.location.href = "/annotation/edit/" + annotation_data.obj.Id
+                    },300);
+
                 }
             }
 
