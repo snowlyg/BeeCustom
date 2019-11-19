@@ -11,8 +11,7 @@
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6">
-                        @{{ map_get .actions .ImpexpMarkcd "canCreate"  }}
-                        @{{if  map_get .actions "I" "canCreate" }}
+                        @{{if  canArray  .actions .ImpexpMarkcd "canCreate" }}
                         <span class="custom-new_btn" lay-href="/annotation/create/@{{.ImpexpMarkcd}}"
                               lay-text="新建@{{.ImpexpMarkcdName}}清单" id="order_import_new">代客下单</span>
                         @{{else}}

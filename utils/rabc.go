@@ -38,7 +38,7 @@ func InitRabc() {
 	}
 
 	a := beegoormadapter.NewAdapter(dbType, dns)
-	E, err = casbin.NewEnforcer("conf/rbac_model.conf", a)
+	E, err = casbin.NewEnforcer("middleware/beego-orm-adapter/examples/rbac_model.conf", a)
 	if err != nil {
 		LogDebug(fmt.Sprintf("NewEnforcer error:%v", err))
 	}

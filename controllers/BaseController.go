@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -68,22 +69,18 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 			return true
 		}
 
-		//遍历用户所负责的资源列表
-		//uRole, err := models.RoleOne(bu.Role.Id, "Resources")
-		//if err != nil {
-		//	utils.LogDebug(fmt.Sprintf("获取用户角色出错=%v", err))
-		//	return false
-		//}
-		//
-		//for _, resource := range uRole.Resources {
-		//	urlfor := resource.UrlFor
-		//	if len(urlfor) == 0 {
-		//		continue
-		//	}
-		//	if len(urlfor) > 0 && urlfor == (ctrlName+"."+ActName) {
-		//		return true
-		//	}
-		//}
+		resources := utils.E.GetPermissionsForUser(strconv.FormatInt(bu.Id, 10))
+		for _, resource := range resources {
+			if len(resource) == 2 {
+				if len(resource[1]) == 0 {
+					continue
+				}
+				if len(resource[1]) > 0 && resource[1] == (ctrlName+"."+ActName) {
+					return true
+				}
+			}
+
+		}
 	}
 
 	return false
@@ -92,9 +89,9 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 // 判断某 Controller.Action 当前用户是否有权访问
 func (c *BaseController) getActionData(actionIndex string, actionNames ...string) {
 
-	//进出口分离权限
+	//清单，货物进出口分离权限
 	if len(actionIndex) > 0 {
-		actions := make(map[string]interface{})
+		actions := make(map[string]map[string]bool)
 		upper := strings.ToUpper(actionIndex)
 		action := make(map[string]bool)
 		for _, v := range actionNames {
@@ -120,9 +117,6 @@ func (c *BaseController) checkAuthor(actionNames []string) {
 	c.checkLogin()
 	//如果Action在忽略列表里，则直接通用
 	for _, actionName := range actionNames {
-		if c.actionName == "EIndex" {
-			utils.LogDebug(fmt.Sprintf("hasAuthor=%v ，%v", actionName == c.actionName, actionName))
-		}
 		if actionName == c.actionName {
 			hasAuthor := c.checkActionAuthor(c.controllerName, c.actionName)
 			if !hasAuthor {
