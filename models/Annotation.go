@@ -1,12 +1,12 @@
 package models
 
 import (
-	"BeeCustom/enums"
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
+
+	"BeeCustom/enums"
 
 	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
@@ -131,8 +131,7 @@ type Annotation struct {
 	Company   *Company `orm:"column(company_id);rel(fk)"`
 	CompanyId int64    `orm:"-" form:"CompanyId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
 
-	HandBook   *HandBook `orm:"column(handbook_id);rel(fk)"`
-	HandBookId int64     `orm:"-" form:"HandBookId"` //关联管理会自动生成 HandBookId 字段，此处不生成字段
+	HandBookId int64 `orm:"column(hand_book_id)" form:"HandBookId"`
 
 	OrderId int64 `orm:"-" form:"OrderId"` //关联管理会自动生成 OrderId 字段，此处不生成字段
 
@@ -257,12 +256,7 @@ func AnnotationOne(id int64, relations string) (*Annotation, error) {
 		return nil, err
 	}
 
-	if &m == nil {
-		return &m, errors.New("清单获取失败")
-	}
-
 	if len(relations) > 0 {
-		o := orm.NewOrm()
 		rs := strings.Split(relations, ",")
 		for _, rv := range rs {
 			_, err := o.LoadRelated(&m, rv)

@@ -950,9 +950,10 @@ layui.define('view', function (exports) {
                 return new Promise(async (resolve, reject) => {
                     let ajax_abort = $.ajax({
                         url: url,
-                        type: 'POST',
-                        data: {
-                            _method: 'DELETE'
+                        type: 'DELETE',
+                        headers:{
+                            "Content-Type": 'application/json',
+                            "X-HTTP-Method-Override": 'DELETE',
                         },
                         dataType: 'JSON',
                         timeout: 8000,
@@ -1685,7 +1686,7 @@ layui.define('view', function (exports) {
 
                     if ($(dom).val().trim()) {
                         let data = {
-                            HandBookId: handBookId,
+                            HandBookId: parseInt(handBookId),
                             Type: type,
                             Serial: $(dom).val(),
                         };

@@ -63,7 +63,7 @@ type HandBookGoodQueryParam struct {
 	BaseQueryParam
 
 	Type       int8
-	HandBookId string
+	HandBookId int64
 	Serial     string
 }
 
@@ -80,8 +80,6 @@ func NewHandBookGoodQueryParam() HandBookGoodQueryParam {
 func HandBookGoodPageList(params *HandBookGoodQueryParam) ([]*HandBookGood, int64) {
 	query := orm.NewOrm().QueryTable(HandBookGoodTBName())
 	data := make([]*HandBookGood, 0)
-
-	utils.LogDebug(params)
 
 	query = query.Distinct().Filter("hand_book_id", params.HandBookId).Filter("Type", params.Type)
 	if len(params.Serial) > 0 {

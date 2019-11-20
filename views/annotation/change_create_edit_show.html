@@ -50,18 +50,36 @@
 
         <div id="order_edit_bill"></div>
         <div class="layui-tab" lay-filter="annotation_header_item">
+        @{{if .m.Id}}
             <ul class="layui-tab-title template_list">
-                <li class="layui-this">表头</li>
-                <li id="annotation_item_tab">表体</li>
+            <li>表头</li>
+            <li id="annotation_item_tab" class="layui-this ">表体</li>
+
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item ">
+                    @{{template "/annotation/create/gauge.html" .}}
+                </div>
+                <div class="layui-tab-item layui-show">
+                    @{{template "/annotation/create/body.html" .}}
+                </div>
+            </div>
+        @{{else}}
+            <ul class="layui-tab-title template_list">
+            <li class="layui-this">表头</li>
+            <li id="annotation_item_tab">表体</li>
+
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     @{{template "/annotation/create/gauge.html" .}}
                 </div>
-                <div class="layui-tab-item">
+                <div class="layui-tab-item ">
                     @{{template "/annotation/create/body.html" .}}
                 </div>
             </div>
+        @{{end}}
+
         </div>
     </div>
 </div>

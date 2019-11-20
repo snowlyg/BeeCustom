@@ -259,14 +259,12 @@ func (c *HandBookController) Import() {
 	}
 	hIP.HandBook = *m
 
-	eInfo := []map[string]string{}
-
 	hBGIP := models.HandBookGoodImportParam{
 		sheet2Name,
 		sheet2Title,
 		"料件",
 	}
-	hIP.Info = eInfo
+
 	c.InsertHandBookGoods(&hIP, &hBGIP)
 
 	hBGIP = models.HandBookGoodImportParam{
@@ -274,7 +272,7 @@ func (c *HandBookController) Import() {
 		sheet3Title,
 		"成品",
 	}
-	hIP.Info = eInfo
+
 	c.InsertHandBookGoods(&hIP, &hBGIP)
 
 	hBGIP = models.HandBookGoodImportParam{
@@ -282,7 +280,7 @@ func (c *HandBookController) Import() {
 		sheet4Title,
 		"",
 	}
-	hIP.Info = eInfo
+
 	c.InsertHandBookGoods(&hIP, &hBGIP)
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("导入成功"), m.Id)
@@ -309,20 +307,21 @@ func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam
 }
 
 //获取 xlsx 文件内容
-func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam) error {
-	for i := 0; i < len(hIP.Info); i++ {
+func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam, Info []map[string]string) error {
+	var handBookGoods []*models.HandBookGood
+	for i := 0; i < len(Info); i++ {
 		handBookGood := models.NewHandBookGood(0)
 		t := reflect.ValueOf(&handBookGood).Elem()
-		for k, v := range hIP.Info[i] {
+		for k, v := range Info[i] {
 			xlsx.SetObjValue(k, v, t)
 		}
 
 		handBookGood.HandBook = &hIP.HandBook
 		handBookGood.Type = hIP.HandBookGoodType
-		hIP.HandBookGoods = append(hIP.HandBookGoods, &handBookGood)
+		handBookGoods = append(handBookGoods, &handBookGood)
 	}
 
-	num, err := models.InsertHandBookGoodMulti(hIP.HandBookGoods)
+	num, err := models.InsertHandBookGoodMulti(handBookGoods)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("InsertHandBookGoodMulti:%v ", err))
 		return err
@@ -336,12 +335,13 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam)
 }
 
 //获取 xlsx 文件内容
-func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportParam) error {
+func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportParam, Info []map[string]string) error {
 
-	for i := 0; i < len(hIP.Info); i++ {
+	var handBookUllages []*models.HandBookUllage
+	for i := 0; i < len(Info); i++ {
 		handBookUllage := models.NewHandBookUllage(0)
 		t := reflect.ValueOf(&handBookUllage).Elem()
-		for k, v := range hIP.Info[i] {
+		for k, v := range Info[i] {
 			xlsx.SetObjValue(k, v, t)
 		}
 		handBookGood, err := models.GetHandBookGoodBySerial(handBookUllage.FinishProNo)
@@ -350,10 +350,10 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 		}
 
 		handBookUllage.HandBookGood = handBookGood
-		hIP.HandBookUllages = append(hIP.HandBookUllages, &handBookUllage)
+		handBookUllages = append(handBookUllages, &handBookUllage)
 	}
 
-	num, err := models.InsertHandBookUllageMulti(hIP.HandBookUllages)
+	num, err := models.InsertHandBookUllageMulti(handBookUllages)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("InsertHandBookGoodMulti:%v ", err))
 		return err
@@ -412,14 +412,13 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 
 //导入基础参数 xlsx 文件内容
 func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportParam, handBookTypeString string) {
-
 	rows, err := xlsx.GetExcelRows(hIP.FileNamePath, hIP.ExcelName)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
+	var Info []map[string]string
 	if len(handBookTypeString) > 0 { //表体
-		var Info []map[string]string
 		obj := models.NewHandBookGood(0)
 		for roI, row := range rows {
 			if roI > 1 { //忽略标题和表头 2 行
@@ -443,8 +442,6 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 
 		}
 
-		hIP.Info = Info
-
 		handBookGoodType, err := enums.GetSectionWithString(handBookTypeString, "hand_book_good_type")
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
@@ -452,12 +449,13 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 
 		hIP.HandBookGoodType = handBookGoodType
 
-		err = c.InsertHandBookGood(hIP)
+		err = c.InsertHandBookGood(hIP, Info)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
+
 	} else { //单损
-		var Info []map[string]string
+
 		obj := models.NewHandBookUllage(0)
 		for roI, row := range rows {
 			if roI > 1 { //忽略标题行
@@ -482,11 +480,10 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 
 		}
 
-		hIP.Info = Info
-
-		err = c.InsertHandBookUllage(hIP)
+		err = c.InsertHandBookUllage(hIP, Info)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
+
 	}
 }

@@ -350,7 +350,7 @@
         $(document).on("click", ".order_detail, .order_keep_auth, .order_start_auth", function () {
             const topLayui = parent === self ? layui : top.layui,
                 href = `/annotation/edit/${$(this).data('id')}`,
-                text = `清单编辑页`;
+                text = "@{{.ImpexpMarkcdName}}"+ `清单制作`;
             topLayui.index.openTabsPage(href, text);
         });
 

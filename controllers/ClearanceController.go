@@ -242,7 +242,7 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 	}
 
 	//提取 excel 数据
-
+	var Info []map[string]string
 	for roI, row := range rows {
 		if roI > 0 {
 			info := make(map[string]string)
@@ -263,18 +263,18 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 				}
 			}
 
-			cIP.Info = append(cIP.Info, info)
+			Info = append(Info, info)
 		}
 
 	}
 
 	//转换 excel 数据
 	//忽略标题行
-	for i := 0; i < len(cIP.Info); i++ {
+	for i := 0; i < len(Info); i++ {
 		inObj := models.NewClearance(0)
 		inObj.Type = cIP.ClearanceType
 		t := reflect.ValueOf(&inObj).Elem()
-		for k, v := range cIP.Info[i] {
+		for k, v := range Info[i] {
 			xlsx.SetObjValue(k, v, t)
 		}
 		cIP.Obj = append(cIP.Obj, &inObj)

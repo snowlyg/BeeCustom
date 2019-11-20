@@ -88,11 +88,11 @@ func (c *BaseAnnotationController) bStatusCount(impexpMarkcd string) {
 }
 
 // TransformAnnotationList 格式化列表数据
-func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotation) []*map[string]string {
+func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotation) []*map[string]interface{} {
 	var annotationCreatorName string //制单人
-	var annotationList []*map[string]string
+	var annotationList []*map[string]interface{}
 	for _, v := range ms {
-		annotationItem := make(map[string]string)
+		annotationItem := make(map[string]interface{})
 		aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
@@ -181,13 +181,6 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
 	}
 
-	handbook, err := models.HandBookOne(m.HandBookId, "")
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取手账册关联数据失败", m)
-	}
-
-	m.HandBook = handbook
-
 	m.InputTime = *iT
 	m.InputTime = *iDT
 	m.Company = company
@@ -226,10 +219,8 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 // Edit 添加 编辑 页面
 func (c *BaseAnnotationController) bEdit(id int64) {
 	m, err := models.AnnotationOne(id, "")
-	if m != nil && id > 0 {
-		if err != nil {
-			c.pageError("数据无效，请刷新后重试")
-		}
+	if err != nil {
+		c.pageError("数据无效，请刷新后重试")
 	}
 
 	// 获取制单人
@@ -260,9 +251,9 @@ func (c *BaseAnnotationController) bMake(id int64) {
 }
 
 // TransformAnnotation 格式化列表数据
-func (c *BaseAnnotationController) TransformAnnotation(v *models.Annotation) map[string]string {
+func (c *BaseAnnotationController) TransformAnnotation(v *models.Annotation) map[string]interface{} {
 
-	annotationItem := make(map[string]string)
+	annotationItem := make(map[string]interface{})
 	aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
@@ -345,7 +336,7 @@ func (c *BaseAnnotationController) TransformAnnotation(v *models.Annotation) map
 	annotationItem["Creator"] = v.Creator
 	annotationItem["GenDecFlag"] = v.GenDecFlag
 	annotationItem["GenDecFlagName"] = v.GenDecFlagName
-	annotationItem["HandBookId"] = strconv.FormatInt(v.HandBook.Id, 10)
+	annotationItem["HandBookId"] = strconv.FormatInt(v.HandBookId, 10)
 
 	annotationItem["InputTime"] = enums.GetDateTimeString(&v.InputTime, enums.BaseDateTimeFormat)
 	annotationItem["PrevdTime"] = enums.GetDateTimeString(&v.PrevdTime, enums.BaseDateTimeFormat)
@@ -460,13 +451,6 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
-
-	handbook, err := models.HandBookOne(m.HandBook.Id, "")
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取手账册关联数据失败", m)
-	}
-
-	m.HandBook = handbook
 
 	//获取form里的值
 	if err := c.ParseForm(m); err != nil {

@@ -15,7 +15,6 @@ import (
 
 // ClearanceImportParam 用于查询的类
 type BaseImportParam struct {
-	Info         []map[string]string
 	FileNamePath string
 	ExcelTitle   map[string]string
 	ExcelName    string

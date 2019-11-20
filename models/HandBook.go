@@ -99,7 +99,6 @@ type HandBook struct {
 	CompanyId int64    `orm:"-" form:"CompanyId"`
 
 	HandBookGoods []*HandBookGood `orm:"reverse(many)"` //设置一对多关系
-	Annotations   []*Annotation   `orm:"reverse(many)"` //设置一对多关系
 }
 
 // HandBookQueryParam 用于查询的类
@@ -120,10 +119,7 @@ type HandBookImportParam struct {
 	xlsx.BaseImportParam
 
 	HandBookGoodType int8
-
-	HandBook        HandBook
-	HandBookGoods   []*HandBookGood
-	HandBookUllages []*HandBookUllage
+	HandBook         HandBook
 }
 
 // HandBookGoodImportParam 用于导入的类
