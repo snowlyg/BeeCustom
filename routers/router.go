@@ -8,7 +8,8 @@ import (
 func init() {
 
 	//客户关联公司管理
-	beego.Router("/annotation_item/store", &controllers.AnnotationItemController{}, "Post:Store")
+	beego.Router("/annotation_item/datagrid", &controllers.AnnotationItemController{}, "Post:DataGrid")
+	beego.Router("/annotation_item/store/?:aid", &controllers.AnnotationItemController{}, "Post:Store")
 	beego.Router("/annotation_item/update/?:id", &controllers.AnnotationItemController{}, "Patch:Update")
 	beego.Router("/annotation_item/delete/?:id", &controllers.AnnotationItemController{}, "Delete:Delete")
 

@@ -18,6 +18,8 @@ func (u *AnnotationItem) TableName() string {
 // AnnotationItemQueryParam 用于查询的类
 type AnnotationItemQueryParam struct {
 	BaseQueryParam
+
+	AnnotationId int64
 }
 
 // AnnotationItem 实体类
@@ -85,6 +87,8 @@ func AnnotationItemPageList(params *AnnotationItemQueryParam) ([]*AnnotationItem
 
 	query := orm.NewOrm().QueryTable(AnnotationItemTBName())
 	datas := make([]*AnnotationItem, 0)
+
+	query = query.Filter("annotation_id", params.AnnotationId)
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)

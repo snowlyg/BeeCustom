@@ -9,8 +9,9 @@
         let order_pros_data_filter = [],
             order_id  /**订单ID**/
             , order_note_data /**附注数据**/
-            , AnnotationSearcIndex;  /**商品快速查询index**/
-
+            , annotationItems /**清单表体数据**/
+            , decListData /**默认报关单数据**/
+            , AnnotationSearcIndex; /**商品快速查询index**/
 
         await admin.annotations_auto(layuicomplete);
 
@@ -34,7 +35,11 @@
         $("#invt_dcl_time").val(admin.getCurrDate());
 
         /**清单产品/报关草稿列表**/
-        admin.getAnnotationTable(admin.order_pros_data, admin.decListData);
+         annotationItems = await admin.post("/annotation_item/datagrid",JSON.stringify({
+            AnnotationId:parseInt(@{{.m.Id}})
+        }),true);
+        admin.getAnnotationTable(annotationItems.rows, []);
+
         /**光标进入全选**/
         $('body').on('focus', 'input,textarea', function (e) {
             $(this).select();
@@ -62,11 +67,10 @@
         });
 
         /**保存商品**/
-        let order_pros_index = null;
-        const annotation_item_data = (data) => {
+        const annotation_item_data = async (data) => {
             /**集报不允许新增**/
-            if (($("#invt_type").val() === "1" || $("#invt_type").val() === "8") && data.GdsSeqno > admin
-                .order_pros_data.length) {
+            if (($("#invt_type").val() === "1" || $("#invt_type").val() === "8")
+                && data.GdsSeqno > annotationItems.length) {
                 layer.open({
                     title: "提示",
                     content: "当前清单类型不允许新增！",
@@ -76,7 +80,7 @@
             }
 
             let _row = {};
-            $.extend(_row, admin.order_pros_data[order_pros_index - 1]);
+            $.extend(_row, annotationItems[order_pros_index - 1]);
             if (_row && _row.GdsSeqno && _row.GdsSeqno !== data.GdsSeqno) {
                 layer.open({
                     title: "提示",
@@ -88,66 +92,38 @@
 
             /**如果报关则生成报关商品**/
             if ($("#dclcus_flag").val() === "1") {
-
                 /**如果用户设置报关单序号，检查序号是否合规**/
-                if (admin.DecListGNoCheck(data, admin.decListData, admin.order_pros_data) === false) return;
-                if (!data.EntryGdsSeqno) {
-                    data.EntryGdsSeqno = data.GdsSeqno
+                if (admin.DecListGNoCheck(data, decListData, annotationItems) === false) return;
+                if (!decListData) {
+                    decListData = data.GdsSeqno
                 }
             }
 
-            if (admin.DecListCountCheck(data, admin.decListData) === false) {
+            if (admin.DecListCountCheck(data, decListData) === false) {
                 layer.open({
                     title: "提示",
                     content: "本保税清单对应的报关单表体已经50条(不可超过50条)，请确认后重新录入！",
                     icon: 2
                 });
+
                 return;
             }
 
-            /**
-             * foreach data array
-             *
-             * add item+'_string'
-             *
-             * **/
-            for (let item in data) {
-                if ($.inArray(item, admin.annotaion_items_arr) >= 0) {
-                    data[item + '_string'] = data[item]
-                }
+            /*保存表体*/
+            let result = await admin.post("/annotation_item/store/"+@{{.m.Id}},data);
+            if (result.status === 1){
+                 annotationItems = await admin.post("/annotation_item/datagrid",JSON.stringify({
+                    AnnotationId:parseInt(result.obj.Annotation.Id)
+                }),true);
+
+                /**加载清单产品/报关草稿表格列表**/
+                admin.getAnnotationTable(annotationItems.rows, []);
             }
-
-            /** edit **/
-            if (order_pros_index) {
-                for (let item in data) {
-                    admin.order_pros_data[order_pros_index - 1][item] = data[item]
-                }
-            } else {
-                /** create **/
-                admin.order_pros_data.push(data);
-            }
-
-            admin.order_pros_data.forEach((value, index) => {
-                value.GdsSeqno = index + 1
-            });
-
-            /**如果报关则生成报关商品**/
-            admin.decListData = admin.InitInvtList2DecList(admin.decListData, admin.order_pros_data);
-            table.reload('customs_declaration_list', {
-                data: admin.decListData,
-                limit: admin.decListData.length
-            });
-
-            table.reload('order_pros', {
-                data: admin.order_pros_data,
-                limit: admin.order_pros_data.length
-            });
         };
 
         form.on('submit(order_pros_submit)', function (form) {
-
-            if (admin.order_pros_data.length > 1) {
-                if (form.field.DclCurrcd !== admin.order_pros_data[0].DclCurrcd) {
+            if (annotationItems.length > 1) {
+                if (form.field.DclCurrcd !== annotationItems[0].DclCurrcd) {
                     return layer.msg("币制不一致！");
                 }
             }
@@ -156,15 +132,11 @@
                 return layer.msg("商品编号必须为10位！");
             }
 
-            let data = form.field;
-
-            annotation_item_data(data);
-
-            order_pros_index = null;
+            annotation_item_data(form.field);/*表体数据*/
 
             $("#order_pros_form input").each(function () {
                 if ($(this).attr("id") === "GdsSeqno") {
-                    $(this).val(admin.order_pros_data.length + 1)
+                    $(this).val(annotationItems.length + 1)
                 } else {
                     if (!($(this).is("[no_empty]"))) {
                         $(this).val("")
@@ -178,15 +150,12 @@
         /**商品--点击行反填数据**/
         table.on('row(order_pros)', function (obj) {
             for (let item in obj.data) {
-                if ($.inArray(item, admin.annotaion_items_arr) >= 0) {
-                    $(`#${item}`).val(obj.data[item + '_string'])
-                } else if (item === 'rmk') {
-                    $(`#${'body_' + item}`).val(obj.data[item])
+               if (item.toLowerCase() === 'rmk') {
+                    $(`#${'body_' + item.toLowerCase()}`).val(obj.data[item])
                 } else {
-                    $(`#${item}`).val(obj.data[item])
+                    $(`#${item.toLowerCase()}`).val(obj.data[item])
                 }
             }
-            order_pros_index = obj.data.GdsSeqno;
         });
 
         /**商品列表--按钮操作**/
@@ -195,10 +164,10 @@
             let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
-                    order_pros_index = null;
+                    // order_pros_index = null;
                     $("#order_pros_form input").each(function () {
                         if ($(this).attr("id") === "GdsSeqno") {
-                            $(this).val(admin.order_pros_data.length + 1)
+                            $(this).val(annotationItems.length + 1)
                         } else {
                             if (!($(this).is("[no_empty]"))) {
                                 $(this).val("")
@@ -214,7 +183,7 @@
                     layer.confirm('真的删除么', {
                         title: '提示'
                     }, async (index) => {
-                        let sup_data = admin.order_pros_data.filter(item => {
+                        let sup_data = annotationItems.filter(item => {
                             return checkData.every(item2 => {
                                 return item.GdsSeqno !== item2.GdsSeqno;
                             })
@@ -222,27 +191,27 @@
                         if (checkData[0].id) {
                             admin.annotation_items_delete_ids.push(checkData[0].id);
                         }
-                        admin.order_pros_data = sup_data;
-                        admin.order_pros_data.forEach((value, index) => {
+                        annotationItems = sup_data;
+                        annotationItems.forEach((value, index) => {
                             value.GdsSeqno = index + 1
                         });
 
                         /**如果报关则生成报关商品**/
                         admin.decListData = admin.InitInvtList2DecList(admin
-                            .decListData, admin.order_pros_data);
+                            .decListData, annotationItems);
                         table.reload('customs_declaration_list', {
                             data: admin.decListData,
                             limit: admin.decListData.length
                         });
 
                         table.reload('order_pros', {
-                            data: admin.order_pros_data,
-                            limit: admin.order_pros_data.length
+                            data: annotationItems,
+                            limit: annotationItems.length
                         });
-                        order_pros_index = null;
+                        // order_pros_index = null;
                         $("#order_pros_form input").each(function () {
                             if ($(this).attr("id") === "GdsSeqno") {
-                                $(this).val(admin.order_pros_data.length + 1)
+                                $(this).val(annotationItems.length + 1)
                             } else {
                                 if (!($(this).is("[no_empty]"))) {
                                     $(this).val("")
@@ -268,11 +237,11 @@
                         });
                         return;
                     }
-                    checkData[0].GdsSeqno = admin.order_pros_data.length + 1;
+                    checkData[0].GdsSeqno = annotationItems.length + 1;
                     if (checkData[0].id) {
                         delete checkData[0].id
                     }
-                    admin.order_pros_data.push(checkData[0]);
+                    annotationItems.push(checkData[0]);
 
                     /**如果报关则生成报关商品**/
                     admin.decListData = admin.InitInvtList2DecList(admin.decListData, admin
@@ -283,10 +252,10 @@
                     });
 
                     table.reload('order_pros', {
-                        data: admin.order_pros_data,
-                        limit: admin.order_pros_data.length
+                        data: annotationItems,
+                        limit: annotationItems.length
                     });
-                    $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${admin.order_pros_data.length - 1}]`)
+                    $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${annotationItems.length - 1}]`)
                         .click();
                     break;
                 case 'search':
@@ -299,6 +268,7 @@
                             return layer.msg('手(账)册编号不能为空');
                         }
                     }
+
                     AnnotationSearcIndex = layer.open({
                         type: 1,
                         title: '商品快速查询',
@@ -307,6 +277,7 @@
                         content: $('#annotation_search_template').html()
                     });
                     $("#gds_mtno_filter").focus();
+
                     table.render({
                         elem: '#annotation_search_table',
                         defaultToolbar: ['filter'],
@@ -424,76 +395,6 @@
             layer.close(AnnotationSearcIndex);
         });
 
-        /**新建进口报关保存刷新后反填数据**/
-        async function order_i_edit_back_filling(order_i_edit_data) {
-            $("#order_i_form input, #order_i_form textarea").each(function () {
-                for (let item in order_i_edit_data) {
-                    if ($(this).attr("id") === item) {
-                        if (item === 'input_time' || item === 'invt_dcl_time') {
-                            const time = admin.getyyyymmdd(order_i_edit_data[item]);
-                            $(this).val(time);
-                        } else {
-                            $(this).val(order_i_edit_data[item])
-                        }
-                    }
-                }
-            });
-            if (order_i_edit_data.PromiseItmes) {
-                $(`input[name='promise_itmes[]']`).each(function (index, element) {
-                    for (let item in order_i_edit_data.PromiseItmes) {
-                        if (index === item) {
-                            $(this).next('div').click();
-                        }
-                    }
-                });
-            }
-            if (!(order_i_edit_data.type)) {
-                $(`input[name='type[]']`).each(function (index, element) {
-                    if (index === 1) {
-                        $(this).next('div').click();
-                    }
-                });
-            }
-            await order_i_add_back_filling(order_i_edit_data);
-        }
-
-        /**新建保税清单（进口）保存反填数据**/
-        async function order_i_add_back_filling(order_i_edit_data) {
-            if (parent.layui.admin.get_iframe_index()) {
-                parent.layui.admin.get_iframe_index().find("span").append(order_i_edit_data
-                    .EtpsInnerInvtNo);
-                if (order_i_edit_data.StatusString !== '已完成') {
-                    const lay_id = parent.layui.admin.get_iframe_index().attr("lay-id").replace("/create",
-                        "");
-                    parent.layui.admin.get_iframe_index().attr("lay-id",
-                        `${lay_id}/${order_id}/#/id=${order_id}`);
-                    parent.layui.admin.get_iframe_index().attr("lay-attr",
-                        `${lay_id}/${order_id}/#/id=${order_id}`);
-                }
-            }
-            if (order_i_edit_data.items.length > 0) {
-                admin.order_pros_data = order_i_edit_data.items;
-                $("#gds_seqno").val(order_i_edit_data.items.length + 1);
-                /**如果报关则生成报关商品**/
-                admin.decListData = admin.InitInvtList2DecList(admin.decListData, admin.order_pros_data);
-                table.reload('customs_declaration_list', {
-                    data: admin.decListData,
-                    limit: admin.decListData.length
-                });
-                table.reload('order_pros', {
-                    data: admin.order_pros_data,
-                    limit: admin.order_pros_data.length
-                });
-            }
-            order_note_data = order_i_edit_data.ExtraRemark;
-            if (order_note_data) {
-                $("#order_note_dot").show()
-            } else {
-                $("#order_note_dot").hide()
-            }
-            $("#order_dispatch").data("user", order_i_edit_data.company.user_id);
-            admin.annotation_items_delete_ids = [];
-        };
 
         /**进口清单保存**/
         $("body").on("click", "#order_save", function () {
@@ -503,14 +404,13 @@
         form.on('submit(annotation_save)', async (data) => {
             layer.load(2);
             /**表体商品数据**/
-            // data.field.items = admin.order_pros_data;
             data.field.ImpexpMarkcd = "@{{.ImpexpMarkcd}}";
             if (@{{ .m.Id }}) {
                 const annotation_data = await admin.patch("/annotation/update/" + @{{ .m.Id }}, data.field);
                 if (annotation_data.status === 1) {
                     setTimeout(() => {
                         window.location.reload()
-                    },300);
+                    }, 300);
 
                 }
             } else {
@@ -518,7 +418,7 @@
                 if (annotation_data.status === 1) {
                     setTimeout(() => {
                         window.location.href = "/annotation/edit/" + annotation_data.obj.Id
-                    },300);
+                    }, 300);
 
                 }
             }

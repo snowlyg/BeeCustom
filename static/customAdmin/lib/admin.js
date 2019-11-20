@@ -45,31 +45,6 @@ layui.define('view', function (exports) {
                 '4600',
                 '4400',
             ],
-
-            /**货物申报需要格式化小数点字段**/
-            order_pros_arr: [
-                'g_qty',
-                'first_qty',
-                'second_qty',
-                'decl_price',
-                'decl_total',
-            ],
-
-            /**清单需要格式化小数点字段**/
-            annotaion_items_arr: [
-                'dcl_uprc_amt',
-                'dcl_total_amt',
-                'usd_stat_total_amt',
-                'lawf_qty',
-                'secd_lawf_qty',
-                'wt_sf_val',
-                'fst_sf_val',
-                'secd_sf_val',
-                'dcl_qty',
-                'gross_wt',
-                'net_wt',
-            ],
-
             get_goods_materials_data: function (cusIEFlag) {
                 /**
                  * 在加工贸易手册和账册情况下 进口 需调取成品数据的贸易方式：
@@ -3676,133 +3651,133 @@ layui.define('view', function (exports) {
             ,
 
             /**清单产品/报关草稿列表**/
-            getAnnotationTable(order_pros_data, decListData) {
+            getAnnotationTable(annotationItems, decListData) {
                 /**产品**/
                 layui.table.render({
                     elem: '#order_pros',
                     toolbar: '#order_pros_tool',
                     defaultToolbar: ['filter'],
                     colFilterRecord: 'local',
-                    primaryKey: 'gds_seqno',
+                    primaryKey: 'GdsSeqno',
                     cols: [
                         [{
                             type: 'radio'
                         }, {
-                            field: 'gds_seqno',
+                            field: 'GdsSeqno',
                             title: '序号',
                             width: 100
                         }, {
-                            field: 'putrec_seqno',
+                            field: 'PutrecSeqno',
                             title: '备案序号',
                             width: 120
                         }, {
-                            field: 'gds_mtno',
+                            field: 'GdsMtno',
                             title: '商品料号',
                             width: 140
                         }, {
-                            field: 'entry_gds_seqno',
+                            field: 'EntryGdsSeqno',
                             title: '报关单商品序号',
                             width: 180
                         }, {
-                            field: 'apply_tb_seqno',
+                            field: 'ApplyTbSeqno',
                             title: '流转申报表序号',
                             width: 180
                         }, {
-                            field: 'gdecd',
+                            field: 'Gdecd',
                             title: '商品编码',
                             width: 140
                         }, {
-                            field: 'gds_nm',
+                            field: 'GdsNm',
                             title: '商品名称',
                             width: 240
                         }, {
-                            field: 'gds_spcf_model_desc',
+                            field: 'GdsSpcfModelDesc',
                             title: '规格型号',
                             width: 240
                         }, {
-                            field: 'dcl_unitcd_name',
+                            field: 'DclUnitcdName',
                             title: '申报计量单位',
                             width: 160
                         }, {
-                            field: 'lawf_unitcd_name',
+                            field: 'LawfUnitcdName',
                             title: '法定计量单位',
                             width: 160
                         }, {
-                            field: 'secd_lawf_unitcd_name',
+                            field: 'SecdLawfUnitcdName',
                             title: '法定第二计量单位',
                             width: 180
                         }, {
-                            field: 'natcd_name',
+                            field: 'NatcdName',
                             title: '原产国(地区)',
                             width: 150
                         }, {
-                            field: 'destination_natcd_name',
+                            field: 'DestinationNatcdName',
                             title: '最终目的国(地区)',
                             width: 200
                         }, {
-                            field: 'dcl_uprc_amt_string',
+                            field: 'DclUprcAmt',
                             title: '企业申报单价',
                             width: 160
                         }, {
-                            field: 'dcl_currcd_name',
+                            field: 'DclCurrcdName',
                             title: '币制',
                             width: 100
                         }, {
-                            field: 'modf_markcd_name',
+                            field: 'ModfMarkcdName',
                             title: '修改标志',
                             width: 100
                         }, {
-                            field: 'lawf_qty_string',
+                            field: 'LawfQty',
                             title: '法定数量',
                             width: 120
                         }, {
-                            field: 'secd_lawf_qty_string',
+                            field: 'SecdLawfQty',
                             title: '第二法定数量',
                             width: 160
                         }, {
-                            field: 'wt_sf_val_string',
+                            field: 'WtSfVal',
                             title: '重量比例因子',
                             width: 160
                         }, {
-                            field: 'fst_sf_val_string',
+                            field: 'FstSfVal',
                             title: '第一比例因子',
                             width: 160
                         }, {
-                            field: 'secd_sf_val_string',
+                            field: 'SecdSfVal',
                             title: '第二比例因子',
                             width: 160
                         }, {
-                            field: 'dcl_qty_string',
+                            field: 'DclQty',
                             title: '申报数量',
                             width: 120
                         }, {
-                            field: 'gross_wt_string',
+                            field: 'GrossWt',
                             title: '毛重',
                             width: 100
                         }, {
-                            field: 'net_wt_string',
+                            field: 'NetWt',
                             title: '净重',
                             width: 100
                         }, {
-                            field: 'lvyrlf_modecd_name',
+                            field: 'LvyrlfModecdName',
                             title: '征免方式',
                             width: 120
                         }, {
-                            field: 'ucns_verno',
+                            field: 'UcnsVerno',
                             title: '单耗版本号',
                             width: 150
                         }, {
-                            field: 'cly_markcd',
+                            field: 'ClyMarkcd',
                             title: '归类标志',
                             width: 130
                         }, {
-                            field: 'param3',
+                            field: 'Param3',
                             title: '自动备案序号',
                             width: 160
                         }]
                     ],
-                    data: order_pros_data,
-                    limit: order_pros_data.length,
+                    data: annotationItems,
+                    limit: annotationItems.length,
                     height: 250
                 });
 
@@ -3815,67 +3790,67 @@ layui.define('view', function (exports) {
                     colFilterRecord: 'local',
                     cols: [
                         [{
-                            field: 'dec_seq_no',
+                            field: 'DecSeqNo',
                             title: '报关单统一编号',
                             width: 180
                         }, {
-                            field: 'entry_gds_seqno',
+                            field: 'EntryGdsSeqno',
                             title: '报关单商品序号',
                             width: 180
                         }, {
-                            field: 'gdecd',
+                            field: 'Gdecd',
                             title: '商品编码',
                             width: 140
                         }, {
-                            field: 'gds_nm',
+                            field: 'GdsNm',
                             title: '商品名称',
                             width: 240
                         }, {
-                            field: 'gds_spcf_model_desc',
+                            field: 'GdsSpcfModelDesc',
                             title: '规格型号',
                             width: 240
                         }, {
-                            field: 'dcl_qty_string',
+                            field: 'DclQtyString',
                             title: '申报数量',
                             width: 120
                         }, {
-                            field: 'dcl_uprc_amt_string',
+                            field: 'DclUprcAmt',
                             title: '申报单价',
                             width: 140
                         }, {
-                            field: 'dcl_total_amt_string',
+                            field: 'DclTotalAmt',
                             title: '申报总价',
                             width: 140
                         }, {
-                            field: 'dcl_currcd_name',
+                            field: 'DclCurrcdName',
                             title: '申报币制',
                             width: 120
                         }, {
-                            field: 'dcl_unitcd_name',
+                            field: 'DclUnitcdName',
                             title: '申报计量单位',
                             width: 160
                         }, {
-                            field: 'lawf_unitcd_name',
+                            field: 'LawfUnitcdName',
                             title: '法定计量单位',
                             width: 160
                         }, {
-                            field: 'secd_lawf_unitcd_name',
+                            field: 'SecdLawfUnitcdName',
                             title: '法定第二计量单位',
                             width: 180
                         }, {
-                            field: 'natcd_name',
+                            field: 'NatcdName',
                             title: '原产国(地区)',
                             width: 150
                         }, {
-                            field: 'destination_natcd_name',
+                            field: 'DestinationNatcdName',
                             title: '最终目的国(地区)',
                             width: 200
                         }, {
-                            field: 'lawf_qty_string',
+                            field: 'LawfQty',
                             title: '法定数量',
                             width: 140
                         }, {
-                            field: 'secd_lawf_qty_string',
+                            field: 'SecdLawfQty',
                             title: '第二法定数量',
                             width: 160
                         }]

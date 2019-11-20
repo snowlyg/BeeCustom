@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/utils"
-	"fmt"
 )
 
 type AnnotationItemController struct {
@@ -25,8 +27,28 @@ func (c *AnnotationItemController) Prepare() {
 
 }
 
+//列表数据
+func (c *AnnotationItemController) DataGrid() {
+	//直接获取参数 getDataGridData()
+	params := models.NewAnnotationItemQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	//获取数据列表和总数
+	data, total := models.AnnotationItemPageList(&params)
+
+	//定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = total
+	result["rows"] = data
+	result["code"] = 0
+	c.Data["json"] = result
+
+	c.ServeJSON()
+}
+
 // Store 添加 新建 页面
 func (c *AnnotationItemController) Store() {
+	Id, _ := c.GetInt64(":aid", 0)
 	m := models.NewAnnotationItem(0)
 	//获取form里的值
 	if err := c.ParseForm(&m); err != nil {
@@ -34,6 +56,13 @@ func (c *AnnotationItemController) Store() {
 	}
 
 	c.validRequestData(m)
+
+	annotation, err := models.AnnotationOne(Id, "")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
+	}
+
+	m.Annotation = annotation
 
 	if err := models.AnnotationItemSave(&m); err != nil {
 		utils.LogDebug(err)
