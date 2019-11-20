@@ -97,6 +97,19 @@ func AnnotationItemPageList(params *AnnotationItemQueryParam) ([]*AnnotationItem
 	return datas, total
 }
 
+// AnnotationItemPageList 获取分页数据
+func AnnotationItemsByAnnotationId(aId int64) ([]*AnnotationItem, error) {
+
+	datas := make([]*AnnotationItem, 0)
+	_, err := orm.NewOrm().QueryTable(AnnotationItemTBName()).Filter("annotation_id", aId).All(&datas)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("AnnotationItemsByAnnotationId error :%v", err))
+		return nil, err
+	}
+
+	return datas, nil
+}
+
 func AnnotationItemGetRelations(ms []*AnnotationItem, relations string) ([]*AnnotationItem, error) {
 	if len(relations) > 0 {
 		o := orm.NewOrm()

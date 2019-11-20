@@ -127,13 +127,10 @@ type Annotation struct {
 	EntryDclTime           time.Time `form:"-" orm:"column(entry_dcl_time);type(datetime);null" description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
 
 	BackendUsers []*BackendUser `orm:"rel(m2m);rel_through(BeeCustom/models.AnnotationUserRel)"` // 设置一对多的反向关系
-
-	Company   *Company `orm:"column(company_id);rel(fk)"`
-	CompanyId int64    `orm:"-" form:"CompanyId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
-
-	HandBookId int64 `orm:"column(hand_book_id)" form:"HandBookId"`
-
-	OrderId int64 `orm:"-" form:"OrderId"` //关联管理会自动生成 OrderId 字段，此处不生成字段
+	Company      *Company       `orm:"column(company_id);rel(fk)"`
+	CompanyId    int64          `orm:"-" form:"CompanyId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
+	HandBookId   int64          `orm:"column(hand_book_id)" form:"HandBookId"`
+	OrderId      int64          `orm:"-" form:"OrderId"` //关联管理会自动生成 OrderId 字段，此处不生成字段
 
 	AnnotationItems   []*AnnotationItem   `orm:"reverse(many)"` //设置一对多关系
 	AnnotationRecords []*AnnotationRecord `orm:"reverse(many)"` //设置一对多关系
@@ -280,7 +277,6 @@ func AnnotationSave(m *Annotation) error {
 			return err
 		}
 	} else {
-
 		if _, err := o.Update(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 			return err
