@@ -371,8 +371,8 @@
         /**开始制单/继续制单/修改**/
         $(document).on("click", ".order_start_maker, .order_keep_maker, .order_revise, .order_check_success_reload", async function () {
             const topLayui = parent === self ? layui : top.layui,
-                href = `/annotation/edit/${$(this).data('id')}`,
-                text = `制单/修改保税清单（` + @{{.ImpexpMarkcdName}} + `）`;
+                href = `/annotation/make/${$(this).data('id')}`,
+                text = `制单/修改保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
             topLayui.index.openTabsPage(href, text);
         });
 

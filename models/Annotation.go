@@ -269,15 +269,23 @@ func AnnotationOne(id int64, relations string) (*Annotation, error) {
 }
 
 //Save 添加、编辑页面 保存
-func AnnotationSave(m *Annotation) error {
+func AnnotationSave(m *Annotation, col string) error {
+	var err error
 	o := orm.NewOrm()
 	if m.Id == 0 {
-		if _, err := o.Insert(m); err != nil {
+		if _, err = o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 			return err
 		}
 	} else {
-		if _, err := o.Update(m); err != nil {
+
+		if len(col) > 0 {
+			_, err = o.Update(m, col)
+		} else {
+			_, err = o.Update(m)
+		}
+
+		if err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 			return err
 		}

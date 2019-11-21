@@ -38,16 +38,13 @@ func inArray(in int64, s []interface{}) bool {
 //		},
 //}
 func canArray(s map[string]map[string]bool, index, perm string) bool {
-
 	if len(s) == 0 {
 		return false
 	}
-
 	for sI, v := range s {
 		if sI == strings.ToUpper(index) {
 			return v[perm]
 		}
 	}
-
 	return false
 }

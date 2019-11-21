@@ -48,6 +48,8 @@
         });
 
         form.on('submit(update)',async function(data){
+            data.field.Status = @{{ .m.Status }};
+            data.field.IsSuper = @{{ .m.IsSuper }};
             await admin.patch(`/backenduser/update/` + @{{ .m.Id }}, data.field);
         });
     });

@@ -13,13 +13,13 @@ func (c *AnnotationController) Prepare() {
 		"ICreate",
 		"IEdit",
 		"IMake",
-		"IAduit",
+		"IAudit",
 		"IDelete",
 		"EIndex",
 		"ECreate",
 		"EEdit",
 		"EMake",
-		"EAduit",
+		"EAudit",
 		"EDelete",
 	}
 	c.checkAuthor(perms)
@@ -151,6 +151,42 @@ func (c *AnnotationController) IUpdate() {
 func (c *AnnotationController) EUpdate() {
 	Id, _ := c.GetInt64(":id", 0)
 	c.bUpdate(Id)
+}
+
+// ForRecheck 复核
+func (c *AnnotationController) IForRecheck() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bForRecheck(Id)
+}
+
+// ForRecheck 复核
+func (c *AnnotationController) EForRecheck() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bForRecheck(Id)
+}
+
+// RecheckPass 复核通过
+func (c *AnnotationController) IRecheckPass() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRecheckPassReject(Id)
+}
+
+// RecheckPass 复核通过
+func (c *AnnotationController) ERecheckPass() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRecheckPassReject(Id)
+}
+
+// RecheckReject 复核通过
+func (c *AnnotationController) IRecheckReject() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRecheckPassReject(Id)
+}
+
+// RecheckReject 复核通过
+func (c *AnnotationController) ERecheckReject() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRecheckPassReject(Id)
 }
 
 //删除

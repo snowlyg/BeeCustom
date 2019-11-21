@@ -111,6 +111,11 @@ func RoleUpdate(m *Role) (*Role, error) {
 	if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
 		return nil, err
 	}
+	_, err := utils.E.DeletePermissionsForUser(strconv.FormatInt(m.Id, 10))
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("AddPermissionForUser error:%v", err))
+		return nil, err
+	}
 
 	urlFors := strings.Split(m.UrlForstrings, ",")
 	for _, urlFor := range urlFors {

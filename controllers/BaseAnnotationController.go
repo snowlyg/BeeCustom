@@ -49,7 +49,7 @@ func (c *BaseAnnotationController) bIndex(impexpMarkcd, impexpMarkcdName string)
 	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
 
 	//页面里按钮权限控制
-	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Aduit", "Delete")
+	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Audit", "Delete")
 
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
@@ -86,10 +86,7 @@ func (c *BaseAnnotationController) bStatusCount(impexpMarkcd string) {
 func (c *BaseAnnotationController) bCreate(impexpMarkcd string) {
 	c.Data["ImpexpMarkcd"] = impexpMarkcd
 
-	c.setTpl("annotation/change_create_edit_show.html")
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
-	c.GetXSRFToken()
+	c.getResponses(impexpMarkcd)
 }
 
 // Store 添加 新建 页面
@@ -149,7 +146,7 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 	//	}
 	//}
 
-	if err := models.AnnotationSave(&m); err != nil {
+	if err := models.AnnotationSave(&m, ""); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
@@ -187,15 +184,13 @@ func (c *BaseAnnotationController) bEdit(id int64) {
 		c.pageError("数据无效，请刷新后重试")
 	}
 
+	c.setStatusOnly(m, "审核中")
+
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
 	c.Data["BackendUsers"] = backendUsers
-
 	c.Data["m"] = c.TransformAnnotation(m)
-	c.setTpl("annotation/change_create_edit_show.html")
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
-	c.GetXSRFToken()
+	c.getResponses(m.ImpexpMarkcd)
 }
 
 // Edit 添加 编辑 页面
@@ -207,11 +202,28 @@ func (c *BaseAnnotationController) bMake(id int64) {
 		}
 	}
 
+	c.setStatusOnly(m, "制单中")
 	c.Data["m"] = c.TransformAnnotation(m)
+	c.getResponses(m.ImpexpMarkcd)
+}
+
+func (c *BaseAnnotationController) getResponses(impexpMarkcd string) {
+	//页面里按钮权限控制
+	c.getActionData(impexpMarkcd, "Audit", "Distribute", "ForRecheck")
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
 	c.GetXSRFToken()
+}
+
+//仅仅更新状态
+func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusString string) {
+	if err := c.updateAnnotationStatus(m, statusString); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+	}
+	if err := models.AnnotationSave(m, "Status"); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
 }
 
 // Cancel 取消订单
@@ -227,7 +239,7 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
-	if err := models.AnnotationSave(m); err != nil {
+	if err := models.AnnotationSave(m, ""); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
@@ -263,7 +275,7 @@ func (c *BaseAnnotationController) bAudit(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
 
-	if err := models.AnnotationSave(m); err != nil {
+	if err := models.AnnotationSave(m, ""); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
@@ -311,7 +323,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	if err := models.AnnotationSave(m); err != nil {
+	if err := models.AnnotationSave(m, ""); err != nil {
 		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
@@ -356,7 +368,7 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 	//	}
 	//}
 
-	if err := models.AnnotationSave(m); err != nil {
+	if err := models.AnnotationSave(m, ""); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
 
@@ -367,6 +379,110 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 
 	c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 
+}
+
+// Update 添加 编辑 页面
+func (c *BaseAnnotationController) bForRecheck(id int64) {
+
+	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	//获取form里的值
+	if err := c.ParseForm(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "ParseForm", m)
+	}
+
+	c.validRequestData(m)
+
+	//valid := validation.Validation{}
+	//if len(m.UserPwd) > 0 {
+	//	valid.MinSize(m.UserPwd, 6, "密码")
+	//	valid.MaxSize(m.UserPwd, 18, "密码")
+	//}
+	//
+	//if valid.HasErrors() {
+	//	// 如果有错误信息，证明验证没通过
+	//	// 打印错误信息
+	//	for _, err := range valid.Errors {
+	//		c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
+	//	}
+	//}
+
+	if err := models.AnnotationSave(m, ""); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+	}
+
+	annotationRecord := c.newAnnotationRecord(m, "制单", "制单中")
+	if err := models.AnnotationRecordSave(&annotationRecord); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+	}
+
+	c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
+
+}
+
+// bRecheckPass 通过复核、驳回
+func (c *BaseAnnotationController) bRecheckPassReject(id int64) {
+
+	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	//获取form里的值
+	if err := c.ParseForm(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "ParseForm", m)
+	}
+
+	c.validRequestData(m)
+
+	//valid := validation.Validation{}
+	//if len(m.UserPwd) > 0 {
+	//	valid.MinSize(m.UserPwd, 6, "密码")
+	//	valid.MaxSize(m.UserPwd, 18, "密码")
+	//}
+	//
+	//if valid.HasErrors() {
+	//	// 如果有错误信息，证明验证没通过
+	//	// 打印错误信息
+	//	for _, err := range valid.Errors {
+	//		c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
+	//	}
+	//}
+
+	if err := models.AnnotationSave(m, ""); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+	}
+
+	annotationRecord := c.newAnnotationRecord(m, "制单", "制单中")
+	if err := models.AnnotationRecordSave(&annotationRecord); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+	}
+
+	if err := c.setAnnotaionUserRelType(m, nil, "复核人"); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+	}
+
+	c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
+
+}
+
+// bRecheck 复核
+func (c *BaseAnnotationController) bRecheck(id int64) {
+	m, err := models.AnnotationOne(id, "")
+	if err != nil {
+		c.pageError("数据无效，请刷新后重试")
+	}
+
+	c.setStatusOnly(m, "复核中")
+
+	c.Data["m"] = c.TransformAnnotation(m)
+	c.setTpl("annotation/recheck.html")
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "annotation/recheck_footerjs.html"
+	c.GetXSRFToken()
 }
 
 //删除

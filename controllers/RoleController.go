@@ -3,9 +3,11 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/utils"
 )
 
 type PermList struct {
@@ -156,17 +158,8 @@ func getChecked(v *models.Resource, m *models.Role) bool {
 		return false
 	}
 
-	if len(m.UrlFors) == 0 {
-		return false
-	}
+	return utils.E.HasPermissionForUser(strconv.FormatInt(m.Id, 10), v.UrlFor)
 
-	for _, urlFor := range m.UrlFors {
-		if urlFor == v.UrlFor {
-			return true
-		}
-	}
-
-	return false
 }
 
 //Edit 添加、编辑角色界面

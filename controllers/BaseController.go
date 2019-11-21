@@ -77,18 +77,13 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 		if bu.IsSuper {
 			return true
 		}
+		roleIds, err := utils.E.GetRolesForUser(strconv.FormatInt(bu.Id, 10))
+		if err != nil {
+			return false
+		}
 
-		resources := utils.E.GetPermissionsForUser(strconv.FormatInt(bu.Id, 10))
-		for _, resource := range resources {
-			if len(resource) == 2 {
-				if len(resource[1]) == 0 {
-					continue
-				}
-				if len(resource[1]) > 0 && resource[1] == (ctrlName+"."+ActName) {
-					return true
-				}
-			}
-
+		for _, roleId := range roleIds {
+			return utils.E.HasPermissionForUser(roleId, ctrlName+"."+ActName)
 		}
 	}
 
