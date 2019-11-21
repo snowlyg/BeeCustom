@@ -91,32 +91,46 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 	return datas
 }
 
-func BackendUserGetRelations(ms []*BackendUser) ([]*BackendUser, error) {
+func BackendUsersGetRelations(ms []*BackendUser) ([]*BackendUser, error) {
 	if len(ms) > 0 {
 		for _, v := range ms {
-			roleIdStrings, err := utils.E.GetRolesForUser(strconv.FormatInt(v.Id, 10))
+			err := BackendUserGetRelations(v)
 			if err != nil {
-				utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
-			}
-
-			var roleNames string
-			for _, roleId := range roleIdStrings {
-				id64, err := strconv.ParseInt(roleId, 10, 64)
-				if err != nil {
-					utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
-				}
-
-				role, err := RoleOne(id64, false)
-				if err != nil {
-					utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
-				}
-
-				roleNames += role.Name + ","
+				return nil, err
 			}
 		}
 	}
 
 	return ms, nil
+}
+
+func BackendUserGetRelations(v *BackendUser) error {
+
+	roleIdStrings, err := utils.E.GetRolesForUser(strconv.FormatInt(v.Id, 10))
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
+	}
+
+	var roleNames string
+	if len(roleIdStrings) > 0 {
+		for _, roleId := range roleIdStrings {
+			id64, err := strconv.ParseInt(roleId, 10, 64)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+			}
+
+			role, err := RoleOne(id64, false)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+			}
+
+			roleNames += role.Name + ","
+		}
+	}
+
+	v.RoleNames = roleNames
+
+	return nil
 }
 
 // BackenduserDataList 获取用户列表
@@ -157,7 +171,7 @@ func BackendUserSave(m *BackendUser, roleIds []string) (*BackendUser, error) {
 		//对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
 
-		if err := setBackendUserRole(m, roleIds); err != nil {
+		if err := setRoles(m, roleIds); err != nil {
 			return nil, err
 		}
 
@@ -181,7 +195,7 @@ func BackendUserSave(m *BackendUser, roleIds []string) (*BackendUser, error) {
 			m.Avatar = oM.Avatar
 		}
 
-		if err := setBackendUserRole(m, roleIds); err != nil {
+		if err := setRoles(m, roleIds); err != nil {
 			return nil, err
 		}
 
@@ -191,6 +205,18 @@ func BackendUserSave(m *BackendUser, roleIds []string) (*BackendUser, error) {
 	}
 
 	return m, nil
+}
+
+//设置角色
+func setRoles(m *BackendUser, roleIds []string) error {
+	if len(roleIds) > 0 && len(roleIds[0]) > 0 {
+		if err := setBackendUserRole(m, roleIds); err != nil {
+			return err
+		}
+	}
+
+	return nil
+
 }
 
 //获取关联模型

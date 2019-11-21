@@ -54,7 +54,7 @@ func (c *BackendUserController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.BackendUserPageList(&params)
-	ms, err := models.BackendUserGetRelations(data)
+	ms, err := models.BackendUsersGetRelations(data)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
@@ -119,18 +119,7 @@ func (c *BackendUserController) Edit() {
 		m.Status = enums.Enabled
 	}
 
-	roleIds, err := utils.E.GetRolesForUser(strconv.FormatInt(m.Id, 10))
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
-	}
-
-	var roleIds64 []interface{}
-	for _, roleId := range roleIds {
-		roleId64, _ := strconv.ParseInt(roleId, 10, 64)
-		roleIds64 = append(roleIds64, roleId64)
-	}
-	m.RoleIds = roleIds64
-	c.Data["m"] = m
+	c.getRolesName(m)
 
 	params := models.NewRoleQueryParam()
 	roles := models.RoleDataList(&params)
@@ -140,6 +129,20 @@ func (c *BackendUserController) Edit() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/edit_footerjs.html"
 	c.GetXSRFToken()
+}
+
+func (c *BackendUserController) getRolesName(m *models.BackendUser) {
+	roleIds, err := utils.E.GetRolesForUser(strconv.FormatInt(m.Id, 10))
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
+	}
+	var roleIds64 []interface{}
+	for _, roleId := range roleIds {
+		roleId64, _ := strconv.ParseInt(roleId, 10, 64)
+		roleIds64 = append(roleIds64, roleId64)
+	}
+	m.RoleIds = roleIds64
+	c.Data["m"] = m
 }
 
 // 禁用 启用
@@ -216,6 +219,8 @@ func (c *BackendUserController) Profile() {
 		//添加用户时默认状态为启用
 		m.Status = enums.Enabled
 	}
+
+	_ = models.BackendUserGetRelations(m)
 
 	c.Data["m"] = m
 	params := models.NewRoleQueryParam()
