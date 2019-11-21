@@ -40,13 +40,7 @@ func (c *CompanyForeignController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.CompanyForeignPageList(&params)
-	//定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = total
-	result["rows"] = data
-	result["code"] = 0
-	c.Data["json"] = result
-
+	c.ResponseList(data, total)
 	c.ServeJSON()
 }
 

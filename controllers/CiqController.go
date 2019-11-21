@@ -40,7 +40,6 @@ func (c *CiqController) Index() {
 
 	//页面里按钮权限控制
 	c.getActionData("", "Import")
-
 	c.GetXSRFToken()
 }
 
@@ -52,13 +51,7 @@ func (c *CiqController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.CiqPageList(&params)
-	//定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = total
-	result["rows"] = data
-	result["code"] = 0
-	c.Data["json"] = result
-
+	c.ResponseList(data, total)
 	c.ServeJSON()
 }
 

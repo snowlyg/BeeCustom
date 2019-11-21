@@ -18,7 +18,7 @@
                 <td class="td-scale-04">
                     <div class="input-group valid">
                         <input type="hidden" name="InvtType" id="invt_type" value="@{{ if .m.InvtType}}@{{.m.InvtType}}@{{ else}}0@{{end}}">
-                        <input type="text" class="non-empty required" value="@{{ if .m.InvtTypeName}}@{{.m.InvtTypeName}}@{{ else}}普通清单@{{end}}" name="InvtTypeName" id="invt_type_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
+                        <input type="text" class="non-empty required" value="@{{ if .m.InvtTypeName}}@{{.m.InvtTypeName}}@{{ else}}普通清单@{{end}}" name="InvtTypeName" id="InvtTypeName" autocomplete="off" lay-verify="required" lay-vertype="tips">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">手(账)册编号</td>
@@ -79,7 +79,7 @@
                 <td class="td-scale-01 text-align-right">申报单位社会信用代码</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty"  name="DclEtpsSccd" value="@{{ if .m.DclEtpsSccd}}@{{.m.DclEtpsSccd}}@{{ else}}14419007962277606@{{end}}" id="dcl_etps_sccd" autocomplete="off" >
+                        <input type="text" class="non-empty"  name="DclEtpsSccd" value="@{{ if .m.DclEtpsSccd}}@{{.m.DclEtpsSccd}}@{{ else}}914419007962277606@{{end}}" id="dcl_etps_sccd" autocomplete="off" >
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">申报单位名称</td>
@@ -119,13 +119,13 @@
                 <td class="td-scale-01 text-align-right">录入日期</td>
                 <td class="td-scale-04" colspan="2">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty required" value="@{{.m.InputTime}}" name="InputTime" id="input_time" autocomplete="off" lay-verify="required" lay-vertype="tips" oninput="layui.admin.is_onlynumber(this)">
+                        <input type="text" class="non-empty required" value="@{{.m.InputTime}}" name="InputTime" id="InputTime" autocomplete="off" lay-verify="required" lay-vertype="tips" oninput="layui.admin.is_onlynumber(this)">
                     </div>
                 </td>
                 <td class="td-scale-01 text-align-right">清单申报日期</td>
                 <td class="td-scale-04">
                     <div class="input-group valid">
-                        <input type="text" class="non-empty required"  value="@{{.m.InvtDclTime}}" name="InvtDclTime" id="invt_dcl_time" autocomplete="off" lay-verify="required" lay-vertype="tips" oninput="layui.admin.is_onlynumber(this)">
+                        <input type="text" class="non-empty required"  value="@{{.m.InvtDclTime}}" name="InvtDclTime" id="InvtDclTime" autocomplete="off" lay-verify="required" lay-vertype="tips" oninput="layui.admin.is_onlynumber(this)">
                     </div>
                 </td>
             </tr>

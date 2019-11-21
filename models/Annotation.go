@@ -103,19 +103,7 @@ type Annotation struct {
 	Param1                 string    `orm:"column(param1);size(19);null" description:"备用1"`
 	Param2                 string    `orm:"column(param2);size(19);null" description:"备用2"`
 	Param3                 string    `orm:"column(param3);size(19);null" description:"备用3"`
-	SysId                  string    `orm:"column(sys_id);size(2)" description:"子系统ID 95 加工贸易账册系统;B1 加工贸易手册系统 ;B2 加工贸易担保管理系统;B3 保税货物流转系统二期 ;Z7 海关特殊监管区域管理系统;Z8 保税物流管理系统"`
-	OperCusRegCode         string    `orm:"column(oper_cus_reg_code);size(10)" description:"操作卡的海关十位"`
-	KeyName                string    `orm:"column(key_name);size(255);null" description:"签名所用的证书信息"`
-	Version                string    `orm:"column(version);size(255);null" description:"版本编号"`
-	BusinessId             string    `orm:"column(business_id);size(255);null" description:"业务单证号"`
-	MessageId              string    `orm:"column(message_id);size(255);null" description:"报文唯一编号"`
-	FileName               string    `orm:"column(file_name);size(255);null" description:"用户原始报文名，主要用于用户查询"`
-	MessageType            string    `orm:"column(message_type);size(255);null" description:"报文类型"`
-	SenderId               string    `orm:"column(sender_id);size(255);null" description:"发送方编号"`
-	ReceiverId             string    `orm:"column(receiver_id);size(255);null" description:"接收方编号"`
-	DelcareFlag            string    `orm:"column(delcare_flag);size(255)" description:"申报标志 0--暂存；1--申报"`
 	ExtraRemark            string    `orm:"column(extra_remark);null" description:"附注"`
-	Creator                string    `orm:"column(creator);size(50);null" description:"创建人"`
 	GenDecFlag             string    `orm:"column(gen_dec_flag);size(2);null" description:"是否生成报关单 1 生成，2 不生成"`
 	GenDecFlagName         string    `orm:"column(gen_dec_flag_name);size(100);null" description:"是否生成报关单名称"`
 	InputTime              time.Time `form:"-" orm:"column(input_time);type(datetime);null" description:"录入日期"`
@@ -125,6 +113,18 @@ type Annotation struct {
 	StatusUpdatedAt        time.Time `form:"-" orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
 	InvtDclTime            time.Time `form:"-" orm:"column(invt_dcl_time);type(datetime);null" description:"清单申报时间(清单申报日期)(返填)"`
 	EntryDclTime           time.Time `form:"-" orm:"column(entry_dcl_time);type(datetime);null" description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
+	RecheckErrorInputIds   string    `orm:"column(recheck_error_input_ids);null" description:"复核input id"`
+	//SysId                  string    `orm:"column(sys_id);size(2)" description:"子系统ID 95 加工贸易账册系统;B1 加工贸易手册系统 ;B2 加工贸易担保管理系统;B3 保税货物流转系统二期 ;Z7 海关特殊监管区域管理系统;Z8 保税物流管理系统"`
+	//OperCusRegCode         string    `orm:"column(oper_cus_reg_code);size(10)" description:"操作卡的海关十位"`
+	//KeyName                string    `orm:"column(key_name);size(255);null" description:"签名所用的证书信息"`
+	//Version                string    `orm:"column(version);size(255);null" description:"版本编号"`
+	//BusinessId             string    `orm:"column(business_id);size(255);null" description:"业务单证号"`
+	//MessageId              string    `orm:"column(message_id);size(255);null" description:"报文唯一编号"`
+	//FileName               string    `orm:"column(file_name);size(255);null" description:"用户原始报文名，主要用于用户查询"`
+	//MessageType            string    `orm:"column(message_type);size(255);null" description:"报文类型"`
+	//SenderId               string    `orm:"column(sender_id);size(255);null" description:"发送方编号"`
+	//ReceiverId             string    `orm:"column(receiver_id);size(255);null" description:"接收方编号"`
+	//DelcareFlag            string    `orm:"column(delcare_flag);size(255)" description:"申报标志 0--暂存；1--申报"`
 
 	BackendUsers []*BackendUser `orm:"rel(m2m);rel_through(BeeCustom/models.AnnotationUserRel)"` // 设置一对多的反向关系
 	Company      *Company       `orm:"column(company_id);rel(fk)"`

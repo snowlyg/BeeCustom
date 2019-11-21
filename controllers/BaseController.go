@@ -34,6 +34,15 @@ func (c *BaseController) GetXSRFToken() {
 	c.Data["xsrf_token"] = c.XSRFToken()
 }
 
+func (c *BaseController) ResponseList(data interface{}, total int64) {
+	// 定义返回的数据结构
+	result := make(map[string]interface{})
+	result["total"] = total
+	result["rows"] = data
+	result["code"] = 0
+	c.Data["json"] = result
+}
+
 // checkLogin判断用户是否登录，未登录则跳转至登录页面
 // 一定要在BaseController.Prepare()后执行
 func (c *BaseController) checkLogin() {

@@ -7,7 +7,10 @@ import (
 
 func init() {
 
-	//客户关联公司管理
+	//清单办理记录管理
+	beego.Router("/annotation_record/datagrid", &controllers.AnnotationRecordController{}, "Post:DataGrid")
+
+	//清单表体管理
 	beego.Router("/annotation_item/datagrid", &controllers.AnnotationItemController{}, "Post:DataGrid")
 	beego.Router("/annotation_item/store/?:aid", &controllers.AnnotationItemController{}, "Post:Store")
 	beego.Router("/annotation_item/update/?:id", &controllers.AnnotationItemController{}, "Patch:Update")

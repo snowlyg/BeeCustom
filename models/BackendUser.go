@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/astaxie/beego"
-
 	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
 )
@@ -31,20 +29,21 @@ type BackendUserQueryParam struct {
 // BackendUser 实体类
 type BackendUser struct {
 	BaseModel
-	RealName    string        `orm:"size(32)" valid:"Required;MaxSize(32)"`
-	UserName    string        `orm:"size(24)" valid:"Required;MaxSize(24)"`
-	UserPwd     string        `orm:"size(256)"`
-	Mobile      string        `orm:"size(16)" valid:"Required;Mobile"`
-	Email       string        `orm:"size(256)" valid:"Required;Email"`
-	Avatar      string        `orm:"size(256)"`
-	ICCode      string        `orm:"column(i_c_code);size(255);null"`
-	Chapter     string        `orm:"column(chapter);size(255);null" description:"签章"`
-	IsSuper     bool          `valid:"Required"`
-	Status      bool          `valid:"Required"`
-	Companies   []*Company    `orm:"reverse(many)"` //设置一对多关系
-	Annotations []*Annotation `orm:"reverse(many)"` // 设置多对多的反向关系
-	RoleIds     []interface{} `orm:"-"`
-	RoleNames   string        `orm:"-"`
+	RealName          string              `orm:"size(32)" valid:"Required;MaxSize(32)"`
+	UserName          string              `orm:"size(24)" valid:"Required;MaxSize(24)"`
+	UserPwd           string              `orm:"size(256)"`
+	Mobile            string              `orm:"size(16)" valid:"Required;Mobile"`
+	Email             string              `orm:"size(256)" valid:"Required;Email"`
+	Avatar            string              `orm:"size(256)"`
+	ICCode            string              `orm:"column(i_c_code);size(255);null"`
+	Chapter           string              `orm:"column(chapter);size(255);null" description:"签章"`
+	IsSuper           bool                `valid:"Required"`
+	Status            bool                `valid:"Required"`
+	Companies         []*Company          `orm:"reverse(many)"` //设置一对多关系
+	Annotations       []*Annotation       `orm:"reverse(many)"` // 设置多对多的反向关系
+	AnnotationRecords []*AnnotationRecord `orm:"reverse(many)"` // 设置多对多的反向关系
+	RoleIds           []interface{}       `orm:"-"`
+	RoleNames         string              `orm:"-"`
 }
 
 func NewBackendUser(id int64) BackendUser {
@@ -75,60 +74,19 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 
 // GetCreateBackendUsers 制单人
 func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
+	params := NewBackendUserQueryParam()
+	//获取数据列表和总数
+	datas, _ := BackendUserPageList(&params)
+	for i, v := range datas {
+		formatInt := strconv.FormatInt(v.Id, 10)
+		hasRoleForUser, _ := utils.E.HasRoleForUser(formatInt, "1") //超级管理员
+		if !utils.E.HasPermissionForUser(formatInt, roleResouceString) || hasRoleForUser {
+			if i <= len(datas)-1 {
+				datas = append(datas[:i], datas[i+1:]...) //删除
+			}
 
-	prefix := beego.AppConfig.DefaultString("db_dt_prefix", "bee_custom_")
-	datas := make([]*BackendUser, 0)
-	// 获取 QueryBuilder 对象. 需要指定数据库驱动参数。
-	// 第二个返回值是错误对象，在这里略过
-	qb1, _ := orm.NewQueryBuilder("mysql")
-
-	// 构建查询对象
-	qb1.Select(prefix + "roles.id").
-		From(prefix + "roles").
-		InnerJoin("role_resource").
-		On(prefix + "roles.id = " + "role_resource." + prefix + "roles_id").
-		InnerJoin(prefix + "resource").
-		On(prefix + "resource.id = " + "role_resource." + prefix + "resource_id").
-		And(prefix + "resource.url_for='" + roleResouceString + "'")
-	subSql := qb1.String()
-
-	qb, _ := orm.NewQueryBuilder("mysql")
-	// 构建查询对象
-	qb.Select(prefix+"users.real_name", prefix+"users.id").
-		From(prefix + "users").
-		LeftJoin(prefix + "roles").
-		On(prefix + "users.id").
-		In(subSql).
-		//Where("age > ?").
-		OrderBy("id").Desc()
-
-	// 导出 SQL 语句
-	sql := qb.String()
-
-	//SELECT
-	//DISTINCT
-	//bee_custom_users.real_name,
-	//	bee_custom_users.id
-	//FROM
-	//bee_custom_users
-	//INNER JOIN bee_custom_roles
-	//ON
-	//bee_custom_users.role_id IN (
-	//	SELECT
-	//bee_custom_roles.id
-	//FROM
-	//bee_custom_roles
-	//INNER JOIN role_resource ON bee_custom_roles.id = role_resource.bee_custom_roles_id
-	//INNER JOIN bee_custom_resource ON bee_custom_resource.id = role_resource.bee_custom_resource_id
-	//and bee_custom_resource.url_for = 'AnnotationController.Make'
-	//
-	//)
-	//ORDER BY
-	//id DESC DISTINCT
-	replace := strings.Replace(sql, "SELECT", "SELECT DISTINCT", 1)
-
-	o := orm.NewOrm()
-	_, _ = o.Raw(replace).QueryRows(&datas)
+		}
+	}
 
 	return datas
 }

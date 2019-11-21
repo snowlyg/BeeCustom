@@ -8,30 +8,25 @@
                 <div class="layui-tab-item order_take_item layui-show">
                     <p class="order_take_tips">本记录为系统自动生成，将记录订单处理中发生的过程</p>
                     <ul class="layui-timeline">
-@{{/*                        */}}
-@{{/*                        @{{# layui.each(d.data_order, function(index, item){ }}*/}}
-@{{/*                        <li class="layui-timeline-item">*/}}
-@{{/*                            @{{# if(index == 0){ }}*/}}
-@{{/*                        <i class="layui-icon layui-timeline-axis"></i>*/}}
-@{{/*                        @{{# }else{ }}*/}}
-@{{/*                        <i class="layui-icon layui-timeline-axis_i"></i>*/}}
-@{{/*                        @{{# } }}*/}}
-@{{/*                            <div class="layui-timeline-content layui-text_rate">*/}}
-@{{/*                                @{{# const name = item.user ? item.user.name : '系统操作';*/}}
-@{{/*                                const phone = item.user ? item.user.phone : '系统操作';}}*/}}
-@{{/*                                <h4 class="layui-timeline-title">@{{ item.content }}（处理人：@{{ name }}，     手机号：@{{ phone }}）</h4>*/}}
-@{{/*                                <p class="record">*/}}
-@{{/*                                    <span class="order_take_time">@{{ item.created_at }}</span>*/}}
-@{{/*                                </p>*/}}
-@{{/*                            </div>*/}}
-@{{/*                        </li>*/}}
-@{{/*                    @{{# }) }}*/}}
-
+                        {{# layui.each(d, function(index, item){ }}
+                        <li class="layui-timeline-item">
+                            {{# if(index == 0){ }}
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            {{# }else{ }}
+                            <i class="layui-icon layui-timeline-axis_i"></i>
+                            {{# } }}
+                            <div class="layui-timeline-content layui-text_rate">
+                             <h4 class="layui-timeline-title">{{ item.Content }}（处理人：{{ item.BackendUserName }}，     手机号：{{ item.BackendUserMobile }}）</h4>
+                                <p class="record">
+                                    <span class="order_take_time">{{ item.CreatedAt }}</span>
+                                </p>
+                            </div>
+                        </li>
+                    {{# }) }}
                     </ul>
                 </div>
             </div>
         </div>
-
     </div>
 </script>
 <script type="text/html" id="order_take_list"></script>

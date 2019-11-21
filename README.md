@@ -26,7 +26,6 @@ git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
 3.加载依赖管理包 使用 gopm 管理包
 
  ``` 
-
   go get -v -u github.com/gpmgo/gopm
   
   // 拉取依赖到缓存目录
@@ -56,10 +55,10 @@ git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
  
  运行
 在 BeeCustom 目录使用 `beego` 官方提供的命令运行
+改用 [gowatch](https://gitee.com/silenceper/gowatch) 解决修改前端文件不热加载问题， gowatch 打包效率更快
 ```
 bee run 
 
-改用 gowatch 解决修改前端文件不热加载问题， gowatch 打包效率更快
 ```
 
 # 增加了 gulp 打包前端资源

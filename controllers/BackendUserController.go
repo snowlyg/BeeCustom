@@ -58,13 +58,8 @@ func (c *BackendUserController) DataGrid() {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
-	//定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = total
-	result["rows"] = ms
-	result["code"] = 0
-	c.Data["json"] = result
 
+	c.ResponseList(ms, total)
 	c.ServeJSON()
 }
 
