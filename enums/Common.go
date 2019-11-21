@@ -100,9 +100,9 @@ func GetOrderAnnotationDateTime(timeString, filedName string) string {
 	case "今天":
 		sql = " WHERE TO_DAYS(" + filedName + ") = TO_DAYS(NOW()) "
 	case "昨天":
-		sql = " WHERE  TO_DAYS(NOW()) - TO_DAYS(" + filedName + ") <= 1 "
+		sql = " WHERE  DATEDIFF(" + filedName + ",NOW()) = -1 "
 	case "最近三天":
-		sql = " WHERE  TO_DAYS(NOW()) - TO_DAYS(" + filedName + ") <= 3 "
+		sql = " WHERE   DATEDIFF(" + filedName + ",NOW()) <= 0 AND DATEDIFF(" + filedName + ",NOW()) > -3 "
 	case "本周":
 		sql = " WHERE YEARWEEK(DATE_FORMAT(" + filedName + ",'%Y-%m-%d')) = YEARWEEK(NOW()) "
 	case "本月":

@@ -1254,9 +1254,9 @@ layui.define('view', function (exports) {
 									   height: 550
 								   });
 			},
+
 			//派单
 			distribute(clickEnum, id) {
-
 				/**派单**/
 				$(document).on("click", clickEnum, function () {
 					layer.open({
@@ -1271,14 +1271,13 @@ layui.define('view', function (exports) {
 				});
 
 				layui.form.on('submit(distribute_submit)', async (data) => {
-
 					let url = `/annotation/distribute/${id}`;
 					let result = await admin.post(url, data.field);
 					if (result.status === 1) {
 						setTimeout(() => {
-							window.location.reload();
 							if (clickEnum === "#order_dispatch") {
 								admin.reloadFrame('进口核注清单iframe');
+								parent.layui.admin.closeThisTabs()
 							}
 						}, 500);
 						layer.closeAll();
@@ -3220,31 +3219,31 @@ layui.define('view', function (exports) {
 				/**自动完成--手帐册**/
 				//手册数据
 				await layuicomplete.render({
-				   elem: $('#putrec_no')[0],
-				   url: '/handbook/datagrid',
-				   cache: false,
-				   response: {
-					   code: 'code',
-					   data: 'rows'
-				   },
-				   request: {
-					   keywords: 'ContractNumber'
-				   },
-				   params: {Limit: 5},
-				   method: 'post',
-				   template_val: '{{d.ContractNumber}}',
-				   template_txt: '{{d.ContractNumber}}' + "-" + '{{d.CompanyManageName}}',
-				   onselect: function (resp) {
-					   $("#hand_book_id").val(resp.Id);
-					   $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
-					   $("#bizop_etpsno").val(resp.CompanyManageCode);
-					   $("#bizop_etps_nm").val(resp.CompanyManageName);
+											   elem: $('#putrec_no')[0],
+											   url: '/handbook/datagrid',
+											   cache: false,
+											   response: {
+												   code: 'code',
+												   data: 'rows'
+											   },
+											   request: {
+												   keywords: 'ContractNumber'
+											   },
+											   params: {Limit: 5},
+											   method: 'post',
+											   template_val: '{{d.ContractNumber}}',
+											   template_txt: '{{d.ContractNumber}}' + "-" + '{{d.CompanyManageName}}',
+											   onselect: function (resp) {
+												   $("#hand_book_id").val(resp.Id);
+												   $("#bizop_etps_sccd").val(resp.CompanyManageCreditCode);
+												   $("#bizop_etpsno").val(resp.CompanyManageCode);
+												   $("#bizop_etps_nm").val(resp.CompanyManageName);
 
-					   $("#rvsngd_etps_sccd").val(resp.CompanyClientCreditCode);
-					   $("#rcvgd_etpsno").val(resp.CompanyClientCode);
-					   $("#rcvgd_etps_nm").val(resp.CompanyClientName);
-				   }
-			   });
+												   $("#rvsngd_etps_sccd").val(resp.CompanyClientCreditCode);
+												   $("#rcvgd_etpsno").val(resp.CompanyClientCode);
+												   $("#rcvgd_etps_nm").val(resp.CompanyClientName);
+											   }
+										   });
 			}
 			,
 
@@ -4349,7 +4348,7 @@ layui.define('view', function (exports) {
 										 limits: [10, 20, 30, 40, 50, 100, 200],
 										 theme: '#1E9FFF',
 										 layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
-										 jump: async function (obj, first) {
+										 jump: async function (obj, first,OrdrIndexRequestData) {
 											 if (!first) {
 												 admin.list_page = obj.curr;
 												 admin.list_limit = obj.limit;
@@ -4741,7 +4740,7 @@ layui.define('view', function (exports) {
 			}
 			,
 
-//切换页面标签主体
+			//切换页面标签主体
 			tabsBodyChange: function (index, options) {
 				options = options || {};
 
@@ -4756,7 +4755,7 @@ layui.define('view', function (exports) {
 			}
 			,
 
-//resize事件管理
+			//resize事件管理
 			resize: function (fn) {
 				var router = layui.router(),
 					key = router.path.join('-');
@@ -4785,21 +4784,21 @@ layui.define('view', function (exports) {
 			}
 			,
 
-//关闭当前 pageTabs
+		//关闭当前 pageTabs
 			closeThisTabs: function () {
 				if (!admin.tabsPage.index) return;
 				$(TABS_HEADER).eq(admin.tabsPage.index).find('.layui-tab-close').trigger('click');
 			}
 			,
 
-//获取当前iframe的标签
+			//获取当前iframe的标签
 			get_iframe_index() {
 				if (!admin.tabsPage.index) return;
 				return $(TABS_HEADER).eq(admin.tabsPage.index);
 			}
 			,
 
-//全屏
+			//全屏
 			fullScreen: function () {
 				var ele = document.documentElement,
 					reqFullScreen = ele.requestFullScreen || ele.webkitRequestFullScreen ||

@@ -96,17 +96,6 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		utils.LogDebug(fmt.Sprintf("ParseForm:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "获取数据出错", m)
 	}
-
-	iT, err := c.GetDateTime("InputTime", enums.BaseDateFormat)
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "格式时间出错", m)
-	}
-
-	iDT, err := c.GetDateTime("InvtDclTime", enums.BaseDateFormat)
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "格式时间出错", m)
-	}
-
 	company, err := models.CompanyByManageCode(m.BizopEtpsno)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取客户出错", nil)
@@ -116,9 +105,8 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
 	}
 
-	m.InputTime = *iT
-	m.InputTime = *iDT
 	m.Company = company
+	m.InputTime = time.Now()
 	m.InvtDclTime = time.Now()
 	m.EtpsInnerInvtNo = c.getEtpsInnerInvtNo(impexpMarkcd, m.DclPlcCuscd)
 
@@ -297,6 +285,9 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "ParseForm", m)
 	}
 
+	m.InputTime = time.Now()
+	m.InvtDclTime = time.Now()
+
 	c.validRequestData(m)
 
 	// valid := validation.Validation{}
@@ -328,7 +319,7 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 
 }
 
-// Update 添加 编辑 页面
+// bForRecheck 添加 编辑 页面
 func (c *BaseAnnotationController) bForRecheck(id int64) {
 
 	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
