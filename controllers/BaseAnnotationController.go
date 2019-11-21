@@ -170,17 +170,6 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 	}
 }
 
-//操作记录
-func (c *BaseAnnotationController) newAnnotationRecord(m *models.Annotation, content, status string) models.AnnotationRecord {
-
-	annotationRecord := models.NewAnnotationRecord(0)
-	annotationRecord.Content = content
-	annotationRecord.BackendUser = &c.curUser
-	annotationRecord.Status = status
-	annotationRecord.Annotation = m
-	return annotationRecord
-}
-
 // Edit 添加 编辑 页面
 func (c *BaseAnnotationController) bEdit(id int64) {
 	m, err := models.AnnotationOne(id, "")
@@ -219,16 +208,6 @@ func (c *BaseAnnotationController) getResponses(impexpMarkcd string) {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
 	c.GetXSRFToken()
-}
-
-//仅仅更新状态
-func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusString string) {
-	if err := c.updateAnnotationStatus(m, statusString); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
-	}
-	if err := models.AnnotationUpdateStatus(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
-	}
 }
 
 // Cancel 取消订单
@@ -692,4 +671,24 @@ func (c *BaseAnnotationController) TransformAnnotation(v *models.Annotation) map
 	annotationItem["InvtDclTime"] = enums.GetDateTimeString(&v.InvtDclTime, enums.BaseDateTimeFormat)
 
 	return annotationItem
+}
+
+//仅仅更新状态
+func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusString string) {
+	if err := c.updateAnnotationStatus(m, statusString); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+	}
+	if err := models.AnnotationUpdateStatus(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
+}
+
+//操作记录
+func (c *BaseAnnotationController) newAnnotationRecord(m *models.Annotation, content, status string) models.AnnotationRecord {
+	annotationRecord := models.NewAnnotationRecord(0)
+	annotationRecord.Content = content
+	annotationRecord.BackendUser = &c.curUser
+	annotationRecord.Status = status
+	annotationRecord.Annotation = m
+	return annotationRecord
 }

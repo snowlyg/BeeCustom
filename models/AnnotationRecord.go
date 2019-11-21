@@ -1,9 +1,7 @@
 package models
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"BeeCustom/utils"
@@ -29,18 +27,17 @@ type AnnotationRecord struct {
 	Content       string       `orm:"column(content)" description:"办理记录内容"`
 	Status        string       `orm:"column(status);size(255);null" description:"办理记录内容时状态"`
 	Remark        string       `orm:"column(remark);size(255);null" description:"备注"`
-	DeletedAt     time.Time    `orm:"column(deleted_at);type(timestamp);null"`
 	BackendUser   *BackendUser `orm:"column(user_id);rel(fk)"`
-	BackendUserId int64        `orm:"-" form:"BackendUserId"` //关联管理会自动生成字段，此处不生成字段
+	BackendUserId int64        `orm:"-" form:"BackendUserId"` // 关联管理会自动生成字段，此处不生成字段
 	Annotation    *Annotation  `orm:"column(annotation_id);rel(fk)"`
-	AnnotationId  int64        `orm:"-" form:"AnnotationId"` //关联管理会自动生成字段，此处不生成字段
+	AnnotationId  int64        `orm:"-" form:"AnnotationId"` // 关联管理会自动生成字段，此处不生成字段
 }
 
 func NewAnnotationRecord(id int64) AnnotationRecord {
 	return AnnotationRecord{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
-//查询参数
+// 查询参数
 func NewAnnotationRecordQueryParam() AnnotationRecordQueryParam {
 	return AnnotationRecordQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
@@ -62,62 +59,50 @@ func AnnotationRecordPageList(params *AnnotationRecordQueryParam) ([]*Annotation
 	return datas, total
 }
 
-func AnnotationRecordGetRelations(ms []*AnnotationRecord, relations string) ([]*AnnotationRecord, error) {
-	if len(relations) > 0 {
-		o := orm.NewOrm()
-		rs := strings.Split(relations, ",")
-		for _, v := range ms {
-			for _, rv := range rs {
-				_, err := o.LoadRelated(v, rv)
-				if err != nil {
-					utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
-					return nil, err
-				}
-			}
-		}
-	}
-	return ms, nil
-}
-
 // AnnotationRecordOne 根据id获取单条
-func AnnotationRecordOne(id int64) (*AnnotationRecord, error) {
+func AnnotationRecordOneByStatusAndAnnotationId(aid int64, status string) (*AnnotationRecord, error) {
 	m := NewAnnotationRecord(0)
 	o := orm.NewOrm()
-	if err := o.QueryTable(AnnotationRecordTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
+	if err := o.QueryTable(AnnotationRecordTBName()).
+		Filter("annotation_id", aid).
+		Filter("status", status).
+		RelatedSel().One(&m); err != nil {
 		return nil, err
-	}
-
-	if &m == nil {
-		return &m, errors.New("清单获取失败")
 	}
 
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
+// Save 添加、编辑页面 保存
 func AnnotationRecordSave(m *AnnotationRecord) error {
 	o := orm.NewOrm()
-	if m.Id == 0 {
+	if m.Annotation == nil || m.Annotation.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationRecordSave:%v", err))
 			return err
 		}
 	} else {
-		if _, err := o.Update(m); err != nil {
-			utils.LogDebug(fmt.Sprintf("AnnotationRecordSave:%v", err))
+		old, err := AnnotationRecordOneByStatusAndAnnotationId(m.Annotation.Id, m.Status)
+		if err != nil && err.Error() != "<QuerySeter> no row found" {
+			utils.LogDebug(fmt.Sprintf("AnnotationRecordOneByStatusAndAnnotationId:%v", err))
 			return err
+		}
+
+		if old.Id == 0 {
+			if _, err := o.Insert(m); err != nil {
+				utils.LogDebug(fmt.Sprintf("AnnotationRecordSave:%v", err))
+				return err
+			}
+		} else {
+			old.BackendUser = m.BackendUser
+			old.Content = m.Content
+			old.Remark = m.Remark
+			if _, err := o.Update(old); err != nil {
+				utils.LogDebug(fmt.Sprintf("AnnotationRecordUpdate:%v", err))
+				return err
+			}
 		}
 	}
 
 	return nil
-}
-
-//删除
-func AnnotationRecordDelete(id int64) (num int64, err error) {
-	m := NewAnnotationRecord(id)
-	if num, err := BaseDelete(&m); err != nil {
-		return num, err
-	} else {
-		return num, nil
-	}
 }
