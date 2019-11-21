@@ -60,47 +60,37 @@ func AnnotationRecordPageList(params *AnnotationRecordQueryParam) ([]*Annotation
 }
 
 // AnnotationRecordOne 根据id获取单条
-func AnnotationRecordOneByStatusAndAnnotationId(aid int64, status string) (*AnnotationRecord, error) {
-	m := NewAnnotationRecord(0)
+func AnnotationRecordOneByStatusAndAnnotationId(m *AnnotationRecord, status string) error {
+	m.Id = 0
 	o := orm.NewOrm()
 	if err := o.QueryTable(AnnotationRecordTBName()).
-		Filter("annotation_id", aid).
+		Filter("annotation_id", m.Annotation.Id).
 		Filter("status", status).
-		RelatedSel().One(&m); err != nil {
-		return nil, err
+		RelatedSel().One(m); err != nil {
+		return err
 	}
 
-	return &m, nil
+	return nil
 }
 
 // Save 添加、编辑页面 保存
 func AnnotationRecordSave(m *AnnotationRecord) error {
 	o := orm.NewOrm()
-	if m.Annotation == nil || m.Annotation.Id == 0 {
+	err := AnnotationRecordOneByStatusAndAnnotationId(m, m.Status)
+	if err != nil && err.Error() != "<QuerySeter> no row found" {
+		utils.LogDebug(fmt.Sprintf("AnnotationRecordOneByStatusAndAnnotationId:%v", err))
+		return err
+	}
+
+	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationRecordSave:%v", err))
 			return err
 		}
 	} else {
-		old, err := AnnotationRecordOneByStatusAndAnnotationId(m.Annotation.Id, m.Status)
-		if err != nil && err.Error() != "<QuerySeter> no row found" {
-			utils.LogDebug(fmt.Sprintf("AnnotationRecordOneByStatusAndAnnotationId:%v", err))
+		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("AnnotationRecordUpdate:%v", err))
 			return err
-		}
-
-		if old.Id == 0 {
-			if _, err := o.Insert(m); err != nil {
-				utils.LogDebug(fmt.Sprintf("AnnotationRecordSave:%v", err))
-				return err
-			}
-		} else {
-			old.BackendUser = m.BackendUser
-			old.Content = m.Content
-			old.Remark = m.Remark
-			if _, err := o.Update(old); err != nil {
-				utils.LogDebug(fmt.Sprintf("AnnotationRecordUpdate:%v", err))
-				return err
-			}
 		}
 	}
 
