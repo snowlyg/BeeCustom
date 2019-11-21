@@ -294,6 +294,19 @@ func AnnotationSave(m *Annotation, col string) error {
 	return nil
 }
 
+//AnnotationUpdateStatus 添加、编辑页面 保存
+func AnnotationUpdateStatus(m *Annotation) error {
+	var err error
+	o := orm.NewOrm()
+	_, err = o.Update(m, "Status", "StatusUpdatedAt")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
+		return err
+	}
+
+	return nil
+}
+
 //删除
 func AnnotationDelete(id int64) (num int64, err error) {
 	m := NewAnnotation(id)

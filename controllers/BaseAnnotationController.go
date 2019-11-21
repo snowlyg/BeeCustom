@@ -162,6 +162,10 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		}
 
 		err = o.Commit()
+		if err != nil {
+			err = o.Rollback()
+			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+		}
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
@@ -207,6 +211,7 @@ func (c *BaseAnnotationController) bMake(id int64) {
 	c.getResponses(m.ImpexpMarkcd)
 }
 
+//编辑相关页面返回
 func (c *BaseAnnotationController) getResponses(impexpMarkcd string) {
 	//页面里按钮权限控制
 	c.getActionData(impexpMarkcd, "Audit", "Distribute", "ForRecheck")
@@ -221,7 +226,7 @@ func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusStr
 	if err := c.updateAnnotationStatus(m, statusString); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
-	if err := models.AnnotationSave(m, "Status"); err != nil {
+	if err := models.AnnotationUpdateStatus(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 }
@@ -254,39 +259,24 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 
 // Audit 审核通过订单
 func (c *BaseAnnotationController) bAudit(id int64) {
-	o := orm.NewOrm()
-	err := o.Begin()
-
 	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
 		if err != nil {
-			err = o.Rollback()
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
 
 	if err := c.setAnnotaionUserRelType(m, nil, "审单人"); err != nil {
-		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
 
-	if err = c.updateAnnotationStatus(m, "审核通过"); err != nil {
-		err = o.Rollback()
-		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
-	}
-
-	if err := models.AnnotationSave(m, ""); err != nil {
-		err = o.Rollback()
-		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
-	}
+	c.setStatusOnly(m, "审核通过")
 
 	annotationRecord := c.newAnnotationRecord(m, "审核订单", "审核通过")
 	if err := models.AnnotationRecordSave(&annotationRecord); err != nil {
-		err = o.Rollback()
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
 
-	err = o.Commit()
 	c.jsonResult(enums.JRCodeSucc, "审核通过", m)
 
 }
@@ -335,6 +325,11 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 	}
 
 	err = o.Commit()
+	if err != nil {
+		err = o.Rollback()
+		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
+	}
+
 	c.jsonResult(enums.JRCodeSucc, "派单通过", m)
 
 }
@@ -520,8 +515,11 @@ func (c *BaseAnnotationController) updateAnnotationStatus(m *models.Annotation, 
 		return err
 	}
 
-	m.Status = aStatus
-	m.StatusUpdatedAt = time.Now()
+	//禁止状态回退
+	if m.Status < aStatus {
+		m.Status = aStatus
+		m.StatusUpdatedAt = time.Now()
+	}
 
 	return nil
 }
