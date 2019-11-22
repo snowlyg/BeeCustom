@@ -1,7 +1,6 @@
 package enums
 
 import (
-	"bufio"
 	"fmt"
 	"html/template"
 	"os"
@@ -46,10 +45,7 @@ func NewPDFGenerator(m interface{}) error {
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf(" Execute error:%v", err))
 	}
-	f := bufio.NewReader(os.Stdin) //读取输入的内容
-	var Input string
-	Input, _ = f.ReadString('\n')
-	utils.LogDebug(fmt.Sprintf(" Execute Input:%v", Input))
+
 	//_ = htmlTplEngine.ExecuteTemplate(
 	//	w,
 	//	"index/index",
