@@ -42,7 +42,7 @@ func NewPDFGenerator(m interface{}) error {
 		M interface{}
 	}{M: m}
 
-	err = tmpl.Execute(os.Stdout, data)
+	err = tmpl.Execute(os.Stdin, data)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf(" Execute error:%v", err))
 	}
