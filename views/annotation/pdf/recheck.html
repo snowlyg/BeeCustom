@@ -1,0 +1,537 @@
+@extends('layouts.app')
+
+@section('content')
+    <style>
+        thead {
+            display: table-row-group;
+        }
+        table {
+            word-wrap: break-word;
+        }
+        table td {
+            word-break: break-all;
+        }
+        tr {
+            page-break-before: always;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+        .text-center{
+            text-align: center;
+        }
+        .font-weight-bold{
+            font-weight: bold;
+        }
+        .annotation_table{
+            margin: 0 20pt;
+        }
+        .annotation_table_title{
+            text-align: center;
+            margin: 20px 0 5px 0;
+        }
+        ._h1{
+            font-size: 42px;
+            font-weight: bold;
+        }
+        ._span{
+            font-size: 20px;
+            text-align: center;
+            margin-top: 5pt;
+            font-weight: bold;
+        }
+        .height_20{
+            height: 20pt;
+        }
+        .time{
+            text-align: right;
+            font-size: 20px;
+        }
+        .time span{
+            font-weight: bold;
+        }
+        .td-scale-04 {
+            width: 12%;
+        }
+
+        .td-scale-05 {
+            width: 10%;
+        }
+        .annotation_table_content td, .annotation_table_content th{
+            border-color: #000000;
+            color: #000;
+            padding: 10px 5px;
+        }
+        .annotation_table_content th{
+            text-align: center;
+        }
+        .annotation_table_content thead tr{
+            background-color: transparent;
+        }
+        .table_flex{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+        }
+        .flex_left, .flex_right{
+            width: 50%;
+        }
+        .flex_left{
+            margin-right: 5px;
+        }
+        @font-face {
+            font-family: 'iconfont';
+            src: url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.eot');
+            src: url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.eot?#iefix') format('embedded-opentype'),
+            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.woff2') format('woff2'),
+            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.woff') format('woff'),
+            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.ttf') format('truetype'),
+            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.svg#iconfont') format('svg');
+        }
+
+        .is_success {
+            background-color: #f7fff7;
+            color: #16b615;
+            font-family: "iconfont" !important;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .is_success:after {
+            content: '\e69c';
+        }
+
+        .is_error {
+            background-color: #FF3940;
+            color: #FFFFFF;
+            font-family: "iconfont" !important;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .is_error:after {
+            content: '\eb1f';
+        }
+        .chapter_img{
+            position: absolute;
+            top: 5px;
+            right: 10px;
+        }
+    </style>
+    <input value="{{ $reject_logs }}" type="hidden" id="reject_logs">
+    <div class="annotation_table">
+        <div class="annotation_table_title">
+            <p class="_h1">保税清单（进口）</p>
+            <p class="_span">（仅供核对使用）</p>
+            <p class="time"><span>打印日期：</span>{{now()->format('Ymd')}}</p>
+        </div>
+        <table class="layui-table annotation_table_content">
+            <tbody>
+            <tr>
+                <td class="td-scale-05">预录入统一编号</td>
+                <td class="td-scale-04">
+                    <span id="seq_no">{{ $annotation->seq_no }}</span>
+                </td>
+                <td class="td-scale-05">清单编号</td>
+                <td class="td-scale-04">
+                    <span id="bond_invt_no">{{ $annotation->bond_invt_no }}</span>
+                </td>
+                <td class="td-scale-05">清单类型</td>
+                <td class="td-scale-04">
+                    <span  id="invt_type_name">{{ $annotation->invt_type_name }}</span>
+                </td>
+                <td class="td-scale-05">手(账)编号</td>
+                <td class="td-scale-04">
+                    <span id="putrec_no">{{ $annotation->putrec_no }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">经营企业编码</td>
+                <td class="td-scale-04">
+                    <span id="bizop_etpsno">{{ $annotation->bizop_etpsno }}</span>
+                </td>
+                <td class="td-scale-05">经营企业社会信用代码</td>
+                <td class="td-scale-04">
+                    <span id="bizop_etps_sccd">{{ $annotation->bizop_etps_sccd }}</span>
+                </td>
+                <td class="td-scale-05">经营企业名称</td>
+                <td class="td-scale-04">
+                    <span id="bizop_etps_nm">{{ $annotation->bizop_etps_nm }}</span>
+                </td>
+                <td class="td-scale-05">加工企业编码</td>
+                <td class="td-scale-04">
+                    <span id="rcvgd_etpsno">{{ $annotation->rcvgd_etpsno }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">加工企业社会信用代码</td>
+                <td class="td-scale-04">
+                    <span id="rvsngd_etps_sccd">{{ $annotation->rvsngd_etps_sccd }}</span>
+                </td>
+                <td class="td-scale-05">加工企业名称</td>
+                <td class="td-scale-04">
+                    <span id="rcvgd_etps_nm">{{ $annotation->rcvgd_etps_nm }}</span>
+                </td>
+                <td class="td-scale-05">申报单位代码</td>
+                <td class="td-scale-04">
+                    <span id="dcl_etpsno">{{ $annotation->dcl_etpsno }}</span>
+                </td>
+                <td class="td-scale-05">申报单位社会信用代码</td>
+                <td class="td-scale-04">
+                    <span id="dcl_etps_sccd">{{ $annotation->dcl_etps_sccd }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">申报单位名称</td>
+                <td class="td-scale-04">
+                    <span id="dcl_etps_nm">{{ $annotation->dcl_etps_nm }}</span>
+                </td>
+                <td class="td-scale-05">录入单位代码</td>
+                <td class="td-scale-04">
+                    <span id="input_code">{{ $annotation->input_code }}</span>
+                </td>
+                <td class="td-scale-05">录入单位社会信用代码</td>
+                <td class="td-scale-04">
+                    <span id="input_credit_code">{{ $annotation->input_credit_code }}</span>
+                </td>
+                <td class="td-scale-05">录入单位名称</td>
+                <td class="td-scale-04">
+                    <span id="input_name">{{ $annotation->input_name }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">录入日期</td>
+                <td class="td-scale-04">
+                    <span id="input_time">{{ $annotation->input_time }}</span>
+                </td>
+                <td class="td-scale-05">清单申报日期</td>
+                <td class="td-scale-04">
+                    <span id="invt_dcl_time">{{ $annotation->invt_dcl_time }}</span>
+                </td>
+                <td class="td-scale-05">清单进出卡口状态</td>
+                <td class="td-scale-04">
+                    <span id="invt_iochkpt_stucd">{{ $annotation->invt_iochkpt_stucd }}</span>
+                </td>
+                <td class="td-scale-05">核扣标志</td>
+                <td class="td-scale-04">
+                    <span id="vrfded_markcd">{{ $annotation->vrfded_markcd }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">企业内部编号</td>
+                <td class="td-scale-04">
+                    <span id="etps_inner_invt_no">{{ $annotation->etps_inner_invt_no }}</span>
+                </td>
+                <td class="td-scale-05">进（出）境关别</td>
+                <td class="td-scale-04">
+                    <span id="impexp_portcd_name">{{ $annotation->impexp_portcd_name }}</span>
+                </td>
+                <td class="td-scale-05">主管海关</td>
+                <td class="td-scale-04">
+                    <span id="dcl_plc_cuscd_name">{{ $annotation->dcl_plc_cuscd_name }}</span>
+                </td>
+                <td class="td-scale-05">启运国(地区)</td>
+                <td class="td-scale-04">
+                    <span id="stship_trsarv_natcd_name">{{ $annotation->stship_trsarv_natcd_name }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">料件、成品标志</td>
+                <td class="td-scale-04">
+                    <span id="mtpck_endprd_markcd_name">{{ $annotation->mtpck_endprd_markcd_name }}</span>
+                </td>
+                <td class="td-scale-05">监管方式</td>
+                <td class="td-scale-04">
+                    <span id="supv_modecd_name">{{ $annotation->supv_modecd_name }}</span>
+                </td>
+                <td class="td-scale-05">运输方式</td>
+                <td class="td-scale-04">
+                    <span id="trsp_modecd_name">{{ $annotation->trsp_modecd_name }}</span>
+                </td>
+                <td class="td-scale-05">申报表编号</td>
+                <td class="td-scale-04">
+                    <span id="apply_no">{{ $annotation->apply_no }}</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="td-scale-05">流转类型</td>
+                <td class="td-scale-04">
+                    <span id="list_type_name">{{ $annotation->list_type_name }}</span>
+                </td>
+                <td class="td-scale-05">报关标志</td>
+                <td class="td-scale-04">
+                    <span id="apply_no">{{ $annotation->dclcus_flag_name }}</span>
+                </td>
+                <td class="td-scale-05">报关类型</td>
+                <td class="td-scale-04">
+                    <span id="dclcus_typecd_name">{{ $annotation->dclcus_typecd_name }}</span>
+                </td>
+                <td class="td-scale-05">报关单类型</td>
+                <td class="td-scale-04">
+                    <span id="dec_type_name">{{ $annotation->dec_type_name }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">关联清单编号</td>
+                <td class="td-scale-04">
+                    <span id="rlt_invt_no">{{ $annotation->rlt_invt_no }}</span>
+                </td>
+                <td class="td-scale-05">关联手(账)册备案号</td>
+                <td class="td-scale-04">
+                    <span id="rlt_putrec_no">{{ $annotation->rlt_putrec_no }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单编号</td>
+                <td class="td-scale-04">
+                    <span id="rlt_entry_no">{{ $annotation->rlt_entry_no }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单申报日期</td>
+                <td class="td-scale-04">
+                    <span id="entry_dcl_time">{{ $annotation->entry_dcl_time }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05" colspan="2">关联报关单收发货人代码</td>
+                <td class="td-scale-04">
+                    <span id="rlt_entry_bizop_etpsno">{{ $annotation->rlt_entry_bizop_etpsno }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单社会信用代码</td>
+                <td class="td-scale-04">
+                    <span id="rlt_entry_bizop_etps_sccd">{{ $annotation->rlt_entry_bizop_etps_sccd }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单收发货人名称</td>
+                <td class="td-scale-04" colspan="2">
+                    <span id="rlt_entry_bizop_etps_nm">{{ $annotation->rlt_entry_bizop_etps_nm }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05" colspan="2">关联报关单生产销售(消费使用)单位代码</td>
+                <td class="td-scale-04">
+                    <span id="rlt_entry_rcvgd_etpsno">{{ $annotation->rlt_entry_rcvgd_etpsno }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单社会信用代码</td>
+                <td class="td-scale-04">
+                    <span id="rlt_entry_rvsngd_etps_sccd">{{ $annotation->rlt_entry_rvsngd_etps_sccd }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单单位名称</td>
+                <td class="td-scale-04" colspan="2">
+                    <span id="rlt_entry_rcvgd_etps_nm">{{ $annotation->rlt_entry_rcvgd_etps_nm }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05" colspan="2">关联报关单申报单位代码</td>
+                <td class="td-scale-04">
+                    <span id="rlt_entry_dcl_etpsno">{{ $annotation->rlt_entry_dcl_etpsno }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单社会信用代码</td>
+                <td class="td-scale-04">
+                    <span id="rlt_entry_dcl_etps_sccd">{{ $annotation->rlt_entry_dcl_etps_sccd }}</span>
+                </td>
+                <td class="td-scale-05">关联报关单申报单位名称</td>
+                <td class="td-scale-04" colspan="2">
+                    <span id="rlt_entry_dcl_etps_nm">{{ $annotation->rlt_entry_dcl_etps_nm }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-scale-05">备注</td>
+                <td class="td-scale-04" colspan="7" style="position: relative;">
+                    <span id="rmk">{{ $annotation->rmkv  }}</span>
+                    <div class="chapter_img">
+                        <img width="100" src="{{'http::'.auth_user()->chapter}}"/>
+                        <p style="color: #ff0000;text-align: center;font-weight: bold;">{{ now()->toDateString() }}</p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="layui-table annotation_table_content">
+            <thead>
+            <tr>
+                <th colspan="20">
+                    <p class="text-center font-weight-bold">表体</p>
+                </th>
+            </tr>
+            <tr>
+                <th width="40"><p class="font-weight-bold">商品序号</p></th>
+                <th width="80"><p class="font-weight-bold">报关单商品序号</p></th>
+                <th width="40"><p class="font-weight-bold">备案序号</p></th>
+                <th width="40"><p class="font-weight-bold">商品料号</p></th>
+                <th><p class="font-weight-bold">商品编码</p></th>
+                <th><p class="font-weight-bold">商品名称</p></th>
+                <th><p class="font-weight-bold">规格型号</p></th>
+                <th><p class="font-weight-bold">原厂国(地区)</p></th>
+                <th><p class="font-weight-bold">最终目的国(地区)</p></th>
+                <th><p class="font-weight-bold">币制</p></th>
+                <th><p class="font-weight-bold">申报单价</p></th>
+                <th><p class="font-weight-bold">申报数量</p></th>
+                <th><p class="font-weight-bold">申报计量单位</p></th>
+                <th><p class="font-weight-bold">申报总价</p></th>
+                <th><p class="font-weight-bold">法定数量</p></th>
+                <th><p class="font-weight-bold">法定计量单位</p></th>
+                <th><p class="font-weight-bold">第二法定数量</p></th>
+                <th><p class="font-weight-bold">法定第二计量单位</p></th>
+                <th><p class="font-weight-bold">征免方式</p></th>
+                <th><p class="font-weight-bold">单耗版本号</p></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @for ($i = 0; $i < $items->count(); $i++)
+                <tr>
+                    <td><span id="gds_seqno{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['gds_seqno'] }}</span></td>
+                    <td><span id="entry_gds_seqno{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['entry_gds_seqno'] }}</span></td>
+                    <td><span id="putrec_seqno{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['putrec_seqno'] }}</span></td>
+                    <td><span id="gds_mtno{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['gds_mtno'] }}</span></td>
+                    <td><span id="gdecd{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['gdecd'] }}</span></td>
+                    <td><span id="gds_nm{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['gds_nm'] }}</span></td>
+                    <td><span id="gds_spcf_model_desc{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['gds_spcf_model_desc'] }}</span></td>
+                    <td><span id="natcd_name{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['natcd_name'] }}</span></td>
+                    <td><span id="destination_natcd_name{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['destination_natcd_name'] }}</span></td>
+                    <td><span id="dcl_currcd_name{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['dcl_currcd_name'] }}</span></td>
+                    <td><span id="dcl_uprc_amt{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['dcl_uprc_amt_string'] }}</span></td>
+                    <td><span id="dcl_qty{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['dcl_qty_string'] }}</span></td>
+                    <td><span id="dcl_unitcd_name{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['dcl_unitcd_name'] }}</span></td>
+                    <td><span id="dcl_total_amt{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['dcl_total_amt_string'] }}</span></td>
+                    <td><span id="lawf_qty{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['lawf_qty_string'] }}</span></td>
+                    <td><span id="lawf_unitcd_name{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['lawf_unitcd_name'] }}</span></td>
+                    <td><span id="secd_lawf_qty{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['secd_lawf_qty_string'] }}</span></td>
+                    <td><span id="secd_lawf_unitcd_name{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['secd_lawf_unitcd_name'] }}</span></td>
+                    <td><span id="lvyrlf_modecd_name{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['lvyrlf_modecd_name'] }}</span></td>
+                    <td><span id="ucns_verno{{ $items[$i]['gds_seqno'] }}">{{ $items[$i]['ucns_verno'] }}</span></td>
+                </tr>
+            @endfor
+            </tbody>
+        </table>
+        <table class="layui-table annotation_table_content">
+            <thead>
+            <tr>
+                <th colspan="20">
+                    <p class="text-center font-weight-bold">报关单草稿</p>
+                </th>
+            </tr>
+            <tr>
+                <th><p class="font-weight-bold">统一编号</p></th>
+                <th><p class="font-weight-bold">商品序号</p></th>
+                <th><p class="font-weight-bold">商品编码</p></th>
+                <th><p class="font-weight-bold">商品名称</p></th>
+                <th><p class="font-weight-bold">规格型号</p></th>
+                <th><p class="font-weight-bold">申报单价</p></th>
+                <th><p class="font-weight-bold">申报数量</p></th>
+                <th><p class="font-weight-bold">申报计量单位</p></th>
+                <th><p class="font-weight-bold">申报总价</p></th>
+                <th><p class="font-weight-bold">申报币制</p></th>
+                <th><p class="font-weight-bold">原产国(地区)</p></th>
+                <th><p class="font-weight-bold">最终目的国(地区)</p></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <table class="layui-table annotation_table_content">
+            <thead>
+            <tr>
+                <th colspan="20">
+                    <p class="text-center font-weight-bold">简单加工清单料件表体/一纳成品内销成品表体</p>
+                </th>
+            </tr>
+            <tr>
+                <th width="40"><p class="font-weight-bold">序号</p></th>
+                <th width="80"><p class="font-weight-bold">商品序号</p></th>
+                <th width="40"><p class="font-weight-bold">备案序号</p></th>
+                <th width="40"><p class="font-weight-bold">商品料号</p></th>
+                <th><p class="font-weight-bold">商品编码</p></th>
+                <th><p class="font-weight-bold">商品名称</p></th>
+                <th><p class="font-weight-bold">规格型号</p></th>
+                <th><p class="font-weight-bold">原厂国(地区)</p></th>
+                <th><p class="font-weight-bold">最终目的国(地区)</p></th>
+                <th><p class="font-weight-bold">币制</p></th>
+                <th><p class="font-weight-bold">申报单价</p></th>
+                <th><p class="font-weight-bold">申报数量</p></th>
+                <th><p class="font-weight-bold">申报计量单位</p></th>
+                <th><p class="font-weight-bold">申报总价</p></th>
+                <th><p class="font-weight-bold">法定数量</p></th>
+                <th><p class="font-weight-bold">法定计量单位</p></th>
+                <th><p class="font-weight-bold">第二法定数量</p></th>
+                <th><p class="font-weight-bold">法定第二计量单位</p></th>
+                <th><p class="font-weight-bold">征免方式</p></th>
+                <th><p class="font-weight-bold">单耗版本号</p></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="table_flex">
+            <div class="flex_left">
+                <table class="layui-table annotation_table_content">
+                    <thead>
+                    <tr>
+                        <th colspan="20">
+                            <p class="text-center font-weight-bold">集报清单---出入库单信息</p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th width="140"><p class="font-weight-bold">序号</p></th>
+                        <th><p class="font-weight-bold">出入库单编号</p></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex_right">
+                <table class="layui-table annotation_table_content">
+                    <thead>
+                    <tr>
+                        <th colspan="20">
+                            <p class="text-center font-weight-bold">集报清单---出入库单信息</p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th width="140"><p class="font-weight-bold">序号</p></th>
+                        <th><p class="font-weight-bold">出入库单编号</p></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+@stop
+@section('script')
+    <script>
+        var status_string = '{{$status_string}}';
+        var reject_logs = JSON.parse(document.querySelector('#reject_logs').value);
+        if (status_string == '复核通过' || status_string == '待暂存') {
+            var ids = document.querySelectorAll('span[id]');
+            for (var i = 0; i < ids.length; i++) {
+                var text = ids[i].innerText;
+                if (text) {
+                    ids[i].classList.add("is_success");
+                }
+            }
+        }
+        if (status_string == '复核不通过') {
+            if (reject_logs.length > 0) {
+                if (reject_logs[reject_logs.length-1].recheck_error_input_ids) {
+                    if (reject_logs[reject_logs.length-1].recheck_error_input_ids.length > 0) {
+                        for (var i = 0; i < reject_logs[reject_logs.length-1].recheck_error_input_ids.length; i++) {
+                            if(reject_logs[reject_logs.length-1].recheck_error_input_ids[i].index) {
+                                for (var j = 0; j < reject_logs[reject_logs.length-1].recheck_error_input_ids[i].id.length; j++) {
+                                    document.querySelector('#'+reject_logs[reject_logs.length-1].recheck_error_input_ids[i].id[j]+reject_logs[reject_logs.length-1].recheck_error_input_ids[i].index).classList.add("is_error");
+                                }
+                            } else {
+                                document.querySelector('#'+reject_logs[reject_logs.length-1].recheck_error_input_ids[i].id).classList.add("is_error");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+@stop

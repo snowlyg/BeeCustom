@@ -390,7 +390,9 @@ func (c *BaseAnnotationController) bRecheckPassReject(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 
-	enums.NewPDFGenerator()
+	if err := enums.NewPDFGenerator(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+	}
 
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 
@@ -411,6 +413,7 @@ func (c *BaseAnnotationController) bRecheck(id int64) {
 	c.setTpl("annotation/recheck.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/recheck_footerjs.html"
+
 	c.GetXSRFToken()
 }
 
