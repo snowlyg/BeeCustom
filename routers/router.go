@@ -158,6 +158,7 @@ func init() {
 	beego.Router("/home/dologin", &controllers.HomeController{}, "Post:DoLogin")
 	beego.Router("/home/logout", &controllers.HomeController{}, "*:Logout")
 	beego.Router("/home/datareset", &controllers.HomeController{}, "Get:DataReset")
+	beego.Router("/home/pdf/?:id", &controllers.HomeController{}, "Get:Pdf")
 
 	beego.Router("/home/404", &controllers.HomeController{}, "*:Page404")
 	beego.Router("/home/error/?:error", &controllers.HomeController{}, "*:Error")

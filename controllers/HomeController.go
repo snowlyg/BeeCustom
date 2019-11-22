@@ -37,6 +37,12 @@ func (c *HomeController) Error() {
 	c.setTpl("home/error.html", "shared/layout_app.html")
 }
 
+func (c *HomeController) Pdf() {
+	id, _ := c.GetInt64(":id")
+	c.Data["M"], _ = models.AnnotationOne(id, "AnnotationItems")
+	c.setTpl("annotation/pdf/index.html", "shared/layout_app.html")
+}
+
 func (c *HomeController) Login() {
 	c.LayoutSections = make(map[string]string)
 	c.setTpl("auth/login.html", "auth/layout_base.html")

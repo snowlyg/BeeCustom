@@ -2,10 +2,9 @@ package enums
 
 import (
 	"fmt"
-	"html/template"
-	"os"
-	"strings"
+	"strconv"
 
+	"BeeCustom/file"
 	"BeeCustom/utils"
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/astaxie/beego"
@@ -16,7 +15,7 @@ import (
 //	htmlTplEngineErr error
 //)
 
-func NewPDFGenerator(m interface{}) error {
+func NewPDFGenerator(Id int64) error {
 
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
@@ -33,24 +32,18 @@ func NewPDFGenerator(m interface{}) error {
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
 	// Create a new input page from an URL
-	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/backenduser/index")
+	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/home/pdf/" + strconv.FormatInt(Id, 10))
 
-	tmpl := template.Must(template.ParseFiles("./views/annotation/pdf/index.html"))
-	// Error checking elided
-	data := struct {
-		M interface{}
-	}{M: m}
-
-	err = tmpl.Execute(os.Stdin, data)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf(" Execute error:%v", err))
-	}
-
-	//_ = htmlTplEngine.ExecuteTemplate(
-	//	w,
-	//	"index/index",
-	//	map[string]interface{}{"PageTitle": "首页", "Name": "sqrt_cat", "Age": 25},
-	//)
+	// tmpl := template.Must(template.ParseFiles("./views/annotation/pdf/index.html"))
+	// // Error checking elided
+	// data := struct {
+	// 	M interface{}
+	// }{M: m}
+	//
+	// err = tmpl.Execute(os.Stdin, data)
+	// if err != nil {
+	// 	utils.LogDebug(fmt.Sprintf(" Execute error:%v", err))
+	// }
 
 	// Set options for this page
 	page.FooterRight.Set("[page]")
@@ -58,10 +51,10 @@ func NewPDFGenerator(m interface{}) error {
 	page.Zoom.Set(0.95)
 
 	//// Add to document
-	//pdfg.AddPage(page)
+	pdfg.AddPage(page)
 
-	html := "<html>Hi</html>"
-	pdfg.AddPage(wkhtmltopdf.NewPageReader(strings.NewReader(html)))
+	// html := "<html>Hi</html>"
+	// pdfg.AddPage(wkhtmltopdf.NewPageReader(strings.NewReader(html)))
 
 	// Create PDF document in internal buffer
 	err = pdfg.Create()
@@ -69,19 +62,19 @@ func NewPDFGenerator(m interface{}) error {
 		utils.LogDebug(fmt.Sprintf(" pdfg.Create error:%v", err))
 		return err
 	}
-	//
-	//path := "./static/generate/annotation/" + strconv.FormatInt(m.Id, 10)
-	//if err := file.CreateFile(path); err != nil {
-	//	utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
-	//	return err
-	//}
 
-	//// Write buffer contents to file on disk
-	//err = pdfg.WriteFile(path + "/simplesample.pdf")
-	//if err != nil {
-	//	utils.LogDebug(fmt.Sprintf("  pdfg.WriteFile error:%v", err))
-	//	return err
-	//}
+	path := "./static/generate/annotation/" + strconv.FormatInt(Id, 10)
+	if err := file.CreateFile(path); err != nil {
+		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+		return err
+	}
+
+	// Write buffer contents to file on disk
+	err = pdfg.WriteFile(path + "/simplesample.pdf")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("  pdfg.WriteFile error:%v", err))
+		return err
+	}
 
 	fmt.Println("Done")
 	return nil

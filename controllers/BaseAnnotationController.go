@@ -390,7 +390,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 
-	if err := enums.NewPDFGenerator(m); err != nil {
+	if err := enums.NewPDFGenerator(m.Id); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 
