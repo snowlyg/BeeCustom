@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -39,8 +40,11 @@ func (c *HomeController) Error() {
 
 func (c *HomeController) Pdf() {
 	id, _ := c.GetInt64(":id")
-	c.Data["M"], _ = models.AnnotationOne(id, "AnnotationItems")
-	c.setTpl("annotation/pdf/index.html", "shared/layout_app.html")
+	c.Data["M"] = models.TransformAnnotation(id, "AnnotationItems")
+	c.Data["Now"] = time.Now()
+	c.setTpl("annotation/pdf/recheck.html", "shared/layout_app.html")
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "annotation/pdf/recheck_footerjs.html"
 }
 
 func (c *HomeController) Login() {

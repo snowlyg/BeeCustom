@@ -10,12 +10,7 @@ import (
 	"github.com/astaxie/beego"
 )
 
-//var (
-//	htmlTplEngine  *template.Template
-//	htmlTplEngineErr error
-//)
-
-func NewPDFGenerator(Id int64) error {
+func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
@@ -34,27 +29,13 @@ func NewPDFGenerator(Id int64) error {
 	// Create a new input page from an URL
 	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/home/pdf/" + strconv.FormatInt(Id, 10))
 
-	// tmpl := template.Must(template.ParseFiles("./views/annotation/pdf/index.html"))
-	// // Error checking elided
-	// data := struct {
-	// 	M interface{}
-	// }{M: m}
-	//
-	// err = tmpl.Execute(os.Stdin, data)
-	// if err != nil {
-	// 	utils.LogDebug(fmt.Sprintf(" Execute error:%v", err))
-	// }
-
 	// Set options for this page
 	page.FooterRight.Set("[page]")
 	page.FooterFontSize.Set(10)
 	page.Zoom.Set(0.95)
 
-	//// Add to document
+	// // Add to document
 	pdfg.AddPage(page)
-
-	// html := "<html>Hi</html>"
-	// pdfg.AddPage(wkhtmltopdf.NewPageReader(strings.NewReader(html)))
 
 	// Create PDF document in internal buffer
 	err = pdfg.Create()
@@ -70,7 +51,7 @@ func NewPDFGenerator(Id int64) error {
 	}
 
 	// Write buffer contents to file on disk
-	err = pdfg.WriteFile(path + "/simplesample.pdf")
+	err = pdfg.WriteFile(path + "/" + etpsInnerInvtNo + ".pdf")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("  pdfg.WriteFile error:%v", err))
 		return err

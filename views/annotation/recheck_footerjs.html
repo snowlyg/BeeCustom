@@ -1,190 +1,190 @@
 <script>
-    layui.config({
-        base: '/static/customAdmin/'
-    }).extend({
-        index: 'lib/index'
-    }).use(['index', 'form', 'admin', 'table', 'AutoComplete', 'laydate', 'laytpl', 'upload'], async () => {
-        const {form, admin, $, laytpl,} = layui;
-        let /**附注数据**/ order_note_data/**获取附件类型**/;
-        /**根据屏幕等比例缩小**/
-        admin.sideFlexible_window();
-        /**回车键光标跳转**/
-        admin.keydown_input_textarea();
-        /**附注**/
-        let order_note_index;
-        $("body").on("click", "#order_note", async function () {
-            if (!@{{.m.Id}}) {
-                return layer.msg("请先保存订单！")
-            }
-            order_note_index = layer.open({
-                type: 1,
-                title: '附注',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
-                content: $('#remark_note_template').html()
-            });
-            form.render();
-            if (order_note_data) {
-                $("#remark_note").val(order_note_data)
-            }
-            $("#order_note_dot").hide();
-        });
+  layui.config({
+    base: '/static/customAdmin/',
+  }).extend({
+    index: 'lib/index',
+  }).use(['index', 'form', 'admin', 'table', 'AutoComplete', 'laydate', 'laytpl', 'upload'], async () => {
+    const {form, admin, $} = layui;
+    let /**附注数据**/ order_note_data/**获取附件类型**/;
+    /**根据屏幕等比例缩小**/
+    admin.sideFlexible_window();
+    /**回车键光标跳转**/
+    admin.keydown_input_textarea();
+    /**附注**/
+    let order_note_index;
+    $('body').on('click', '#order_note', async function() {
+      if (!@{{.m.Id}}) {
+        return layer.msg('请先保存订单！');
+      }
+      order_note_index = layer.open({
+        type: 1,
+        title: '附注',
+        shadeClose: true,
+        area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
+        content: $('#remark_note_template').html(),
+      });
+      form.render();
+      if (order_note_data) {
+        $('#remark_note').val(order_note_data);
+      }
+      $('#order_note_dot').hide();
+    });
 
-        $("body").on("input", "#remark_note", function () {
-            $("#remark_note_number span").text($(this).val().length);
-        });
+    $('body').on('input', '#remark_note', function() {
+      $('#remark_note_number span').text($(this).val().length);
+    });
 
-        /**附注保存**/
-        form.on('submit(remark_note_submit)', async (data) => {
-            order_note_data = data.field.ExtraRemark;
-            await admin.post(`/annotation/i/${@{{.m.Id}}}/extra_remark`, data.field);
-            layer.close(order_note_index);
-        });
+    /**附注保存**/
+    form.on('submit(remark_note_submit)', async (data) => {
+      order_note_data = data.field.ExtraRemark;
+      await admin.post(`/annotation/i/${@{{.m.Id}}}/extra_remark`, data.field);
+      layer.close(order_note_index);
+    });
 
-
-        /**通过**/
-        $("body").on("click", "#order_review_pass", async (data) => {
-            if (recheck_data.length > 0) {
-                return layer.msg('有错误内容，无法通过！')
-            }
-            layer.load(2);
-            const result = await admin.post(`/annotation/recheck_pass/${@{{.m.Id}}}`, data.field, true);
-            if (result.status === 1) {
-                layer.closeAll('loading');
-                setTimeout(() => {
-                    window.location.reload();
-                    layui.admin.reloadFrame("@{{.ImpexpMarkcdName}}" + "进口核注清单iframe")
-                }, 1000);
-            }
-
-        });
-
-        /**打印**/
-        $("body").on("click", "#order_print", async function () {
-            if (!@{{.m.Id}}) {
-                return layer.msg("请先保存订单！")
-            }
-            window.open(` / annotation / i /${@{{.m.Id}}}/downloads/prints?margin_top=1cm&margin_left=0cm&margin_right=0cm&margin_bottom=1cm`);
-        });
-
-        /**驳回**/
-        $("body").on("click", "#order_reject", function () {
-
-            if (recheck_data.length === 0) {
-                return layer.msg('请先选择错误内容！')
-            }
-            layer.open({
-                type: 1,
-                title: '填写驳回原因',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
-                content: $('#order_reject_template').html()
-            });
-            form.render();
-        });
-
-        $("body").on("input", "#order_reject_remark", function () {
-            $("#remark_reject_number span").text($(this).val().length);
-        });
-
-        /**驳回保存**/
-        form.on('submit(order_reject_submit)', async (data) => {
-            layer.load(2);
-            try {
-                data.field.recheck_error_input_ids = recheck_data;
-                const res = await admin.post(`/annotation/rechcek_rejdect/${@{{.m.Id}}}`, data.field,true);
-                layer.closeAll('loading');
-                if (res.status) {
-                    setTimeout(() => {
-                        layer.closeAll();
-                        window.location.reload();
-                    }, 1000);
-                }
-            } catch (e) {
-                layer.closeAll('loading');
-                return layer.msg('接口错误！', {
-                    offset: '15px'
-                    , icon: 2
-                    , time: 2000
-                    , id: 'Message'
-                });
-            }
-        });
-
-        /**点击报关单显示错误**/
-        let p_timer
-            , recheck_data = [];
-        $("body").on("click", "p, span", function () {
-            const id = $(this).data('id');
-            const index = $(this).data('index');
-            if (id) {
-                clearTimeout(p_timer);
-                p_timer = setTimeout(() => {
-                    if ($(this).hasClass('is_warn')) {
-                        $(this).removeClass('is_warn');
-                    } else {
-                        if ($(this).hasClass('is_error')) {
-                            $(this).removeClass('is_error');
-                            if (index) {
-                                const i = recheck_data.findIndex((item) => item.index === index);
-                                const x = recheck_data[i].id.findIndex((item) => item === id);
-                                recheck_data[i].id.splice(x, 1);
-                                if (recheck_data[i].id.length === 0) {
-                                    recheck_data.splice(i, 1);
-                                }
-                            } else {
-                                const i = recheck_data.findIndex((item) => item.id === id);
-                                recheck_data.splice(i, 1);
-                            }
-                        } else {
-                            $(this).addClass('is_error');
-                            if (index) {
-                                if (recheck_data.some((item) => item.index === index)) {
-                                    const i = recheck_data.findIndex((item) => item.index === index);
-                                    recheck_data[i].id.push(id);
-                                } else {
-                                    recheck_data.push({
-                                        index: index,
-                                        id: [id]
-                                    });
-                                }
-                            } else {
-                                recheck_data.push({
-                                    id: id
-                                });
-                            }
-                        }
-                    }
-                }, 150);
-            }
-        });
-
-        /**双击报关单显示警告**/
-        $("body").on("dblclick", "p, span", function (event) {
-            const id = $(this).data('id');
-            const index = $(this).data('index');
-            if (id) {
-                event.stopPropagation();
-                clearTimeout(p_timer);
-                if ($(this).hasClass('is_error')) {
-                    $(this).removeClass('is_error');
-                    $(this).addClass('is_warn');
-                    if (index) {
-                        const i = recheck_data.findIndex((item) => item.index === index);
-                        const x = recheck_data[i].id.findIndex((item) => item === id);
-                        recheck_data[i].id.splice(x, 1);
-                        if (recheck_data[i].id.length === 0) {
-                            recheck_data.splice(i, 1);
-                        }
-                    } else {
-                        const i = recheck_data.findIndex((item) => item.id === id);
-                        recheck_data.splice(i, 1);
-                    }
-                } else {
-                    $(this).addClass('is_warn');
-                }
-            }
-        });
+    /**通过**/
+    $('body').on('click', '#order_review_pass', async (data) => {
+      if (recheck_data.length > 0) {
+        return layer.msg('有错误内容，无法通过！');
+      }
+      layer.load(2);
+      const result = await admin.post(`/annotation/recheck_pass/${@{{.m.Id}}}`, data.field, true);
+      if (result.status === 1) {
+        layer.closeAll('loading');
+        setTimeout(() => {
+          window.location.reload();
+          layui.admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '进口核注清单iframe');
+        }, 1000);
+      }
 
     });
+
+    /**打印**/
+    $('body').on('click', '#order_print', async function() {
+      if (!@{{.m.Id}}) {
+        return layer.msg('请先保存订单！');
+      }
+      window.open(
+          ` / annotation / i /${@{{.m.Id}}}/downloads/prints?margin_top=1cm&margin_left=0cm&margin_right=0cm&margin_bottom=1cm`);
+    });
+
+    /**驳回**/
+    $('body').on('click', '#order_reject', function() {
+      if (recheck_data.length === 0) {
+        return layer.msg('请先选择错误内容！');
+      }
+      layer.open({
+        type: 1,
+        title: '填写驳回原因',
+        shadeClose: true,
+        area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
+        content: $('#order_reject_template').html(),
+      });
+      form.render();
+    });
+
+    $('body').on('input', '#order_reject_remark', function() {
+      $('#remark_reject_number span').text($(this).val().length);
+    });
+
+    /**驳回保存**/
+    form.on('submit(order_reject_submit)', async (data) => {
+      layer.load(2);
+      try {
+        data.field.RecheckErrorInputIds = recheck_data;
+        console.log(data.field);
+        const res = await admin.post(`/annotation/recheck_reject/${@{{.m.Id}}}`, data.field, true);
+        layer.closeAll('loading');
+        if (res.status) {
+          setTimeout(() => {
+            layer.closeAll();
+            window.location.reload();
+          }, 1000);
+        }
+      } catch (e) {
+        layer.closeAll('loading');
+        return layer.msg('接口错误！', {
+          offset: '15px'
+          , icon: 2
+          , time: 2000
+          , id: 'Message',
+        });
+      }
+    });
+
+    /**点击报关单显示错误**/
+    let p_timer
+        , recheck_data = [];
+    $('body').on('click', 'p, span', function() {
+      const id = $(this).data('id');
+      const index = $(this).data('index');
+      if (id) {
+        clearTimeout(p_timer);
+        p_timer = setTimeout(() => {
+          if ($(this).hasClass('is_warn')) {
+            $(this).removeClass('is_warn');
+          } else {
+            if ($(this).hasClass('is_error')) {
+              $(this).removeClass('is_error');
+              if (index) {
+                const i = recheck_data.findIndex((item) => item.index === index);
+                const x = recheck_data[i].id.findIndex((item) => item === id);
+                recheck_data[i].id.splice(x, 1);
+                if (recheck_data[i].id.length === 0) {
+                  recheck_data.splice(i, 1);
+                }
+              } else {
+                const i = recheck_data.findIndex((item) => item.id === id);
+                recheck_data.splice(i, 1);
+              }
+            } else {
+              $(this).addClass('is_error');
+              if (index) {
+                if (recheck_data.some((item) => item.index === index)) {
+                  const i = recheck_data.findIndex((item) => item.index === index);
+                  recheck_data[i].id.push(id);
+                } else {
+                  recheck_data.push({
+                    index: index,
+                    id: [id],
+                  });
+                }
+              } else {
+                recheck_data.push({
+                  id: id,
+                });
+              }
+            }
+          }
+        }, 150);
+      }
+    });
+
+    /**双击报关单显示警告**/
+    $('body').on('dblclick', 'p, span', function(event) {
+      const id = $(this).data('id');
+      const index = $(this).data('index');
+      if (id) {
+        event.stopPropagation();
+        clearTimeout(p_timer);
+        if ($(this).hasClass('is_error')) {
+          $(this).removeClass('is_error');
+          $(this).addClass('is_warn');
+          if (index) {
+            const i = recheck_data.findIndex((item) => item.index === index);
+            const x = recheck_data[i].id.findIndex((item) => item === id);
+            recheck_data[i].id.splice(x, 1);
+            if (recheck_data[i].id.length === 0) {
+              recheck_data.splice(i, 1);
+            }
+          } else {
+            const i = recheck_data.findIndex((item) => item.id === id);
+            recheck_data.splice(i, 1);
+          }
+        } else {
+          $(this).addClass('is_warn');
+        }
+      }
+    });
+
+  });
 </script>

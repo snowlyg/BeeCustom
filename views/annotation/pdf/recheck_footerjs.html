@@ -1,0 +1,25 @@
+<script>
+  if ("@{{.M.StatusString}}" === '复核通过' || "@{{.M.StatusString}}" === '待暂存') {
+    var ids = document.querySelectorAll('span[id]');
+    for (var i = 0; i < ids.length; i++) {
+      var text = ids[i].innerText;
+      if (text) {
+        ids[i].classList.add('is_success');
+      }
+    }
+  }
+  if ("@{{.M.StatusString}}" === '复核不通过') {
+    for (var i = 0; i < @{{.M.RecheckErrorInputIds}}.length; i++) {
+      if (@{{.M.RecheckErrorInputIds}}[i].index) {
+        for (var j = 0; j < @{{.M.RecheckErrorInputIds}}[i].id.length; j++) {
+          document.querySelector('#' + @{{.M.RecheckErrorInputIds}}[i].id[j] +
+              @{{.M.RecheckErrorInputIds}}[i].index).classList.add('is_error');
+        }
+      } else {
+        document.querySelector('#' + @{{.M.RecheckErrorInputIds}}[i].id).classList.add('is_error');
+      }
+    }
+
+  }
+</script>
+

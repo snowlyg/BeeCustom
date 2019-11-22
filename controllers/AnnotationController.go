@@ -17,11 +17,11 @@ func (c *AnnotationController) Prepare() {
 }
 
 func (c *AnnotationController) IIndex() {
-	c.bIndex("I", "进口")
+	c.bIndex("I")
 }
 
 func (c *AnnotationController) EIndex() {
-	c.bIndex("E", "出口")
+	c.bIndex("E")
 }
 
 //列表数据
@@ -167,25 +167,25 @@ func (c *AnnotationController) ERecheck() {
 // RecheckPass 复核通过
 func (c *AnnotationController) IRecheckPass() {
 	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id)
+	c.bRecheckPassReject(Id, "复核通过")
 }
 
 // RecheckPass 复核通过
 func (c *AnnotationController) ERecheckPass() {
 	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id)
+	c.bRecheckPassReject(Id, "复核通过")
 }
 
-// RecheckReject 复核通过
+// RecheckReject 复核不通过
 func (c *AnnotationController) IRecheckReject() {
 	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id)
+	c.bRecheckPassReject(Id, "复核不通过")
 }
 
-// RecheckReject 复核通过
+// RecheckReject 复核不通过
 func (c *AnnotationController) ERecheckReject() {
 	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id)
+	c.bRecheckPassReject(Id, "复核不通过")
 }
 
 //删除

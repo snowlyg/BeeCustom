@@ -88,9 +88,20 @@ func GetDateTimeString(v *time.Time, format string) string {
 	if v.IsZero() {
 		return ""
 	} else {
-		v.Format(format)
+		return v.Format(format)
 	}
-	return fmt.Sprintf("%04v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
+}
+
+//返回进出口中文
+func GetImpexpMarkcdCNName(impexpMarkcd string) string {
+
+	if impexpMarkcd == "I" {
+		return "进口"
+	} else if impexpMarkcd == "E" {
+		return "出口"
+	} else {
+		return ""
+	}
 }
 
 //获取时间段

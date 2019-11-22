@@ -332,3 +332,101 @@ func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 
 	return sql
 }
+
+// TransformAnnotation 格式化列表数据
+func TransformAnnotation(id int64, relation string) map[string]interface{} {
+	v, _ := AnnotationOne(id, relation)
+	annotationItem := make(map[string]interface{})
+	aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
+	if err != nil {
+		return nil
+	}
+
+	annotationItem["Id"] = strconv.FormatInt(v.Id, 10)
+	annotationItem["StatusString"] = aStatus
+	annotationItem["PutrecNo"] = v.PutrecNo
+	annotationItem["ImpexpPortcd"] = v.ImpexpPortcd
+	annotationItem["ImpexpPortcdName"] = v.ImpexpPortcdName
+	annotationItem["BondInvtNo"] = v.BondInvtNo
+	annotationItem["EntryNo"] = v.EntryNo
+	annotationItem["EtpsInnerInvtNo"] = v.EtpsInnerInvtNo
+	annotationItem["CompanyName"] = v.Company.Name
+	annotationItem["SeqNo"] = v.SeqNo
+	annotationItem["BizopEtpsSccd"] = v.BizopEtpsSccd
+	annotationItem["BizopEtpsno"] = v.BizopEtpsno
+	annotationItem["BizopEtpsNm"] = v.BizopEtpsNm
+	annotationItem["RcvgdEtpsno"] = v.RcvgdEtpsno
+	annotationItem["RvsngdEtpsSccd"] = v.RvsngdEtpsSccd
+	annotationItem["RcvgdEtpsNm"] = v.RcvgdEtpsNm
+	annotationItem["DclEtpsSccd"] = v.DclEtpsSccd
+	annotationItem["DclEtpsno"] = v.DclEtpsno
+	annotationItem["DclEtpsNm"] = v.DclEtpsNm
+	annotationItem["DclPlcCuscd"] = v.DclPlcCuscd
+	annotationItem["DclPlcCuscdName"] = v.DclPlcCuscdName
+	annotationItem["ImpexpMarkcd"] = v.ImpexpMarkcd
+	annotationItem["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(v.ImpexpMarkcd)
+	annotationItem["RecheckErrorInputIds"] = v.RecheckErrorInputIds
+	annotationItem["MtpckEndprdMarkcd"] = v.MtpckEndprdMarkcd
+	annotationItem["MtpckEndprdMarkcdName"] = v.MtpckEndprdMarkcdName
+	annotationItem["SupvModecd"] = v.SupvModecd
+	annotationItem["SupvModecdName"] = v.SupvModecdName
+	annotationItem["TrspModecd"] = v.TrspModecd
+	annotationItem["TrspModecdName"] = v.TrspModecdName
+	annotationItem["DclcusFlag"] = v.DclcusFlag
+	annotationItem["DclcusFlagName"] = v.DclcusFlagName
+	annotationItem["DclcusTypecd"] = v.DclcusTypecd
+	annotationItem["DclcusTypecdName"] = v.DclcusTypecdName
+	annotationItem["VrfdedMarkcd"] = v.VrfdedMarkcd
+	annotationItem["InvtIochkptStucd"] = v.InvtIochkptStucd
+	annotationItem["ApplyNo"] = v.ApplyNo
+	annotationItem["ListType"] = v.ListType
+	annotationItem["ListTypeName"] = v.ListTypeName
+	annotationItem["InputCode"] = v.InputCode
+	annotationItem["InputCreditCode"] = v.InputCreditCode
+	annotationItem["InputName"] = v.InputName
+	annotationItem["ListStat"] = v.ListStat
+	annotationItem["CorrEntryDclEtpsSccd"] = v.CorrEntryDclEtpsSccd
+	annotationItem["CorrEntryDclEtpsNo"] = v.CorrEntryDclEtpsNo
+	annotationItem["CorrEntryDclEtpsNm"] = v.CorrEntryDclEtpsNm
+	annotationItem["DecType"] = v.DecType
+	annotationItem["DecTypeName"] = v.DecTypeName
+	annotationItem["StshipTrsarvNatcd"] = v.StshipTrsarvNatcd
+	annotationItem["StshipTrsarvNatcdName"] = v.StshipTrsarvNatcdName
+	annotationItem["InvtType"] = v.InvtType
+	annotationItem["InvtTypeName"] = v.InvtTypeName
+	annotationItem["EntryStucd"] = v.EntryStucd
+	annotationItem["PassportUsedTypeCd"] = v.PassportUsedTypeCd
+	annotationItem["Rmk"] = v.Rmk
+	annotationItem["DecRmk"] = v.DecRmk
+	annotationItem["DclTypecd"] = v.DclTypecd
+	annotationItem["NeedEntryModified"] = v.NeedEntryModified
+	annotationItem["LevyBlAmt"] = v.LevyBlAmt
+	annotationItem["ChgTmsCnt"] = v.ChgTmsCnt
+	annotationItem["RltInvtNo"] = v.RltInvtNo
+	annotationItem["RltPutrecNo"] = v.RltPutrecNo
+	annotationItem["RltEntryNo"] = v.RltEntryNo
+	annotationItem["RltEntryBizopEtpsSccd"] = v.RltEntryBizopEtpsSccd
+	annotationItem["RltEntryBizopEtpsno"] = v.RltEntryBizopEtpsno
+	annotationItem["RltEntryBizopEtpsNm"] = v.RltEntryBizopEtpsNm
+	annotationItem["RltEntryRvsngdEtpsSccd"] = v.RltEntryRvsngdEtpsSccd
+	annotationItem["RltEntryRcvgdEtpsno"] = v.RltEntryRcvgdEtpsno
+	annotationItem["RltEntryRcvgdEtpsNm"] = v.RltEntryRcvgdEtpsNm
+	annotationItem["RltEntryDclEtpsSccd"] = v.RltEntryDclEtpsSccd
+	annotationItem["RltEntryDclEtpsno"] = v.RltEntryDclEtpsno
+	annotationItem["RltEntryDclEtpsNm"] = v.RltEntryDclEtpsNm
+	annotationItem["Param1"] = v.Param1
+	annotationItem["Param2"] = v.Param2
+	annotationItem["Param3"] = v.Param3
+	annotationItem["ExtraRemark"] = v.ExtraRemark
+	annotationItem["GenDecFlag"] = v.GenDecFlag
+	annotationItem["GenDecFlagName"] = v.GenDecFlagName
+	annotationItem["HandBookId"] = strconv.FormatInt(v.HandBookId, 10)
+	annotationItem["InputTime"] = enums.GetDateTimeString(&v.InputTime, enums.BaseDateFormat)
+	annotationItem["PrevdTime"] = enums.GetDateTimeString(&v.PrevdTime, enums.BaseDateFormat)
+	annotationItem["FormalVrfdedTime"] = enums.GetDateTimeString(&v.FormalVrfdedTime, enums.BaseDateFormat)
+	annotationItem["EntryDclTime"] = enums.GetDateTimeString(&v.EntryDclTime, enums.BaseDateFormat)
+	annotationItem["InvtDclTime"] = enums.GetDateTimeString(&v.InvtDclTime, enums.BaseDateFormat)
+	annotationItem["AnnotationItems"] = v.AnnotationItems
+
+	return annotationItem
+}
