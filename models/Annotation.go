@@ -113,34 +113,34 @@ type Annotation struct {
 	StatusUpdatedAt        time.Time `form:"-" orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
 	InvtDclTime            time.Time `form:"-" orm:"column(invt_dcl_time);type(datetime);null" description:"清单申报时间(清单申报日期)(返填)"`
 	EntryDclTime           time.Time `form:"-" orm:"column(entry_dcl_time);type(datetime);null" description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
-	RecheckErrorInputIds   string    `orm:"column(recheck_error_input_ids);null" description:"复核input id"`
-	//SysId                  string    `orm:"column(sys_id);size(2)" description:"子系统ID 95 加工贸易账册系统;B1 加工贸易手册系统 ;B2 加工贸易担保管理系统;B3 保税货物流转系统二期 ;Z7 海关特殊监管区域管理系统;Z8 保税物流管理系统"`
-	//OperCusRegCode         string    `orm:"column(oper_cus_reg_code);size(10)" description:"操作卡的海关十位"`
-	//KeyName                string    `orm:"column(key_name);size(255);null" description:"签名所用的证书信息"`
-	//Version                string    `orm:"column(version);size(255);null" description:"版本编号"`
-	//BusinessId             string    `orm:"column(business_id);size(255);null" description:"业务单证号"`
-	//MessageId              string    `orm:"column(message_id);size(255);null" description:"报文唯一编号"`
-	//FileName               string    `orm:"column(file_name);size(255);null" description:"用户原始报文名，主要用于用户查询"`
-	//MessageType            string    `orm:"column(message_type);size(255);null" description:"报文类型"`
-	//SenderId               string    `orm:"column(sender_id);size(255);null" description:"发送方编号"`
-	//ReceiverId             string    `orm:"column(receiver_id);size(255);null" description:"接收方编号"`
-	//DelcareFlag            string    `orm:"column(delcare_flag);size(255)" description:"申报标志 0--暂存；1--申报"`
+	RecheckErrorInputIds   []byte    `orm:"column(recheck_error_input_ids);null" description:"复核input id"`
+	// SysId                  string    `orm:"column(sys_id);size(2)" description:"子系统ID 95 加工贸易账册系统;B1 加工贸易手册系统 ;B2 加工贸易担保管理系统;B3 保税货物流转系统二期 ;Z7 海关特殊监管区域管理系统;Z8 保税物流管理系统"`
+	// OperCusRegCode         string    `orm:"column(oper_cus_reg_code);size(10)" description:"操作卡的海关十位"`
+	// KeyName                string    `orm:"column(key_name);size(255);null" description:"签名所用的证书信息"`
+	// Version                string    `orm:"column(version);size(255);null" description:"版本编号"`
+	// BusinessId             string    `orm:"column(business_id);size(255);null" description:"业务单证号"`
+	// MessageId              string    `orm:"column(message_id);size(255);null" description:"报文唯一编号"`
+	// FileName               string    `orm:"column(file_name);size(255);null" description:"用户原始报文名，主要用于用户查询"`
+	// MessageType            string    `orm:"column(message_type);size(255);null" description:"报文类型"`
+	// SenderId               string    `orm:"column(sender_id);size(255);null" description:"发送方编号"`
+	// ReceiverId             string    `orm:"column(receiver_id);size(255);null" description:"接收方编号"`
+	// DelcareFlag            string    `orm:"column(delcare_flag);size(255)" description:"申报标志 0--暂存；1--申报"`
 
 	BackendUsers []*BackendUser `orm:"rel(m2m);rel_through(BeeCustom/models.AnnotationUserRel)"` // 设置一对多的反向关系
 	Company      *Company       `orm:"column(company_id);rel(fk)"`
-	CompanyId    int64          `orm:"-" form:"CompanyId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
+	CompanyId    int64          `orm:"-" form:"CompanyId"` // 关联管理会自动生成 CompanyId 字段，此处不生成字段
 	HandBookId   int64          `orm:"column(hand_book_id)" form:"HandBookId"`
-	OrderId      int64          `orm:"-" form:"OrderId"` //关联管理会自动生成 OrderId 字段，此处不生成字段
+	OrderId      int64          `orm:"-" form:"OrderId"` // 关联管理会自动生成 OrderId 字段，此处不生成字段
 
-	AnnotationItems   []*AnnotationItem   `orm:"reverse(many)"` //设置一对多关系
-	AnnotationRecords []*AnnotationRecord `orm:"reverse(many)"` //设置一对多关系
+	AnnotationItems   []*AnnotationItem   `orm:"reverse(many)"` // 设置一对多关系
+	AnnotationRecords []*AnnotationRecord `orm:"reverse(many)"` // 设置一对多关系
 }
 
 func NewAnnotation(id int64) Annotation {
 	return Annotation{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
-//查询参数
+// 查询参数
 func NewAnnotationQueryParam() AnnotationQueryParam {
 	return AnnotationQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
@@ -192,7 +192,7 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 		sql += " AND status = " + strconv.Itoa(int(aStatus))
 	}
 
-	//默认排序
+	// 默认排序
 	sortorder := "Id"
 	if len(params.Sort) > 0 {
 		sortorder = params.Sort
@@ -206,7 +206,7 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 	}
 
 	o := orm.NewOrm()
-	//总数量
+	// 总数量
 	total, err := o.Raw(sql).QueryRows(&datas)
 	if err != nil {
 		return nil, 0, err
@@ -218,7 +218,7 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 		sql += " LIMIT " + offset + "," + limit
 	}
 
-	//分页数据
+	// 分页数据
 	_, err = o.Raw(sql).QueryRows(&datas)
 	if err != nil {
 		return nil, 0, err
@@ -268,8 +268,8 @@ func AnnotationOne(id int64, relations string) (*Annotation, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
-func AnnotationSave(m *Annotation, col string) error {
+// Save 添加、编辑页面 保存
+func AnnotationUpdateOrSave(m *Annotation) error {
 	var err error
 	o := orm.NewOrm()
 	if m.Id == 0 {
@@ -278,12 +278,7 @@ func AnnotationSave(m *Annotation, col string) error {
 			return err
 		}
 	} else {
-
-		if len(col) > 0 {
-			_, err = o.Update(m, col)
-		} else {
-			_, err = o.Update(m)
-		}
+		_, err = o.Update(m)
 
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
@@ -294,7 +289,22 @@ func AnnotationSave(m *Annotation, col string) error {
 	return nil
 }
 
-//AnnotationUpdateStatus 添加、编辑页面 保存
+// Save 添加、编辑页面 保存
+func AnnotationUpdateStatusRecheckErrorInputIds(m *Annotation) error {
+	var err error
+	o := orm.NewOrm()
+
+	_, err = o.Update(m, "Status", "StatusUpdatedAt", "RecheckErrorInputIds")
+
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
+		return err
+	}
+
+	return nil
+}
+
+// AnnotationUpdateStatus 添加、编辑页面 保存
 func AnnotationUpdateStatus(m *Annotation) error {
 	var err error
 	o := orm.NewOrm()
@@ -307,7 +317,7 @@ func AnnotationUpdateStatus(m *Annotation) error {
 	return nil
 }
 
-//删除
+// 删除
 func AnnotationDelete(id int64) (num int64, err error) {
 	m := NewAnnotation(id)
 	if num, err := BaseDelete(&m); err != nil {
@@ -317,7 +327,7 @@ func AnnotationDelete(id int64) (num int64, err error) {
 	}
 }
 
-//列表公用sql
+// 列表公用sql
 func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 	sql += " FROM " + AnnotationTBName()
 	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")

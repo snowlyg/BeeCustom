@@ -10,8 +10,8 @@ import (
 
 type BaseModel struct {
 	Id        int64
-	CreatedAt time.Time `orm:"column(created_at);type(timestamp);null"`
-	UpdatedAt time.Time `orm:"column(updated_at);type(timestamp);null"`
+	CreatedAt time.Time `orm:"auto_now_add;type(datetime);column(created_at);type(timestamp)"`
+	UpdatedAt time.Time `orm:"auto_now;type(datetime);column(updated_at);type(timestamp)"`
 }
 
 // JsonResult 用于返回ajax请求的基类

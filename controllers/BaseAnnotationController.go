@@ -125,7 +125,7 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 	//	}
 	// }
 
-	if err := models.AnnotationSave(&m, ""); err != nil {
+	if err := models.AnnotationUpdateOrSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
 		if err := c.setAnnotaionUserRelType(&m, nil, "创建人"); err != nil {
@@ -197,7 +197,7 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
-	if err := models.AnnotationSave(m, ""); err != nil {
+	if err := models.AnnotationUpdateStatus(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
@@ -260,7 +260,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	if err := models.AnnotationSave(m, ""); err != nil {
+	if err := models.AnnotationUpdateOrSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
@@ -305,7 +305,7 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 	//	}
 	// }
 
-	if err := models.AnnotationSave(m, ""); err != nil {
+	if err := models.AnnotationUpdateOrSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
 
@@ -330,7 +330,7 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
-	if err := models.AnnotationSave(m, "Status"); err != nil {
+	if err := models.AnnotationUpdateStatus(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
@@ -344,16 +344,12 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 }
 
 // bRecheckPass 通过复核、驳回
-func (c *BaseAnnotationController) bRecheckPassReject(id int64, statusString string) {
+func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
+	Id, _ := c.GetInt64(":id", 0)
 
-	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
+	m, err := models.AnnotationOne(Id, "Company,AnnotationItems")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
-	}
-
-	// 获取form里的值
-	if err := c.ParseForm(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "ParseForm", m)
 	}
 
 	c.validRequestData(m)
@@ -375,11 +371,22 @@ func (c *BaseAnnotationController) bRecheckPassReject(id int64, statusString str
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
-	if err := models.AnnotationSave(m, "Status"); err != nil {
+	recheckErrorInputIds := c.GetStrings("RecheckErrorInputIds")
+	if len(recheckErrorInputIds) > 0 && len(recheckErrorInputIds[0]) > 0 {
+		m.RecheckErrorInputIds, _ = json.Marshal(recheckErrorInputIds)
+	}
+
+	if err := models.AnnotationUpdateStatusRecheckErrorInputIds(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
+	content := c.GetString("Content")
+	remark := c.GetString("Remark")
+	if len(content) > 0 {
+		statusString += ":" + content
+	}
 	annotationRecord := c.newAnnotationRecord(m, statusString)
+	annotationRecord.Remark = remark
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}

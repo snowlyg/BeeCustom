@@ -91,7 +91,6 @@
       layer.load(2);
       try {
         data.field.RecheckErrorInputIds = recheck_data;
-        console.log(data.field);
         const res = await admin.post(`/annotation/recheck_reject/${@{{.m.Id}}}`, data.field, true);
         layer.closeAll('loading');
         if (res.status) {

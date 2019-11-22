@@ -166,26 +166,22 @@ func (c *AnnotationController) ERecheck() {
 
 // RecheckPass 复核通过
 func (c *AnnotationController) IRecheckPass() {
-	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id, "复核通过")
+	c.bRecheckPassReject("复核通过")
 }
 
 // RecheckPass 复核通过
 func (c *AnnotationController) ERecheckPass() {
-	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id, "复核通过")
+	c.bRecheckPassReject("复核通过")
 }
 
 // RecheckReject 复核不通过
 func (c *AnnotationController) IRecheckReject() {
-	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id, "复核不通过")
+	c.bRecheckPassReject("复核不通过")
 }
 
 // RecheckReject 复核不通过
 func (c *AnnotationController) ERecheckReject() {
-	Id, _ := c.GetInt64(":id", 0)
-	c.bRecheckPassReject(Id, "复核不通过")
+	c.bRecheckPassReject("复核不通过")
 }
 
 //删除

@@ -22,7 +22,8 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	// Set global options
 	pdfg.Dpi.Set(300)
 	pdfg.Orientation.Set(wkhtmltopdf.OrientationLandscape)
-	pdfg.Grayscale.Set(true)
+	pdfg.Grayscale.Set(false) //彩色 false， 灰色 true
+	pdfg.Grayscale.Set(false) //彩色 false， 灰色 true
 
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
@@ -30,9 +31,12 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/home/pdf/" + strconv.FormatInt(Id, 10))
 
 	// Set options for this page
-	page.FooterRight.Set("[page]")
-	page.FooterFontSize.Set(10)
+	page.FooterCenter.Set("第[page]页 共[topage]页")
+	page.FooterFontSize.Set(12)
 	page.Zoom.Set(0.95)
+	page.DisableJavascript.Set(false)
+	page.MinimumFontSize.Set(12)
+	page.DebugJavascript.Set(true)
 
 	// // Add to document
 	pdfg.AddPage(page)

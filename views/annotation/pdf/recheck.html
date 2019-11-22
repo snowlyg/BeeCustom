@@ -108,34 +108,23 @@
 
     .is_success {
         background-color: #16b615;
-        color: #FFFFFF;
-        font-family: "iconfont" !important;
+        color: #fff;
         font-style: normal;
         font-size: 12px;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         padding: 4px;
-    }
-
-    .is_success:after {
-        content: '\e69c';
     }
 
     .is_error {
         background-color: #FF3940;
-        color: #FFFFFF;
-        font-family: "iconfont" !important;
+        color: #fff;
         font-style: normal;
         font-size: 12px;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         padding: 4px;
     }
-
-    .is_error:after {
-        content: '\eb1f';
-    }
-
     .chapter_img {
         position: absolute;
         top: 5px;
@@ -154,7 +143,7 @@
         <tr>
             <td class="td-scale-05">预录入统一编号</td>
             <td class="td-scale-04">
-                <span id="seq_no">@{{.M.SeqNo }}</span>
+                <span  id="seq_no">@{{.M.SeqNo }}</span>
             </td>
             <td class="td-scale-05">清单编号</td>
             <td class="td-scale-04">
