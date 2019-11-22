@@ -8,20 +8,7 @@ func (c *AnnotationController) Prepare() {
 	//先执行
 	c.BaseController.Prepare()
 	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
-	perms := []string{
-		"IIndex",
-		"ICreate",
-		"IEdit",
-		"IMake",
-		"IAudit",
-		"IDelete",
-		"EIndex",
-		"ECreate",
-		"EEdit",
-		"EMake",
-		"EAudit",
-		"EDelete",
-	}
+	perms := []string{}
 	c.checkAuthor(perms)
 
 	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
@@ -153,16 +140,28 @@ func (c *AnnotationController) EUpdate() {
 	c.bUpdate(Id)
 }
 
-// ForRecheck 复核
+// ForRecheck 申请复核
 func (c *AnnotationController) IForRecheck() {
 	Id, _ := c.GetInt64(":id", 0)
 	c.bForRecheck(Id)
 }
 
-// ForRecheck 复核
+// ForRecheck 申请复核
 func (c *AnnotationController) EForRecheck() {
 	Id, _ := c.GetInt64(":id", 0)
 	c.bForRecheck(Id)
+}
+
+// ForRecheck 复核
+func (c *AnnotationController) IRecheck() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRecheck(Id)
+}
+
+// ForRecheck 复核
+func (c *AnnotationController) ERecheck() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRecheck(Id)
 }
 
 // RecheckPass 复核通过

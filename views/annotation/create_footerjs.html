@@ -6,8 +6,7 @@
     })
         .use(['index', 'form', 'admin', 'table', 'layuicomplete', 'laydate', 'laytpl'], async () => {
             const {form, admin, table, $, laytpl, layuicomplete} = layui;
-            let order_pros_data_filter = [],
-                order_id  /**订单ID**/
+            let order_pros_data_filter = []
                 , order_note_data /**附注数据**/
                 , annotationItems /**清单表体数据**/
                 , decListData = [] /**默认报关单数据**/
@@ -361,12 +360,12 @@
 
 
             /**派单**/
-            admin.distribute("#order_dispatch", @{{.m.Id}});
+            admin.distribute("#order_dispatch", @{{.m.Id}},"@{{.ImpexpMarkcdName}}");
 
             /**附注**/
             let order_note_index;
             $("body").on("click", "#order_note", async function () {
-                if (!order_id) {
+                if (!@{{.m.Id}}) {
                     return layer.msg("请先保存订单！")
                 }
 
@@ -393,7 +392,7 @@
             /**附注保存**/
             form.on('submit(remark_note_submit)', async (data) => {
                 order_note_data = data.field.ExtraRemark;
-                await admin.post(`/annotation/i/${order_id}/extra_remark`, data.field);
+                await admin.post(`/annotation/i/${@{{.m.Id}}}/extra_remark`, data.field);
                 layer.close(order_note_index);
             });
 
@@ -405,46 +404,45 @@
             form.on('submit(annotation_save_pass)', async () => {
                 layer.load(2);
 
-                let result = await admin.get(`/annotation/audit/` + @{{.m.Id}}, 'show');
+                let result = await admin.get(`/annotation/audit/` + @{{.m.Id}}, true);
                 if (result.status === 1) {
-                    window.location.reload();
-                    admin.reloadFrame('进口核注清单iframe');
+                    admin.reloadFrame("@{{.ImpexpMarkcdName}}"+'核注清单iframe');
+                    setTimeout(()=>{
+                        window.location.reload();
+                    },150)
                 }
 
                 layer.closeAll('loading');
-            });
-
-            /**办理记录**/
-            $("body").on("click", "#order_take", async function () {
-                if (!@{{.m.Id}}) {
-                    return layer.msg("请先保存订单！")
-                }
-
-                layer.load(2);
-                const annotationRecords = await admin.post(`/annotation_record/datagrid`,JSON.stringify({AnnotationId:parseInt(@{{.m.Id}})}),true);
-                layer.closeAll('loading');
-
-                laytpl($("#order_take_template").html()).render(annotationRecords.rows, function (html) {
-                    $("#order_take_list").html(html)
-                });
-
-                layer.open({
-                    type: 1,
-                    title: '办理记录',
-                    shadeClose: true,
-                    area: admin.screen() < 2 ? ['80%', '300px'] : ['600px', '500px'],
-                    content: `<div id="order_take_list_content">${$('#order_take_list').html()}</div>`
-                });
-
             });
 
             /**打印**/
             $("body").on("click", "#order_print", async function () {
-                if (!order_id) {
+                if (!@{{.m.Id}}) {
                     return layer.msg("请先保存订单！")
                 }
                 window.open(
-                    `/annotation/i/${order_id}/downloads/prints?margin_top=1cm&margin_left=0cm&margin_right=0cm&margin_bottom=1cm`);
+                    `/annotation/i/${@{{.m.Id}}}/downloads/prints?margin_top=1cm&margin_left=0cm&margin_right=0cm&margin_bottom=1cm`);
+            });
+
+            /**申请复核**/
+            $("body").on("click", "#order_application_review", function() {
+                $("#annotation_application_review").click();
+            });
+
+            form.on('submit(annotation_application_review)', async (data) => {
+                if (annotationItems.total === 0) {
+                    return layer.msg("请先输入表体商品");
+                }
+
+                layer.load(2);
+
+                const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`,"show");
+                if (result.status === 1) {
+                    window.location.reload();
+                    admin.reloadFrame("@{{.ImpexpMarkcdName}}"+'进口核注清单iframe');
+                }
+
+                layer.closeAll('loading');
             });
 
             /**表单验证规则**/

@@ -144,7 +144,7 @@ func getSonsPerms(ptl *PermTreeList, v *models.Resource, m *models.Role) {
 			pls := PermList{}
 			pls.Title = sv.Name
 			pls.Value = sv.UrlFor
-			pls.Checked = getChecked(v, m) //是否有权限
+			pls.Checked = getChecked(sv, m) //是否有权限
 			pl.Data = append(pl.Data, &pls)
 		}
 	}
@@ -158,7 +158,9 @@ func getChecked(v *models.Resource, m *models.Role) bool {
 		return false
 	}
 
-	return utils.E.HasPermissionForUser(strconv.FormatInt(m.Id, 10), v.UrlFor)
+	hasPermission := utils.E.HasPermissionForUser(strconv.FormatInt(m.Id, 10), v.UrlFor)
+
+	return hasPermission
 
 }
 

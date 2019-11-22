@@ -74,6 +74,14 @@ gulp
 
 在浏览器里打开 http://localhost:8080 进行访问
 
+2.pdf 生成pdf
+[go-wkhtmltopdf](https://github.com/SebastiaanKlippert/go-wkhtmltopdf)
+```
+go get github.com/SebastiaanKlippert/go-wkhtmltopdf
+
+WKHTMLTOPDF_PATH 系统变量
+
+```
 
 # 问题
  `beego` 升级到v1.10.1后，启动本项目时报错

@@ -381,7 +381,7 @@
             const id = $(this).data('id');
             const topLayui = parent === self ? layui : top.layui,
                 href = `/annotation/i/${id}/get_change/#/id=${id}`,
-                text = `改单保税清单（进口）`;
+                text = `改单保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
             topLayui.index.openTabsPage(href, text);
         });
 
@@ -389,8 +389,8 @@
         $(document).on("click", ".order_check", async function () {
             const id = $(this).data('id');
             const topLayui = parent === self ? layui : top.layui,
-                href = `/annotation/i/${id}/get_recheck/#/id=${id}`,
-                text = `复核保税清单（进口）`;
+                href = `/annotation/recheck/${id}`,
+                text = `复核保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
             topLayui.index.openTabsPage(href, text);
         });
 
@@ -399,38 +399,6 @@
             const id = $(this).data('id');
             try {
                 const data = await admin.post(`/annotation/i/${id}/press`);
-            } catch (e) {
-                return layer.msg('接口错误！', {
-                    offset: '15px',
-                    icon: 2,
-                    time: 2000,
-                    id: 'Message'
-                });
-            }
-        });
-
-        /**撤回订单**/
-        $(document).on("click", ".order_recall", function () {
-            const id = $(this).data('id');
-            layer.confirm('真的要撤回订单吗？', {
-                title: '撤回订单'
-            }, async (index) => {
-                const data = await admin.post(`/annotation/i/${id}/recheck_cancel`);
-                layer.close(index);
-                if (data.status) {
-                    await admin.get_data_list(`/annotation/i/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-                }
-            });
-        });
-
-        /**提交复核/重新提交复核**/
-        $(document).on("click", ".order_again_check", async function () {
-            const id = $(this).data('id');
-            try {
-                const data = await admin.get(`/annotation/i/${id}/recheck_again`, 'show');
-                if (data.status) {
-                    await admin.get_data_list(`/annotation/i/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-                }
             } catch (e) {
                 return layer.msg('接口错误！', {
                     offset: '15px',

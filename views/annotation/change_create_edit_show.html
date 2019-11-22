@@ -1,11 +1,6 @@
 <div class="custom-order_form">
     <div class="custom-order_form_annotation">
         <div class="custom-order_form_top">
-            @{{if .canStore }}
-            <button class="layui-btn custom-create_btn" id="order_save" type="button">
-                <i class="iconfont icon-save"></i>保存表头
-            </button>
-            @{{end}}
             @{{if .m.Id }}
                 @{{if eq  .m.StatusString  "待审核"  "审核中" }}
                     @{{ if canArray  .actions .m.ImpexpMarkcd  "canAudit"}}
@@ -42,7 +37,8 @@
                 <i class="iconfont icon-tab"></i>附注
                 <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
             </button>
-            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_take" type="button">
+            <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="{{ item.Id }}"
+                    onclick="layui.admin.annotation_jilu_click(this)" type="button">
                 <i class="iconfont icon-assignment1"></i>办理记录
             </button>
 

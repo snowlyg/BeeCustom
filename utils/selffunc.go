@@ -38,6 +38,9 @@ func inArray(in int64, s []interface{}) bool {
 //		},
 //}
 func canArray(s map[string]map[string]bool, index, perm string) bool {
+	//LogDebug(s)
+	//LogDebug(index)
+	//LogDebug(perm)
 	if len(s) == 0 {
 		return false
 	}

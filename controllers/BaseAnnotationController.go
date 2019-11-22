@@ -48,7 +48,7 @@ func (c *BaseAnnotationController) bIndex(impexpMarkcd, impexpMarkcdName string)
 	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
 
 	// 页面里按钮权限控制
-	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Audit", "Delete")
+	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Audit", "Delete", "Distribute", "Recheck", "Push", "PushXml", "StoreError", "Change", "Restart", "Cancel")
 
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
@@ -131,7 +131,7 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		if err := c.setAnnotaionUserRelType(&m, nil, "创建人"); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
-		annotationRecord := c.newAnnotationRecord(&m, "创建订单", "待审核")
+		annotationRecord := c.newAnnotationRecord(&m, "创建订单")
 		if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
@@ -157,7 +157,7 @@ func (c *BaseAnnotationController) bEdit(id int64) {
 	c.getResponses(m.ImpexpMarkcd)
 }
 
-// Edit 添加 编辑 页面
+// bMake 添加 编辑 页面
 func (c *BaseAnnotationController) bMake(id int64) {
 	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
@@ -174,9 +174,15 @@ func (c *BaseAnnotationController) bMake(id int64) {
 
 // 编辑相关页面返回
 func (c *BaseAnnotationController) getResponses(impexpMarkcd string) {
+	var impexpMarkcdName string
+	if impexpMarkcd == "I" {
+		impexpMarkcdName = "进口"
+	} else if impexpMarkcd == "E" {
+		impexpMarkcdName = "出口"
+	}
 	// 页面里按钮权限控制
 	c.getActionData(impexpMarkcd, "Audit", "Distribute", "ForRecheck")
-
+	c.Data["ImpexpMarkcdName"] = impexpMarkcdName
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
@@ -200,7 +206,7 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
-	annotationRecord := c.newAnnotationRecord(m, "取消订单", "订单关闭")
+	annotationRecord := c.newAnnotationRecord(m, "取消订单")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
@@ -224,7 +230,7 @@ func (c *BaseAnnotationController) bAudit(id int64) {
 
 	c.setStatusOnly(m, "审核通过")
 
-	annotationRecord := c.newAnnotationRecord(m, "审核订单", "审核通过")
+	annotationRecord := c.newAnnotationRecord(m, "审核订单")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
@@ -263,7 +269,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	annotationRecord := c.newAnnotationRecord(m, "派单："+bu.RealName, "待制单")
+	annotationRecord := c.newAnnotationRecord(m, "派单："+bu.RealName)
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
@@ -308,9 +314,7 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
 
-	statusString, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
-
-	annotationRecord := c.newAnnotationRecord(m, "保存数据", statusString)
+	annotationRecord := c.newAnnotationRecord(m, "保存数据")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
@@ -319,7 +323,7 @@ func (c *BaseAnnotationController) bUpdate(id int64) {
 
 }
 
-// bForRecheck 添加 编辑 页面
+// bForRecheck 申请复核
 func (c *BaseAnnotationController) bForRecheck(id int64) {
 
 	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
@@ -327,37 +331,20 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
-	// 获取form里的值
-	if err := c.ParseForm(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "ParseForm", m)
+	if err = c.updateAnnotationStatus(m, "待复核"); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
-	c.validRequestData(m)
-
-	// valid := validation.Validation{}
-	// if len(m.UserPwd) > 0 {
-	//	valid.MinSize(m.UserPwd, 6, "密码")
-	//	valid.MaxSize(m.UserPwd, 18, "密码")
-	// }
-	//
-	// if valid.HasErrors() {
-	//	// 如果有错误信息，证明验证没通过
-	//	// 打印错误信息
-	//	for _, err := range valid.Errors {
-	//		c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
-	//	}
-	// }
-
-	if err := models.AnnotationSave(m, ""); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+	if err := models.AnnotationSave(m, "Status"); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
-	annotationRecord := c.newAnnotationRecord(m, "制单", "制单中")
+	annotationRecord := c.newAnnotationRecord(m, "复核")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
-	c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
+	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 
 }
 
@@ -391,32 +378,36 @@ func (c *BaseAnnotationController) bRecheckPassReject(id int64) {
 	// }
 
 	if err := models.AnnotationSave(m, ""); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
-	annotationRecord := c.newAnnotationRecord(m, "制单", "制单中")
+	annotationRecord := c.newAnnotationRecord(m, "通过复核")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
 	if err := c.setAnnotaionUserRelType(m, nil, "复核人"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 
-	c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
+	enums.NewPDFGenerator()
+
+	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 
 }
 
 // bRecheck 复核
 func (c *BaseAnnotationController) bRecheck(id int64) {
-	m, err := models.AnnotationOne(id, "")
+	m, err := models.AnnotationOne(id, "AnnotationItems")
 	if err != nil {
 		c.pageError("数据无效，请刷新后重试")
 	}
 
 	c.setStatusOnly(m, "复核中")
 
-	c.Data["m"] = c.TransformAnnotation(m)
+	annotation := c.TransformAnnotation(m)
+	annotation["AnnotationItems"] = m.AnnotationItems
+	c.Data["m"] = annotation
 	c.setTpl("annotation/recheck.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/recheck_footerjs.html"
@@ -434,7 +425,7 @@ func (c *BaseAnnotationController) bDelete(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
 
-	annotationRecord := c.newAnnotationRecord(m, "删除订单", "已删除")
+	annotationRecord := c.newAnnotationRecord(m, "删除订单")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", m)
 	}
@@ -648,11 +639,13 @@ func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusStr
 }
 
 // 操作记录
-func (c *BaseAnnotationController) newAnnotationRecord(m *models.Annotation, content, status string) *models.AnnotationRecord {
+func (c *BaseAnnotationController) newAnnotationRecord(m *models.Annotation, content string) *models.AnnotationRecord {
+
+	statusString, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
 	annotationRecord := models.NewAnnotationRecord(0)
 	annotationRecord.Content = content
 	annotationRecord.BackendUser = &c.curUser
-	annotationRecord.Status = status
+	annotationRecord.Status = statusString
 	annotationRecord.Annotation = m
 
 	return &annotationRecord
@@ -660,6 +653,11 @@ func (c *BaseAnnotationController) newAnnotationRecord(m *models.Annotation, con
 
 // 是否能保存
 func (c *BaseAnnotationController) getCanStore(m *models.Annotation, impexpMarkcd string) bool {
+
+	if models.IsSuperAdmin(c.curUser.Id) {
+		return true
+	}
+
 	if m == nil {
 		return c.checkActionAuthor(c.controllerName, impexpMarkcd+"Audit")
 	} else {

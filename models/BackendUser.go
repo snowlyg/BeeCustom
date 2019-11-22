@@ -78,8 +78,9 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 	//获取数据列表和总数
 	datas, _ := BackendUserPageList(&params)
 	for i, v := range datas {
+
+		hasRoleForUser := IsSuperAdmin(v.Id)
 		formatInt := strconv.FormatInt(v.Id, 10)
-		hasRoleForUser, _ := utils.E.HasRoleForUser(formatInt, "1") //超级管理员
 		if !utils.E.HasPermissionForUser(formatInt, roleResouceString) || hasRoleForUser {
 			if i <= len(datas)-1 {
 				datas = append(datas[:i], datas[i+1:]...) //删除
@@ -89,6 +90,13 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 	}
 
 	return datas
+}
+
+func IsSuperAdmin(id int64) bool {
+	formatInt := strconv.FormatInt(id, 10)
+	hasRoleForUser, _ := utils.E.HasRoleForUser(formatInt, "1")
+	//超级管理员
+	return hasRoleForUser
 }
 
 func BackendUsersGetRelations(ms []*BackendUser) ([]*BackendUser, error) {

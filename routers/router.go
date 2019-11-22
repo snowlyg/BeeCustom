@@ -42,7 +42,9 @@ func init() {
 		//派单
 		beego.Router("/annotation/distribute/?:id", &controllers.AnnotationController{}, "Post:"+flag+"Distribute")
 		//申请复核
-		beego.Router("/annotation/for_recheck/?:id", &controllers.AnnotationController{}, "Post:"+flag+"ForRecheck")
+		beego.Router("/annotation/for_recheck/?:id", &controllers.AnnotationController{}, "Get:"+flag+"ForRecheck")
+		//申请复核
+		beego.Router("/annotation/recheck/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Recheck")
 		//复核通过
 		beego.Router("/annotation/recheck_pass/?:id", &controllers.AnnotationController{}, "Post:"+flag+"RecheckPass")
 		//复核驳回

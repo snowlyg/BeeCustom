@@ -88,7 +88,7 @@ func ResourceTreeGrid(params *ResourceQueryParam) ([]*Resource, int64) {
 	}
 
 	total, _ := query.Count()
-	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
+	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset).RelatedSel()
 	_, _ = query.All(&datas)
 
 	//关联子权
@@ -130,7 +130,7 @@ func ResourceSave(m *Resource) (*Resource, error) {
 			return nil, err
 		}
 	} else {
-		if _, err := o.Update(m, "Name", "Parent", "Rtype", "Sons", "Sons", "Icon", "UrlFor", "Roles", "UpdatedAt"); err != nil {
+		if _, err := o.Update(m, "Name", "Parent", "Rtype", "Sons", "Sons", "Icon", "UrlFor", "UpdatedAt"); err != nil {
 			return nil, err
 		}
 	}

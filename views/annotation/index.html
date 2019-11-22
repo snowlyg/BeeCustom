@@ -125,7 +125,7 @@
                                         <i class="iconfont icon-xiaoxi blue person_tips" data-index="{{ index }}"
                                            title="客户信息"></i>
                                         <i class="iconfont icon-jilu" data-id="{{ item.Id }}"
-                                           onclick="layui.admin.annotation_jilu_click(this, 'i')" title="办理记录"></i>
+                                           onclick="layui.admin.annotation_jilu_click(this)" title="办理记录"></i>
                                         <i class="iconfont icon-attach-file" data-id="{{ item.Id }}" title="附件"></i>
                                         <i class="iconfont icon-shanchu1" data-id="{{ item.Id }}" title="删除"></i>
                                     </div>
@@ -232,12 +232,6 @@
                                     <a class="margin_top_10 order_reminder" data-id="{{ item.Id }}">催单</a>
                                     @{{end}}
                                  {{# } }}
-
-                                {{# if(item.StatusString == '复核通过'  || item.StatusString == '复核不通过'){ }}
-                                    @{{ if canArray  .actions .ImpexpMarkcd "canReturn"}}
-                                    <a class="order_recall" data-id="{{ item.Id }}">撤回</a>
-                                    @{{end}}
-                                {{# } }}
 
                                 {{# if(item.StatusString == '复核不通过'){ }}
                                     @{{if canArray  .actions .ImpexpMarkcd "canEdit"}}
