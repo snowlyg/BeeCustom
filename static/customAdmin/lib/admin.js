@@ -4347,12 +4347,12 @@ layui.define('view', function (exports) {
                     limits: [10, 20, 30, 40, 50, 100, 200],
                     theme: '#1E9FFF',
                     layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
-                    jump: async function (obj, first, OrdrIndexRequestData) {
+                    jump: async function (obj, first) {
                         if (!first) {
                             admin.list_page = obj.curr;
                             admin.list_limit = obj.limit;
                             OrderIndexRequestListData = JSON.stringify($.extend(
-                                OrdrIndexRequestData.List.Request, {
+                                OrderIndexRequestData.List.Request, {
                                     ImpexpMarkcd: impexpMarkcd,
                                     StatusString: StatusString,
                                     offset: admin.list_page,

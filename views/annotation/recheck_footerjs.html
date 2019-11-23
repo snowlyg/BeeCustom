@@ -90,7 +90,7 @@
     form.on('submit(order_reject_submit)', async (data) => {
       layer.load(2);
       try {
-        data.field.RecheckErrorInputIds = recheck_data;
+        data.field.RecheckErrorInputIds = JSON.stringify(recheck_data);
         const res = await admin.post(`/annotation/recheck_reject/${@{{.m.Id}}}`, data.field, true);
         layer.closeAll('loading');
         if (res.status) {

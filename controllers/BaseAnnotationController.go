@@ -371,11 +371,8 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
-	recheckErrorInputIds := c.GetStrings("RecheckErrorInputIds")
-	if len(recheckErrorInputIds) > 0 && len(recheckErrorInputIds[0]) > 0 {
-		m.RecheckErrorInputIds, _ = json.Marshal(recheckErrorInputIds)
-	}
-
+	recheckErrorInputIds := c.GetString("RecheckErrorInputIds")
+	m.RecheckErrorInputIds = recheckErrorInputIds
 	if err := models.AnnotationUpdateStatusRecheckErrorInputIds(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
@@ -385,6 +382,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 	if len(content) > 0 {
 		statusString += ":" + content
 	}
+
 	annotationRecord := c.newAnnotationRecord(m, statusString)
 	annotationRecord.Remark = remark
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {

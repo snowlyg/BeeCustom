@@ -9,26 +9,37 @@
         var para=document.createElement("i");//创建需要增加的元素节点
         para.classList.add('iconfont');
         para.classList.add('iconcheck');
+        para.classList.add('font-12');
         ids[i].appendChild(para);//添加至父节点内
       }
     }
   }
-  if ("@{{.M.StatusString}}" === '复核不通过') {
-    for (var i = 0; i < @{{.M.RecheckErrorInputIds}}.length; i++) {
-      if (@{{.M.RecheckErrorInputIds}}[i].index) {
-        for (var j = 0; j < @{{.M.RecheckErrorInputIds}}[i].id.length; j++) {
-          document.querySelector('#' + @{{.M.RecheckErrorInputIds}}[i].id[j] + @{{.M.RecheckErrorInputIds}}[i].index).classList.add('is_error');
 
+  if ("@{{.M.StatusString}}" === '复核不通过') {
+    if (@{{.M.RecheckErrorInputIds}}){
+      let RecheckErrorInputIds = JSON.parse(@{{.M.RecheckErrorInputIds}});
+      for (var i = 0; i < RecheckErrorInputIds.length; i++) {
+        if (RecheckErrorInputIds[i].index) {
+          for (var j = 0; j < RecheckErrorInputIds[i].id.length; j++) {
+            let element = document.querySelector('#' + RecheckErrorInputIds[i].id[j] + RecheckErrorInputIds[i].index);
+            element.classList.add('is_error');
+            var para=document.createElement("i");//创建需要增加的元素节点
+            para.classList.add('iconfont');
+            para.classList.add('iconclose');
+            para.classList.add('font-12');
+            element.appendChild(para);//添加至父节点内
+          }
+        } else {
+          let element1 = document.querySelector('#' + RecheckErrorInputIds[i].id);
+          element1.classList.add('is_error');
           var para=document.createElement("i");//创建需要增加的元素节点
           para.classList.add('iconfont');
           para.classList.add('iconclose');
-          ids[i].appendChild(para);//添加至父节点内
+          para.classList.add('font-12');
+          element1.appendChild(para);//添加至父节点内
         }
-      } else {
-        document.querySelector('#' + @{{.M.RecheckErrorInputIds}}[i].id).classList.add('is_error');
       }
     }
-
   }
 </script>
 
