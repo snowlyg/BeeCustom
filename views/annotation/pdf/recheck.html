@@ -167,23 +167,41 @@
             </td>
             <td class="td-scale-05">清单类型</td>
             <td class="td-scale-04">
-                @{{if eq .M.StatusString "复核通过"}}
-                <span  id="invt_type_name" class="is_success">@{{.M.InvtTypeName}}<i class="iconfont iconcheck font-12"></i></span>
-                @{{else if eq .M.StatusString "复核不通过"}}
-                <span  id="invt_type_name" class="is_error">@{{.M.InvtTypeName}}<i class="iconfont iconclose font-12"></i></span>
-                @{{else}}
-                <span  id="invt_type_name">@{{.M.InvtTypeName }}</span>
+                @{{if .M.InvtTypeName}}
+                    @{{if eq .M.StatusString "复核通过"}}
+                    <span  id="invt_type_name" class="is_success">@{{.M.InvtTypeName}}<i class="iconfont iconcheck font-12"></i></span>
+                    @{{else if eq .M.StatusString "复核不通过"}}
+                    <span  id="invt_type_name" class="is_error">@{{.M.InvtTypeName}}<i class="iconfont iconclose font-12"></i></span>
+                    @{{else}}
+                    <span  id="invt_type_name">@{{.M.InvtTypeName }}</span>
+                    @{{end}}
                 @{{end}}
             </td>
             <td class="td-scale-05">手(账)编号</td>
             <td class="td-scale-04">
-                <span id="putrec_no">@{{.M.PutrecNo }}</span>
+                @{{if .M.PutrecNo}}
+                    @{{if eq .M.StatusString "复核通过"}}
+                    <span  id="putrec_no" class="is_success">@{{.M.PutrecNo}}<i class="iconfont iconcheck font-12"></i></span>
+                    @{{else if eq .M.StatusString "复核不通过"}}
+                    <span  id="putrec_no" class="is_error"  >@{{.M.PutrecNo}}<i class="iconfont iconclose font-12"></i></span>
+                    @{{else}}
+                    <span  id="putrec_no">@{{.M.PutrecNo}}</span>
+                    @{{end}}
+                @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">经营企业编码</td>
             <td class="td-scale-04">
-                <span id="bizop_etpsno">@{{.M.BizopEtpsno }}</span>
+                @{{if .M.PutrecNo}}
+                    @{{if eq .M.StatusString "复核通过"}}
+                    <span  id="bizop_etpsno" class="is_success">@{{.M.BizopEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+                    @{{else if eq .M.StatusString "复核不通过"}}
+                    <span  id="bizop_etpsno" class="is_error"  >@{{.M.BizopEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+                    @{{else}}
+                    <span  id="bizop_etpsno">@{{.M.BizopEtpsno}}</span>
+                    @{{end}}
+                @{{end}}
             </td>
             <td class="td-scale-05">经营企业社会信用代码</td>
             <td class="td-scale-04">
