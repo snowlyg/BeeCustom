@@ -193,7 +193,7 @@
         <tr>
             <td class="td-scale-05">经营企业编码</td>
             <td class="td-scale-04">
-                @{{if .M.PutrecNo}}
+                @{{if .M.BizopEtpsno}}
                     @{{if eq .M.StatusString "复核通过"}}
                     <span  id="bizop_etpsno" class="is_success">@{{.M.BizopEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
                     @{{else if eq .M.StatusString "复核不通过"}}
@@ -205,192 +205,522 @@
             </td>
             <td class="td-scale-05">经营企业社会信用代码</td>
             <td class="td-scale-04">
-                <span id="bizop_etps_sccd">@{{.M.BizopEtpsSccd }}</span>
+                @{{if .M.BizopEtpsSccd}}
+                    @{{if eq .M.StatusString "复核通过"}}
+                    <span  id="bizop_etps_sccd" class="is_success">@{{.M.BizopEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+                    @{{else if eq .M.StatusString "复核不通过"}}
+                    <span  id="bizop_etps_sccd" class="is_error"  >@{{.M.BizopEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+                    @{{else}}
+                    <span  id="bizop_etps_sccd">@{{.M.BizopEtpsSccd}}</span>
+                    @{{end}}
+                @{{end}}
             </td>
             <td class="td-scale-05">经营企业名称</td>
             <td class="td-scale-04">
-                <span id="bizop_etps_nm">@{{.M.BizopEtpsNm }}</span>
+                @{{if .M.BizopEtpsNm}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="bizop_etps_nm" class="is_success">@{{.M.BizopEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="bizop_etps_nm" class="is_error"  >@{{.M.BizopEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="bizop_etps_nm">@{{.M.BizopEtpsNm}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">加工企业编码</td>
             <td class="td-scale-04">
-                <span id="rcvgd_etpsno">@{{.M.RcvgdEtpsno }}</span>
+                @{{if .M.RcvgdEtpsno}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rcvgd_etpsno" class="is_success">@{{.M.RcvgdEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rcvgd_etpsno" class="is_error"  >@{{.M.RcvgdEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rcvgd_etpsno">@{{.M.RcvgdEtpsno}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">加工企业社会信用代码</td>
             <td class="td-scale-04">
-                <span id="rvsngd_etps_sccd">@{{.M.RvsngdEtpsSccd }}</span>
+                @{{if .M.RvsngdEtpsSccd}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rvsngd_etps_sccd" class="is_success">@{{.M.RvsngdEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rvsngd_etps_sccd" class="is_error"  >@{{.M.RvsngdEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rvsngd_etps_sccd">@{{.M.RvsngdEtpsSccd}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">加工企业名称</td>
             <td class="td-scale-04">
-                <span id="rcvgd_etps_nm">@{{.M.RcvgdEtpsNm }}</span>
+                @{{if .M.RcvgdEtpsNm}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rcvgd_etps_nm" class="is_success">@{{.M.RcvgdEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rcvgd_etps_nm" class="is_error"  >@{{.M.RcvgdEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rcvgd_etps_nm">@{{.M.RcvgdEtpsNm}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">申报单位代码</td>
             <td class="td-scale-04">
-                <span id="dcl_etpsno">@{{.M.DclEtpsno }}</span>
+                @{{if .M.DclEtpsno}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="dcl_etpsno" class="is_success">@{{.M.DclEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="dcl_etpsno" class="is_error"  >@{{.M.DclEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="dcl_etpsno">@{{.M.DclEtpsno}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">申报单位社会信用代码</td>
             <td class="td-scale-04">
-                <span id="dcl_etps_sccd">@{{.M.DclEtpsSccd }}</span>
+                @{{if .M.DclEtpsSccd}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="dcl_etps_sccd" class="is_success">@{{.M.DclEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="dcl_etps_sccd" class="is_error"  >@{{.M.DclEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="dcl_etps_sccd">@{{.M.DclEtpsSccd}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">申报单位名称</td>
             <td class="td-scale-04">
-                <span id="dcl_etps_nm">@{{.M.DclEtpsNm }}</span>
+                @{{if .M.DclEtpsNm}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="dcl_etps_nm" class="is_success">@{{.M.DclEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="dcl_etps_nm" class="is_error"  >@{{.M.DclEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="dcl_etps_nm">@{{.M.DclEtpsNm}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">录入单位代码</td>
             <td class="td-scale-04">
-                <span id="input_code">@{{.M.InputCode }}</span>
+                @{{if .M.InputCode}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="input_code" class="is_success">@{{.M.InputCode}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="input_code" class="is_error"  >@{{.M.InputCode}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="input_code">@{{.M.InputCode}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">录入单位社会信用代码</td>
             <td class="td-scale-04">
-                <span id="input_credit_code">@{{.M.InputCreditCode }}</span>
+                @{{if .M.InputCreditCode}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="input_credit_code" class="is_success">@{{.M.InputCreditCode}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="input_credit_code" class="is_error"  >@{{.M.InputCreditCode}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="input_credit_code">@{{.M.InputCreditCode}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">录入单位名称</td>
             <td class="td-scale-04">
-                <span id="input_name">@{{.M.InputName }}</span>
+                @{{if .M.InputName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="input_name" class="is_success">@{{.M.InputName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="input_name" class="is_error"  >@{{.M.InputName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="input_name">@{{.M.InputName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">录入日期</td>
             <td class="td-scale-04">
-                <span id="input_time">@{{.M.InputTime }}</span>
+                @{{if .M.InputTime}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="input_time" class="is_success">@{{.M.InputTime}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="input_time" class="is_error"  >@{{.M.InputTime}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="input_time">@{{.M.InputTime}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">清单申报日期</td>
             <td class="td-scale-04">
-                <span id="invt_dcl_time">@{{.M.InvtDclTime }}</span>
+                @{{if .M.InvtDclTime}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="invt_dcl_time" class="is_success">@{{.M.InvtDclTime}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="invt_dcl_time" class="is_error"  >@{{.M.InvtDclTime}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="invt_dcl_time">@{{.M.InvtDclTime}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">清单进出卡口状态</td>
             <td class="td-scale-04">
-                <span id="invt_iochkpt_stucd">@{{.M.InvtIochkptStucd }}</span>
+                @{{if .M.InvtIochkptStucd}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="invt_iochkpt_stucd" class="is_success">@{{.M.InvtIochkptStucd}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="invt_iochkpt_stucd" class="is_error"  >@{{.M.InvtIochkptStucd}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="invt_iochkpt_stucd">@{{.M.InvtIochkptStucd}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">核扣标志</td>
             <td class="td-scale-04">
-                <span id="vrfded_markcd">@{{.M.VrfdedMarkcd }}</span>
+                @{{if .M.VrfdedMarkcd}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="vrfded_markcd" class="is_success">@{{.M.VrfdedMarkcd}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="vrfded_markcd" class="is_error"  >@{{.M.VrfdedMarkcd}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="vrfded_markcd">@{{.M.VrfdedMarkcd}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">企业内部编号</td>
             <td class="td-scale-04">
-                <span id="etps_inner_invt_no">@{{.M.EtpsInnerInvtNo }}</span>
+                @{{if .M.EtpsInnerInvtNo}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="etps_inner_invt_no" class="is_success">@{{.M.EtpsInnerInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="etps_inner_invt_no" class="is_error"  >@{{.M.EtpsInnerInvtNo}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="etps_inner_invt_no">@{{.M.EtpsInnerInvtNo}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">进（出）境关别</td>
             <td class="td-scale-04">
-                <span id="impexp_portcd_name">@{{.M.ImpexpPortcdName }}</span>
+                @{{if .M.ImpexpPortcdName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="impexp_portcd_name" class="is_success">@{{.M.ImpexpPortcdName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="impexp_portcd_name" class="is_error"  >@{{.M.ImpexpPortcdName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="impexp_portcd_name">@{{.M.ImpexpPortcdName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">主管海关</td>
             <td class="td-scale-04">
-                <span id="dcl_plc_cuscd_name">@{{.M.DclPlcCuscdName }}</span>
+                @{{if .M.DclPlcCuscdName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="dcl_plc_cuscd_name" class="is_success">@{{.M.DclPlcCuscdName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="dcl_plc_cuscd_name" class="is_error"  >@{{.M.DclPlcCuscdName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="dcl_plc_cuscd_name">@{{.M.DclPlcCuscdName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">启运国(地区)</td>
             <td class="td-scale-04">
-                <span id="stship_trsarv_natcd_name">@{{.M.StshipTrsarvNatcdName }}</span>
+                @{{if .M.StshipTrsarvNatcdName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="stship_trsarv_natcd_name" class="is_success">@{{.M.StshipTrsarvNatcdName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="stship_trsarv_natcd_name" class="is_error"  >@{{.M.StshipTrsarvNatcdName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="stship_trsarv_natcd_name">@{{.M.StshipTrsarvNatcdName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">料件、成品标志</td>
             <td class="td-scale-04">
-                <span id="mtpck_endprd_markcd_name">@{{.M.MtpckEndprdMarkcdName }}</span>
+                @{{if .M.MtpckEndprdMarkcdName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="mtpck_endprd_markcd_name" class="is_success">@{{.M.MtpckEndprdMarkcdName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="mtpck_endprd_markcd_name" class="is_error"  >@{{.M.MtpckEndprdMarkcdName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="mtpck_endprd_markcd_name">@{{.M.MtpckEndprdMarkcdName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">监管方式</td>
             <td class="td-scale-04">
-                <span id="supv_modecd_name">@{{.M.SupvModecdName }}</span>
+                @{{if .M.SupvModecdName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="supv_modecd_name" class="is_success">@{{.M.SupvModecdName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="supv_modecd_name" class="is_error"  >@{{.M.SupvModecdName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="supv_modecd_name">@{{.M.SupvModecdName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">运输方式</td>
             <td class="td-scale-04">
-                <span id="trsp_modecd_name">@{{.M.TrspModecdName }}</span>
+                @{{if .M.TrspModecdName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="trsp_modecd_name" class="is_success">@{{.M.TrspModecdName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="trsp_modecd_name" class="is_error"  >@{{.M.TrspModecdName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="trsp_modecd_name">@{{.M.TrspModecdName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">申报表编号</td>
             <td class="td-scale-04">
-                <span id="apply_no">@{{.M.ApplyNo }}</span>
+                @{{if .M.ApplyNo}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="apply_no" class="is_success">@{{.M.ApplyNo}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="apply_no" class="is_error"  >@{{.M.ApplyNo}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="apply_no">@{{.M.ApplyNo}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
 
         <tr>
             <td class="td-scale-05">流转类型</td>
             <td class="td-scale-04">
-                <span id="list_type_name">@{{.M.ListTypeName }}</span>
+                @{{if .M.ListTypeName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="list_type_name" class="is_success">@{{.M.ListTypeName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="list_type_name" class="is_error"  >@{{.M.ListTypeName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="list_type_name">@{{.M.ListTypeName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">报关标志</td>
             <td class="td-scale-04">
-                <span id="apply_no">@{{.M.DclcusFlagName }}</span>
+                @{{if .M.DclcusFlagName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="dclcus_flag_name" class="is_success">@{{.M.DclcusFlagName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="dclcus_flag_name" class="is_error"  >@{{.M.DclcusFlagName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="dclcus_flag_name">@{{.M.DclcusFlagName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">报关类型</td>
             <td class="td-scale-04">
-                <span id="dclcus_typecd_name">@{{.M.DclcusTypecdName }}</span>
+                @{{if .M.DclcusTypecdName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="dclcus_typecd_name" class="is_success">@{{.M.DclcusTypecdName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="dclcus_typecd_name" class="is_error"  >@{{.M.DclcusTypecdName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="dclcus_typecd_name">@{{.M.DclcusTypecdName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">报关单类型</td>
             <td class="td-scale-04">
-                <span id="dec_type_name">@{{.M.DecTypeName }}</span>
+                @{{if .M.DecTypeName}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="dec_type_name" class="is_success">@{{.M.DecTypeName}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="dec_type_name" class="is_error"  >@{{.M.DecTypeName}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="dec_type_name">@{{.M.DecTypeName}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">关联清单编号</td>
             <td class="td-scale-04">
-                <span id="rlt_invt_no">@{{.M.RltInvtNo }}</span>
+                @{{if .M.RltInvtNo}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_invt_no" class="is_success">@{{.M.RltInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_invt_no" class="is_error"  >@{{.M.RltInvtNo}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_invt_no">@{{.M.RltInvtNo}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联手(账)册备案号</td>
             <td class="td-scale-04">
-                <span id="rlt_putrec_no">@{{.M.RltPutrecNo }}</span>
+                @{{if .M.RltPutrecNo}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_putrec_no" class="is_success">@{{.M.RltPutrecNo}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_putrec_no" class="is_error"  >@{{.M.RltPutrecNo}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_putrec_no">@{{.M.RltPutrecNo}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单编号</td>
             <td class="td-scale-04">
-                <span id="rlt_entry_no">@{{.M.RltEntryNo }}</span>
+                @{{if .M.RltEntryNo}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_no" class="is_success">@{{.M.RltEntryNo}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_no" class="is_error"  >@{{.M.RltEntryNo}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_no">@{{.M.RltEntryNo}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单申报日期</td>
             <td class="td-scale-04">
-                <span id="entry_dcl_time">@{{.M.EntryDclTime }}</span>
+                @{{if .M.EntryDclTime}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="entry_dcl_time" class="is_success">@{{.M.EntryDclTime}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="entry_dcl_time" class="is_error"  >@{{.M.EntryDclTime}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="entry_dcl_time">@{{.M.EntryDclTime}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05" colspan="2">关联报关单收发货人代码</td>
             <td class="td-scale-04">
-                <span id="rlt_entry_bizop_etpsno">@{{.M.RltEntryBizopEtpsno }}</span>
+                @{{if .M.RltEntryBizopEtpsno}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_bizop_etpsno" class="is_success">@{{.M.RltEntryBizopEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_bizop_etpsno" class="is_error"  >@{{.M.RltEntryBizopEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_bizop_etpsno">@{{.M.RltEntryBizopEtpsno}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单社会信用代码</td>
             <td class="td-scale-04">
-                <span id="rlt_entry_bizop_etps_sccd">@{{.M.RltEntryBizopEtpsSccd }}</span>
+                @{{if .M.RltEntryBizopEtpsSccd}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_bizop_etps_sccd" class="is_success">@{{.M.RltEntryBizopEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_bizop_etps_sccd" class="is_error"  >@{{.M.RltEntryBizopEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_bizop_etps_sccd">@{{.M.RltEntryBizopEtpsSccd}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单收发货人名称</td>
             <td class="td-scale-04" colspan="2">
-                <span id="rlt_entry_bizop_etps_nm">@{{.M.RltEntryBizopEtpsNm }}</span>
+                @{{if .M.RltEntryBizopEtpsNm}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_bizop_etps_nm" class="is_success">@{{.M.RltEntryBizopEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_bizop_etps_nm" class="is_error"  >@{{.M.RltEntryBizopEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_bizop_etps_nm">@{{.M.RltEntryBizopEtpsNm}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05" colspan="2">关联报关单生产销售(消费使用)单位代码</td>
             <td class="td-scale-04">
-                <span id="rlt_entry_rcvgd_etpsno">@{{.M.RltEntryRcvgdEtpsno }}</span>
+                @{{if .M.RltEntryRcvgdEtpsno}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_rcvgd_etpsno" class="is_success">@{{.M.RltEntryRcvgdEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_rcvgd_etpsno" class="is_error"  >@{{.M.RltEntryRcvgdEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_rcvgd_etpsno">@{{.M.RltEntryRcvgdEtpsno}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单社会信用代码</td>
             <td class="td-scale-04">
-                <span id="rlt_entry_rvsngd_etps_sccd">@{{.M.RltEntryRvsngdEtpsSccd }}</span>
+                @{{if .M.RltEntryRvsngdEtpsSccd}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_rvsngd_etps_sccd" class="is_success">@{{.M.RltEntryRvsngdEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_rvsngd_etps_sccd" class="is_error"  >@{{.M.RltEntryRvsngdEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_rvsngd_etps_sccd">@{{.M.RltEntryRvsngdEtpsSccd}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单单位名称</td>
             <td class="td-scale-04" colspan="2">
-                <span id="rlt_entry_rcvgd_etps_nm">@{{.M.RltEntryRcvgdEtpsNm }}</span>
+                @{{if .M.RltEntryRcvgdEtpsNm}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_rcvgd_etps_nm" class="is_success">@{{.M.RltEntryRcvgdEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_rcvgd_etps_nm" class="is_error"  >@{{.M.RltEntryRcvgdEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_rcvgd_etps_nm">@{{.M.RltEntryRcvgdEtpsNm}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05" colspan="2">关联报关单申报单位代码</td>
             <td class="td-scale-04">
-                <span id="rlt_entry_dcl_etpsno">@{{.M.RltEntryDclEtpsno }}</span>
+                @{{if .M.RltEntryDclEtpsno}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_dcl_etpsno" class="is_success">@{{.M.RltEntryDclEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_dcl_etpsno" class="is_error"  >@{{.M.RltEntryDclEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_dcl_etpsno">@{{.M.RltEntryDclEtpsno}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单社会信用代码</td>
             <td class="td-scale-04">
-                <span id="rlt_entry_dcl_etps_sccd">@{{.M.RltEntryDclEtpsSccd }}</span>
+                @{{if .M.RltEntryDclEtpsSccd}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_dcl_etps_sccd" class="is_success">@{{.M.RltEntryDclEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_dcl_etps_sccd" class="is_error"  >@{{.M.RltEntryDclEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_dcl_etps_sccd">@{{.M.RltEntryDclEtpsSccd}}</span>
+            @{{end}}
+            @{{end}}
             </td>
             <td class="td-scale-05">关联报关单申报单位名称</td>
             <td class="td-scale-04" colspan="2">
-                <span id="rlt_entry_dcl_etps_nm">@{{.M.RltEntryDclEtpsNm }}</span>
+                @{{if .M.RltEntryDclEtpsNm}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rlt_entry_dcl_etps_nm" class="is_success">@{{.M.RltEntryDclEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rlt_entry_dcl_etps_nm" class="is_error"  >@{{.M.RltEntryDclEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rlt_entry_dcl_etps_nm">@{{.M.RltEntryDclEtpsNm}}</span>
+            @{{end}}
+            @{{end}}
             </td>
         </tr>
         <tr>
             <td class="td-scale-05">备注</td>
             <td class="td-scale-04" colspan="7" style="position: relative;">
-                <span id="rmk">@{{.M.Rmk  }}</span>
+                @{{if .M.Rmk}}
+            @{{if eq .M.StatusString "复核通过"}}
+            <span  id="rmk" class="is_success">@{{.M.Rmk}}<i class="iconfont iconcheck font-12"></i></span>
+            @{{else if eq .M.StatusString "复核不通过"}}
+            <span  id="rmk" class="is_error"  >@{{.M.Rmk}}<i class="iconfont iconclose font-12"></i></span>
+            @{{else}}
+            <span  id="rmk">@{{.M.Rmk}}</span>
+            @{{end}}
+            @{{end}}
                 <div class="chapter_img">
+                    @{{if.AuthUserChapter }}
                     <img width="100" src="@{{.AuthUserChapter}}"/>
+                    @{{end}}
                     <p style="color: #ff0000;text-align: center;font-weight: bold;">@{{date .Now "Y-m-d H:i:s"}}</p>
                 </div>
             </td>
