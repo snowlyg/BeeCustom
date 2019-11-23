@@ -372,7 +372,9 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 	}
 
 	recheckErrorInputIds := c.GetString("RecheckErrorInputIds")
+	itemRecheckErrorInputIds := c.GetString("ItemRecheckErrorInputIds")
 	m.RecheckErrorInputIds = recheckErrorInputIds
+	m.ItemRecheckErrorInputIds = itemRecheckErrorInputIds
 	if err := models.AnnotationUpdateStatusRecheckErrorInputIds(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}

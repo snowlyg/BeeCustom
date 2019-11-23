@@ -43,7 +43,7 @@
 
     /**通过**/
     $('body').on('click', '#order_review_pass', async (data) => {
-      if (recheck_data.length > 0) {
+      if (recheck_data.length > 0 || recheck_data_item.length > 0) {
         return layer.msg('有错误内容，无法通过！');
       }
       layer.load(2);
@@ -69,7 +69,7 @@
 
     /**驳回**/
     $('body').on('click', '#order_reject', function() {
-      if (recheck_data.length === 0) {
+      if (recheck_data.length === 0 && recheck_data_item.length === 0) {
         return layer.msg('请先选择错误内容！');
       }
       layer.open({
@@ -91,6 +91,9 @@
       layer.load(2);
       try {
         data.field.RecheckErrorInputIds = JSON.stringify(recheck_data);
+        data.field.ItemRecheckErrorInputIds = JSON.stringify(recheck_data_item);
+        console.log(data.field.RecheckErrorInputIds)
+        console.log(data.field.ItemRecheckErrorInputIds)
         const res = await admin.post(`/annotation/recheck_reject/${@{{.m.Id}}}`, data.field, true);
         layer.closeAll('loading');
         if (res.status) {
@@ -111,8 +114,7 @@
     });
 
     /**点击报关单显示错误**/
-    let p_timer
-        , recheck_data = [];
+    let p_timer, recheck_data = [], recheck_data_item = [];
     $('body').on('click', 'p, span', function() {
       const id = $(this).data('id');
       const index = $(this).data('index');
@@ -125,11 +127,11 @@
             if ($(this).hasClass('is_error')) {
               $(this).removeClass('is_error');
               if (index) {
-                const i = recheck_data.findIndex((item) => item.index === index);
-                const x = recheck_data[i].id.findIndex((item) => item === id);
-                recheck_data[i].id.splice(x, 1);
-                if (recheck_data[i].id.length === 0) {
-                  recheck_data.splice(i, 1);
+                const i = recheck_data_item.findIndex((item) => item.index === index);
+                const x = recheck_data_item[i].id.findIndex((item) => item === id);
+                recheck_data_item[i].id.splice(x, 1);
+                if (recheck_data_item[i].id.length === 0) {
+                  recheck_data_item.splice(i, 1);
                 }
               } else {
                 const i = recheck_data.findIndex((item) => item.id === id);
@@ -138,11 +140,11 @@
             } else {
               $(this).addClass('is_error');
               if (index) {
-                if (recheck_data.some((item) => item.index === index)) {
-                  const i = recheck_data.findIndex((item) => item.index === index);
-                  recheck_data[i].id.push(id);
+                if (recheck_data_item.some((item) => item.index === index)) {
+                  const i = recheck_data_item.findIndex((item) => item.index === index);
+                  recheck_data_item[i].id.push(id);
                 } else {
-                  recheck_data.push({
+                  recheck_data_item.push({
                     index: index,
                     id: [id],
                   });
@@ -169,11 +171,11 @@
           $(this).removeClass('is_error');
           $(this).addClass('is_warn');
           if (index) {
-            const i = recheck_data.findIndex((item) => item.index === index);
-            const x = recheck_data[i].id.findIndex((item) => item === id);
-            recheck_data[i].id.splice(x, 1);
-            if (recheck_data[i].id.length === 0) {
-              recheck_data.splice(i, 1);
+            const i = recheck_data_item.findIndex((item) => item.index === index);
+            const x = recheck_data_item[i].id.findIndex((item) => item === id);
+            recheck_data_item[i].id.splice(x, 1);
+            if (recheck_data_item[i].id.length === 0) {
+              recheck_data_item.splice(i, 1);
             }
           } else {
             const i = recheck_data.findIndex((item) => item.id === id);
