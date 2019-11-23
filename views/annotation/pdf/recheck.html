@@ -143,15 +143,37 @@
         <tr>
             <td class="td-scale-05">预录入统一编号</td>
             <td class="td-scale-04">
-                <span  id="seq_no">@{{.M.SeqNo }}</span>
+                @{{if .M.SeqNo}}
+                    @{{if eq .M.StatusString "复核通过"}}
+                    <span  id="seq_no" class="is_success">@{{.M.SeqNo}}<i class="iconfont iconcheck font-12"></i></span>
+                    @{{else if eq .M.StatusString "复核不通过"}}
+                    <span  id="seq_no" class="is_error"  >@{{.M.SeqNo}}<i class="iconfont iconclose font-12"></i></span>
+                    @{{else}}
+                    <span  id="seq_no">@{{.M.SeqNo}}</span>
+                    @{{end}}
+                @{{end}}
             </td>
             <td class="td-scale-05">清单编号</td>
             <td class="td-scale-04">
-                <span id="bond_invt_no">@{{.M.BondInvtNo }}</span>
+                @{{if .M.BondInvtNo}}
+                    @{{if eq .M.StatusString "复核通过"}}
+                    <span  id="bond_invt_no" class="is_success">@{{.M.BondInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
+                    @{{else if eq .M.StatusString "复核不通过"}}
+                    <span  id="bond_invt_no" class="is_error">@{{.M.BondInvtNo}}<i class="iconfont iconclose font-12"></i></span>
+                    @{{else}}
+                    <span  id="bond_invt_no">@{{.M.BondInvtNo}}</span>
+                    @{{end}}
+                @{{end}}
             </td>
             <td class="td-scale-05">清单类型</td>
             <td class="td-scale-04">
-                <span id="invt_type_name">@{{.M.InvtTypeName }}</span>
+                @{{if eq .M.StatusString "复核通过"}}
+                <span  id="invt_type_name" class="is_success">@{{.M.InvtTypeName}}<i class="iconfont iconcheck font-12"></i></span>
+                @{{else if eq .M.StatusString "复核不通过"}}
+                <span  id="invt_type_name" class="is_error">@{{.M.InvtTypeName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{else}}
+                <span  id="invt_type_name">@{{.M.InvtTypeName }}</span>
+                @{{end}}
             </td>
             <td class="td-scale-05">手(账)编号</td>
             <td class="td-scale-04">

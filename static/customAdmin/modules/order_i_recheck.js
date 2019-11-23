@@ -936,7 +936,7 @@ layui.define(function (exports) {
                 layer.closeAll('loading');
                 return layer.msg('该订单已经驳回');
             }
-            if(order_i_edit_data.order_status_string == '复核通过' || order_i_edit_data.order_status_string == '待暂存') {
+            if(order_i_edit_data.order_status_string == '复核通过') {
                 layer.closeAll('loading');
                 return layer.msg('该订单已通过复核');
             }
@@ -1363,7 +1363,7 @@ layui.define(function (exports) {
         });
         /**驳回**/
         $("body").on("click", "#order_reject", function () {
-            if(order_i_edit_data.order_status_string == '复核通过' || order_i_edit_data.order_status_string == '待暂存') {
+            if(order_i_edit_data.order_status_string == '复核通过' ) {
                 layer.closeAll('loading');
                 return layer.msg('该订单已通过复核');
             }

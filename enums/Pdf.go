@@ -23,7 +23,6 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	pdfg.Dpi.Set(300)
 	pdfg.Orientation.Set(wkhtmltopdf.OrientationLandscape)
 	pdfg.Grayscale.Set(false) //彩色 false， 灰色 true
-	pdfg.Grayscale.Set(false) //彩色 false， 灰色 true
 
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
@@ -35,8 +34,8 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	page.FooterFontSize.Set(12)
 	page.Zoom.Set(0.95)
 	page.DisableJavascript.Set(false)
-	page.MinimumFontSize.Set(12)
 	page.DebugJavascript.Set(true)
+	page.MinimumFontSize.Set(12)
 
 	// // Add to document
 	pdfg.AddPage(page)
@@ -61,6 +60,5 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 		return err
 	}
 
-	fmt.Println("Done")
 	return nil
 }

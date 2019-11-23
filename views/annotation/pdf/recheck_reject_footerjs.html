@@ -1,0 +1,28 @@
+<script>
+  var RecheckErrorInputIdsString = document.getElementById('RecheckErrorInputIds').value;
+  if (RecheckErrorInputIdsString) {
+    let RecheckErrorInputIds = JSON.parse(RecheckErrorInputIdsString);
+    for (var i = 0; i < RecheckErrorInputIds.length; i++) {
+      if (RecheckErrorInputIds[i].index) {
+        for (var j = 0; j < RecheckErrorInputIds[i].id.length; j++) {
+          let element = document.querySelector('#' + RecheckErrorInputIds[i].id[j] + RecheckErrorInputIds[i].index);
+          element.classList.add('is_error');
+          var para = document.createElement('i');//创建需要增加的元素节点
+          para.classList.add('iconfont');
+          para.classList.add('iconclose');
+          para.classList.add('font-12');
+          element.appendChild(para);//添加至父节点内
+        }
+      } else {
+        let element1 = document.querySelector('#' + RecheckErrorInputIds[i].id);
+        element1.classList.add('is_error');
+        var para = document.createElement('i');//创建需要增加的元素节点
+        para.classList.add('iconfont');
+        para.classList.add('iconclose');
+        para.classList.add('font-12');
+        element1.appendChild(para);//添加至父节点内
+      }
+    }
+  }
+</script>
+
