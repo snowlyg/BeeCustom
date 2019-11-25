@@ -52,8 +52,7 @@ func InitDatabase() {
 		orm.Debug = isDev
 	}
 
-	pdf := beego.AppConfig.DefaultString("pdf", "pdf")
-	username := beego.AppConfig.DefaultString(pdf+"::username", "bee_custom_pdf")
-	password := beego.AppConfig.DefaultString(pdf+":password", "nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo")
+	username := beego.AppConfig.DefaultString("pdf_username", "bee_custom_pdf")
+	password := beego.AppConfig.DefaultString("pdf_password", "nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo")
 	beego.InsertFilter("/pdf/*", beego.BeforeRouter, auth.Basic(username, password))
 }

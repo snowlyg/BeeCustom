@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -13,6 +12,8 @@ import (
 	"BeeCustom/file"
 	"BeeCustom/models"
 	"BeeCustom/utils"
+	"BeeCustom/xmlTemplate"
+	"github.com/astaxie/beego"
 )
 
 type BaseAnnotationController struct {
@@ -428,37 +429,66 @@ func (c *BaseAnnotationController) bRecheck(id int64) {
 
 // bPushXml 提交单一
 func (c *BaseAnnotationController) bPushXml(id int64) {
-	type Address struct {
-		City, State string
-	}
-	type Person struct {
-		XMLName   xml.Name `xml:"person"`     //该XML文件的根元素为person
-		Id        int      `xml:"id,attr"`    //该值会作为person元素的属性
-		FirstName string   `xml:"name>first"` //first为name的子元素
-		LastName  string   `xml:"name>last"`  //last
-		Age       int      `xml:"age"`
-		Height    float32  `xml:"height,omitempty"` //含omitempty选项的字段如果为空值会省略
-		Married   bool     //默认为false
-		Address            //匿名字段（其标签无效）会被处理为其字段是外层结构体的字段，所以没有Address这个元素，而是直接显示City, State这两个元素
-		Comment   string   `xml:",comment"` //注释
-	}
 
 	m, err := models.AnnotationOne(id, "AnnotationItems")
 	if err != nil {
 		c.pageError("数据无效，请刷新后重试")
 	}
 
-	v := &Person{Id: 13, FirstName: "John", LastName: "Doe", Age: 42}
-	v.Comment = " Need more details. "
-	v.Address = Address{"Hanga Roa", "Easter Island"}
-	output, err := xml.MarshalIndent(v, "", "")
+	/*清单报文对象*/
+	signature := &xmlTemplate.Signature{
+		Xmlns: "http://www.w3.org/2001/XMLSchema-instance",
+		SignedInfo: xmlTemplate.SignedInfo{
+			CanonicalizationMethod: xmlTemplate.CanonicalizationMethod{
+				Algorithm: "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+			},
+			SignatureMethod: xmlTemplate.SignatureMethod{
+				Algorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-md5",
+			},
+			Reference: xmlTemplate.Reference{
+				URI: "String",
+				DigestMethod: xmlTemplate.DigestMethod{
+					Algorithm: "http://www.w3.org/2000/09/xmldsig#sha1",
+				},
+			},
+		},
+	}
+
+	handBook, _ := models.HandBookOne(m.HandBookId, "")
+
+	var sysId string
+	var receiverId string
+
+	handBookType1, _ := enums.GetSectionWithString("手册", "hand_book_type")
+	handBookType2, _ := enums.GetSectionWithString("账册", "hand_book_type")
+	if handBook.Type == handBookType1 {
+		receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdC", "DXPEDCNEMS000001")
+		sysId = beego.AppConfig.DefaultString("AnnotationSysIdC", "B1")
+	} else if handBook.Type == handBookType2 {
+		receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdE", "DXPEDCNEMS000002")
+		sysId = beego.AppConfig.DefaultString("AnnotationSysIdE", "95")
+	}
+
+	signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.DefaultString("AnnotationVersion", "1.0")
+	signature.Object.Package.EnvelopInfo.BusinessId = beego.AppConfig.DefaultString("AnnotationBusinessId", "")
+	signature.Object.Package.EnvelopInfo.FileName = beego.AppConfig.DefaultString("AnnotationFileName", "bee_custom_pdf")
+	signature.Object.Package.EnvelopInfo.MessageType = beego.AppConfig.DefaultString("AnnotationMessageType", "INV101")
+	signature.Object.Package.EnvelopInfo.SenderId = beego.AppConfig.DefaultString("AnnotationSenderId", "DXPESW0000002284")
+	signature.Object.Package.EnvelopInfo.ReceiverId = receiverId
+	signature.Object.Package.EnvelopInfo.MessageId = m.EtpsInnerInvtNo
+	signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
+
+	signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" //0:暂存，1:申报
+	signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
+	signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.DefaultString("AgentCode", "4419986507")
+
+	output, err := xml.MarshalIndent(signature, "", "")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
 		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
 	}
 
 	path := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/xml/"
-
 	if err := file.CreateFile(path); err != nil {
 		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
 		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
@@ -475,8 +505,6 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
 		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
 	}
-
-	_, _ = os.Stdout.Write(output)
 
 	c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
 

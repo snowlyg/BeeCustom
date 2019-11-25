@@ -52,7 +52,7 @@ type HandBook struct {
 	ThroughPutUnit          string    `orm:"column(through_put_unit);size(255);null" description:"生产能力单位"`
 	MaxWorkingCapital       string    `orm:"column(max_working_capital);size(255);null" description:"最大周转资金"`
 	Remark                  string    `orm:"column(remark);size(1000);null" description:"备注"`
-	Type                    int8      `orm:"column(type)" description:"账册类别 1：普通账册；2：二期账册"`
+	Type                    int8      `orm:"column(type)" description:"账册类别 1：手册；2：账册"`
 	CompanyManageCreditCode string    `orm:"column(company_manage_credit_code);size(18);null" description:"经营单位社会信用代码"`
 	CompanyClientCreditCode string    `orm:"column(company_client_credit_code);size(18);null" description:"加工单位社会信用代码"`
 	AgentCode               string    `orm:"column(agent_code);size(50);null" description:"申报单位代码"`

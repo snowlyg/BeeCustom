@@ -68,15 +68,15 @@ redis_password = ""
 cache_expire = 10
 
 #pdf 打印链接认证
-[pdf]
-username="bee_custom_pdf"
-password="nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo"
+pdf_username="bee_custom_pdf"
+pdf_password="nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo"
 
 
 include "clearance.conf"
 include "handbook.conf"
 include "import.conf"
 include "annotation.conf"
+include "agent.conf"
 
 
 

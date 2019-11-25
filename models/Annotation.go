@@ -115,6 +115,16 @@ type Annotation struct {
 	EntryDclTime             time.Time `form:"-" orm:"column(entry_dcl_time);type(datetime);null" description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
 	RecheckErrorInputIds     string    `orm:"column(recheck_error_input_ids);type(text);null" description:"复核input id"`
 	ItemRecheckErrorInputIds string    `orm:"column(item_recheck_error_input_ids);type(text);null" description:"复核input id"`
+
+	BackendUsers []*BackendUser `orm:"rel(m2m);rel_through(BeeCustom/models.AnnotationUserRel)"` // 设置一对多的反向关系
+	Company      *Company       `orm:"column(company_id);rel(fk)"`
+	CompanyId    int64          `orm:"-" form:"CompanyId"` // 关联管理会自动生成 CompanyId 字段，此处不生成字段
+	HandBookId   int64          `orm:"column(hand_book_id)" form:"HandBookId"`
+	OrderId      int64          `orm:"-" form:"OrderId"` // 关联管理会自动生成 OrderId 字段，此处不生成字段
+
+	AnnotationItems   []*AnnotationItem   `orm:"reverse(many)"` // 设置一对多关系
+	AnnotationRecords []*AnnotationRecord `orm:"reverse(many)"` // 设置一对多关系
+
 	// SysId                  string    `orm:"column(sys_id);size(2)" description:"子系统ID 95 加工贸易账册系统;B1 加工贸易手册系统 ;B2 加工贸易担保管理系统;B3 保税货物流转系统二期 ;Z7 海关特殊监管区域管理系统;Z8 保税物流管理系统"`
 	// OperCusRegCode         string    `orm:"column(oper_cus_reg_code);size(10)" description:"操作卡的海关十位"`
 	// KeyName                string    `orm:"column(key_name);size(255);null" description:"签名所用的证书信息"`
@@ -126,15 +136,6 @@ type Annotation struct {
 	// SenderId               string    `orm:"column(sender_id);size(255);null" description:"发送方编号"`
 	// ReceiverId             string    `orm:"column(receiver_id);size(255);null" description:"接收方编号"`
 	// DelcareFlag            string    `orm:"column(delcare_flag);size(255)" description:"申报标志 0--暂存；1--申报"`
-
-	BackendUsers []*BackendUser `orm:"rel(m2m);rel_through(BeeCustom/models.AnnotationUserRel)"` // 设置一对多的反向关系
-	Company      *Company       `orm:"column(company_id);rel(fk)"`
-	CompanyId    int64          `orm:"-" form:"CompanyId"` // 关联管理会自动生成 CompanyId 字段，此处不生成字段
-	HandBookId   int64          `orm:"column(hand_book_id)" form:"HandBookId"`
-	OrderId      int64          `orm:"-" form:"OrderId"` // 关联管理会自动生成 OrderId 字段，此处不生成字段
-
-	AnnotationItems   []*AnnotationItem   `orm:"reverse(many)"` // 设置一对多关系
-	AnnotationRecords []*AnnotationRecord `orm:"reverse(many)"` // 设置一对多关系
 
 }
 
