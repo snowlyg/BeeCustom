@@ -1,12 +1,18 @@
 <div class="custom-order_form">
     <div class="custom-order_form_content">
         <div class="custom-order_form_top">
-            <button class="layui-btn custom-create_btn" id="order_review_pass" type="button">
-                <i class="iconfont icon-checkcircle"></i>通过
-            </button>
-            <button class="layui-btn custom-create_btn" id="order_reject" type="button">
-                <i class="iconfont icon-replyall"></i>驳回
-            </button>
+            @{{if eq  .m.StatusString  "待复核"  "复核中" }}
+                @{{ if canArray  .actions .m.ImpexpMarkcd  "canRecheckPass"}}
+                <button class="layui-btn custom-create_btn" id="order_review_pass" type="button">
+                    <i class="iconfont icon-checkcircle"></i>通过
+                </button>
+                @{{end}}
+                @{{ if canArray  .actions .m.ImpexpMarkcd  "canRecheckReject"}}
+                <button class="layui-btn custom-create_btn" id="order_reject" type="button">
+                    <i class="iconfont icon-replyall"></i>驳回
+                </button>
+                @{{end}}
+            @{{end}}
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="@{{ .m.Id }}"
                     onclick="layui.admin.annotation_jilu_click(this)"
                     type="button">

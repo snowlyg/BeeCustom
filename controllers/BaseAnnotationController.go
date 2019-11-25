@@ -411,12 +411,14 @@ func (c *BaseAnnotationController) bRecheck(id int64) {
 		c.pageError("数据无效，请刷新后重试")
 	}
 
+	c.getActionData(m.ImpexpMarkcd, "RecheckPass", "RecheckReject")
 	c.setStatusOnly(m, "复核中")
-
-	c.Data["m"] = models.TransformAnnotation(id, "AnnotationItems")
+	annotation := models.TransformAnnotation(id, "AnnotationItems")
+	c.Data["m"] = annotation
 	c.setTpl("annotation/recheck.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/recheck_footerjs.html"
+	// 页面里按钮权限控制
 
 	c.GetXSRFToken()
 }

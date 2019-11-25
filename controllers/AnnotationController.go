@@ -152,13 +152,13 @@ func (c *AnnotationController) EForRecheck() {
 	c.bForRecheck(Id)
 }
 
-// ForRecheck 复核
+// IRecheck 复核
 func (c *AnnotationController) IRecheck() {
 	Id, _ := c.GetInt64(":id", 0)
 	c.bRecheck(Id)
 }
 
-// ForRecheck 复核
+// ERecheck 复核
 func (c *AnnotationController) ERecheck() {
 	Id, _ := c.GetInt64(":id", 0)
 	c.bRecheck(Id)
