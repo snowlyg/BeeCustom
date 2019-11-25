@@ -409,12 +409,12 @@
             }
         });
 
-        /**提交到单一窗口-选择附件**/
+        /**提交到单一窗口**/
         $(document).on("click", ".order_check_success", async function () {
             try {
-                const data_check = await admin.get(`/annotation/i/${$(this).data('id')}/create_xml`, 'show');
-                if (data_check.status) {
-                    await admin.get_data_list(`/annotation/i/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+                const data_check = await admin.get(`/annotation/push_xml/${$(this).data('id')}`, 'show');
+                if (data.status) {
+                    window.location.reload()
                 }
             } catch (e) {
                 return layer.msg('接口错误！', {

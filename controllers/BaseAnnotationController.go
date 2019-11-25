@@ -2,12 +2,15 @@ package controllers
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"BeeCustom/enums"
+	"BeeCustom/file"
 	"BeeCustom/models"
 	"BeeCustom/utils"
 )
@@ -421,6 +424,56 @@ func (c *BaseAnnotationController) bRecheck(id int64) {
 	// 页面里按钮权限控制
 
 	c.GetXSRFToken()
+}
+
+// bPushXml 提交单一
+func (c *BaseAnnotationController) bPushXml(id int64) {
+	type Address struct {
+		City, State string
+	}
+	type Person struct {
+		XMLName   xml.Name `xml:"person"`     //该XML文件的根元素为person
+		Id        int      `xml:"id,attr"`    //该值会作为person元素的属性
+		FirstName string   `xml:"name>first"` //first为name的子元素
+		LastName  string   `xml:"name>last"`  //last
+		Age       int      `xml:"age"`
+		Height    float32  `xml:"height,omitempty"` //含omitempty选项的字段如果为空值会省略
+		Married   bool     //默认为false
+		Address            //匿名字段（其标签无效）会被处理为其字段是外层结构体的字段，所以没有Address这个元素，而是直接显示City, State这两个元素
+		Comment   string   `xml:",comment"` //注释
+	}
+
+	m, err := models.AnnotationOne(id, "AnnotationItems")
+	if err != nil {
+		c.pageError("数据无效，请刷新后重试")
+	}
+
+	v := &Person{Id: 13, FirstName: "John", LastName: "Doe", Age: 42}
+	v.Comment = " Need more details. "
+	v.Address = Address{"Hanga Roa", "Easter Island"}
+	output, err := xml.MarshalIndent(v, "  ", "    ")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
+		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+	}
+
+	path := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/xml/"
+
+	if err := file.CreateFile(path); err != nil {
+		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+	}
+
+	err = file.WriteFile(path+m.EtpsInnerInvtNo+".xml", output)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
+		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+	}
+
+	_, _ = os.Stdout.Write(output)
+
+	c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
+
 }
 
 // 删除

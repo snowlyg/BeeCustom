@@ -27,7 +27,7 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
 	// Create a new input page from an URL
-	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/home/pdf/" + strconv.FormatInt(Id, 10))
+	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/pdf/annotation_pdf/" + strconv.FormatInt(Id, 10))
 
 	// Set options for this page
 	page.FooterCenter.Set("第[page]页 共[topage]页")

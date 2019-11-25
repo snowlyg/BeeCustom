@@ -184,6 +184,18 @@ func (c *AnnotationController) ERecheckReject() {
 	c.bRecheckPassReject("复核不通过")
 }
 
+// PushXml 已提交单一
+func (c *AnnotationController) IPushXml() {
+	id, _ := c.GetInt64(":id")
+	c.bPushXml(id)
+}
+
+// PushXml 已提交单一
+func (c *AnnotationController) EPushXml() {
+	id, _ := c.GetInt64(":id")
+	c.bPushXml(id)
+}
+
 //删除
 func (c *AnnotationController) IDelete() {
 	id, _ := c.GetInt64(":id")

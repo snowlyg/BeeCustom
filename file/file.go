@@ -3,6 +3,7 @@ package file
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"mime/multipart"
 	"os"
 
@@ -59,4 +60,9 @@ func GetUploadFileUPath(f multipart.File, h *multipart.FileHeader, fileType stri
 		return "", errors.New("上传失败")
 	}
 
+}
+
+// WriteFile writes the contents of the output buffer to a file
+func WriteFile(filename string, output []byte) error {
+	return ioutil.WriteFile(filename, output, 0666)
 }
