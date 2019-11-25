@@ -239,16 +239,16 @@
                                     @{{end}}
                                 {{# } }}
 
-                                {{# if(item.StatusString == '待暂存'){ }}
+                                {{# if(item.StatusString == '复核通过'){ }}
                                     @{{if canArray  .actions .ImpexpMarkcd "canPushXml"}}
-                                    <button class="layui-btn tr-bd-{{ status }} order_check_success" type="button" data-id="{{ item.Id }}">暂存到单一窗口</button>
+                                    <button class="layui-btn tr-bd-{{ status }} order_check_success" type="button" data-id="{{ item.Id }}">暂存到单一</button>
                                     @{{end}}
                                     @{{if canArray  .actions .ImpexpMarkcd "canEdit"}}
                                     <a class="order_revise" data-id="{{ item.Id }}">修改</a>
                                     @{{end}}
                                  {{# } }}
 
-                                {{# if(item.StatusString == '单一处理中'){ }}
+                                {{# if(item.StatusString == '单一已暂存'){ }}
                                     @{{if canArray  .actions .ImpexpMarkcd "canPushXml"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_check_success_reload" type="button" data-id="{{ item.Id }}">重新发送</button>
                                     @{{end}}
@@ -269,7 +269,7 @@
                                     @{{end}}
                                 {{# } }}
 
-                                {{# if(item.StatusString !== '已完成' || item.StatusString !== '订单关闭' ||item.StatusString !== '单一处理中' ){ }}
+                                {{# if(item.StatusString !== '已完成' || item.StatusString !== '订单关闭' || item.StatusString !== '单一已暂存' || item.StatusString !== '单一处理中' ){ }}
                                     @{{ if canArray  .actions .ImpexpMarkcd "canCancel"}}
                                         <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
                                     @{{end}}

@@ -164,8 +164,8 @@ func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
 	sql += "count( CASE WHEN STATUS = 3 THEN 1 END ) AS '审核通过',"
 	sql += "count( CASE WHEN STATUS = 5 THEN 1 END ) AS '待制单',"
 	sql += "count( CASE WHEN STATUS = 7 THEN 1 END ) AS '待复核',"
-	sql += "count( CASE WHEN STATUS = 11 THEN 1 END ) AS '单一处理中',"
-	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '已完成' "
+	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '单一处理中',"
+	sql += "count( CASE WHEN STATUS = 13 THEN 1 END ) AS '已完成' "
 	sql = GetCommonListSql(sql, params)
 
 	_, err := o.Raw(sql).Values(&maps)
