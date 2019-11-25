@@ -161,6 +161,7 @@ func init() {
 	beego.Router("/home/logout", &controllers.HomeController{}, "*:Logout")
 	beego.Router("/home/datareset", &controllers.HomeController{}, "Get:DataReset")
 
+	//pdf打印 使用超级管理员
 	beego.Router("/pdf/annotation_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationPdf")
 
 	beego.Router("/home/404", &controllers.HomeController{}, "*:Page404")

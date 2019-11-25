@@ -451,7 +451,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 	v := &Person{Id: 13, FirstName: "John", LastName: "Doe", Age: 42}
 	v.Comment = " Need more details. "
 	v.Address = Address{"Hanga Roa", "Easter Island"}
-	output, err := xml.MarshalIndent(v, "  ", "    ")
+	output, err := xml.MarshalIndent(v, "", "")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
 		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
@@ -461,6 +461,12 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 
 	if err := file.CreateFile(path); err != nil {
 		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+	}
+
+	err = file.WriteFile(path+m.EtpsInnerInvtNo+".xml", []byte(xml.Header))
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
 		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
 	}
 

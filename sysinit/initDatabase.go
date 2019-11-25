@@ -6,6 +6,8 @@ import (
 	"BeeCustom/utils"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/plugins/auth"
+
 	//_ "github.com/mattn/go-sqlite3"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -49,4 +51,9 @@ func InitDatabase() {
 	if isDev {
 		orm.Debug = isDev
 	}
+
+	pdf := beego.AppConfig.DefaultString("pdf", "pdf")
+	username := beego.AppConfig.DefaultString(pdf+"::username", "bee_custom_pdf")
+	password := beego.AppConfig.DefaultString(pdf+":password", "nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo")
+	beego.InsertFilter("/pdf/*", beego.BeforeRouter, auth.Basic(username, password))
 }
