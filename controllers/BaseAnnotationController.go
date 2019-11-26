@@ -457,29 +457,41 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 
 		var sysId string
 		var receiverId string
+		var path string
 
 		handBookType1, _ := enums.GetSectionWithString("手册", "hand_book_type")
 		handBookType2, _ := enums.GetSectionWithString("账册", "hand_book_type")
-		if handBook.Type == handBookType1 {
-			receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdC", "DXPEDCNEMS000001")
-			sysId = beego.AppConfig.DefaultString("AnnotationSysIdC", "B1")
-		} else if handBook.Type == handBookType2 {
-			receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdE", "DXPEDCNEMS000002")
-			sysId = beego.AppConfig.DefaultString("AnnotationSysIdE", "95")
+		if handBook == nil {
+			c.jsonResult(enums.JRCodeSucc, "错误手账册类型", nil)
+		} else {
+			if handBook.Type == handBookType1 {
+				receiverId = beego.AppConfig.String("AnnotationReceiverIdC")
+				sysId = beego.AppConfig.String("AnnotationSysIdC")
+				path = beego.AppConfig.String("annotation_xml_path_c")
+			} else if handBook.Type == handBookType2 {
+				receiverId = beego.AppConfig.String("AnnotationReceiverIdE")
+				sysId = beego.AppConfig.String("AnnotationSysIdE")
+				path = beego.AppConfig.String("annotation_xml_path_e")
+			} else {
+				c.jsonResult(enums.JRCodeSucc, "错误手账册类型", nil)
+			}
 		}
-		fileName := m.EtpsInnerInvtNo + ".xml"
+
+		//报文名称
+		fileName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.EtpsInnerInvtNo + ".xml"
+
 		signature.Object.Package.EnvelopInfo.FileName = fileName
-		signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.DefaultString("AnnotationVersion", "1.0")
-		signature.Object.Package.EnvelopInfo.BusinessId = beego.AppConfig.DefaultString("AnnotationBusinessId", "")
-		signature.Object.Package.EnvelopInfo.MessageType = beego.AppConfig.DefaultString("AnnotationMessageType", "INV101")
-		signature.Object.Package.EnvelopInfo.SenderId = beego.AppConfig.DefaultString("AnnotationSenderId", "DXPESW0000002284")
+		signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.String("AnnotationVersion")
+		signature.Object.Package.EnvelopInfo.BusinessId = beego.AppConfig.String("AnnotationBusinessId")
+		signature.Object.Package.EnvelopInfo.MessageType = beego.AppConfig.String("AnnotationMessageType")
+		signature.Object.Package.EnvelopInfo.SenderId = beego.AppConfig.String("AnnotationSenderId")
 		signature.Object.Package.EnvelopInfo.ReceiverId = receiverId
 		signature.Object.Package.EnvelopInfo.MessageId = m.EtpsInnerInvtNo
 		signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
 
 		signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" //0:暂存，1:申报
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.DefaultString("AgentCode", "4419986507")
+		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.String("AgentCode")
 
 		output, err := xml.MarshalIndent(signature, "", "")
 		if err != nil {
@@ -487,7 +499,6 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
 		}
 
-		path := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/xml/"
 		if err := file.CreateFile(path); err != nil {
 			utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
 			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)

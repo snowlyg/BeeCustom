@@ -31,7 +31,7 @@ func init() {
 
 // TableName 下面是统一的表名管理
 func TableName(name string) string {
-	prefix := beego.AppConfig.DefaultString("db_dt_prefix", "bee_custom_")
+	prefix := beego.AppConfig.String("db_dt_prefix")
 	return prefix + name
 }
 

@@ -15,8 +15,8 @@ import (
 var cc cache.Cache
 
 func InitCache() {
-	host := beego.AppConfig.DefaultString("cache::redis_host", "localhost")
-	//passWord := beego.AppConfig.DefaultString("cache::redis_password")
+	host := beego.AppConfig.String("cache::redis_host")
+	//passWord := beego.AppConfig.String("cache::redis_password")
 	var err error
 	defer func() {
 		if r := recover(); r != nil {

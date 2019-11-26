@@ -38,9 +38,9 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	page.MinimumFontSize.Set(12)
 
 	// basic auth 认证用户名和密码
-	pdf := beego.AppConfig.DefaultString("pdf", "pdf")
-	username := beego.AppConfig.DefaultString(pdf+"::username", "bee_custom_pdf")
-	password := beego.AppConfig.DefaultString(pdf+":password", "nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo")
+	pdf := beego.AppConfig.String("pdf")
+	username := beego.AppConfig.String(pdf + "::username")
+	password := beego.AppConfig.String(pdf + ":password")
 	page.Username.Set(username)
 	page.Password.Set(password)
 
