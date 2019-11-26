@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 
 	"BeeCustom/models"
+	"BeeCustom/tasks"
 	"BeeCustom/utils"
 
 	_ "github.com/astaxie/beego/session/redis"
@@ -22,6 +23,8 @@ func init() {
 	utils.InitRabc()
 	//自定义末模板方法
 	utils.InitFunc()
+	//定时任务
+	tasks.InitTask()
 	//初始化数据库
 	InitDatabase()
 

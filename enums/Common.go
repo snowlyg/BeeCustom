@@ -135,3 +135,14 @@ func GetOrderAnnotationDateTime(timeString, filedName string) string {
 
 	return sql
 }
+
+//string slice in
+func InStringArray(s string, sS []string) bool {
+	for _, v := range sS {
+		if v == s {
+			return true
+		}
+	}
+
+	return false
+}
