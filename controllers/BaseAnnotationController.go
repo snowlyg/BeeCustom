@@ -431,83 +431,82 @@ func (c *BaseAnnotationController) bRecheck(id int64) {
 func (c *BaseAnnotationController) bPushXml(id int64) {
 
 	m, err := models.AnnotationOne(id, "AnnotationItems")
-	if err != nil {
+	if err != nil || m == nil {
 		c.pageError("数据无效，请刷新后重试")
-	}
-
-	/*清单报文对象*/
-	signature := &xmlTemplate.Signature{
-		Xmlns: "http://www.w3.org/2001/XMLSchema-instance",
-		SignedInfo: xmlTemplate.SignedInfo{
-			CanonicalizationMethod: xmlTemplate.CanonicalizationMethod{
-				Algorithm: "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
-			},
-			SignatureMethod: xmlTemplate.SignatureMethod{
-				Algorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-md5",
-			},
-			Reference: xmlTemplate.Reference{
-				URI: "String",
-				DigestMethod: xmlTemplate.DigestMethod{
-					Algorithm: "http://www.w3.org/2000/09/xmldsig#sha1",
+	} else {
+		/*清单报文对象*/
+		signature := &xmlTemplate.Signature{
+			Xmlns: "http://www.w3.org/2001/XMLSchema-instance",
+			SignedInfo: xmlTemplate.SignedInfo{
+				CanonicalizationMethod: xmlTemplate.CanonicalizationMethod{
+					Algorithm: "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+				},
+				SignatureMethod: xmlTemplate.SignatureMethod{
+					Algorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-md5",
+				},
+				Reference: xmlTemplate.Reference{
+					URI: "String",
+					DigestMethod: xmlTemplate.DigestMethod{
+						Algorithm: "http://www.w3.org/2000/09/xmldsig#sha1",
+					},
 				},
 			},
-		},
+		}
+
+		handBook, _ := models.HandBookOne(m.HandBookId, "")
+
+		var sysId string
+		var receiverId string
+
+		handBookType1, _ := enums.GetSectionWithString("手册", "hand_book_type")
+		handBookType2, _ := enums.GetSectionWithString("账册", "hand_book_type")
+		if handBook.Type == handBookType1 {
+			receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdC", "DXPEDCNEMS000001")
+			sysId = beego.AppConfig.DefaultString("AnnotationSysIdC", "B1")
+		} else if handBook.Type == handBookType2 {
+			receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdE", "DXPEDCNEMS000002")
+			sysId = beego.AppConfig.DefaultString("AnnotationSysIdE", "95")
+		}
+		fileName := m.EtpsInnerInvtNo + ".xml"
+		signature.Object.Package.EnvelopInfo.FileName = fileName
+		signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.DefaultString("AnnotationVersion", "1.0")
+		signature.Object.Package.EnvelopInfo.BusinessId = beego.AppConfig.DefaultString("AnnotationBusinessId", "")
+		signature.Object.Package.EnvelopInfo.MessageType = beego.AppConfig.DefaultString("AnnotationMessageType", "INV101")
+		signature.Object.Package.EnvelopInfo.SenderId = beego.AppConfig.DefaultString("AnnotationSenderId", "DXPESW0000002284")
+		signature.Object.Package.EnvelopInfo.ReceiverId = receiverId
+		signature.Object.Package.EnvelopInfo.MessageId = m.EtpsInnerInvtNo
+		signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
+
+		signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" //0:暂存，1:申报
+		signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
+		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.DefaultString("AgentCode", "4419986507")
+
+		output, err := xml.MarshalIndent(signature, "", "")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
+			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+		}
+
+		path := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/xml/"
+		if err := file.CreateFile(path); err != nil {
+			utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+		}
+
+		err = file.WriteFile(path+fileName, []byte(xml.Header))
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
+			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+		}
+
+		err = file.WriteFile(path+fileName, output)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
+			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+		}
+
+		c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
 	}
-
-	handBook, _ := models.HandBookOne(m.HandBookId, "")
-
-	var sysId string
-	var receiverId string
-
-	handBookType1, _ := enums.GetSectionWithString("手册", "hand_book_type")
-	handBookType2, _ := enums.GetSectionWithString("账册", "hand_book_type")
-	if handBook.Type == handBookType1 {
-		receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdC", "DXPEDCNEMS000001")
-		sysId = beego.AppConfig.DefaultString("AnnotationSysIdC", "B1")
-	} else if handBook.Type == handBookType2 {
-		receiverId = beego.AppConfig.DefaultString("AnnotationReceiverIdE", "DXPEDCNEMS000002")
-		sysId = beego.AppConfig.DefaultString("AnnotationSysIdE", "95")
-	}
-
-	signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.DefaultString("AnnotationVersion", "1.0")
-	signature.Object.Package.EnvelopInfo.BusinessId = beego.AppConfig.DefaultString("AnnotationBusinessId", "")
-	signature.Object.Package.EnvelopInfo.FileName = beego.AppConfig.DefaultString("AnnotationFileName", "bee_custom_pdf")
-	signature.Object.Package.EnvelopInfo.MessageType = beego.AppConfig.DefaultString("AnnotationMessageType", "INV101")
-	signature.Object.Package.EnvelopInfo.SenderId = beego.AppConfig.DefaultString("AnnotationSenderId", "DXPESW0000002284")
-	signature.Object.Package.EnvelopInfo.ReceiverId = receiverId
-	signature.Object.Package.EnvelopInfo.MessageId = m.EtpsInnerInvtNo
-	signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
-
-	signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" //0:暂存，1:申报
-	signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
-	signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.DefaultString("AgentCode", "4419986507")
-
-	output, err := xml.MarshalIndent(signature, "", "")
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
-		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
-	}
-
-	path := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/xml/"
-	if err := file.CreateFile(path); err != nil {
-		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
-		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
-	}
-
-	err = file.WriteFile(path+m.EtpsInnerInvtNo+".xml", []byte(xml.Header))
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
-		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
-	}
-
-	err = file.WriteFile(path+m.EtpsInnerInvtNo+".xml", output)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
-		c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
-	}
-
-	c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
-
 }
 
 // 删除
