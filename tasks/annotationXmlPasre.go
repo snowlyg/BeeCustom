@@ -41,14 +41,14 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 			}
 
 			qs = qs.SetCond(cond1)
-		}
 
-		_, err = qs.Update(orm.Params{
-			"status": status11,
-		})
+			_, err = qs.Update(orm.Params{
+				"status": status11,
+			})
 
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("annotationXmlPasre Update error:%v", err))
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("annotationXmlPasre Update error:%v", err))
+			}
 		}
 
 		return nil

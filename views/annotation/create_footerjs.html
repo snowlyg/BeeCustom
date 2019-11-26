@@ -439,7 +439,7 @@
                 const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`,"show");
                 if (result.status === 1) {
                     window.location.reload();
-                    admin.reloadFrame("@{{.ImpexpMarkcdName}}"+'进口核注清单iframe');
+                    admin.reloadFrame("@{{.ImpexpMarkcdName}}"+'核注清单iframe');
                 }
 
                 layer.closeAll('loading');

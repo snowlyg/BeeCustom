@@ -305,10 +305,7 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam,
 	var handBookGoods []*models.HandBookGood
 	for i := 0; i < len(Info); i++ {
 		handBookGood := models.NewHandBookGood(0)
-		t := reflect.ValueOf(&handBookGood).Elem()
-		for k, v := range Info[i] {
-			xlsx.SetObjValue(k, v, t)
-		}
+		enums.SetObjValue(&handBookGood, Info, i)
 
 		handBookGood.HandBook = &hIP.HandBook
 		handBookGood.Type = hIP.HandBookGoodType
@@ -334,10 +331,7 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 	var handBookUllages []*models.HandBookUllage
 	for i := 0; i < len(Info); i++ {
 		handBookUllage := models.NewHandBookUllage(0)
-		t := reflect.ValueOf(&handBookUllage).Elem()
-		for k, v := range Info[i] {
-			xlsx.SetObjValue(k, v, t)
-		}
+		enums.SetObjValue(&handBookUllage, Info, i)
 		handBookGood, err := models.GetHandBookGoodBySerial(handBookUllage.FinishProNo)
 		if err != nil {
 			return err
@@ -374,7 +368,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 					c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 				}
 
-				xlsx.SetObjValue(obj.Name, cell, t)
+				enums.SetObjValueIn(obj.Name, cell, t)
 			}
 		}
 	}

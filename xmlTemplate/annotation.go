@@ -5,36 +5,30 @@ package xmlTemplate
 import "encoding/xml"
 
 type DigestMethod struct {
-	//DigestMethod xml.Name `xml:"DigestMethod"`
 	Algorithm string `xml:"Algorithm,attr"`
 }
 
 type Reference struct {
-	//Reference    xml.Name     `xml:"Reference"`
 	URI          string       `xml:"URI,attr"`
 	DigestMethod DigestMethod `xml:"DigestMethod"`
 	DigestValue  string       `xml:"DigestValue"`
 }
 
 type CanonicalizationMethod struct {
-	//CanonicalizationMethod xml.Name `xml:"CanonicalizationMethod"`
 	Algorithm string `xml:"Algorithm,attr"`
 }
 
 type SignatureMethod struct {
-	//SignatureMethod xml.Name `xml:"SignatureMethod"`
 	Algorithm string `xml:"Algorithm,attr"`
 }
 
 type SignedInfo struct {
-	//SignedInfo             xml.Name               `xml:"SignedInfo"`
 	CanonicalizationMethod CanonicalizationMethod `xml:"CanonicalizationMethod"`
 	SignatureMethod        SignatureMethod        `xml:"SignatureMethod"`
 	Reference              Reference              `xml:"Reference"`
 }
 
 type EnvelopInfo struct {
-	//EnvelopInfo xml.Name `xml:"EnvelopInfo"`
 	Version     string `xml:"version"`
 	BusinessId  string `xml:"business_id"`
 	MessageId   string `xml:"message_id"`
@@ -46,7 +40,6 @@ type EnvelopInfo struct {
 }
 
 type PocketInfo struct {
-	//PocketInfo     xml.Name `xml:"PocketInfo"`
 	PocketId       string `xml:"pocket_id"`
 	TotalPocketQty string `xml:"total_pocket_qty"`
 	CurPocketNo    string `xml:"cur_pocket_no"`
@@ -54,7 +47,6 @@ type PocketInfo struct {
 }
 
 type InvtHeadType struct {
-	//InvtHeadType                 xml.Name `xml:"InvtHeadType"`
 	SeqNo                        string `xml:"SeqNo"`
 	BondInvtNo                   string `xml:"BondInvtNo"`
 	ChgTmsCntstring              string `xml:"ChgTmsCnt"`
@@ -109,7 +101,6 @@ type InvtHeadType struct {
 }
 
 type InvtListType struct {
-	//InvtListType     xml.Name `xml:"InvtListType"`
 	SeqNo            string `xml:"SeqNo"`
 	GdsSeqno         string `xml:"GdsSeqno"`
 	PutrecSeqno      string `xml:"PutrecSeqno"`
@@ -145,7 +136,6 @@ type InvtListType struct {
 }
 
 type InvtDecHeadType struct {
-	//InvtDecHeadType        xml.Name `xml:"InvtDecHeadType"`
 	SeqNo                  string `xml:"SeqNo"`
 	DecSeqNo               string `xml:"DecSeqNo"`
 	PutrecNo               string `xml:"PutrecNo"`
@@ -205,7 +195,6 @@ type InvtDecHeadType struct {
 }
 
 type InvtDecListType struct {
-	//InvtDecListType        xml.Name `xml:"InvtDecListType"`
 	SeqNostring            string `xml:"SeqNo"`
 	DecSeqNostring         string `xml:"DecSeqNo"`
 	EntryGdsSeqnostring    string `xml:"EntryGdsSeqno"`
@@ -254,7 +243,6 @@ type InvtDecListType struct {
 }
 
 type InvtMessage struct {
-	//InvtMessage     xml.Name          `xml:"InvtMessage"`
 	InvtHeadType    InvtHeadType      `xml:"InvtHeadType"`
 	InvtListType    []InvtListType    `xml:"InvtListType"`
 	InvtDecHeadType InvtDecHeadType   `xml:"InvtDecHeadType"`
@@ -264,25 +252,21 @@ type InvtMessage struct {
 }
 
 type BussinessData struct {
-	//BussinessData xml.Name    `xml:"BussinessData"`
 	InvtMessage InvtMessage `xml:"InvtMessage"`
 	DelcareFlag string      `xml:"DelcareFlag"`
 }
 
 type DataInfo struct {
-	//DataInfo      xml.Name      `xml:"DataInfo"`
 	PocketInfo    PocketInfo    `xml:"PocketInfo"`
 	BussinessData BussinessData `xml:"BussinessData"`
 }
 
 type Package struct {
-	//Package     xml.Name    `xml:"Package"`
 	EnvelopInfo EnvelopInfo `xml:"EnvelopInfo"`
 	DataInfo    DataInfo    `xml:"DataInfo"`
 }
 
 type Object struct {
-	//Object  xml.Name `xml:"Object"`
 	Package Package `xml:"Package"`
 }
 

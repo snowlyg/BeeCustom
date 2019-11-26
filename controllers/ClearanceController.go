@@ -267,10 +267,7 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 	for i := 0; i < len(Info); i++ {
 		inObj := models.NewClearance(0)
 		inObj.Type = cIP.ClearanceType
-		t := reflect.ValueOf(&inObj).Elem()
-		for k, v := range Info[i] {
-			xlsx.SetObjValue(k, v, t)
-		}
+		enums.SetObjValue(&inObj, Info, i)
 		cIP.Obj = append(cIP.Obj, &inObj)
 	}
 

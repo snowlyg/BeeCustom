@@ -26,6 +26,11 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
+
+	// basic auth 认证用户名和密码
+	username := beego.AppConfig.String("pdf_username")
+	password := beego.AppConfig.String("pdf_password")
+
 	// Create a new input page from an URL
 	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/pdf/annotation_pdf/" + strconv.FormatInt(Id, 10))
 
@@ -37,10 +42,6 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	page.DebugJavascript.Set(true)
 	page.MinimumFontSize.Set(12)
 
-	// basic auth 认证用户名和密码
-	pdf := beego.AppConfig.String("pdf")
-	username := beego.AppConfig.String(pdf + "::username")
-	password := beego.AppConfig.String(pdf + ":password")
 	page.Username.Set(username)
 	page.Password.Set(password)
 

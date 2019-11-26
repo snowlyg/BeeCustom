@@ -1257,8 +1257,12 @@ layui.define('view', function (exports) {
 
             //派单
             distribute(clickEnum, id,impexpMarkcdName) {
+
                 /**派单**/
                 $(document).on("click", clickEnum, function () {
+                    if (!id){
+                        id = $(this).data("id");
+                    }
                     layer.open({
                         type: 1,
                         title: '派单',
@@ -1278,7 +1282,10 @@ layui.define('view', function (exports) {
                             if (clickEnum === "#order_dispatch") {
                                 admin.reloadFrame(impexpMarkcdName + '核注清单iframe');
                                 parent.layui.admin.closeThisTabs()
+                            }else{
+                                window.location.reload();
                             }
+
                         }, 500);
                         layer.closeAll();
                     }

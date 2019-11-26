@@ -52,6 +52,7 @@ func InitDatabase() {
 		orm.Debug = isDev
 	}
 
+	//basicAuth 认证
 	username := beego.AppConfig.String("pdf_username")
 	password := beego.AppConfig.String("pdf_password")
 	beego.InsertFilter("/pdf/*", beego.BeforeRouter, auth.Basic(username, password))
