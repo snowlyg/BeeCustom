@@ -356,18 +356,18 @@ func TransformAnnotation(id int64, relation string) map[string]interface{} {
 		return nil
 	}
 	//转换表头复核标记
-	recheckErrorInputIds := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(v.RecheckErrorInputIds, `id":"`, ""), `[{"`, ""), `"}]`, "")
+	recheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.RecheckErrorInputIds, `id":"`, "", -1), `[{"`, "", -1), `"}]`, "", -1)
 	recheckErrorInputIdsSlice := strings.Split(recheckErrorInputIds, `"},{"`)
 
 	//转换表体复核标记
-	itemRecheckErrorInputIds := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(v.ItemRecheckErrorInputIds, `index":`, ""), `[{"`, ""), `"]}]`, "")
+	itemRecheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.ItemRecheckErrorInputIds, `index":`, "", -1), `[{"`, "", -1), `"]}]`, "", -1)
 	itemRecheckErrorInputIdsSlice := strings.Split(itemRecheckErrorInputIds, `"]},{"`)
 	var itemRecheckErrorInputIdsSlices []map[int][]string
 	for _, v := range itemRecheckErrorInputIdsSlice {
 		itemRecheckErrorInputIdsSlices1 := map[int][]string{}
 		itemRecheckErrorInputIdsSlice1 := strings.Split(v, `,"id":["`)
 		if len(itemRecheckErrorInputIdsSlice1) > 0 && len(itemRecheckErrorInputIdsSlice1[0]) > 0 {
-			itemRecheckErrorInputIdsSlice1[1] = strings.ReplaceAll(itemRecheckErrorInputIdsSlice1[1], `"`, "")
+			itemRecheckErrorInputIdsSlice1[1] = strings.Replace(itemRecheckErrorInputIdsSlice1[1], `"`, "", -1)
 			itemRecheckErrorInputIdsSlice2 := strings.Split(itemRecheckErrorInputIdsSlice1[1], `,`)
 			i, _ := strconv.ParseInt(itemRecheckErrorInputIdsSlice1[0], 10, 64)
 			itemRecheckErrorInputIdsSlices1[int(i)] = itemRecheckErrorInputIdsSlice2

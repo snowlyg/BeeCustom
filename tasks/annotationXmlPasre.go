@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -31,17 +32,16 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 		sendPathCNames = getAnnotationXmlNames(err, "annotation_send_xml_path_c", sendPathCNames)
 		sendPathENames = getAnnotationXmlNames(err, "annotation_send_xml_path_e", sendPathENames)
 		qs := o.QueryTable(models.AnnotationTBName()).Filter("status", status9)
-		if len(sendPathCNames) > 0 || len(sendPathENames) > 0 {
+		if len(sendPathCNames[0]) > 0 || len(sendPathENames[0]) > 0 {
 			cond := orm.NewCondition()
 			var cond1 *orm.Condition
-			if len(sendPathCNames) > 0 {
+			if len(sendPathCNames[0]) > 0 {
 				cond1 = cond.And("etps_inner_invt_no__in", sendPathCNames)
 			} else {
 				cond1 = cond.And("etps_inner_invt_no__in", sendPathENames)
 			}
 
 			qs = qs.SetCond(cond1)
-
 			_, err = qs.Update(orm.Params{
 				"status": status11,
 			})
@@ -65,22 +65,21 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 
 func getAnnotationXmlNames(err error, pathConfig string, pathNames []string) []string {
 	path := beego.AppConfig.String(pathConfig)
-	pathCfiles, err := ioutil.ReadDir(path)
-	for i, f := range pathCfiles {
+	pathCfiles, err := ioutil.ReadDir(path + "/" + time.Now().Format(enums.BaseDateFormatN))
+	for _, f := range pathCfiles {
 		name := getAnnotationXmlName(f)
 		if len(name) > 0 {
-			pathNames[i] = name
+			pathNames = append(pathNames, name)
 		}
 	}
-
 	return pathNames
 }
 
 func getAnnotationXmlName(f os.FileInfo) string {
-	names := strings.Split(f.Name(), "__")
-	if len(names) > 2 && len(names[1]) > 0 {
-		return names[1]
+	names := strings.Split(f.Name(), `__`)
+	if len(names) >= 2 && len(names[1]) > 0 {
+		namesS := strings.Split(strings.Replace(names[1], `.xml`, "", -1), `_`)
+		return namesS[0]
 	}
-
 	return ""
 }
