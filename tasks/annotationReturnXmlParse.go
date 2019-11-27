@@ -10,6 +10,7 @@ import (
 
 	"BeeCustom/controllers"
 	"BeeCustom/enums"
+	"BeeCustom/file"
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
@@ -21,39 +22,7 @@ import (
 func annotationCReturnXmlParse() *toolbox.Task {
 
 	task := toolbox.NewTask("task", "* * * * * *", func() error {
-		//o := orm.NewOrm()
-		//status12, err := enums.GetSectionWithString("单一已暂存", "annotation_status")
-		//if err != nil {
-		//	utils.LogDebug(fmt.Sprintf("获取数据列表和总数 error:%v", err))
-		//}
-		//status11, err := enums.GetSectionWithString("已提交单一", "annotation_status")
-		//if err != nil {
-		//	utils.LogDebug(fmt.Sprintf("获取数据列表和总数 error:%v", err))
-		//}
-
-		parseAnnotationRturns("annotation_return_path_c", "annotation_history_path_c")
-		//
-		//qs := o.QueryTable(models.AnnotationTBName()).Filter("status", status9)
-		//
-		//cond := orm.NewCondition()
-		//var cond1 *orm.Condition
-		//cond1 = cond.And("etps_inner_invt_no__in", sendPathCNames)
-		//
-		//qs = qs.SetCond(cond1)
-		//mun, err := qs.Update(orm.Params{
-		//	"status": status11,
-		//})
-		//
-		//if err != nil {
-		//	utils.LogDebug(fmt.Sprintf("annotationXmlPasre Update error:%v", err))
-		//}
-		//
-		////ws 自动更新
-		//if mun > 0 {
-		//	msg := utils.Message{"清单状态更新", true}
-		//	utils.Broadcast <- msg
-		//}
-		//
+		parseAnnotationReturns("annotation_return_path_c", "annotation_history_path_c")
 		return nil
 	})
 
@@ -66,7 +35,8 @@ func annotationCReturnXmlParse() *toolbox.Task {
 	return task
 }
 
-func parseAnnotationRturns(returnPathCofig, historyPathCofig string) {
+//解析回执
+func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 	returnPath := beego.AppConfig.String(returnPathCofig)
 	historyPath := beego.AppConfig.String(historyPathCofig)
@@ -77,15 +47,15 @@ func parseAnnotationRturns(returnPathCofig, historyPathCofig string) {
 
 	for _, f := range pathCfiles {
 		fullPath := returnPath + f.Name()
-		file, err := os.Open(fullPath) // For read access.
+		file2, err := os.Open(fullPath) // For read access.
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("os.Open :%v", err))
 			continue
 		}
 
-		defer file.Close()
+		defer file2.Close()
 
-		data, err := ioutil.ReadAll(file)
+		data, err := ioutil.ReadAll(file2)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf(" ioutil.ReadAll :%v", err))
 			continue
@@ -124,16 +94,17 @@ func parseAnnotationRturns(returnPathCofig, historyPathCofig string) {
 						utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
 					}
 
-					fullHistoryPath := getHistoryPath(historyPath, v.EtpsPreentNo, f)
-					err = os.Rename(fullPath, fullHistoryPath)
+					err = moveFile(historyPath, v.EtpsPreentNo, fullPath, f)
 					if err != nil {
 						utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
 						continue
 					}
 
+					//ws 自动更新
+					wsPush()
+
 				} else if prefix == "Receipt" {
-					fullHistoryPath := getHistoryPath(historyPath, "/Receipt/", f)
-					err = os.Rename(fullPath, fullHistoryPath)
+					err = moveFile(historyPath, "/Receipt/", fullPath, f)
 					if err != nil {
 						utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
 						continue
@@ -169,12 +140,15 @@ func parseAnnotationRturns(returnPathCofig, historyPathCofig string) {
 					utils.LogDebug(fmt.Sprintf("enums.UpdateAnnotationStatus :%v,filename:%v", err, f.Name()))
 				}
 
-				fullHistoryPath := getHistoryPath(historyPath, annotation.EtpsInnerInvtNo, f)
-				err = os.Rename(fullPath, fullHistoryPath)
+				err = moveFile(historyPath, annotation.EtpsInnerInvtNo, fullPath, f)
 				if err != nil {
 					utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
 					continue
 				}
+
+				//ws 自动更新
+				msg := utils.Message{"清单状态更新", true}
+				utils.Broadcast <- msg
 
 			} else if ext == "xml" {
 				if prefix == "Failed" {
@@ -206,8 +180,7 @@ func parseAnnotationRturns(returnPathCofig, historyPathCofig string) {
 			}
 		}
 
-		fullHistoryPath := getHistoryPath(historyPath, "/Error/", f)
-		err = os.Rename(fullPath, fullHistoryPath)
+		err = moveFile(historyPath, "/Error/", fullPath, f)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
 			continue
@@ -217,9 +190,25 @@ func parseAnnotationRturns(returnPathCofig, historyPathCofig string) {
 	}
 }
 
+//ws 自动更新
+func wsPush() {
+	msg := utils.Message{"清单状态更新", true}
+	utils.Broadcast <- msg
+}
+
 //历史目录
-func getHistoryPath(historyPath, v string, f os.FileInfo) string {
-	return historyPath + "/" + time.Now().Format(enums.BaseDateFormat) + "/" + v + "/" + f.Name()
+func moveFile(historyPath, v, fullPath string, f os.FileInfo) error {
+	path := historyPath + time.Now().Format(enums.BaseDateFormat) + "/" + v + "/"
+	if err := file.CreateFile(path); err != nil {
+		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+	}
+
+	err := os.Rename(fullPath, path+f.Name())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //回执文件的前缀，和后缀
