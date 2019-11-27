@@ -169,4 +169,7 @@ func init() {
 
 	beego.Router("/", &controllers.HomeController{}, "*:Index")
 
+	// WebSocket.
+	beego.Router("/ws", &controllers.WebSocketController{})
+
 }

@@ -17,6 +17,7 @@ import (
 
 //检测报文是否发送成功，并更新清单状态
 func annotationUpdateAnnotationStatus() *toolbox.Task {
+
 	task := toolbox.NewTask("task", "* * * * * *", func() error {
 		o := orm.NewOrm()
 		status9, err := enums.GetSectionWithString("复核通过", "annotation_status")
@@ -32,7 +33,7 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 		sendPathCNames = getAnnotationXmlNames(err, "annotation_send_xml_path_c", sendPathCNames)
 		sendPathENames = getAnnotationXmlNames(err, "annotation_send_xml_path_e", sendPathENames)
 		qs := o.QueryTable(models.AnnotationTBName()).Filter("status", status9)
-		if len(sendPathCNames[0]) > 0 || len(sendPathENames[0]) > 0 {
+		if (len(sendPathCNames) > 0 && len(sendPathCNames[0]) > 0) || (len(sendPathENames) > 0 && len(sendPathENames[0]) > 0) {
 			cond := orm.NewCondition()
 			var cond1 *orm.Condition
 			if len(sendPathCNames[0]) > 0 {
@@ -42,12 +43,18 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 			}
 
 			qs = qs.SetCond(cond1)
-			_, err = qs.Update(orm.Params{
+			mun, err := qs.Update(orm.Params{
 				"status": status11,
 			})
 
 			if err != nil {
 				utils.LogDebug(fmt.Sprintf("annotationXmlPasre Update error:%v", err))
+			}
+
+			//ws 自动更新
+			if mun > 0 {
+				msg := utils.Message{"清单状态更新", true}
+				utils.Broadcast <- msg
 			}
 		}
 

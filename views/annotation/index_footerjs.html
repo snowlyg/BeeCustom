@@ -5,6 +5,17 @@
         index: 'lib/index'
     }).use(['index', 'table', 'admin', 'laydate', 'form', "laytpl"], async () => {
         const {$, laydate, form, layer, admin, table, laytpl} = layui;
+        $(function () {
+            var ws = new WebSocket('ws://' + window.location.host + '/ws');
+            ws.onmessage = function (e) {
+                let message = JSON.parse(e.data);
+                if (message.annotation_is_updated){
+                    window.location.reload()
+                }
+
+            };
+
+        });
         /**根据屏幕等比例缩小**/
         admin.sideFlexible_window();
 
@@ -88,7 +99,7 @@
         });
 
         /**派单**/
-        admin.distribute(".order_distribute", @{{.m.Id}},"@{{.ImpexpMarkcdName}}");
+        admin.distribute(".order_distribute", @{{.m.Id}}, "@{{.ImpexpMarkcdName}}");
 
         /**时间筛选**/
         form.on('select(time_table)', async function (data) {
@@ -98,7 +109,7 @@
             let OrderIndexRequestData = {
                 StatusString: annotationStatusString,
                 List: {
-                    Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
+                    Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                         sort: "impexp_markcd",
@@ -106,13 +117,13 @@
                     }
                 },
                 StatusCount: {
-                    Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
+                    Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                     }
                 },
             };
-            order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
+            order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
         });
 
         /**复制订单**/
@@ -130,7 +141,7 @@
                 let OrderIndexRequestData = {
                     StatusString: annotationStatusString,
                     List: {
-                        Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
+                        Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                         Request: {
                             EtpsInnerInvtNoLike: $(this).val(),
                             SearchTimeString: MonthTime,
@@ -139,7 +150,7 @@
                         }
                     },
                     StatusCount: {
-                        Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
+                        Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
                         Request: {
                             EtpsInnerInvtNoLike: $(this).val(),
                             SearchTimeString: MonthTime,
@@ -160,7 +171,7 @@
             let OrderIndexRequestData = {
                 StatusString: annotationStatusString,
                 List: {
-                    Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
+                    Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                         sort: "impexp_markcd",
@@ -168,14 +179,14 @@
                     }
                 },
                 StatusCount: {
-                    Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
+                    Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
                     }
                 },
             };
 
-            order_import_list = await admin.get_data_list(OrderIndexRequestData,true);
+            order_import_list = await admin.get_data_list(OrderIndexRequestData, true);
         });
 
         /**查看联系人信息**/
@@ -332,7 +343,7 @@
         let OrderIndexRequestData = {
             StatusString: annotationStatusString,
             List: {
-                Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
+                Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                 Request: {
                     SearchTimeString: MonthTime,
                     sort: "impexp_markcd",
@@ -340,20 +351,20 @@
                 }
             },
             StatusCount: {
-                Url: `/annotation/statuscount/`+"@{{.ImpexpMarkcd}}",
+                Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
                 Request: {
                     SearchTimeString: MonthTime,
                 }
             },
         };
 
-        order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
+        order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
 
         /**审核清单，清单详情，核中**/
         $(document).on("click", ".order_detail, .order_keep_auth, .order_start_auth", function () {
             const topLayui = parent === self ? layui : top.layui,
                 href = `/annotation/edit/${$(this).data('id')}`,
-                text = "@{{.ImpexpMarkcdName}}"+ `清单制作`;
+                text = "@{{.ImpexpMarkcdName}}" + `清单制作`;
             topLayui.index.openTabsPage(href, text);
         });
 
@@ -515,7 +526,7 @@
 
         /**运输方式**/
         try {
-            const data = await admin.post(`/clearance/datagrid`,JSON.stringify({TypeString: "运输方式代码"}), true);
+            const data = await admin.post(`/clearance/datagrid`, JSON.stringify({TypeString: "运输方式代码"}), true);
             laytpl($("#trsp_modecd_template").html()).render(data.rows, function (html) {
                 $("#annotation_trsp_modecd").html(html);
             });
@@ -529,7 +540,7 @@
             let OrderIndexRequestData = {
                 StatusString: annotationStatusString,
                 List: {
-                    Url: `/annotation/datagrid/`+"@{{.ImpexpMarkcd}}",
+                    Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         TrspModecd: data.value ? data.value : '',
                         SearchTimeString: MonthTime,
@@ -546,7 +557,7 @@
                 },
             };
 
-            order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
+            order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
         });
     });
 </script>

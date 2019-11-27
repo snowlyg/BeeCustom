@@ -25,6 +25,8 @@ func init() {
 	utils.InitFunc()
 	//定时任务
 	tasks.InitTask()
+	//ws
+	utils.InitWs()
 	//初始化数据库
 	InitDatabase()
 
