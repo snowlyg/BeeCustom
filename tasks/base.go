@@ -19,7 +19,7 @@ func getAnnotationXmlNames(pathConfig string, pathNames []string) []string {
 	if file.IsExist(fullpath) {
 		pathCfiles, err := ioutil.ReadDir(fullpath)
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf("ioutil.ReadDir :%v", err))
+			utils.LogError(fmt.Sprintf("ioutil.ReadDir :%v", err))
 			return nil
 		}
 		for _, f := range pathCfiles {

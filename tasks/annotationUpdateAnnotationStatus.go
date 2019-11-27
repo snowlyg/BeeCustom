@@ -17,11 +17,11 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 		o := orm.NewOrm()
 		status9, err := enums.GetSectionWithString("复核通过", "annotation_status")
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf("获取数据列表和总数 error:%v", err))
+			utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
 		}
 		status11, err := enums.GetSectionWithString("已提交单一", "annotation_status")
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf("获取数据列表和总数 error:%v", err))
+			utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
 		}
 
 		sendPathCNames, sendPathENames := []string{}, []string{}
@@ -43,7 +43,7 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 			})
 
 			if err != nil {
-				utils.LogDebug(fmt.Sprintf("annotationXmlPasre Update error:%v", err))
+				utils.LogError(fmt.Sprintf("annotationXmlPasre Update error:%v", err))
 			}
 
 			//ws 自动更新
@@ -58,7 +58,7 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 
 	err := task.Run()
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("tk.Run error :%v", err))
+		utils.LogError(fmt.Sprintf("tk.Run error :%v", err))
 		return nil
 	}
 

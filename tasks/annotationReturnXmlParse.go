@@ -28,7 +28,7 @@ func annotationCReturnXmlParse() *toolbox.Task {
 
 	err := task.Run()
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("tk.Run error :%v", err))
+		utils.LogError(fmt.Sprintf("tk.Run error :%v", err))
 		return nil
 	}
 
@@ -42,23 +42,25 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 	historyPath := beego.AppConfig.String(historyPathCofig)
 	pathCfiles, err := ioutil.ReadDir(returnPath)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("获取数据列表和总数 error:%v", err))
+		utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
 	}
 
-	for _, f := range pathCfiles {
+	fileIndex := 0
+	if len(pathCfiles) >= fileIndex {
+		f := pathCfiles[fileIndex]
 		fullPath := returnPath + f.Name()
-		file2, err := os.Open(fullPath) // For read access.
+		xmlFile, err := os.Open(fullPath) // For read access.
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf("os.Open :%v", err))
-			continue
+			utils.LogError(fmt.Sprintf("os.Open :%v", err))
+			fileIndex++
 		}
 
-		defer file2.Close()
+		defer xmlFile.Close()
 
-		data, err := ioutil.ReadAll(file2)
+		data, err := ioutil.ReadAll(xmlFile)
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf(" ioutil.ReadAll :%v", err))
-			continue
+			utils.LogError(fmt.Sprintf(" ioutil.ReadAll :%v", err))
+			fileIndex++
 		}
 
 		prefix, ext, failedName := getNameExts(f)
@@ -68,14 +70,14 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 					v := xmlTemplate.CommonResponeMessage{}
 					err := xml.Unmarshal(data, &v)
 					if err != nil {
-						utils.LogDebug(fmt.Sprintf("xml.Unmarshal :%v ,filename:%v", err, f.Name()))
-						continue
+						utils.LogError(fmt.Sprintf("xml.Unmarshal :%v ,filename:%v", err, f.Name()))
+						fileIndex++
 					}
 
 					annotation, err := models.GetAnnotationByEtpsInnerInvtNo(v.EtpsPreentNo)
 					if err != nil {
-						utils.LogDebug(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v", err))
-						continue
+						utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v", err))
+						fileIndex++
 					}
 
 					aReturn := models.NewAnnotationReturn(0)
@@ -85,19 +87,19 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 					aReturn.Annotation = annotation
 
 					if err = models.AnnotationReturnSave(&aReturn); err != nil {
-						utils.LogDebug(fmt.Sprintf("models.AnnotationReturnSave :%v,filename:%v", err, f.Name()))
-						continue
+						utils.LogError(fmt.Sprintf("models.AnnotationReturnSave :%v,filename:%v", err, f.Name()))
+						fileIndex++
 					}
 
 					//更新状态
 					if err = controllers.UpdateAnnotationStatus(annotation, "单一处理中"); err != nil {
-						utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+						utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
 					}
 
 					err = moveFile(historyPath, v.EtpsPreentNo, fullPath, f)
 					if err != nil {
-						utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
-						continue
+						utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+						fileIndex++
 					}
 
 					//ws 自动更新
@@ -106,22 +108,22 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 				} else if prefix == "Receipt" {
 					err = moveFile(historyPath, "/Receipt/", fullPath, f)
 					if err != nil {
-						utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
-						continue
+						utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+						fileIndex++
 					}
 				}
 			} else if ext == "INVT" && prefix == "Receipt" {
 				v := xmlTemplate.ReturnPackage{}
 				err := xml.Unmarshal(data, &v)
 				if err != nil {
-					utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
-					continue
+					utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+					fileIndex++
 				}
 
 				annotation, err := models.GetAnnotationBySeqNo(v.InvPreentNo)
 				if err != nil {
-					utils.LogDebug(fmt.Sprintf("models.GetAnnotationBySeqNo :%v", err))
-					continue
+					utils.LogError(fmt.Sprintf("models.GetAnnotationBySeqNo :%v", err))
+					fileIndex++
 				}
 
 				aReturn := models.NewAnnotationReturn(0)
@@ -131,19 +133,19 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 				aReturn.Annotation = annotation
 
 				if err = models.AnnotationReturnSave(&aReturn); err != nil {
-					utils.LogDebug(fmt.Sprintf("models.AnnotationReturnSave :%v,filename:%v", err, f.Name()))
-					continue
+					utils.LogError(fmt.Sprintf("models.AnnotationReturnSave :%v,filename:%v", err, f.Name()))
+					fileIndex++
 				}
 
 				//更新状态
 				if err = controllers.UpdateAnnotationStatus(annotation, "已完成"); err != nil {
-					utils.LogDebug(fmt.Sprintf("enums.UpdateAnnotationStatus :%v,filename:%v", err, f.Name()))
+					utils.LogError(fmt.Sprintf("enums.UpdateAnnotationStatus :%v,filename:%v", err, f.Name()))
 				}
 
 				err = moveFile(historyPath, annotation.EtpsInnerInvtNo, fullPath, f)
 				if err != nil {
-					utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
-					continue
+					utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+					fileIndex++
 				}
 
 				//ws 自动更新
@@ -155,14 +157,14 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 					v := xmlTemplate.Failed{}
 					err := xml.Unmarshal(data, &v)
 					if err != nil {
-						utils.LogDebug(fmt.Sprintf("xml.Unmarshal :%v ,filename:%v", err, f.Name()))
-						continue
+						utils.LogError(fmt.Sprintf("xml.Unmarshal :%v ,filename:%v", err, f.Name()))
+						fileIndex++
 					}
 
 					annotation, err := models.GetAnnotationByEtpsInnerInvtNo(failedName)
 					if err != nil {
-						utils.LogDebug(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v", err))
-						continue
+						utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v", err))
+						fileIndex++
 					}
 
 					aReturn := models.NewAnnotationReturn(0)
@@ -171,23 +173,23 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 					aReturn.Annotation = annotation
 
 					if err = models.AnnotationReturnSave(&aReturn); err != nil {
-						utils.LogDebug(fmt.Sprintf("models.AnnotationReturnSave :%v,filename:%v", err, f.Name()))
-						continue
+						utils.LogError(fmt.Sprintf("models.AnnotationReturnSave :%v,filename:%v", err, f.Name()))
+						fileIndex++
 					}
 
-					continue
+					fileIndex++
 				}
 			}
 		}
 
 		err = moveFile(historyPath, "/Error/", fullPath, f)
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
-			continue
+			utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+			fileIndex++
 		}
-		continue
-
+		fileIndex++
 	}
+
 }
 
 //ws 自动更新
@@ -200,7 +202,7 @@ func wsPush() {
 func moveFile(historyPath, v, fullPath string, f os.FileInfo) error {
 	path := historyPath + time.Now().Format(enums.BaseDateFormat) + "/" + v + "/"
 	if err := file.CreateFile(path); err != nil {
-		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+		utils.LogError(fmt.Sprintf("文件夹创建失败:%v", err))
 	}
 
 	err := os.Rename(fullPath, path+f.Name())
@@ -218,8 +220,9 @@ func getNameExts(f os.FileInfo) (string, string, string) {
 		eNames := strings.Split(extNames[0], "_")
 		if len(eNames) > 1 && len(eNames[0]) > 0 {
 			if len(eNames[1]) > 0 {
-				mNames := strings.Split(extNames[0], "__")
+				mNames := strings.Split(eNames[1], "__")
 				if len(mNames) > 1 && len(mNames[1]) > 0 {
+					utils.LogError(fmt.Sprintf("文件夹创建失败:%v %v %v ", eNames, extNames[1], mNames[1]))
 					return eNames[0], extNames[1], mNames[1]
 				} else {
 					return eNames[0], extNames[1], ""
