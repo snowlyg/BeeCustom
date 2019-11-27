@@ -39,8 +39,13 @@ import (
 
 func InitTask() {
 
-	annotationXmlPasre := annotationUpdateAnnotationStatus()
-	toolbox.AddTask("tk", annotationXmlPasre)
+	//检测报文是否发送成功，并更新清单状态
+	annotationUpdateAnnotationStatus := annotationUpdateAnnotationStatus()
+	toolbox.AddTask("annotationUpdateAnnotationStatus", annotationUpdateAnnotationStatus)
+
+	//清单回执解释
+	annotationCReturnXmlParse := annotationCReturnXmlParse()
+	toolbox.AddTask("annotationCReturnXmlParse", annotationCReturnXmlParse)
 
 	toolbox.StartTask()
 	defer toolbox.StopTask()

@@ -105,7 +105,7 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		c.jsonResult(enums.JRCodeFailed, "获取客户出错", nil)
 	}
 
-	if err = c.updateAnnotationStatus(&m, "待审核"); err != nil {
+	if err = UpdateAnnotationStatus(&m, "待审核"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
 	}
 
@@ -197,7 +197,7 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 		}
 	}
 
-	if err = c.updateAnnotationStatus(m, "订单关闭"); err != nil {
+	if err = UpdateAnnotationStatus(m, "订单关闭"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
@@ -260,7 +260,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	if err = c.updateAnnotationStatus(m, "待制单"); err != nil {
+	if err = UpdateAnnotationStatus(m, "待制单"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
@@ -330,7 +330,7 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
-	if err = c.updateAnnotationStatus(m, "待复核"); err != nil {
+	if err = UpdateAnnotationStatus(m, "待复核"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
@@ -371,7 +371,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 	//		c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
 	//	}
 	// }
-	if err = c.updateAnnotationStatus(m, statusString); err != nil {
+	if err = UpdateAnnotationStatus(m, statusString); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
@@ -649,23 +649,6 @@ func (c *BaseAnnotationController) getEtpsInnerInvtNo(iEFlag, customMasterName s
 }
 
 // 更新状态和状态更新时间
-func (c *BaseAnnotationController) updateAnnotationStatus(m *models.Annotation, StatusString string) error {
-	aStatus, err := enums.GetSectionWithString(StatusString, "annotation_status")
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("转换清单状态出错:%v", err))
-		return err
-	}
-
-	// 禁止状态回退
-	if m.Status < aStatus {
-		m.Status = aStatus
-		m.StatusUpdatedAt = time.Now()
-	}
-
-	return nil
-}
-
-// 更新状态和状态更新时间
 func (c *BaseAnnotationController) setAnnotaionUserRelType(m *models.Annotation, bu *models.BackendUser, userTypes string) error {
 	rs := strings.Split(userTypes, ",")
 	for _, v := range rs {
@@ -742,7 +725,7 @@ func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotati
 
 // 仅仅更新状态
 func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusString string) {
-	if err := c.updateAnnotationStatus(m, statusString); err != nil {
+	if err := UpdateAnnotationStatus(m, statusString); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
 	if err := models.AnnotationUpdateStatus(m); err != nil {

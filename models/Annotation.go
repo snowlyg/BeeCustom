@@ -271,6 +271,30 @@ func AnnotationOne(id int64, relations string) (*Annotation, error) {
 	return &m, nil
 }
 
+// GetAnnotationByEtpsInnerInvtNo 根据清单号获取单条
+func GetAnnotationByEtpsInnerInvtNo(etpsInnerInvtNo string) (*Annotation, error) {
+	m := NewAnnotation(0)
+	o := orm.NewOrm()
+	if err := o.QueryTable(AnnotationTBName()).Filter("etps_inner_invt_no", etpsInnerInvtNo).One(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("find annotation:%v", err))
+		return nil, err
+	}
+
+	return &m, nil
+}
+
+// GetAnnotationBySeqNo 根据清单预录入编号获取单条
+func GetAnnotationBySeqNo(seqNo string) (*Annotation, error) {
+	m := NewAnnotation(0)
+	o := orm.NewOrm()
+	if err := o.QueryTable(AnnotationTBName()).Filter("seq_no", seqNo).One(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("find annotation:%v", err))
+		return nil, err
+	}
+
+	return &m, nil
+}
+
 // Save 添加、编辑页面 保存
 func AnnotationUpdateOrSave(m *Annotation) error {
 	var err error

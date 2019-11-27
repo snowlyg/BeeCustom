@@ -26,6 +26,7 @@ func init() {
 		new(AnnotationUserRel),
 		new(AnnotationItem),
 		new(AnnotationRecord),
+		new(AnnotationReturn),
 	)
 }
 
@@ -123,4 +124,9 @@ func AnnotationItemTBName() string {
 // AnnotationRecordTBName 获取 AnnotationRecordTBName 对应的表名称
 func AnnotationRecordTBName() string {
 	return "annotation_records"
+}
+
+// AnnotationReturnTBName 获取 AnnotationReturnTBName 对应的表名称
+func AnnotationReturnTBName() string {
+	return "annotation_returns"
 }
