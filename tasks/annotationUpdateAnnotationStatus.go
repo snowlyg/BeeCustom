@@ -27,17 +27,15 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 		sendPathCNames, sendPathENames := []string{}, []string{}
 		sendPathCNames = getAnnotationXmlNames("annotation_send_xml_path_c", sendPathCNames)
 		sendPathENames = getAnnotationXmlNames("annotation_send_xml_path_e", sendPathENames)
-		qs := o.QueryTable(models.AnnotationTBName()).Filter("status", status9)
+		qs := o.QueryTable(models.AnnotationTBName()).Filter("Status", status9)
 		if (len(sendPathCNames) > 0 && len(sendPathCNames[0]) > 0) || (len(sendPathENames) > 0 && len(sendPathENames[0]) > 0) {
-			cond := orm.NewCondition()
-			var cond1 *orm.Condition
+
 			if len(sendPathCNames[0]) > 0 {
-				cond1 = cond.And("etps_inner_invt_no__in", sendPathCNames)
+				qs = qs.Filter("etps_inner_invt_no__in", sendPathCNames)
 			} else {
-				cond1 = cond.And("etps_inner_invt_no__in", sendPathENames)
+				qs = qs.Filter("etps_inner_invt_no__in", sendPathENames)
 			}
 
-			qs = qs.SetCond(cond1)
 			mun, err := qs.Update(orm.Params{
 				"status": status11,
 			})

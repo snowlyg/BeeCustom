@@ -335,7 +335,7 @@ func AnnotationUpdateStatusRecheckErrorInputIds(m *Annotation) error {
 func AnnotationUpdateStatus(m *Annotation) error {
 	var err error
 	o := orm.NewOrm()
-	_, err = o.Update(m, "Status", "StatusUpdatedAt")
+	_, err = o.Update(m, "Status", "StatusUpdatedAt", "SeqNo", "BondInvtNo")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 		return err
