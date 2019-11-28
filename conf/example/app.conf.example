@@ -19,6 +19,48 @@ enablexsrf = true
 xsrfkey = asdfioerjlasdfmFADFOEJF2323SDFF
 xsrfexpire = 3600
 
+#报关通用数据
+AgentCodeScc = "914419007962277606"
+AgentCode = "4419986507"
+DeclCiqCode = "4400510052"
+AgentName = "广东东华报关服务有限公司"
+AgentTel = "0769-87510025"
+ICCode = "8930000083638"
+OperName = "卢明"
+AgentCustomMaster = "5200"
+AgentCopCode = "796227760"
+AgentClientId = "DXPESW0000002284"
+
+#清单报文字段数据
+AnnotationVersion = "1.0"
+AnnotationBusinessId = ""
+AnnotationMessageType = "INV101"
+#正式
+#AnnotationSenderId = "DXPESW0000002284"
+#测试
+AnnotationSenderId = "DXPESW0000003241"
+AnnotationReceiverIdC = "DXPEDCNEMS000001"
+AnnotationReceiverIdE = "DXPEDCNEMS000002"
+AnnotationSysIdC = "B1"
+AnnotationSysIdE = "95"
+
+#清单报文发送路径
+#手册
+annotation_xml_path_c = "C:/ImpPath/Npts/OutBox/"
+annotation_return_path_c = "C:/ImpPath/Npts/InBox/"
+annotation_send_xml_path_c = "C:/ImpPath/Npts/SentBox/"
+annotation_history_path_c = "C:/ImpPath/Npts/History/"
+#账册
+annotation_xml_path_e = "C:/ImpPath/Nems/OutBox/"
+annotation_return_path_e = "C:/ImpPath/Nems/InBox/"
+annotation_send_xml_path_e = "C:/ImpPath/Nems/SentBox/"
+annotation_history_path_e = "C:/ImpPath/Nems/History/"
+
+
+#pdf 打印链接认证
+pdf_username="bee_custom_pdf"
+pdf_password="nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo"
+
 #数据库类型：postgres/mysql/sqlite3
 db_type = "mysql"
 #数据库表名前辍
@@ -67,16 +109,12 @@ redis_password = ""
 #过期时间
 cache_expire = 10
 
-#pdf 打印链接认证
-pdf_username="bee_custom_pdf"
-pdf_password="nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo"
 
 
 include "clearance.conf"
 include "handbook.conf"
 include "import.conf"
 include "annotation.conf"
-include "agent.conf"
 
 
 

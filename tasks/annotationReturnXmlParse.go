@@ -76,7 +76,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 					annotation, err := models.GetAnnotationByEtpsInnerInvtNo(v.EtpsPreentNo)
 					if err != nil {
-						utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v", err))
+						utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v", err, f.Name()))
 						fileIndex++
 					}
 
@@ -93,12 +93,12 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 					//更新状态
 					if err = controllers.UpdateAnnotationStatus(annotation, "单一处理中"); err != nil {
-						utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+						utils.LogError(fmt.Sprintf("controllers.UpdateAnnotationStatus :%v,filename:%v", err, f.Name()))
 					}
 
 					err = moveFile(historyPath, v.EtpsPreentNo, fullPath, f)
 					if err != nil {
-						utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+						utils.LogError(fmt.Sprintf("moveFile:%v,filename:%v", err, f.Name()))
 						fileIndex++
 					}
 
@@ -106,9 +106,9 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 					wsPush()
 
 				} else if prefix == "Receipt" {
-					err = moveFile(historyPath, "/Receipt/", fullPath, f)
+					err = moveFile(historyPath, "Receipt", fullPath, f)
 					if err != nil {
-						utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+						utils.LogError(fmt.Sprintf("moveFile :%v,filename:%v", err, f.Name()))
 						fileIndex++
 					}
 				}
@@ -116,13 +116,13 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 				v := xmlTemplate.ReturnPackage{}
 				err := xml.Unmarshal(data, &v)
 				if err != nil {
-					utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+					utils.LogError(fmt.Sprintf(" xml.Unmarshal :%v,filename:%v", err, f.Name()))
 					fileIndex++
 				}
 
 				annotation, err := models.GetAnnotationBySeqNo(v.InvPreentNo)
 				if err != nil {
-					utils.LogError(fmt.Sprintf("models.GetAnnotationBySeqNo :%v", err))
+					utils.LogError(fmt.Sprintf("models.GetAnnotationBySeqNo :%v,filename:%v", err, f.Name()))
 					fileIndex++
 				}
 
@@ -163,7 +163,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 					annotation, err := models.GetAnnotationByEtpsInnerInvtNo(failedName)
 					if err != nil {
-						utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v", err))
+						utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v,failedName:%v", err, f.Name(), failedName))
 						fileIndex++
 					}
 
@@ -182,9 +182,9 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 			}
 		}
 
-		err = moveFile(historyPath, "/Error/", fullPath, f)
+		err = moveFile(historyPath, "Error", fullPath, f)
 		if err != nil {
-			utils.LogError(fmt.Sprintf("os.Rename :%v,filename:%v", err, f.Name()))
+			utils.LogError(fmt.Sprintf("moveFile:%v,filename:%v", err, f.Name()))
 			fileIndex++
 		}
 		fileIndex++
@@ -198,7 +198,7 @@ func wsPush() {
 	utils.Broadcast <- msg
 }
 
-//历史目录
+//移动文件
 func moveFile(historyPath, v, fullPath string, f os.FileInfo) error {
 	path := historyPath + time.Now().Format(enums.BaseDateFormat) + "/" + v + "/"
 	if err := file.CreateFile(path); err != nil {
@@ -219,19 +219,15 @@ func getNameExts(f os.FileInfo) (string, string, string) {
 	if len(extNames) > 1 && len(extNames[1]) > 0 && len(extNames[0]) > 0 {
 		eNames := strings.Split(extNames[0], "_")
 		if len(eNames) > 1 && len(eNames[0]) > 0 {
-			if len(eNames[1]) > 0 {
-				mNames := strings.Split(eNames[1], "__")
-				if len(mNames) > 1 && len(mNames[1]) > 0 {
-					utils.LogError(fmt.Sprintf("文件夹创建失败:%v %v %v ", eNames, extNames[1], mNames[1]))
-					return eNames[0], extNames[1], mNames[1]
-				} else {
-					return eNames[0], extNames[1], ""
-				}
+			if len(eNames) > 3 && len(eNames[3]) > 0 {
+				return eNames[0], extNames[1], eNames[3]
+			} else {
+				return eNames[0], extNames[1], ""
 			}
-
-		} else {
-			return "", extNames[1], ""
 		}
+
+	} else {
+		return "", extNames[1], ""
 	}
 
 	return "", "", ""

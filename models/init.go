@@ -118,15 +118,15 @@ func AnnotationUserRelTBName() string {
 
 // AnnotationItemTBName 获取 AnnotationItemTBName 对应的表名称
 func AnnotationItemTBName() string {
-	return "annotation_items"
+	return TableName("annotation_items")
 }
 
 // AnnotationRecordTBName 获取 AnnotationRecordTBName 对应的表名称
 func AnnotationRecordTBName() string {
-	return "annotation_records"
+	return TableName("annotation_records")
 }
 
 // AnnotationReturnTBName 获取 AnnotationReturnTBName 对应的表名称
 func AnnotationReturnTBName() string {
-	return "annotation_returns"
+	return TableName("annotation_returns")
 }

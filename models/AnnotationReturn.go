@@ -24,7 +24,7 @@ type AnnotationReturnQueryParam struct {
 type AnnotationReturn struct {
 	BaseModel
 
-	CheckInfo    string `orm:"column(check_info);null" description:"回执信息"`
+	CheckInfo    string `orm:"column(check_info);null;type(text)" description:"回执信息"`
 	DealFlag     string `orm:"column(deal_flag);size(10);null" description:"回执代码"`
 	EtpsPreentNo string `orm:"column(etps_preent_no);size(64);null" description:"企业预录入编号"`
 
