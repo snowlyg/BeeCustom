@@ -549,7 +549,7 @@
                     }
                 },
                 StatusCount: {
-                    Url: `/annotation/statuscount`,
+                    Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         TrspModecd: data.value ? data.value : '',
                         SearchTimeString: MonthTime,
