@@ -5,13 +5,16 @@
         index: 'lib/index'
     }).use(['index', 'table', 'admin', 'laydate', 'form', "laytpl"], async () => {
         const {$, laydate, form, layer, admin, table, laytpl} = layui;
-        let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index, order_import_list, MonthTime = '今天', annotationStatusString = '全部订单';
+        let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index,
+            order_import_list, MonthTime = '今天', annotationStatusString = '全部订单';
 
         $(function () {
             var ws = new WebSocket('ws://' + window.location.host + '/ws');
             ws.onmessage = function (e) {
                 let message = JSON.parse(e.data);
-                if (message.annotation_is_updated){window.location.reload()}
+                if (message.annotation_is_updated) {
+                    window.location.reload()
+                }
             };
         });
 
@@ -22,7 +25,7 @@
         /**table左右拖动**/
         admin.table_mousedown();
         /**附件下载列表**/
-        $(document).on("click", ".icon-attach-file", function () {
+        $(document).on("click", ".iconattach-file", function () {
             const id = $(this).data("id");
             layer.open({
                 type: 1,
@@ -33,13 +36,31 @@
             });
 
             table.render({
-                elem: '#pdf_lists',
-                skin: 'line',
-                url: `/annotation/i/${id}/pdf/lists`,
-                response: {
-                    countName: 'total'
-                },
-                cols: [
+                elem: '#pdf_lists'
+                , autoSort: false
+                , skin: 'line'
+                , method: 'post'
+                , where: {
+                    order: 'desc',
+                    sort: 'CreatedAt'
+                }
+                , contentType: 'application/json'
+                , url: @{{ urlfor "AnnotationFileController.DataGrid" }}
+                , request: {
+                    pageName: 'offset' //页码的参数名称，默认：page
+                    , limitName: 'limit' //每页数据量的参数名，默认：limit
+                }, response: {
+                    statusName: 'code',
+                    statusCode: 0,
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.code,
+                        "count": res.total,
+                        "data": res.rows
+                    };
+                }
+                , cols: [
                     [{
                         field: 'type_string',
                         title: '类型'
@@ -64,10 +85,10 @@
         table.on('tool(pdf_lists)', async function (obj) {
             const data = obj.data;
             if (obj.event === 'preview') {
-                const preview_data = await admin.get(`/annotation/i/pdf/${data.id}/show`);
+                const preview_data = await admin.get(`/annotation_pdf/${data.id}/show`);
                 window.open(preview_data);
             } else if (obj.event === 'download') {
-                window.open(`/annotation/i/pdf/${data.id}/downloads`)
+                window.open(`/annotation_pdf/${data.id}/downloads`)
             }
         });
 
@@ -77,7 +98,7 @@
             layer.confirm('真的删除么', {
                 title: '提示'
             }, async (index) => {
-                const data = await admin.delete(`/annotation/delete/${id}`,"show");
+                const data = await admin.delete(`/annotation/delete/${id}`, "show");
                 layer.close(index);
                 if (data.status) {
                     window.location.reload()
@@ -114,7 +135,7 @@
         /**复制订单**/
         $(document).on("click", ".copy_order", async function () {
             const id = $(this).data("id");
-           let data =  await admin.get(`/annotation/copy/${id}`, 'show');
+            let data = await admin.get(`/annotation/copy/${id}`, 'show');
             if (data.status) {
                 window.location.reload()
             }
@@ -173,10 +194,11 @@
         });
 
         /**查看联系人信息**/
-        $(document).on("click", ".person_tips", function () {
-            const index = $(this).data('index');
-            if (order_import_list.datas.data[index].CompanyAdminName) {
-                const txt = `<div class="person-tips person_tips_close"><h1 class="person-tips-h1">${order_import_list.datas.data[index].company_admin_name}</h1><p>电子邮箱：${order_import_list.datas.data[index].company_admin_email}</p><p>手机号码：${order_import_list.datas.data[index].company_admin_phone}</p></div>`;
+        $(document).on("click", ".person_tips", async function () {
+            const id = $(this).data('id');
+            const data = await admin.get(`/annotation_company_admin_user/${id}`);
+            if (data) {
+                const txt = `<div class="person-tips person_tips_close"><h1 class="person-tips-h1">${data.Name}</h1><p>电子邮箱：${data.Email}</p><p>手机号码：${data.Phone}</p></div>`;
                 person_tips_index = layer.tips(txt, this, {
                     tips: [4, '#FFFFFF'],
                     time: 0,
@@ -206,20 +228,20 @@
         /**查看回执信息**/
         $(document).on("click", ".returns_show", async function () {
             const id = $(this).data('id');
-            const data = await admin.get(`/annotation/i/${id}/returns`);
             let content;
-            if (data.length === 0) {
+            const data = await admin.post(`/annotation_return/datagrid`, JSON.stringify({AnnotationId: id}) );
+            if (data.rows.length === 0) {
                 content = '<p class="returns_tips_close" style="color: #888888;text-align: center;">无数据</p>'
             } else {
                 let txt = '';
-                data.forEach((item, index) => {
+                data.rows.forEach((item, index) => {
                     let icon;
                     if (index === 0) {
                         icon = '<i class="layui-icon layui-timeline-axis"></i>'
                     } else {
                         icon = '<i class="layui-icon layui-timeline-axis_i"></i>'
                     }
-                    txt += `<li class="layui-timeline-item">${icon}<div class="layui-timeline-content layui-text_rate"><h4 class="layui-timeline-title">${item.deal_flag == '0' ? '暂存成功' : item.check_info}<span class="margin_left_10">${item.created_at}</span></h4><p class="record"><span>海关预录入编号为：</span><span class="_time">${item.seq_no}</span></p></div></li>`
+                    txt += `<li class="layui-timeline-item">${icon}<div class="layui-timeline-content layui-text_rate"><h4 class="layui-timeline-title">${item.DealFlag == '0' ? '暂存成功' : item.CheckInfo}<span class="margin_left_10">${item.CreatedAt}</span></h4><p class="record"><span>海关预录入编号为：</span><span class="_time">${item.SeqNo}</span></p></div></li>`
                 });
                 content = `<div class="returns_tips returns_tips_close"><p class="returns_tips_content">回执内容：</p><ul class="layui-timeline">${txt}</ul></div>`;
             }
@@ -228,9 +250,11 @@
                 time: 0,
                 area: ['400px', 'auto']
             });
+
             if (returns_index) {
                 clearTimeout(returns_index);
             }
+
         });
 
         let returns_index;

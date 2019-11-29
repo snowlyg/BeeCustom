@@ -85,6 +85,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 				aReturn.EtpsPreentNo = v.EtpsPreentNo
 				aReturn.CheckInfo = v.CheckInfo
 				aReturn.DealFlag = v.DealFlag
+				aReturn.SeqNo = v.SeqNo
 				aReturn.Annotation = annotation
 
 				if err = models.AnnotationReturnSave(&aReturn); err != nil {

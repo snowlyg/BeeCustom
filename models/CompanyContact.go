@@ -81,6 +81,21 @@ func CompanyContactOne(id int64) (*CompanyContact, error) {
 	return &m, nil
 }
 
+// GetAdminCompanyContactByCompanyId 根据id获取单条
+func GetAdminCompanyContactByCompanyId(id int64) (*CompanyContact, error) {
+	m := NewCompanyContact(0)
+	o := orm.NewOrm()
+	if err := o.QueryTable(CompanyContactTBName()).Filter("company_id", id).Filter("is_admin", true).One(&m); err != nil {
+		return nil, err
+	}
+
+	if &m == nil {
+		return &m, errors.New("获取失败")
+	}
+
+	return &m, nil
+}
+
 //Save 添加、编辑页面 保存
 func CompanyContactSave(m *CompanyContact) (*CompanyContact, error) {
 	o := orm.NewOrm()

@@ -7,6 +7,12 @@ import (
 
 func init() {
 
+	//客户联系人
+	beego.Router("/annotation_company_admin_user/?:id", &controllers.AnnotationController{}, "Get:CompanyAdminUser")
+	//清单附件列表
+	beego.Router("/annotation_file/datagrid", &controllers.AnnotationFileController{}, "Post:DataGrid")
+	//清单回执列表
+	beego.Router("/annotation_return/datagrid", &controllers.AnnotationReturnController{}, "Post:DataGrid")
 	//清单办理记录管理
 	beego.Router("/annotation_record/datagrid", &controllers.AnnotationRecordController{}, "Post:DataGrid")
 

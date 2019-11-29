@@ -1,5 +1,10 @@
 package controllers
 
+import (
+	"BeeCustom/enums"
+	"BeeCustom/models"
+)
+
 type AnnotationController struct {
 	BaseAnnotationController
 }
@@ -218,4 +223,22 @@ func (c *AnnotationController) IDelete() {
 func (c *AnnotationController) EDelete() {
 	id, _ := c.GetInt64(":id")
 	c.bDelete(id)
+}
+
+//客户管理联系人信息
+func (c *AnnotationController) CompanyAdminUser() {
+	id, _ := c.GetInt64(":id")
+	annotation, err := models.AnnotationOne(id, "Company")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "数据查询失败", err)
+	}
+
+	companyId := annotation.Company.Id
+	adminCompanyContact, err := models.GetAdminCompanyContactByCompanyId(companyId)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "数据查询失败", err)
+	}
+
+	c.Data["json"] = adminCompanyContact
+	c.ServeJSON()
 }
