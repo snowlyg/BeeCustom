@@ -52,7 +52,7 @@ func (c *BaseAnnotationController) bIndex(impexpMarkcd string) {
 	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
 
 	// 页面里按钮权限控制
-	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Audit", "Delete", "Distribute", "Recheck", "Push", "PushXml", "StoreError", "Change", "Restart", "Cancel")
+	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Audit", "Delete", "Distribute", "Recheck", "Push", "PushXml", "StoreError", "Change", "Restart", "Cancel", "Copy")
 
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
@@ -105,7 +105,7 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 		c.jsonResult(enums.JRCodeFailed, "获取客户出错", nil)
 	}
 
-	if err = UpdateAnnotationStatus(&m, "待审核"); err != nil {
+	if err = UpdateAnnotationStatus(&m, "待审核", false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
 	}
 
@@ -140,6 +140,42 @@ func (c *BaseAnnotationController) bStore(impexpMarkcd string) {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
 
+		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
+	}
+}
+
+// copy 复制
+func (c *BaseAnnotationController) bCopy(id int64) {
+
+	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据出错", nil)
+	}
+
+	if err := UpdateAnnotationStatus(m, "待审核", true); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
+	}
+
+	//重置数据
+	if m != nil {
+		m.Id = 0
+		m.InputTime = time.Now()
+		m.InvtDclTime = time.Now()
+		m.EtpsInnerInvtNo = c.getEtpsInnerInvtNo(m.ImpexpMarkcd, m.DclPlcCuscd)
+		m.SeqNo = ""
+		m.BondInvtNo = ""
+	}
+
+	if err := models.AnnotationUpdateOrSave(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+	} else {
+		if err := c.setAnnotaionUserRelType(m, nil, "创建人"); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+		}
+		annotationRecord := c.newAnnotationRecord(m, "创建订单")
+		if err := models.AnnotationRecordSave(annotationRecord); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+		}
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
 	}
 }
@@ -197,7 +233,7 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 		}
 	}
 
-	if err = UpdateAnnotationStatus(m, "订单关闭"); err != nil {
+	if err = UpdateAnnotationStatus(m, "订单关闭", false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 
@@ -260,7 +296,7 @@ func (c *BaseAnnotationController) bDistribute(backendUserId, id int64) {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
-	if err = UpdateAnnotationStatus(m, "待制单"); err != nil {
+	if err = UpdateAnnotationStatus(m, "待制单", false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 
@@ -330,7 +366,7 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
-	if err = UpdateAnnotationStatus(m, "待复核"); err != nil {
+	if err = UpdateAnnotationStatus(m, "待复核", false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
@@ -371,7 +407,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 	//		c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
 	//	}
 	// }
-	if err = UpdateAnnotationStatus(m, statusString); err != nil {
+	if err = UpdateAnnotationStatus(m, statusString, false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 
@@ -725,7 +761,7 @@ func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotati
 
 // 仅仅更新状态
 func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusString string) {
-	if err := UpdateAnnotationStatus(m, statusString); err != nil {
+	if err := UpdateAnnotationStatus(m, statusString, false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
 	if err := models.AnnotationUpdateStatus(m); err != nil {

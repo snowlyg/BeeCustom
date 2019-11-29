@@ -4296,8 +4296,7 @@ layui.define('view', function (exports) {
 
 //订单列表
             list_page: 1,
-            list_limit:
-                10,
+            list_limit: 10,
             async get_data_list(OrderIndexRequestData, isClickStatusTab) {
 
                 let url = OrderIndexRequestData.List.Url;

@@ -95,7 +95,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 				//更新状态
 				annotation.SeqNo = v.SeqNo
-				if err = controllers.UpdateAnnotationStatus(annotation, "单一处理中"); err != nil {
+				if err = controllers.UpdateAnnotationStatus(annotation, "单一处理中", false); err != nil {
 					utils.LogError(fmt.Sprintf("controllers.UpdateAnnotationStatus :%v,filename:%v", err, f.Name()))
 					xmlFile.Close()
 					continue
@@ -161,7 +161,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 			}
 
 			//更新状态
-			if err = controllers.UpdateAnnotationStatus(annotation, "已完成"); err != nil {
+			if err = controllers.UpdateAnnotationStatus(annotation, "已完成", false); err != nil {
 				utils.LogError(fmt.Sprintf("enums.UpdateAnnotationStatus :%v,filename:%v", err, f.Name()))
 				xmlFile.Close()
 				continue

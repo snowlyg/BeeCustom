@@ -4,27 +4,27 @@
             @{{if eq  .m.StatusString  "待复核"  "复核中" }}
                 @{{ if canArray  .actions .m.ImpexpMarkcd  "canRecheckPass"}}
                 <button class="layui-btn custom-create_btn" id="order_review_pass" type="button">
-                    <i class="iconfont icon-checkcircle"></i>通过
+                    <i class="iconfont iconcheckcircle"></i>通过
                 </button>
                 @{{end}}
                 @{{ if canArray  .actions .m.ImpexpMarkcd  "canRecheckReject"}}
                 <button class="layui-btn custom-create_btn" id="order_reject" type="button">
-                    <i class="iconfont icon-replyall"></i>驳回
+                    <i class="iconfont iconreplyall"></i>驳回
                 </button>
                 @{{end}}
             @{{end}}
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="@{{ .m.Id }}"
                     onclick="layui.admin.annotation_jilu_click(this)"
                     type="button">
-                <i class="iconfont icon-assignment1"></i>办理记录
+                <i class="iconfont iconassignment1"></i>办理记录
             </button>
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print"
                     type="button">
-                <i class="iconfont icon-print"></i>打印
+                <i class="iconfont iconprint"></i>打印
             </button>
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note"
                     type="button">
-                <i class="iconfont icon-tab"></i>附注
+                <i class="iconfont icontab"></i>附注
                 <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
             </button>
         </div>

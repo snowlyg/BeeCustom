@@ -5,34 +5,22 @@
         index: 'lib/index'
     }).use(['index', 'table', 'admin', 'laydate', 'form', "laytpl"], async () => {
         const {$, laydate, form, layer, admin, table, laytpl} = layui;
+        let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index, order_import_list, MonthTime = '今天', annotationStatusString = '全部订单';
+
         $(function () {
             var ws = new WebSocket('ws://' + window.location.host + '/ws');
             ws.onmessage = function (e) {
                 let message = JSON.parse(e.data);
-                if (message.annotation_is_updated){
-                    window.location.reload()
-                }
-
+                if (message.annotation_is_updated){window.location.reload()}
             };
-
         });
+
         /**根据屏幕等比例缩小**/
         admin.sideFlexible_window();
-
         /**table点击行选中**/
         admin.table_radio_click();
-
-        let person_tips_index,
-            returns_tips_index,
-            audit_reject_logs_tips_index,
-            reject_logs_tips_index,
-            order_import_list,
-            MonthTime = '今天',
-            annotationStatusString = '全部订单';
-
         /**table左右拖动**/
         admin.table_mousedown();
-
         /**附件下载列表**/
         $(document).on("click", ".icon-attach-file", function () {
             const id = $(this).data("id");
@@ -84,35 +72,32 @@
         });
 
         /**删除**/
-        $(document).on("click", ".icon-shanchu1", function () {
+        $(document).on("click", ".iconshanchu1", function () {
             const id = $(this).data("id");
             layer.confirm('真的删除么', {
                 title: '提示'
             }, async (index) => {
-                const data = await admin.delete(`/annotation/i/${id}`);
-                layer.close(index);
+                const data = await admin.delete(`/annotation/delete/${id}`,"show");
                 layer.close(index);
                 if (data.status) {
-                    order_import_list = await admin.get_data_list(`/annotation/i/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+                    window.location.reload()
                 }
             });
         });
 
         /**派单**/
-        admin.distribute(".order_distribute", @{{.m.Id}}, "@{{.ImpexpMarkcdName}}");
-
+        admin.distribute(".order_distribute", "@{{.m.Id}}", "@{{.ImpexpMarkcdName}}");
         /**时间筛选**/
         form.on('select(time_table)', async function (data) {
             MonthTime = data.value;
             admin.list_page = 1;
-
             let OrderIndexRequestData = {
                 StatusString: annotationStatusString,
                 List: {
                     Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
-                        sort: "impexp_markcd",
+                        sort: "invt_dcl_time",
                         order: "desc",
                     }
                 },
@@ -129,15 +114,16 @@
         /**复制订单**/
         $(document).on("click", ".copy_order", async function () {
             const id = $(this).data("id");
-            await admin.get(`/annotation/i/${id}/copy`, 'show');
-            order_import_list = await admin.get_data_list(`/annotation/i/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
+           let data =  await admin.get(`/annotation/copy/${id}`, 'show');
+            if (data.status) {
+                window.location.reload()
+            }
         });
 
         /**简单搜索**/
         $("#order_import_search").on('keydown', async function (e) {
             let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
             if (eCode === 13) {
-
                 let OrderIndexRequestData = {
                     StatusString: annotationStatusString,
                     List: {
@@ -145,7 +131,7 @@
                         Request: {
                             EtpsInnerInvtNoLike: $(this).val(),
                             SearchTimeString: MonthTime,
-                            sort: "impexp_markcd",
+                            sort: "invt_dcl_time",
                             order: "desc",
                         }
                     },
@@ -164,17 +150,15 @@
         /**状态筛选**/
         $(document).on("click", ".status_flex_list_item", async function () {
             admin.list_page = 1;
-
             annotationStatusString = $(this).data("status");
             $(this).addClass('active').siblings().removeClass('active');
-
             let OrderIndexRequestData = {
                 StatusString: annotationStatusString,
                 List: {
                     Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                     Request: {
                         SearchTimeString: MonthTime,
-                        sort: "impexp_markcd",
+                        sort: "invt_dcl_time",
                         order: "desc",
                     }
                 },
@@ -185,7 +169,6 @@
                     }
                 },
             };
-
             order_import_list = await admin.get_data_list(OrderIndexRequestData, true);
         });
 
@@ -298,40 +281,6 @@
             layer.close(audit_reject_logs_tips_index);
         });
 
-
-        /**查看失败原因**/
-        $(document).on("click", ".first_reject_logs_show", async function () {
-            const id = $(this).data('id');
-            const data = await admin.get(`/annotation/i/${id}/first_reject_log`);
-            let content;
-            if (Object.keys(data).length === 0) {
-                content = '<p class="reject_logs_tips_close" style="color: #888888;text-align: center;">无数据</p>'
-            } else {
-                content = `<div class="returns_tips reject_logs_tips_close"><p class="returns_tips_content">失败原因：</p><p class="returns_tips_content_p">${data.content}</p><p class="returns_tips_content">备注：</p><p class="returns_tips_content_p">${data.remark}</p></div>`;
-            }
-            reject_logs_tips_index = layer.tips(content, this, {
-                tips: [4, '#FFFFFF'],
-                time: 0,
-                area: ['400px', 'auto']
-            });
-            if (reject_logs_index) {
-                clearTimeout(reject_logs_index);
-            }
-        });
-
-        let reject_logs_index;
-        $(document).on("mouseleave", ".first_reject_logs_show", function (event) {
-            reject_logs_index = setTimeout(() => {
-                layer.close(reject_logs_tips_index);
-            }, 1000);
-        });
-        $(document).on("mouseenter", ".reject_logs_tips_close", function () {
-            clearTimeout(reject_logs_index);
-        });
-        $(document).on("mouseleave", ".reject_logs_tips_close", function () {
-            layer.close(reject_logs_tips_index);
-        });
-
         /**时间**/
         laydate.render({
             elem: '#invt_dcl_time',
@@ -346,7 +295,7 @@
                 Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
                 Request: {
                     SearchTimeString: MonthTime,
-                    sort: "impexp_markcd",
+                    sort: "invt_dcl_time",
                     order: "desc",
                 }
             },
@@ -544,7 +493,7 @@
                     Request: {
                         TrspModecd: data.value ? data.value : '',
                         SearchTimeString: MonthTime,
-                        sort: "impexp_markcd",
+                        sort: "invt_dcl_time",
                         order: "desc",
                     }
                 },

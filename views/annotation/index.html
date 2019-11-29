@@ -5,7 +5,7 @@
                 <div class="status_flex">
                     <div class="status_flex_list" id="status_flex_list"></div>
                     <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
-                        <i class="iconfont icon-delete"></i>
+                        <i class="iconfont icondelete"></i>
                         <span>订单回收站</span>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                                         {{# } }}
                                     {{# if(item.StatusString == "已完成"){ }}
                                         <div class="copy_number copy_order" data-id="{{ item.Id }}">
-                                            <i class="iconfont icon-content-copy"></i>
+                                            <i class="iconfont iconcontent-copy"></i>
                                             <span>复制订单</span>
                                         </div>
                                         {{# } }}
@@ -117,12 +117,10 @@
                                         <p>{{ item.CompanyName || "" }}</p>
                                     </div>
                                     <div class="tr-th-flex-right">
-                                        <i class="iconfont icon-xiaoxi blue person_tips" data-index="{{ index }}"
-                                           title="客户信息"></i>
-                                        <i class="iconfont icon-jilu" data-id="{{ item.Id }}"
-                                           onclick="layui.admin.annotation_jilu_click(this)" title="办理记录"></i>
-                                        <i class="iconfont icon-attach-file" data-id="{{ item.Id }}" title="附件"></i>
-                                        <i class="iconfont icon-shanchu1" data-id="{{ item.Id }}" title="删除"></i>
+                                        <i class="iconfont iconxiaoxi blue person_tips" data-index="{{ index }}" title="客户信息"></i>
+                                        <i class="iconfont iconjilu" data-id="{{ item.Id }}" onclick="layui.admin.annotation_jilu_click(this)" title="办理记录"></i>
+                                        <i class="iconfont iconattach-file" data-id="{{ item.Id }}" title="附件"></i>
+                                        <i class="iconfont iconshanchu1" data-id="{{ item.Id }}" title="删除"></i>
                                     </div>
                                 </div>
                             </td>

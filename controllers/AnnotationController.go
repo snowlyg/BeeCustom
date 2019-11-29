@@ -140,6 +140,18 @@ func (c *AnnotationController) EUpdate() {
 	c.bUpdate(Id)
 }
 
+// Copy 添加 编辑 页面
+func (c *AnnotationController) ICopy() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bCopy(Id)
+}
+
+// Copy 添加 编辑 页面
+func (c *AnnotationController) ECopy() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bCopy(Id)
+}
+
 // ForRecheck 申请复核
 func (c *AnnotationController) IForRecheck() {
 	Id, _ := c.GetInt64(":id", 0)

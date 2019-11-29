@@ -35,6 +35,8 @@ func init() {
 		beego.Router("/annotation/make/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Make")
 		//取消订单
 		beego.Router("/annotation/cancel/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Cancel")
+		//复制订单
+		beego.Router("/annotation/copy/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Copy")
 		//审核通过
 		beego.Router("/annotation/audit/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Audit")
 		//更新

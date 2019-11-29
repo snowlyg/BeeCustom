@@ -10,7 +10,7 @@ import (
 )
 
 // 更新状态和状态更新时间
-func UpdateAnnotationStatus(m *models.Annotation, StatusString string) error {
+func UpdateAnnotationStatus(m *models.Annotation, StatusString string, isRestart bool) error {
 	aStatus, err := enums.GetSectionWithString(StatusString, "annotation_status")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("转换清单状态出错:%v", err))
@@ -18,7 +18,7 @@ func UpdateAnnotationStatus(m *models.Annotation, StatusString string) error {
 	}
 
 	// 禁止状态回退
-	if m.Status < aStatus {
+	if m.Status < aStatus || isRestart {
 		m.Status = aStatus
 		m.StatusUpdatedAt = time.Now()
 	}
