@@ -60,6 +60,8 @@ func init() {
 		beego.Router("/annotation/recheck_reject/?:id", &controllers.AnnotationController{}, "Post:"+flag+"RecheckReject")
 		//报文提交
 		beego.Router("/annotation/push_xml/?:id", &controllers.AnnotationController{}, "Get:"+flag+"PushXml")
+		//打印
+		beego.Router("/annotation/print/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Print")
 		//删除
 		beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:"+flag+"Delete")
 	}
@@ -170,7 +172,9 @@ func init() {
 	beego.Router("/home/logout", &controllers.HomeController{}, "*:Logout")
 	beego.Router("/home/datareset", &controllers.HomeController{}, "Get:DataReset")
 
-	//pdf打印 使用超级管理员
+	//复核凭证 使用超级管理员
+	beego.Router("/pdf/annotation_recheck_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationRecheckPdf")
+	//清单打印
 	beego.Router("/pdf/annotation_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationPdf")
 
 	beego.Router("/home/404", &controllers.HomeController{}, "*:Page404")

@@ -213,6 +213,18 @@ func (c *AnnotationController) EPushXml() {
 	c.bPushXml(id)
 }
 
+// Print 已提交单一
+func (c *AnnotationController) IPrint() {
+	id, _ := c.GetInt64(":id")
+	c.bPrint(id)
+}
+
+// Print 已提交单一
+func (c *AnnotationController) EPrint() {
+	id, _ := c.GetInt64(":id")
+	c.bPrint(id)
+}
+
 //删除
 func (c *AnnotationController) IDelete() {
 	id, _ := c.GetInt64(":id")

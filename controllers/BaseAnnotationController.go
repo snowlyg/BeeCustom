@@ -436,7 +436,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 	}
 
 	// 生成 pdf 凭证
-	if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo); err != nil {
+	if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 
@@ -459,6 +459,24 @@ func (c *BaseAnnotationController) bRecheck(id int64) {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "annotation/recheck_footerjs.html"
 	// 页面里按钮权限控制
+
+	c.GetXSRFToken()
+}
+
+// bPrint 打印
+func (c *BaseAnnotationController) bPrint(id int64) {
+	m, err := models.AnnotationOne(id, "AnnotationItems")
+	if err != nil {
+		c.pageError("数据无效，请刷新后重试")
+	}
+
+	if m != nil {
+		// 生成 pdf 凭证
+		if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_pdf"); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+		}
+
+	}
 
 	c.GetXSRFToken()
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/astaxie/beego"
 )
 
-func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
+func NewPDFGenerator(Id int64, etpsInnerInvtNo, url string) error {
 
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
@@ -32,7 +32,7 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo string) error {
 	password := beego.AppConfig.String("pdf_password")
 
 	// Create a new input page from an URL
-	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/pdf/annotation_pdf/" + strconv.FormatInt(Id, 10))
+	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/pdf/" + url + "/" + strconv.FormatInt(Id, 10))
 
 	// Set options for this page
 	page.FooterCenter.Set("第[page]页 共[topage]页")
