@@ -384,7 +384,7 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 }
 
 // bRecheckPass 通过复核、驳回
-func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
+func (c *BaseAnnotationController) bRecheckPassReject(statusString, action string) {
 	Id, _ := c.GetInt64(":id", 0)
 
 	m, err := models.AnnotationOne(Id, "Company,AnnotationItems")
@@ -394,19 +394,6 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 
 	c.validRequestData(m)
 
-	// valid := validation.Validation{}
-	// if len(m.UserPwd) > 0 {
-	//	valid.MinSize(m.UserPwd, 6, "密码")
-	//	valid.MaxSize(m.UserPwd, 18, "密码")
-	// }
-	//
-	// if valid.HasErrors() {
-	//	// 如果有错误信息，证明验证没通过
-	//	// 打印错误信息
-	//	for _, err := range valid.Errors {
-	//		c.jsonResult(enums.JRCodeFailed, err.Key+err.Message, m)
-	//	}
-	// }
 	if err = UpdateAnnotationStatus(m, statusString, false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
@@ -436,7 +423,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString string) {
 	}
 
 	// 生成 pdf 凭证
-	if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf"); err != nil {
+	if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf", action); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 
@@ -472,13 +459,13 @@ func (c *BaseAnnotationController) bPrint(id int64) {
 
 	if m != nil {
 		// 生成 pdf 凭证
-		if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_pdf"); err != nil {
+		if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_pdf", "report"); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
 
 	}
 
-	c.GetXSRFToken()
+	c.ServeJSON()
 }
 
 // bPushXml 提交单一

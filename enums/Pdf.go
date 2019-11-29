@@ -10,7 +10,7 @@ import (
 	"github.com/astaxie/beego"
 )
 
-func NewPDFGenerator(Id int64, etpsInnerInvtNo, url string) error {
+func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) error {
 
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
@@ -55,7 +55,7 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo, url string) error {
 		return err
 	}
 
-	path := "./static/generate/annotation/" + strconv.FormatInt(Id, 10)
+	path := "./static/generate/annotation/" + strconv.FormatInt(Id, 10) + "/" + action
 	if err := file.CreateFile(path); err != nil {
 		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
 		return err
