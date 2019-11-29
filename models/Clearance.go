@@ -106,6 +106,28 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	return datas, total
 }
 
+// GetClearancesByTypes 获取分页数据
+func GetClearancesByTypes(clearanceType string, isOld bool) []orm.ParamsList {
+	var lists []orm.ParamsList
+	query := orm.NewOrm().QueryTable(ClearanceTBName())
+
+	clearanceTypeStrings, err := beego.AppConfig.GetSection("clearance_type")
+	if err != nil {
+		return nil
+	}
+
+	clearanceTypeStrings = xlsx.FilpValueString(clearanceTypeStrings)
+	cType := clearanceTypeStrings[clearanceType]
+	query = query.Filter("type", cType)
+	if isOld {
+		_, _ = query.ValuesList(&lists, "name", "old_custom_code")
+	} else {
+		_, _ = query.ValuesList(&lists, "name", "customs_code")
+	}
+
+	return lists
+}
+
 // ClearanceOne 根据id获取单条
 func ClearanceOne(id int64) (*Clearance, error) {
 	m := NewClearance(0)

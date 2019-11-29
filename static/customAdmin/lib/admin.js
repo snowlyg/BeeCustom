@@ -993,6 +993,12 @@ layui.define('view', function (exports) {
 
             //自动完成
             async autoFnClearanceData(data) {
+
+                let template_val = '{{d.CustomsCode}}', template_txt = '{{d.CustomsCode}}' + "-" + '{{d.Name}}';
+                if ($.inArray(data.hideElem,["stship_trsarv_natcd","DclCurrcd","DclCurrcdBatch","Natcd","DestinationNatcd","NatcdBatch","DestinationNatcdBatch"])) {
+                    template_val = '{{d.OldCustomCode}}';
+                    template_txt = '{{d.OldCustomCode}}' + "-" + '{{d.Name}}';
+                }
                 //通关参数
                 data.layuicomplete.render({
                     elem: $(data.elem)[0],
@@ -1007,8 +1013,8 @@ layui.define('view', function (exports) {
                     },
                     params: {Limit: 5, TypeString: data.type},
                     method: 'post',
-                    template_val: '{{d.CustomsCode}}',
-                    template_txt: '{{d.CustomsCode}}' + "-" + '{{d.Name}}',
+                    template_val: template_val,
+                    template_txt: template_txt,
                     onselect: function (resp) {
                         $(data.elem).val(resp.Name);
                         $(data.hideElem).val(resp.CustomsCode);

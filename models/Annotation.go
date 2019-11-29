@@ -32,52 +32,52 @@ type AnnotationQueryParam struct {
 type Annotation struct {
 	BaseModel
 
-	Status                   int8      `orm:"column(status)" description:"核注清单状态"`
-	BondInvtNo               string    `orm:"column(bond_invt_no);size(64);null" description:"清单编号 (返填)"`
-	SeqNo                    string    `orm:"column(seq_no);size(18);null" description:"清单预录入统一编号 (返填)"`
-	PutrecNo                 string    `orm:"column(putrec_no);size(64)" description:"备案编号（手(账)册编号）"`
-	EtpsInnerInvtNo          string    `orm:"column(etps_inner_invt_no);size(64);null" description:"企业内部清单编号 （企业内部编号） (企业自行编写)"`
-	BizopEtpsSccd            string    `orm:"column(bizop_etps_sccd);size(18);null" description:"经营企业社会信用代码"`
-	BizopEtpsno              string    `orm:"column(bizop_etpsno);size(10)" description:"经营企业编号"`
-	BizopEtpsNm              string    `orm:"column(bizop_etps_nm);size(512)" description:"经营企业名称"`
-	RcvgdEtpsno              string    `orm:"column(rcvgd_etpsno);size(10)" description:"收货企业编号（加工单位）"`
-	RvsngdEtpsSccd           string    `orm:"column(rvsngd_etps_sccd);size(18);null" description:"收发货企业社会信用代码（加工单位）"`
-	RcvgdEtpsNm              string    `orm:"column(rcvgd_etps_nm);size(512)" description:"收货企业名称（加工单位）"`
-	DclEtpsSccd              string    `orm:"column(dcl_etps_sccd);size(18);null" description:"申报企业社会信用代码"`
-	DclEtpsno                string    `orm:"column(dcl_etpsno);size(10)" description:"申报企业编号"`
-	DclEtpsNm                string    `orm:"column(dcl_etps_nm);size(512)" description:"申报企业名称"`
+	Status                   int8      `orm:"column(status)"  valid:"Required" description:"核注清单状态"`
+	BondInvtNo               string    `orm:"column(bond_invt_no);size(64);null"  valid:"MaxSize(64)" description:"清单编号 (返填)"`
+	SeqNo                    string    `orm:"column(seq_no);size(18);null" valid:"MaxSize(18)" description:"清单预录入统一编号 (返填)"`
+	PutrecNo                 string    `orm:"column(putrec_no);size(64)"  valid:"Required;MaxSize(64)" description:"备案编号（手(账)册编号）"`
+	EtpsInnerInvtNo          string    `orm:"column(etps_inner_invt_no);size(64);null"  valid:"Required;MaxSize(64)" description:"企业内部清单编号 （企业内部编号） (企业自行编写)"`
+	BizopEtpsSccd            string    `orm:"column(bizop_etps_sccd);size(18);null"  valid:"Required;Length(18)" description:"经营企业社会信用代码"`
+	BizopEtpsno              string    `orm:"column(bizop_etpsno);size(10)"  valid:"Required;Length(10)" description:"经营企业编号"`
+	BizopEtpsNm              string    `orm:"column(bizop_etps_nm);size(512)" valid:"Required;MaxSize(512)" description:"经营企业名称"`
+	RcvgdEtpsno              string    `orm:"column(rcvgd_etpsno);size(10)" valid:"Required;Length(10)" description:"收货企业编号（加工单位）"`
+	RvsngdEtpsSccd           string    `orm:"column(rvsngd_etps_sccd);size(18);null" valid:"Required;Length(18)" description:"收发货企业社会信用代码（加工单位）"`
+	RcvgdEtpsNm              string    `orm:"column(rcvgd_etps_nm);size(512)" valid:"Required;MaxSize(512)" description:"收货企业名称（加工单位）"`
+	DclEtpsSccd              string    `orm:"column(dcl_etps_sccd);size(18);null" valid:"Required;Length(18)" description:"申报企业社会信用代码"`
+	DclEtpsno                string    `orm:"column(dcl_etpsno);size(10)" valid:"Required;Length(10)" description:"申报企业编号"`
+	DclEtpsNm                string    `orm:"column(dcl_etps_nm);size(512)" valid:"Required;MaxSize(512)" description:"申报企业名称"`
 	EntryNo                  string    `orm:"column(entry_no);size(64);null" description:"对应报关单编号(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
-	ImpexpPortcd             string    `orm:"column(impexp_portcd);size(4);null" description:"进/出境关别"`
-	ImpexpPortcdName         string    `orm:"column(impexp_portcd_name);size(100);null" description:"进/出境关别名称"`
-	DclPlcCuscd              string    `orm:"column(dcl_plc_cuscd);size(4);null" description:"申报地关区代码（主管海关）"`
-	DclPlcCuscdName          string    `orm:"column(dcl_plc_cuscd_name);size(100);null" description:"申报地关区代码名称"`
-	ImpexpMarkcd             string    `orm:"column(impexp_markcd);size(4);null" description:"进出口标记代码 I：进口,E：出口"`
-	MtpckEndprdMarkcd        string    `orm:"column(mtpck_endprd_markcd);size(4);null" description:"料件成品标记代码 I：料件，E：成品"`
-	MtpckEndprdMarkcdName    string    `orm:"column(mtpck_endprd_markcd_name);size(100);null" description:"料件成品标记名称"`
-	SupvModecd               string    `orm:"column(supv_modecd);size(6);null" description:"监管方式代码"`
-	SupvModecdName           string    `orm:"column(supv_modecd_name);size(100);null" description:"监管方式名称"`
-	TrspModecd               string    `orm:"column(trsp_modecd);size(6);null" description:"运输方式代码"`
-	TrspModecdName           string    `orm:"column(trsp_modecd_name);size(100);null" description:"运输方式名称"`
-	DclcusFlag               string    `orm:"column(dclcus_flag);size(1);null" description:"是否报关标志：1.报关2.非报关"`
-	DclcusFlagName           string    `orm:"column(dclcus_flag_name);size(100);null" description:"是否报关标志名称"`
-	DclcusTypecd             string    `orm:"column(dclcus_typecd);size(25);null" description:"报关类型代码(1.关联报关2.对应报关；当报关标志为“1.报关”时，企业可选择“关联报关单”/“对应报关单”；当报关标志填写为“2.非报关”时，报关标志填写为“2.非报关”该项不可填。)"`
-	DclcusTypecdName         string    `orm:"column(dclcus_typecd_name);size(100);null" description:"报关类型名称)"`
+	ImpexpPortcd             string    `orm:"column(impexp_portcd);size(4);null" valid:"Required;Length(4)" description:"进/出境关别"`
+	ImpexpPortcdName         string    `orm:"column(impexp_portcd_name);size(100);null" valid:"Required;MaxSize(100)" description:"进/出境关别名称"`
+	DclPlcCuscd              string    `orm:"column(dcl_plc_cuscd);size(4);null" valid:"Required;Length(4)" description:"申报地关区代码（主管海关）"`
+	DclPlcCuscdName          string    `orm:"column(dcl_plc_cuscd_name);size(100);null" valid:"Required;MaxSize(100)" description:"申报地关区代码名称"`
+	ImpexpMarkcd             string    `orm:"column(impexp_markcd);size(4);null" valid:"Required;MaxSize(4)" description:"进出口标记代码 I：进口,E：出口"`
+	MtpckEndprdMarkcd        string    `orm:"column(mtpck_endprd_markcd);size(4);null" valid:"Required;MaxSize(4)" description:"料件成品标记代码 I：料件，E：成品"`
+	MtpckEndprdMarkcdName    string    `orm:"column(mtpck_endprd_markcd_name);size(100);null" valid:"Required;MaxSize(100)" description:"料件成品标记名称"`
+	SupvModecd               string    `orm:"column(supv_modecd);size(6);null" valid:"Required;MaxSize(6)" description:"监管方式代码"`
+	SupvModecdName           string    `orm:"column(supv_modecd_name);size(100);null" valid:"Required;MaxSize(100)" description:"监管方式名称"`
+	TrspModecd               string    `orm:"column(trsp_modecd);size(6);null" valid:"Required;MaxSize(6)" description:"运输方式代码"`
+	TrspModecdName           string    `orm:"column(trsp_modecd_name);size(100);null" valid:"Required;MaxSize(100)"  description:"运输方式名称"`
+	DclcusFlag               string    `orm:"column(dclcus_flag);size(1);null" valid:"Required;Length(1)"  description:"是否报关标志：1.报关2.非报关"`
+	DclcusFlagName           string    `orm:"column(dclcus_flag_name);size(100);null" valid:"Required;MaxSize(100)"  description:"是否报关标志名称"`
+	DclcusTypecd             string    `orm:"column(dclcus_typecd);size(25);null"   description:"报关类型代码(1.关联报关2.对应报关；当报关标志为“1.报关”时，企业可选择“关联报关单”/“对应报关单”；当报关标志填写为“2.非报关”时，报关标志填写为“2.非报关”该项不可填。)"`
+	DclcusTypecdName         string    `orm:"column(dclcus_typecd_name);size(100);null"   description:"报关类型名称)"`
 	VrfdedMarkcd             string    `orm:"column(vrfded_markcd);size(4);null" description:"核扣标记代码（核扣标志） (返填)"`
 	InvtIochkptStucd         string    `orm:"column(invt_iochkpt_stucd);size(4);null" description:"清单进出卡口状态代码 (返填)"`
 	ApplyNo                  string    `orm:"column(apply_no);size(64);null" description:"申请表编号(单一显示：申报表编号)"`
 	ListType                 string    `orm:"column(list_type);size(1);null" description:"流转类型 (非流转类不填写，流转类填写: A：加工贸易深加工结转、B：加工贸易余料结转、C：不作价设备结转)"`
 	ListTypeName             string    `orm:"column(list_type_name);size(100);null" description:"流转类型名称"`
-	InputCode                string    `orm:"column(input_code);size(10)" description:"录入企业编号"`
-	InputCreditCode          string    `orm:"column(input_credit_code);size(18);null" description:"录入企业社会信用代码"`
-	InputName                string    `orm:"column(input_name);size(255)" description:"录入单位名称"`
+	InputCode                string    `orm:"column(input_code);size(10)" valid:"Required;Length(10)"  description:"录入企业编号"`
+	InputCreditCode          string    `orm:"column(input_credit_code);size(18);null" valid:"Required;Length(18)"  description:"录入企业社会信用代码"`
+	InputName                string    `orm:"column(input_name);size(255)" valid:"Required;MaxSize(255)"  description:"录入单位名称"`
 	ListStat                 string    `orm:"column(list_stat);size(1);null" description:"清单状态 (返填)"`
-	CorrEntryDclEtpsSccd     string    `orm:"column(corr_entry_dcl_etps_sccd);size(18);null" description:"对应报关单申报单位社会统一信用代码"`
-	CorrEntryDclEtpsNo       string    `orm:"column(corr_entry_dcl_etps_no);size(10);null" description:"对应报关单申报单位代码(当报关类型DCLCUS_TYPECD字段为2时，该字段必填)"`
-	CorrEntryDclEtpsNm       string    `orm:"column(corr_entry_dcl_etps_nm);size(512);null" description:"对应报关单申报单位名称(当报关类型DCLCUS_TYPECD字段为2时，该字段必填)"`
+	CorrEntryDclEtpsSccd     string    `orm:"column(corr_entry_dcl_etps_sccd);size(18);null" valid:"Required;Length(18)"  description:"对应报关单申报单位社会统一信用代码"`
+	CorrEntryDclEtpsNo       string    `orm:"column(corr_entry_dcl_etps_no);size(10);null" valid:"Required;Length(10)"  description:"对应报关单申报单位代码(当报关类型DCLCUS_TYPECD字段为2时，该字段必填)"`
+	CorrEntryDclEtpsNm       string    `orm:"column(corr_entry_dcl_etps_nm);size(512);null" valid:"Required;MaxSize(512)"  description:"对应报关单申报单位名称(当报关类型DCLCUS_TYPECD字段为2时，该字段必填)"`
 	DecType                  string    `orm:"column(dec_type);size(1);null" description:"报关单类型"`
 	DecTypeName              string    `orm:"column(dec_type_name);size(100);null" description:"报关单类型名称"`
-	StshipTrsarvNatcd        string    `orm:"column(stship_trsarv_natcd);size(3);null" description:"起运/运抵国(地区）（启运国(地区)）"`
-	StshipTrsarvNatcdName    string    `orm:"column(stship_trsarv_natcd_name);size(100);null" description:"起运/运抵国(地区）(启运国(地区))名称"`
+	StshipTrsarvNatcd        string    `orm:"column(stship_trsarv_natcd);size(3);null" valid:"Required;Length(3)" description:"起运/运抵国(地区）（启运国(地区)）"`
+	StshipTrsarvNatcdName    string    `orm:"column(stship_trsarv_natcd_name);size(100);null"  valid:"Required;MaxSize(100)" description:"起运/运抵国(地区）(启运国(地区))名称"`
 	InvtType                 string    `orm:"column(invt_type);size(1);null" description:"清单类型 (SAS项目新增)"`
 	InvtTypeName             string    `orm:"column(invt_type_name);size(100);null" description:"清单类型名称"`
 	EntryStucd               string    `orm:"column(entry_stucd);size(1);null" description:"报关状态 (SAS项目新增)"`
@@ -104,15 +104,15 @@ type Annotation struct {
 	Param2                   string    `orm:"column(param2);size(19);null" description:"备用2"`
 	Param3                   string    `orm:"column(param3);size(19);null" description:"备用3"`
 	ExtraRemark              string    `orm:"column(extra_remark);null" description:"附注"`
-	GenDecFlag               string    `orm:"column(gen_dec_flag);size(2);null" description:"是否生成报关单 1 生成，2 不生成"`
-	GenDecFlagName           string    `orm:"column(gen_dec_flag_name);size(100);null" description:"是否生成报关单名称"`
-	InputTime                time.Time `form:"-" orm:"column(input_time);type(datetime);null" description:"录入日期"`
+	GenDecFlag               string    `orm:"column(gen_dec_flag);size(2);null" valid:"Required;MaxSize(2)" description:"是否生成报关单 1 生成，2 不生成"`
+	GenDecFlagName           string    `orm:"column(gen_dec_flag_name);size(100);null" valid:"Required;MaxSize(100)" description:"是否生成报关单名称"`
+	InputTime                time.Time `form:"-" orm:"column(input_time);type(datetime);null" valid:"Required"  description:"录入日期"`
 	PrevdTime                time.Time `form:"-" orm:"column(prevd_time);type(datetime);null" description:"预核扣时间"`
 	FormalVrfdedTime         time.Time `form:"-" orm:"column(formal_vrfded_time);type(datetime);null" description:"正式核扣时间 (返填)"`
 	DeletedAt                time.Time `form:"-" orm:"column(deleted_at);type(timestamp);null" `
 	StatusUpdatedAt          time.Time `form:"-" orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
-	InvtDclTime              time.Time `form:"-" orm:"column(invt_dcl_time);type(datetime);null" description:"清单申报时间(清单申报日期)(返填)"`
-	EntryDclTime             time.Time `form:"-" orm:"column(entry_dcl_time);type(datetime);null" description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
+	InvtDclTime              time.Time `form:"-" orm:"column(invt_dcl_time);type(datetime);null" valid:"Required" description:"清单申报时间(清单申报日期)(返填)"`
+	EntryDclTime             time.Time `form:"-" orm:"column(entry_dcl_time);type(datetime);null"  description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
 	RecheckErrorInputIds     string    `orm:"column(recheck_error_input_ids);type(text);null" description:"复核input id"`
 	ItemRecheckErrorInputIds string    `orm:"column(item_recheck_error_input_ids);type(text);null" description:"复核input id"`
 
