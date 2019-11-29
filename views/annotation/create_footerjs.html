@@ -250,14 +250,8 @@
                         break;
 
                     case 'search':
-                        if ("@{{.m.ImpexpMarkcd }}" === 'I') {
-                            if (admin.ann_materials_data.length === 0) {
-                                return layer.msg('手(账)册编号不能为空');
-                            }
-                        } else {
-                            if (admin.ann_goods_data.length === 0) {
-                                return layer.msg('手(账)册编号不能为空');
-                            }
+                        if (!@{{.m.HandBookId}}) {
+                            return layer.msg('手(账)册编号不能为空');
                         }
 
                         AnnotationSearcIndex = layer.open({
@@ -267,6 +261,7 @@
                             area: admin.screen() < 2 ? ['80%', '300px'] : ['950px', '540px'],
                             content: $('#annotation_search_template').html()
                         });
+
                         $("#gds_mtno_filter").focus();
 
                         table.render({
