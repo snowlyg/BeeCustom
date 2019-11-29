@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -156,7 +157,7 @@ func (c *BaseAnnotationController) bCopy(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
 	}
 
-	//重置数据
+	// 重置数据
 	if m != nil {
 		m.Id = 0
 		m.InputTime = time.Now()
@@ -503,7 +504,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		handBookType1, _ := enums.GetSectionWithString("手册", "hand_book_type")
 		handBookType2, _ := enums.GetSectionWithString("账册", "hand_book_type")
 		if handBook == nil {
-			c.jsonResult(enums.JRCodeSucc, "错误手账册类型", nil)
+			c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
 		} else {
 			if handBook.Type == handBookType1 {
 				receiverId = beego.AppConfig.String("AnnotationReceiverIdC")
@@ -514,12 +515,14 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 				sysId = beego.AppConfig.String("AnnotationSysIdE")
 				path = beego.AppConfig.String("annotation_xml_path_e")
 			} else {
-				c.jsonResult(enums.JRCodeSucc, "错误手账册类型", nil)
+				c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
 			}
 		}
 
-		//报文名称
-		fileName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.EtpsInnerInvtNo + ".xml"
+		path_temp := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/temp/"
+		// 报文名称
+		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.EtpsInnerInvtNo
+		fileName := mName + ".xml"
 
 		signature.Object.Package.EnvelopInfo.FileName = fileName
 		signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.String("AnnotationVersion")
@@ -530,7 +533,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		signature.Object.Package.EnvelopInfo.MessageId = m.EtpsInnerInvtNo
 		signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
 
-		signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" //0:暂存，1:申报
+		signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" // 0:暂存，1:申报
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.String("AgentCode")
 
@@ -638,24 +641,44 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		output, err := xml.MarshalIndent(signature, "", "")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
-			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		if err := file.CreateFile(path); err != nil {
+		if err := file.CreateFile(path_temp); err != nil {
 			utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
-			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = file.WriteFile(path+fileName, []byte(xml.Header))
+		err = file.WriteFile(path_temp+fileName, []byte(xml.Header))
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
-			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = file.WriteFile(path+fileName, output)
+		err = file.WriteFile(path_temp+fileName, output)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
-			c.jsonResult(enums.JRCodeSucc, "操作失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+		}
+
+		f1, err := os.Open(path_temp + fileName)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("os.Open error:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+		}
+		defer f1.Close()
+
+		var files = []*os.File{f1}
+		err = file.Compress(files, path+mName+".zip")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("file.Compress error:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+		}
+
+		err = os.Remove(path_temp + fileName)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("os.Remove error:%v", err))
+			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
 		c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
