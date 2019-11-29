@@ -1256,11 +1256,11 @@ layui.define('view', function (exports) {
             },
 
             //派单
-            distribute(clickEnum, id,impexpMarkcdName) {
+            distribute(clickEnum, id, impexpMarkcdName) {
 
                 /**派单**/
                 $(document).on("click", clickEnum, function () {
-                    if (!id){
+                    if (!id) {
                         id = $(this).data("id");
                     }
                     layer.open({
@@ -1282,7 +1282,7 @@ layui.define('view', function (exports) {
                             if (clickEnum === "#order_dispatch") {
                                 admin.reloadFrame(impexpMarkcdName + '核注清单iframe');
                                 parent.layui.admin.closeThisTabs()
-                            }else{
+                            } else {
                                 window.location.reload();
                             }
 
@@ -4131,7 +4131,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-        //货物申报-办理记录
+            //货物申报-办理记录
             async order_jilu_click(dom, type) {
                 const id = $(dom).data("id");
                 layer.load(2);
@@ -4160,7 +4160,7 @@ layui.define('view', function (exports) {
                     return layer.msg("请先保存订单！")
                 }
                 layer.load(2);
-                const annotationRecords = await admin.post(`/annotation_record/datagrid`,JSON.stringify({AnnotationId:parseInt(id)}),true);
+                const annotationRecords = await admin.post(`/annotation_record/datagrid`, JSON.stringify({AnnotationId: parseInt(id)}), true);
                 layer.closeAll('loading');
                 laytpl($("#order_take_template").html()).render(annotationRecords.rows, function (html) {
                     $("#order_take_list").html(html)
@@ -4486,54 +4486,6 @@ layui.define('view', function (exports) {
                     shadeClose: true,
                     area: admin.screen() < 2 ? ['80%', '300px'] : ['880px', '700px'],
                     content: `/car/create`
-                });
-            }
-            ,
-
-//核注清单商品批量修改
-            annotation_batch_edit(dom) {
-                const flag = $(dom).data("flag");
-                if (admin.order_pros_data.length === 0) {
-                    return layer.msg("没有数据！");
-                }
-                layui.laytpl($('#batch_edit_list').html()).render(flag, function (html) {
-                    layer.open({
-                        type: 1,
-                        title: '商品批量修改',
-                        shadeClose: true,
-                        area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', 'auto'],
-                        content: html
-                    });
-                });
-                $("#dcl_currcd_name_batch").focus();
-
-            }
-            ,
-
-//核注清单批量修改-保存
-            order_pros_data: [],
-            batch_edit_save(dom) {
-                layui.form.on('submit(batch_edit_save)', async (data) => {
-                    const data_map = admin.order_pros_data.map(item => item.gds_seqno);
-                    for (let item of data_map) {
-                        for (let value in data.field) {
-                            if (data.field[value]) {
-                                admin.order_pros_data[parseInt(item) - 1][value] = data.field[value]
-                            }
-                        }
-                    }
-                    /**如果报关则生成报关商品**/
-                    admin.decListData = admin.InitInvtList2DecList(admin.decListData, admin.order_pros_data);
-                    layui.table.reload('customs_declaration_list', {
-                        data: admin.decListData,
-                        limit: admin.decListData.length
-                    });
-
-                    layui.table.reload('order_pros', {
-                        data: admin.order_pros_data,
-                        limit: admin.order_pros_data.length
-                    });
-                    layer.closeAll();
                 });
             }
             ,

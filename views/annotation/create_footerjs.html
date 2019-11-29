@@ -5,7 +5,7 @@
         index: 'lib/index'
     })
         .use(['index', 'form', 'admin', 'table', 'layuicomplete', 'laydate', 'laytpl'], async () => {
-            const {form, admin, table, $, laytpl, layuicomplete} = layui;
+            const {form, admin, table, $, layuicomplete} = layui;
             let order_pros_data_filter = []
                 , order_note_data /**附注数据**/
                 , annotationItems /**清单表体数据**/
@@ -134,6 +134,17 @@
                 }
             });
 
+
+            /**批量修改表体*/
+            layui.form.on('submit(batch_edit_save)', async (data) => {
+                let result = await admin.patch("/annotation_item_update/" + @{{.m.Id}}, data.field)
+                if (result.status) {
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 150);
+                }
+            });
+
             /**商品列表--按钮操作**/
             table.on('toolbar(order_pros)', async function (obj) {
                 let checkStatus = table.checkStatus(obj.config.id);
@@ -189,8 +200,57 @@
                         $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${annotationItems.total - 1}]`).click();
 
                         break;
+                    case 'batch_edit':
+                        if (annotationItems.total === 0) {
+                            return layer.msg("没有数据！");
+                        }
+
+                        layui.laytpl($('#batch_edit_list').html()).render("@{{.m.ImpexpMarkcd }}", function (html) {
+                            layer.open({
+                                type: 1,
+                                title: '商品批量修改',
+                                shadeClose: true,
+                                area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', 'auto'],
+                                content: html
+                            });
+                        });
+
+                        $("#dcl_currcd_name_batch").focus();
+
+                        /**最终目的国(地区)*/
+                        const destination_natcd = {
+                            layuicomplete: layuicomplete,
+                            elem: '#DestinationNatcdNameBatch',
+                            hideElem: '#DestinationNatcdBatch',
+                            type: "国别地区代码",
+                            cache: false,
+                        };
+                        await admin.autoFnClearanceData(destination_natcd);
+
+                        /**原产国（地区）*/
+                        const natcd = {
+                            layuicomplete: layuicomplete,
+                            elem: '#NatcdNameBatch',
+                            hideElem: '#NatcdBatch',
+                            type: "国别地区代码",
+                            cache: false,
+                        };
+                        await admin.autoFnClearanceData(natcd);
+
+                        /**自动完成--币制**/
+                        const dcl_currcd = {
+                            layuicomplete: layuicomplete,
+                            elem: '#DclCurrcdNameBatch',
+                            hideElem: '#DclCurrcdBatch',
+                            type: "货币代码",
+                            cache: false,
+                        };
+                        await admin.autoFnClearanceData(dcl_currcd);
+
+                        break;
+
                     case 'search':
-                        if (cusIEFlag === 'I') {
+                        if ("@{{.m.ImpexpMarkcd }}" === 'I') {
                             if (admin.ann_materials_data.length === 0) {
                                 return layer.msg('手(账)册编号不能为空');
                             }
@@ -278,7 +338,7 @@
                     return layer.msg('查询条件不能为空');
                 }
 
-                let data_search = get_ann_goods_materials_data(cusIEFlag);
+                let data_search = get_ann_goods_materials_data("@{{.m.ImpexpMarkcd }}");
                 const condition = {
                     RecordNo: data.field.gds_mtno_filter,
                     HsCode: data.field.gdecd_filter,
@@ -360,7 +420,7 @@
 
 
             /**派单**/
-            admin.distribute("#order_dispatch", @{{.m.Id}},"@{{.ImpexpMarkcdName}}");
+            admin.distribute("#order_dispatch", @{{.m.Id}}, "@{{.ImpexpMarkcdName}}");
 
             /**附注**/
             let order_note_index;
@@ -406,10 +466,10 @@
 
                 let result = await admin.get(`/annotation/audit/` + @{{.m.Id}}, true);
                 if (result.status === 1) {
-                    admin.reloadFrame("@{{.ImpexpMarkcdName}}"+'核注清单iframe');
-                    setTimeout(()=>{
+                    admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
+                    setTimeout(() => {
                         window.location.reload();
-                    },150)
+                    }, 150)
                 }
 
                 layer.closeAll('loading');
@@ -425,7 +485,7 @@
             });
 
             /**申请复核**/
-            $("body").on("click", "#order_application_review", function() {
+            $("body").on("click", "#order_application_review", function () {
                 $("#annotation_application_review").click();
             });
 
@@ -436,10 +496,10 @@
 
                 layer.load(2);
 
-                const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`,"show");
+                const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`, "show");
                 if (result.status === 1) {
                     window.location.reload();
-                    admin.reloadFrame("@{{.ImpexpMarkcdName}}"+'核注清单iframe');
+                    admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
                 }
 
                 layer.closeAll('loading');
@@ -489,6 +549,7 @@
 
                 order_pros_form_focus();
             }
+
 
         });
 </script>

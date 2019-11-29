@@ -161,6 +161,40 @@ func AnnotationItemSave(m *AnnotationItem) error {
 	return nil
 }
 
+//AnnotationItemUpdateAll 添加、编辑页面 保存
+func AnnotationItemUpdateAll(aid int64, m *AnnotationItem) error {
+	o := orm.NewOrm()
+	qs := o.QueryTable(AnnotationItemTBName()).Filter("annotation_id", aid)
+
+	var params orm.Params
+	if len(m.Natcd) > 0 {
+		params = orm.Params{
+			"dcl_currcd":      m.DclCurrcd,
+			"dcl_currcd_name": m.DclCurrcdName,
+			"natcd":           m.Natcd,
+			"natcd_name":      m.NatcdName,
+		}
+	} else if len(m.DestinationNatcd) > 0 {
+		params = orm.Params{
+			"dcl_currcd":      m.DclCurrcd,
+			"dcl_currcd_name": m.DclCurrcdName,
+			"natcd":           m.DestinationNatcd,
+			"natcd_name":      m.DestinationNatcdName,
+		}
+	}
+
+	if params != nil {
+		_, err := qs.Update(params)
+		if err != nil {
+			return err
+		}
+	} else {
+		return errors.New("未更新")
+	}
+
+	return nil
+}
+
 //删除
 func AnnotationItemDelete(id int64) (num int64, err error) {
 	m := NewAnnotationItem(id)

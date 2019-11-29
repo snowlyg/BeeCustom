@@ -251,8 +251,7 @@
         <button class="layui-btn layui-btn-sm order_pros_btn" id="annotation_add" lay-event="add" type="button">
             新增
         </button>
-        <button class="layui-btn layui-btn-sm order_pros_btn" id="order_pros_submit" lay-submit
-                lay-filter="order_pros_submit" type="button">
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="order_pros_submit" lay-submit lay-filter="order_pros_submit" type="button">
             保存
         </button>
         <button class="layui-btn layui-btn-sm order_pros_btn" id="annotation_delete" lay-event="delete" type="button">
@@ -261,8 +260,7 @@
         <button class="layui-btn layui-btn-sm order_pros_btn" id="annotation_copy" lay-event="copy" type="button">
             复制
         </button>
-        <button class="layui-btn layui-btn-sm order_pros_btn" id="annotation_batch_edit" type="button"
-                onclick="layui.admin.annotation_batch_edit(this)" data-flag="I">
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="annotation_batch_edit" lay-event="batch_edit" type="button"  >
             批量修改
         </button>
         <button class="layui-btn layui-btn-sm order_pros_btn" id="annotation_search" lay-event="search" type="button">
@@ -280,8 +278,8 @@
                     <td class="td-scale-01 text-align-right">币制</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="DclCurrcd" id="dcl_currcd_batch">
-                            <input type="text" class="non-empty" name="DclCurrcdName" id="dcl_currcd_name_batch" autocomplete="off">
+                            <input type="hidden" name="DclCurrcd" id="DclCurrcdBatch">
+                            <input type="text" class="non-empty" name="DclCurrcdName" id="DclCurrcdNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -290,9 +288,8 @@
                     <td class="td-scale-01 text-align-right">原产国（地区）</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="Natcd" id="natcd_batch">
-                            <input type="text" class="non-empty" name="NatcdName" id="natcd_name_batch"
-                                   autocomplete="off">
+                            <input type="hidden" name="Natcd" id="NatcdBatch">
+                            <input type="text" class="non-empty" name="NatcdName" id="NatcdNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -301,9 +298,8 @@
                     <td class="td-scale-01 text-align-right">最终目的国(地区)</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="DestinationNatcd" id="destination_natcd_batch">
-                            <input type="text" class="non-empty" name="DestinationNatcdName"
-                                   id="destination_natcd_name_batch" autocomplete="off">
+                            <input type="hidden" name="DestinationNatcd" id="DestinationNatcdBatch">
+                            <input type="text" class="non-empty" name="DestinationNatcdName" id="DestinationNatcdNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -311,10 +307,7 @@
                 </tbody>
             </table>
             <div class="manual_no_btn">
-                <button class="layui-btn custom-create_btn" lay-submit lay-filter="batch_edit_save" id="batch_edit_save"
-                        type="button" onclick="layui.admin.batch_edit_save(this)">
-                    提交
-                </button>
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="batch_edit_save" id="batch_edit_save" type="button">提交</button>
             </div>
         </form>
     </div>

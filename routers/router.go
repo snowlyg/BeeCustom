@@ -20,6 +20,7 @@ func init() {
 	beego.Router("/annotation_item/datagrid", &controllers.AnnotationItemController{}, "Post:DataGrid")
 	beego.Router("/annotation_item/store/?:aid", &controllers.AnnotationItemController{}, "Post:Store")
 	beego.Router("/annotation_item/update/?:id", &controllers.AnnotationItemController{}, "Patch:Update")
+	beego.Router("/annotation_item_update/?:aid", &controllers.AnnotationItemController{}, "Patch:UpdateAll")
 	beego.Router("/annotation_item/delete/?:id", &controllers.AnnotationItemController{}, "Delete:Delete")
 
 	flags := [2]string{"I", "E"}

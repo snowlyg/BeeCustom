@@ -53,7 +53,24 @@ func (c *AnnotationItemController) Update() {
 	m := models.NewAnnotationItem(Id)
 
 	c.saveOrUpdate(&m, 0)
+}
 
+// Update 添加 编辑 页面
+func (c *AnnotationItemController) UpdateAll() {
+	Id, _ := c.GetInt64(":aid", 0)
+
+	annotationItem := models.NewAnnotationItem(0)
+
+	//获取form里的值
+	if err := c.ParseForm(&annotationItem); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", nil)
+	}
+
+	if err := models.AnnotationItemUpdateAll(Id, &annotationItem); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+	} else {
+		c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
+	}
 }
 
 // Update 添加 编辑 页面
