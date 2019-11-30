@@ -70,11 +70,7 @@ gulp
 ```
 
 # 使用组件
- 1. 数据格式化 [https://github.com/IamBusy/amoeba](https://github.com/IamBusy/amoeba)
-
-在浏览器里打开 http://localhost:8080 进行访问
-
-2.pdf 生成pdf
+ 1..pdf 生成pdf
 [go-wkhtmltopdf](https://github.com/SebastiaanKlippert/go-wkhtmltopdf)
 ```
 go get github.com/SebastiaanKlippert/go-wkhtmltopdf
