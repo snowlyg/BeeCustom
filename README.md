@@ -104,6 +104,10 @@ beego.BConfig.WebConfig.Session.SessionOn = true
 sessionon = true
 ```
 
+#演示地址
+[BeeCustom](http://112.74.61.105:8089)
+账号/密码:admin/123456
+
 # 参考项目
  - [lhtzbj12/sdrms](https://gitee.com/lhtzbj12/sdrms/tree/master)
  
