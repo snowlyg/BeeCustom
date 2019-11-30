@@ -81,16 +81,28 @@ func (c *AnnotationController) EEdit() {
 	c.bEdit(Id)
 }
 
-// Edit 添加 编辑 页面
+// IMake 制单
 func (c *AnnotationController) IMake() {
 	Id, _ := c.GetInt64(":id", 0)
 	c.bMake(Id)
 }
 
-// Edit 添加 编辑 页面
+// EMake 制单
 func (c *AnnotationController) EMake() {
 	Id, _ := c.GetInt64(":id", 0)
 	c.bMake(Id)
+}
+
+// IReMake 驳回修改
+func (c *AnnotationController) IReMake() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bReMake(Id)
+}
+
+// EReMake 驳回修改
+func (c *AnnotationController) EReMake() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bReMake(Id)
 }
 
 // Cancel 取消订单

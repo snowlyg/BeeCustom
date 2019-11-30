@@ -24,49 +24,51 @@ func init() {
 	beego.Router("/annotation_item/delete/?:id", &controllers.AnnotationItemController{}, "Delete:Delete")
 
 	flags := [2]string{"I", "E"}
-	/*清单管理*/
+	/**清单管理*/
 	for _, flag := range flags {
-		//清单
+		// 清单
 		beego.Router("/annotation/index/"+flag, &controllers.AnnotationController{}, "Get:"+flag+"Index")
-		//代客下单
+		// 代客下单
 		beego.Router("/annotation/create/"+flag, &controllers.AnnotationController{}, "Get:"+flag+"Create")
-		//列表
+		// 列表
 		beego.Router("/annotation/datagrid/"+flag, &controllers.AnnotationController{}, "Post:"+flag+"DataGrid")
-		//数量统计
+		// 数量统计
 		beego.Router("/annotation/statuscount/"+flag, &controllers.AnnotationController{}, "Post:"+flag+"StatusCount")
-		//保存
+		// 保存
 		beego.Router("/annotation/store/"+flag, &controllers.AnnotationController{}, "Post:"+flag+"Store")
-		//开始审单
+		// 开始审单
 		beego.Router("/annotation/edit/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Edit")
-		//开始制单
+		// 开始制单
 		beego.Router("/annotation/make/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Make")
-		//取消订单
+		// 驳回修改订单
+		beego.Router("/annotation/remake/?:id", &controllers.AnnotationController{}, "Get:"+flag+"ReMake")
+		// 取消订单
 		beego.Router("/annotation/cancel/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Cancel")
-		//复制订单
+		// 复制订单
 		beego.Router("/annotation/copy/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Copy")
-		//审核通过
+		// 审核通过
 		beego.Router("/annotation/audit/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Audit")
-		//更新
+		// 更新
 		beego.Router("/annotation/update/?:id", &controllers.AnnotationController{}, "Patch:"+flag+"Update")
-		//派单
+		// 派单
 		beego.Router("/annotation/distribute/?:id", &controllers.AnnotationController{}, "Post:"+flag+"Distribute")
-		//申请复核
+		// 申请复核
 		beego.Router("/annotation/for_recheck/?:id", &controllers.AnnotationController{}, "Get:"+flag+"ForRecheck")
-		//申请复核
+		// 申请复核
 		beego.Router("/annotation/recheck/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Recheck")
-		//复核通过
+		// 复核通过
 		beego.Router("/annotation/recheck_pass/?:id", &controllers.AnnotationController{}, "Post:"+flag+"RecheckPass")
-		//复核驳回
+		// 复核驳回
 		beego.Router("/annotation/recheck_reject/?:id", &controllers.AnnotationController{}, "Post:"+flag+"RecheckReject")
-		//报文提交
+		// 报文提交
 		beego.Router("/annotation/push_xml/?:id", &controllers.AnnotationController{}, "Get:"+flag+"PushXml")
-		//打印
+		// 打印
 		beego.Router("/annotation/print/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Print")
-		//附注
+		// 附注
 		beego.Router("/annotation/extra_remark/?:id", &controllers.AnnotationController{}, "Post:"+flag+"ExtraRemark")
-		//驳回原因
+		// 驳回原因
 		beego.Router("/annotation/audit_first_reject_log/?:id", &controllers.AnnotationController{}, "Get:"+flag+"AuditFirstRejectLog")
-		//删除
+		// 删除
 		beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:"+flag+"Delete")
 	}
 

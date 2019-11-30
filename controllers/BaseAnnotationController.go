@@ -49,7 +49,7 @@ func (c *BaseAnnotationController) bIndex(impexpMarkcd string) {
 	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
 
 	// 页面里按钮权限控制
-	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "Audit", "Delete", "Distribute", "Recheck", "Push", "PushXml", "StoreError", "Change", "Restart", "Cancel", "Copy")
+	c.getActionData(impexpMarkcd, "Index", "Create", "Edit", "Make", "ReMake", "Audit", "Delete", "Distribute", "Recheck", "Push", "PushXml", "StoreError", "Change", "Restart", "Cancel", "Copy")
 
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
@@ -157,7 +157,7 @@ func (c *BaseAnnotationController) bEdit(id int64) {
 	if err != nil {
 		c.pageError("数据无效，请刷新后重试")
 	}
-	c.setStatusOnly(m, "审核中")
+	c.setStatusOnly(m, "审核中", false)
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
 	c.Data["BackendUsers"] = backendUsers
@@ -168,7 +168,7 @@ func (c *BaseAnnotationController) bEdit(id int64) {
 	}
 }
 
-// bMake 添加 编辑 页面
+// bMake 制单
 func (c *BaseAnnotationController) bMake(id int64) {
 	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
@@ -176,7 +176,23 @@ func (c *BaseAnnotationController) bMake(id int64) {
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
-	c.setStatusOnly(m, "制单中")
+	c.setStatusOnly(m, "制单中", false)
+	c.Data["m"] = models.TransformAnnotation(id, "AnnotationItems")
+	c.Data["canStore"] = c.getCanStore(m, "")
+	if m != nil {
+		c.getResponses(m.ImpexpMarkcd)
+	}
+}
+
+// bReMake 驳回修改
+func (c *BaseAnnotationController) bReMake(id int64) {
+	m, err := models.AnnotationOne(id, "")
+	if m != nil && id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
+	c.setStatusOnly(m, "制单中", true)
 	c.Data["m"] = models.TransformAnnotation(id, "AnnotationItems")
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
@@ -227,7 +243,7 @@ func (c *BaseAnnotationController) bAudit(id int64) {
 	if err := c.setAnnotaionUserRelType(m, nil, "审单人"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
-	c.setStatusOnly(m, "审核通过")
+	c.setStatusOnly(m, "审核通过", false)
 	annotationRecord := c.newAnnotationRecord(m, "审核订单")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
@@ -345,14 +361,18 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString, action, acti
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
 		aFile := models.NewAnnotationFile(0)
-		aFile.Url = ffp
+		aFile.Url = strings.Replace(ffp, ".", "", 1)
 		aFile.Type = actionName
 		aFile.Name = actionName
 		aFile.Creator = c.curUser.RealName
 		aFile.Annotation = m
 		aFile.Version = "1.0"
 		err = models.AnnotationFileSaveOrUpdate(&aFile)
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "添加失败", err)
+		}
 	}
+
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 }
 
@@ -365,7 +385,7 @@ func (c *BaseAnnotationController) bRecheck(id int64) {
 	if m != nil {
 		c.getActionData(m.ImpexpMarkcd, "RecheckPass", "RecheckReject")
 	}
-	c.setStatusOnly(m, "复核中")
+	c.setStatusOnly(m, "复核中", false)
 	annotation := models.TransformAnnotation(id, "AnnotationItems")
 	c.Data["m"] = annotation
 	c.setTpl("annotation/recheck.html")
@@ -731,8 +751,8 @@ func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotati
 }
 
 // 仅仅更新状态
-func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusString string) {
-	if err := UpdateAnnotationStatus(m, statusString, false); err != nil {
+func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusString string, isRestart bool) {
+	if err := UpdateAnnotationStatus(m, statusString, isRestart); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
 	if err := models.AnnotationUpdateStatus(m); err != nil {
@@ -764,7 +784,6 @@ func (c *BaseAnnotationController) getCanStore(m *models.Annotation, impexpMarkc
 			if aStatus == "待审核" || aStatus == "审核中" {
 				return true
 			}
-
 		} else if c.checkActionAuthor(c.controllerName, m.ImpexpMarkcd+"Make") {
 			aStatus, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
 			if aStatus == "待制单" || aStatus == "制单中" {
@@ -772,6 +791,5 @@ func (c *BaseAnnotationController) getCanStore(m *models.Annotation, impexpMarkc
 			}
 		}
 	}
-
 	return false
 }

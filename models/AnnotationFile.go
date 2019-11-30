@@ -77,7 +77,7 @@ func AnnotationFileOneByTypeAndAnnotationId(m *AnnotationFile) error {
 // Save 添加、编辑页面 保存
 func AnnotationFileSaveOrUpdate(m *AnnotationFile) error {
 	o := orm.NewOrm()
-	if err := AnnotationFileOneByTypeAndAnnotationId(m); err != nil {
+	if err := AnnotationFileOneByTypeAndAnnotationId(m); err != nil && err.Error() != "<QuerySeter> no row found" {
 		utils.LogDebug(fmt.Sprintf("AnnotationFileSave:%v", err))
 		return err
 	}

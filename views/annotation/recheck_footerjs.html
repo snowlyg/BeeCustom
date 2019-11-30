@@ -63,8 +63,10 @@
       if (!@{{.m.Id}}) {
         return layer.msg('请先保存订单！');
       }
-      window.open(
-          ` / annotation / i /${@{{.m.Id}}}/downloads/prints?margin_top=1cm&margin_left=0cm&margin_right=0cm&margin_bottom=1cm`);
+      let url = await admin.get(`/annotation/print/${@{{.m.Id}}}`);
+      if (url) {
+        window.open(url,"打印清单")
+      }
     });
 
     /**驳回**/

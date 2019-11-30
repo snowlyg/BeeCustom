@@ -1,533 +1,554 @@
 <script>
-    layui.config({
-        base: '/static/customAdmin/'
-    }).extend({
-        index: 'lib/index'
-    }).use(['index', 'table', 'admin', 'laydate', 'form', "laytpl"], async () => {
-        const {$, laydate, form, layer, admin, table, laytpl} = layui;
-        let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index,
-            order_import_list, MonthTime = '今天', annotationStatusString = '全部订单';
+  layui.config({
+    base: '/static/customAdmin/',
+  }).extend({
+    index: 'lib/index',
+  }).use(['index', 'table', 'admin', 'laydate', 'form', 'laytpl'], async () => {
+    const {$, laydate, form, layer, admin, table, laytpl} = layui;
+    let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index,
+        order_import_list, MonthTime = '今天', annotationStatusString = '全部订单';
 
-        $(function () {
-            var ws = new WebSocket('ws://' + window.location.host + '/ws');
-            ws.onmessage = function (e) {
-                let message = JSON.parse(e.data);
-                if (message.annotation_is_updated) {
-                    window.location.reload()
-                }
-            };
-        });
-
-        /**根据屏幕等比例缩小**/
-        admin.sideFlexible_window();
-        /**table点击行选中**/
-        admin.table_radio_click();
-        /**table左右拖动**/
-        admin.table_mousedown();
-        /**附件下载列表**/
-        $(document).on("click", ".iconattach-file", function () {
-            const id = $(this).data("id");
-            layer.open({
-                type: 1,
-                title: '附件下载',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['750px', '600px'],
-                content: $('#pdf_lists_template').html()
-            });
-
-            table.render({
-                elem: '#pdf_lists'
-                , autoSort: false
-                , skin: 'line'
-                , method: 'post'
-                , where: {
-                    order: 'desc',
-                    sort: 'CreatedAt'
-                }
-                , contentType: 'application/json'
-                , url: @{{ urlfor "AnnotationFileController.DataGrid" }}
-                , request: {
-                    pageName: 'offset' //页码的参数名称，默认：page
-                    , limitName: 'limit' //每页数据量的参数名，默认：limit
-                }, response: {
-                    statusName: 'code',
-                    statusCode: 0,
-                }
-                , parseData: function (res) {
-                    return {
-                        "code": res.code,
-                        "count": res.total,
-                        "data": res.rows
-                    };
-                }
-                , cols: [
-                    [{
-                        field: 'type_string',
-                        title: '类型'
-                    }, {
-                        field: 'name',
-                        title: '文件名称'
-                    }, {
-                        field: 'created_at',
-                        title: '上传时间'
-                    }, {
-                        title: '操作',
-                        toolbar: '#pdf_toolbar',
-                        width: 180
-                    }]
-                ],
-                page: true,
-                limit: 10
-            });
-        });
-
-        /**附件下载列表操作**/
-        table.on('tool(pdf_lists)', async function (obj) {
-            const data = obj.data;
-            if (obj.event === 'preview') {
-                const preview_data = await admin.get(`/annotation_pdf/${data.id}/show`);
-                window.open(preview_data);
-            } else if (obj.event === 'download') {
-                window.open(`/annotation_pdf/${data.id}/downloads`)
-            }
-        });
-
-        /**删除**/
-        $(document).on("click", ".iconshanchu1", function () {
-            const id = $(this).data("id");
-            layer.confirm('真的删除么', {
-                title: '提示'
-            }, async (index) => {
-                const data = await admin.delete(`/annotation/delete/${id}`, "show");
-                layer.close(index);
-                if (data.status) {
-                    window.location.reload()
-                }
-            });
-        });
-
-        /**派单**/
-        admin.distribute(".order_distribute", "@{{.m.Id}}", "@{{.ImpexpMarkcdName}}");
-        /**时间筛选**/
-        form.on('select(time_table)', async function (data) {
-            MonthTime = data.value;
-            admin.list_page = 1;
-            let OrderIndexRequestData = {
-                StatusString: annotationStatusString,
-                List: {
-                    Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
-                    Request: {
-                        SearchTimeString: MonthTime,
-                        sort: "invt_dcl_time",
-                        order: "desc",
-                    }
-                },
-                StatusCount: {
-                    Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
-                    Request: {
-                        SearchTimeString: MonthTime,
-                    }
-                },
-            };
-            order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
-        });
-
-        /**复制订单**/
-        $(document).on("click", ".copy_order", async function () {
-            const id = $(this).data("id");
-            let data = await admin.get(`/annotation/copy/${id}`, 'show');
-            if (data.status) {
-                window.location.reload()
-            }
-        });
-
-        /**简单搜索**/
-        $("#order_import_search").on('keydown', async function (e) {
-            let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
-            if (eCode === 13) {
-                let OrderIndexRequestData = {
-                    StatusString: annotationStatusString,
-                    List: {
-                        Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
-                        Request: {
-                            EtpsInnerInvtNoLike: $(this).val(),
-                            SearchTimeString: MonthTime,
-                            sort: "invt_dcl_time",
-                            order: "desc",
-                        }
-                    },
-                    StatusCount: {
-                        Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
-                        Request: {
-                            EtpsInnerInvtNoLike: $(this).val(),
-                            SearchTimeString: MonthTime,
-                        }
-                    },
-                };
-                order_import_list = await admin.get_data_list(OrderIndexRequestData);
-            }
-        });
-
-        /**状态筛选**/
-        $(document).on("click", ".status_flex_list_item", async function () {
-            admin.list_page = 1;
-            annotationStatusString = $(this).data("status");
-            $(this).addClass('active').siblings().removeClass('active');
-            let OrderIndexRequestData = {
-                StatusString: annotationStatusString,
-                List: {
-                    Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
-                    Request: {
-                        SearchTimeString: MonthTime,
-                        sort: "invt_dcl_time",
-                        order: "desc",
-                    }
-                },
-                StatusCount: {
-                    Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
-                    Request: {
-                        SearchTimeString: MonthTime,
-                    }
-                },
-            };
-            order_import_list = await admin.get_data_list(OrderIndexRequestData, true);
-        });
-
-        /**查看联系人信息**/
-        $(document).on("click", ".person_tips", async function () {
-            const id = $(this).data('id');
-            const data = await admin.get(`/annotation_company_admin_user/${id}`);
-            if (data) {
-                const txt = `<div class="person-tips person_tips_close"><h1 class="person-tips-h1">${data.Name}</h1><p>电子邮箱：${data.Email}</p><p>手机号码：${data.Phone}</p></div>`;
-                person_tips_index = layer.tips(txt, this, {
-                    tips: [4, '#FFFFFF'],
-                    time: 0,
-                    area: ['300px', 'auto']
-                });
-                if (person_index) {
-                    clearTimeout(person_index);
-                }
-            }
-        });
-
-        let person_index;
-        $(document).on("mouseleave", ".person_tips", function (event) {
-            person_index = setTimeout(() => {
-                layer.close(person_tips_index);
-            }, 1000);
-        });
-
-        $(document).on("mouseenter", ".person_tips_close", function () {
-            clearTimeout(person_index);
-        });
-
-        $(document).on("mouseleave", ".person_tips_close", function () {
-            layer.close(person_tips_index);
-        });
-
-        /**查看回执信息**/
-        $(document).on("click", ".returns_show", async function () {
-            const id = $(this).data('id');
-            let content;
-            const data = await admin.post(`/annotation_return/datagrid`, JSON.stringify({AnnotationId: id}) );
-            if (data.rows.length === 0) {
-                content = '<p class="returns_tips_close" style="color: #888888;text-align: center;">无数据</p>'
-            } else {
-                let txt = '';
-                data.rows.forEach((item, index) => {
-                    let icon;
-                    if (index === 0) {
-                        icon = '<i class="layui-icon layui-timeline-axis"></i>'
-                    } else {
-                        icon = '<i class="layui-icon layui-timeline-axis_i"></i>'
-                    }
-                    txt += `<li class="layui-timeline-item">${icon}<div class="layui-timeline-content layui-text_rate"><h4 class="layui-timeline-title">${item.DealFlag == '0' ? '暂存成功' : item.CheckInfo}<span class="margin_left_10">${item.CreatedAt}</span></h4><p class="record"><span>海关预录入编号为：</span><span class="_time">${item.SeqNo}</span></p></div></li>`
-                });
-                content = `<div class="returns_tips returns_tips_close"><p class="returns_tips_content">回执内容：</p><ul class="layui-timeline">${txt}</ul></div>`;
-            }
-            returns_tips_index = layer.tips(content, this, {
-                tips: [4, '#FFFFFF'],
-                time: 0,
-                area: ['400px', 'auto']
-            });
-
-            if (returns_index) {
-                clearTimeout(returns_index);
-            }
-
-        });
-
-        let returns_index;
-        $(document).on("mouseleave", ".returns_show", function (event) {
-            returns_index = setTimeout(() => {
-                layer.close(returns_tips_index);
-            }, 1000);
-        });
-        $(document).on("mouseenter", ".returns_tips_close", function () {
-            clearTimeout(returns_index);
-        });
-        $(document).on("mouseleave", ".returns_tips_close", function () {
-            layer.close(returns_tips_index);
-        });
-
-        /**查看驳回原因**/
-        let audit_reject_logs_index;
-        $(document).on("click", ".first_audit_reject_logs_show", async function () {
-
-            const data = await admin.get(`/annotation/audit_first_reject_log/${$(this).data('id')}`);
-            let content;
-            if (data.status === 0) {
-                content = '<p class="audit_reject_logs_tips_close" style="color: #888888;text-align: center;">无数据</p>'
-            } else {
-                content = `<div class="returns_tips audit_reject_logs_tips_close"><p class="returns_tips_content">驳回原因：</p><p class="returns_tips_content_p">${data.obj.Content}</p><p class="returns_tips_content">备注：</p><p class="returns_tips_content_p">${data.obj.Remark}</p></div>`;
-            }
-            audit_reject_logs_tips_index = layer.tips(content, this, {
-                tips: [4, '#FFFFFF'],
-                time: 0,
-                area: ['400px', 'auto']
-            });
-            if (audit_reject_logs_index) {
-                clearTimeout(audit_reject_logs_index);
-            }
-        });
-        $(document).on("mouseleave", ".first_audit_reject_logs_show", function (event) {
-            audit_reject_logs_index = setTimeout(() => {
-                layer.close(audit_reject_logs_tips_index);
-            }, 1000);
-        });
-        $(document).on("mouseenter", ".audit_reject_logs_tips_close", function () {
-            clearTimeout(audit_reject_logs_index);
-        });
-        $(document).on("mouseleave", ".audit_reject_logs_tips_close", function () {
-            layer.close(audit_reject_logs_tips_index);
-        });
-
-        /**时间**/
-        laydate.render({
-            elem: '#invt_dcl_time',
-            range: true,
-            theme: '#1E9FFF'
-        });
-
-        /**订单列表**/
-        let OrderIndexRequestData = {
-            StatusString: annotationStatusString,
-            List: {
-                Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
-                Request: {
-                    SearchTimeString: MonthTime,
-                    sort: "invt_dcl_time",
-                    order: "desc",
-                }
-            },
-            StatusCount: {
-                Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
-                Request: {
-                    SearchTimeString: MonthTime,
-                }
-            },
-        };
-
-        order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
-
-        /**审核清单，清单详情，核中**/
-        $(document).on("click", ".order_detail, .order_keep_auth, .order_start_auth", function () {
-            const topLayui = parent === self ? layui : top.layui,
-                href = `/annotation/edit/${$(this).data('id')}`,
-                text = "@{{.ImpexpMarkcdName}}" + `清单制作`;
-            topLayui.index.openTabsPage(href, text);
-        });
-
-
-        /**取消订单**/
-        $(document).on("click", ".cancel_order", function () {
-            layer.confirm('真的要取消订单吗？一旦取消，订单将被关闭！', {
-                title: '提示'
-            }, async (index) => {
-                const data = await admin.get(`/annotation/cancel/${$(this).data('id')}`);
-                layer.close(index);
-                if (data.status) {
-                    window.location.reload()
-                }
-            });
-        });
-
-        /**开始制单/继续制单/修改**/
-        $(document).on("click", ".order_start_maker, .order_keep_maker, .order_revise, .order_check_success_reload", async function () {
-            const topLayui = parent === self ? layui : top.layui,
-                href = `/annotation/make/${$(this).data('id')}`,
-                text = `制单/修改保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
-            topLayui.index.openTabsPage(href, text);
-        });
-
-        /**改单**/
-        $(document).on("click", ".order_switch_bill", async function () {
-            const id = $(this).data('id');
-            const topLayui = parent === self ? layui : top.layui,
-                href = `/annotation/i/${id}/get_change/#/id=${id}`,
-                text = `改单保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
-            topLayui.index.openTabsPage(href, text);
-        });
-
-        /**进入复核页面**/
-        $(document).on("click", ".order_check", async function () {
-            const id = $(this).data('id');
-            const topLayui = parent === self ? layui : top.layui,
-                href = `/annotation/recheck/${id}`,
-                text = `复核保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
-            topLayui.index.openTabsPage(href, text);
-        });
-
-        /**催单**/
-        $(document).on("click", ".order_reminder", async function () {
-            const id = $(this).data('id');
-            try {
-                const data = await admin.post(`/annotation/i/${id}/press`);
-            } catch (e) {
-                return layer.msg('接口错误！', {
-                    offset: '15px',
-                    icon: 2,
-                    time: 2000,
-                    id: 'Message'
-                });
-            }
-        });
-
-        /**提交到单一窗口**/
-        $(document).on("click", ".order_check_success", async function () {
-            try {
-                const data_check = await admin.get(`/annotation/push_xml/${$(this).data('id')}`, 'show');
-                if (data.status) {
-                    window.location.reload()
-                }
-            } catch (e) {
-                return layer.msg('接口错误！', {
-                    offset: '15px',
-                    icon: 2,
-                    time: 2000,
-                    id: 'Message'
-                });
-            }
-        });
-
-        /**差错登记**/
-        let order_error_logging_index, order_error_logging_id;
-        $(document).on("click", ".order_error_log", async function () {
-            order_error_logging_id = $(this).data('id');
-            order_error_logging_index = layer.open({
-                type: 1,
-                title: '差错登记',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '460px'],
-                content: $('#order_error_logging_template').html()
-            });
-            form.render();
-        });
-
-        form.on('radio(order_error_logging_type)', function (data) {
-            if (data.value === 0) {
-                $("#order_error_logging_user_id").show()
-            } else {
-                $("#order_error_logging_user_id").hide()
-            }
-        });
-
-        /**差错登记保存**/
-        form.on('submit(order_error_logging_submit)', async (data) => {
-            try {
-                const res = await admin.post(`/annotation/i/${order_error_logging_id}/errors`, data.field);
-                if (res.status) {
-                    await admin.get_data_list(`/annotation/e/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-                    setTimeout(() => {
-                        layer.closeAll();
-                    }, 2000);
-                }
-            } catch (e) {
-                return layer.msg('接口错误！', {
-                    offset: '15px',
-                    icon: 2,
-                    time: 2000,
-                    id: 'Message'
-                });
-            }
-        });
-
-        /**申请改单**/
-        let order_application_change_index, order_application_change_id;
-        $(document).on("click", ".order_apply_switch_bill", async function () {
-            order_application_change_id = $(this).data('id');
-            order_application_change_index = layer.open({
-                type: 1,
-                title: '申请改单',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
-                content: $('#order_application_change_template').html()
-            });
-            form.render();
-        });
-
-        $(document).on("input", "#order_application_change_note", function () {
-            $("#order_application_change_note_number span").text($(this).val().length);
-        });
-
-        /**申请改单保存**/
-        form.on('submit(order_application_change_note_submit)', async (data) => {
-            await admin.post(`/annotation/i/${order_application_change_id}/for_change`, data.field);
-            layer.close(order_application_change_index);
-        });
-
-        /**重新开启订单**/
-        $(document).on("click", ".again_open_order", async function () {
-            const id = $(this).data('id');
-            try {
-                const res = await admin.post(`/annotation/i/${id}/restart`);
-                if (res.status) {
-                    await admin.get_data_list(`/annotation/e/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`, order_import_list);
-                }
-            } catch (e) {
-                return layer.msg('接口错误！', {
-                    offset: '15px',
-                    icon: 2,
-                    time: 2000,
-                    id: 'Message'
-                });
-            }
-        });
-
-        /**运输方式**/
-        try {
-            const data = await admin.post(`/clearance/datagrid`, JSON.stringify({TypeString: "运输方式代码"}), true);
-            laytpl($("#trsp_modecd_template").html()).render(data.rows, function (html) {
-                $("#annotation_trsp_modecd").html(html);
-            });
-
-            form.render('select');
-        } catch (e) {
-            console.log(e);
+    $(function() {
+      var ws = new WebSocket('ws://' + window.location.host + '/ws');
+      ws.onmessage = function(e) {
+        let message = JSON.parse(e.data);
+        if (message.annotation_is_updated) {
+          window.location.reload();
         }
-
-        form.on('select(trsp_modecd)', async (data) => {
-            let OrderIndexRequestData = {
-                StatusString: annotationStatusString,
-                List: {
-                    Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
-                    Request: {
-                        TrspModecd: data.value ? data.value : '',
-                        SearchTimeString: MonthTime,
-                        sort: "invt_dcl_time",
-                        order: "desc",
-                    }
-                },
-                StatusCount: {
-                    Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
-                    Request: {
-                        TrspModecd: data.value ? data.value : '',
-                        SearchTimeString: MonthTime,
-                    }
-                },
-            };
-
-            order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
-        });
+      };
     });
+
+    /**根据屏幕等比例缩小**/
+    admin.sideFlexible_window();
+    /**table点击行选中**/
+    admin.table_radio_click();
+    /**table左右拖动**/
+    admin.table_mousedown();
+    /**附件下载列表**/
+    $(document).on('click', '.iconattach-file', function() {
+      const id = $(this).data('id');
+      layer.open({
+        type: 1,
+        title: '附件下载',
+        shadeClose: true,
+        area: admin.screen() < 2 ? ['80%', '300px'] : ['750px', '600px'],
+        content: $('#pdf_lists_template').html(),
+      });
+
+      table.render({
+        elem: '#pdf_lists'
+        , autoSort: false
+        , skin: 'line'
+        , method: 'post'
+        , where: {
+          AnnotationId: id,
+          order: 'desc',
+          sort: 'CreatedAt',
+        }
+        , contentType: 'application/json'
+        , url: @{{ urlfor "AnnotationFileController.DataGrid" }}
+        , request: {
+          pageName: 'offset' //页码的参数名称，默认：page
+          , limitName: 'limit', //每页数据量的参数名，默认：limit
+        }, response: {
+          statusName: 'code',
+          statusCode: 0,
+        }
+        , parseData: function(res) {
+          return {
+            'code': res.code,
+            'count': res.total,
+            'data': res.rows,
+          };
+        }
+        , cols: [
+          [
+            {
+              field: 'Type',
+              title: '类型',
+            }, {
+            field: 'Name',
+            title: '文件名称',
+          }, {
+            field: 'CreatedAt',
+            title: '上传时间',
+          }, {
+            title: '操作',
+            toolbar: '#pdf_toolbar',
+            width: 180,
+          }],
+        ],
+        page: true,
+        limit: 10,
+      });
+    });
+
+    /**附件下载列表操作**/
+    table.on('tool(pdf_lists)', async function(obj) {
+      const data = obj.data;
+      if (obj.event === 'preview') {
+        window.open(data.Url);
+      }
+    });
+
+    /**删除**/
+    $(document).on('click', '.iconshanchu1', function() {
+      const id = $(this).data('id');
+      layer.confirm('真的删除么', {
+        title: '提示',
+      }, async (index) => {
+        const data = await admin.delete(`/annotation/delete/${id}`, 'show');
+        layer.close(index);
+        if (data.status) {
+          window.location.reload();
+        }
+      });
+    });
+
+    /**派单**/
+    admin.distribute('.order_distribute', "@{{.m.Id}}", "@{{.ImpexpMarkcdName}}");
+    /**时间筛选**/
+    form.on('select(time_table)', async function(data) {
+      MonthTime = data.value;
+      admin.list_page = 1;
+      let OrderIndexRequestData = {
+        StatusString: annotationStatusString,
+        List: {
+          Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
+          Request: {
+            SearchTimeString: MonthTime,
+            sort: 'invt_dcl_time',
+            order: 'desc',
+          },
+        },
+        StatusCount: {
+          Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
+          Request: {
+            SearchTimeString: MonthTime,
+          },
+        },
+      };
+      order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
+    });
+
+    /**复制订单**/
+    $(document).on('click', '.copy_order', async function() {
+      const id = $(this).data('id');
+      let data = await admin.get(`/annotation/copy/${id}`, 'show');
+      if (data.status) {
+        window.location.reload();
+      }
+    });
+
+    /**简单搜索**/
+    $('#order_import_search').on('keydown', async function(e) {
+      let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+      if (eCode === 13) {
+        let OrderIndexRequestData = {
+          StatusString: annotationStatusString,
+          List: {
+            Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
+            Request: {
+              EtpsInnerInvtNoLike: $(this).val(),
+              SearchTimeString: MonthTime,
+              sort: 'invt_dcl_time',
+              order: 'desc',
+            },
+          },
+          StatusCount: {
+            Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
+            Request: {
+              EtpsInnerInvtNoLike: $(this).val(),
+              SearchTimeString: MonthTime,
+            },
+          },
+        };
+        order_import_list = await admin.get_data_list(OrderIndexRequestData);
+      }
+    });
+
+    /**状态筛选**/
+    $(document).on('click', '.status_flex_list_item', async function() {
+      admin.list_page = 1;
+      annotationStatusString = $(this).data('status');
+      $(this).addClass('active').siblings().removeClass('active');
+      let OrderIndexRequestData = {
+        StatusString: annotationStatusString,
+        List: {
+          Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
+          Request: {
+            SearchTimeString: MonthTime,
+            sort: 'invt_dcl_time',
+            order: 'desc',
+          },
+        },
+        StatusCount: {
+          Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
+          Request: {
+            SearchTimeString: MonthTime,
+          },
+        },
+      };
+      order_import_list = await admin.get_data_list(OrderIndexRequestData, true);
+    });
+
+    /**查看联系人信息**/
+    $(document).on('click', '.person_tips', async function() {
+      const id = $(this).data('id');
+      const data = await admin.get(`/annotation_company_admin_user/${id}`);
+      if (data) {
+        const txt = `<div class="person-tips person_tips_close"><h1 class="person-tips-h1">${data.Name}</h1><p>电子邮箱：${data.Email}</p><p>手机号码：${data.Phone}</p></div>`;
+        person_tips_index = layer.tips(txt, this, {
+          tips: [4, '#FFFFFF'],
+          time: 0,
+          area: ['300px', 'auto'],
+        });
+        if (person_index) {
+          clearTimeout(person_index);
+        }
+      }
+    });
+
+    let person_index;
+    $(document).on('mouseleave', '.person_tips', function(event) {
+      person_index = setTimeout(() => {
+        layer.close(person_tips_index);
+      }, 1000);
+    });
+
+    $(document).on('mouseenter', '.person_tips_close', function() {
+      clearTimeout(person_index);
+    });
+
+    $(document).on('mouseleave', '.person_tips_close', function() {
+      layer.close(person_tips_index);
+    });
+
+    /**查看回执信息**/
+    $(document).on('click', '.returns_show', async function() {
+      const id = $(this).data('id');
+      let content;
+      const data = await admin.post(`/annotation_return/datagrid`, JSON.stringify({AnnotationId: id}));
+      if (data.rows.length === 0) {
+        content = '<p class="returns_tips_close" style="color: #888888;text-align: center;">无数据</p>';
+      } else {
+        let txt = '';
+        data.rows.forEach((item, index) => {
+          let icon;
+          if (index === 0) {
+            icon = '<i class="layui-icon layui-timeline-axis"></i>';
+          } else {
+            icon = '<i class="layui-icon layui-timeline-axis_i"></i>';
+          }
+          txt += `<li class="layui-timeline-item">${icon}<div class="layui-timeline-content layui-text_rate"><h4 class="layui-timeline-title">${item.DealFlag ==
+          '0'
+              ? '暂存成功'
+              : item.CheckInfo}<span class="margin_left_10">${item.CreatedAt}</span></h4><p class="record"><span>海关预录入编号为：</span><span class="_time">${item.SeqNo}</span></p></div></li>`;
+        });
+        content = `<div class="returns_tips returns_tips_close"><p class="returns_tips_content">回执内容：</p><ul class="layui-timeline">${txt}</ul></div>`;
+      }
+      returns_tips_index = layer.tips(content, this, {
+        tips: [4, '#FFFFFF'],
+        time: 0,
+        area: ['400px', 'auto'],
+      });
+
+      if (returns_index) {
+        clearTimeout(returns_index);
+      }
+
+    });
+
+    let returns_index;
+    $(document).on('mouseleave', '.returns_show', function(event) {
+      returns_index = setTimeout(() => {
+        layer.close(returns_tips_index);
+      }, 1000);
+    });
+    $(document).on('mouseenter', '.returns_tips_close', function() {
+      clearTimeout(returns_index);
+    });
+    $(document).on('mouseleave', '.returns_tips_close', function() {
+      layer.close(returns_tips_index);
+    });
+
+    /**查看驳回原因**/
+    let audit_reject_logs_index;
+    $(document).on('click', '.first_audit_reject_logs_show', async function() {
+
+      const data = await admin.get(`/annotation/audit_first_reject_log/${$(this).data('id')}`);
+      let content;
+      if (data.status === 0) {
+        content = '<p class="audit_reject_logs_tips_close" style="color: #888888;text-align: center;">无数据</p>';
+      } else {
+        content = `<div class="returns_tips audit_reject_logs_tips_close"><p class="returns_tips_content">驳回原因：</p><p class="returns_tips_content_p">${data.obj.Content}</p><p class="returns_tips_content">备注：</p><p class="returns_tips_content_p">${data.obj.Remark}</p></div>`;
+      }
+      audit_reject_logs_tips_index = layer.tips(content, this, {
+        tips: [4, '#FFFFFF'],
+        time: 0,
+        area: ['400px', 'auto'],
+      });
+      if (audit_reject_logs_index) {
+        clearTimeout(audit_reject_logs_index);
+      }
+    });
+    $(document).on('mouseleave', '.first_audit_reject_logs_show', function(event) {
+      audit_reject_logs_index = setTimeout(() => {
+        layer.close(audit_reject_logs_tips_index);
+      }, 1000);
+    });
+    $(document).on('mouseenter', '.audit_reject_logs_tips_close', function() {
+      clearTimeout(audit_reject_logs_index);
+    });
+    $(document).on('mouseleave', '.audit_reject_logs_tips_close', function() {
+      layer.close(audit_reject_logs_tips_index);
+    });
+
+    /**时间**/
+    laydate.render({
+      elem: '#invt_dcl_time',
+      range: true,
+      theme: '#1E9FFF',
+    });
+
+    /**订单列表**/
+    let OrderIndexRequestData = {
+      StatusString: annotationStatusString,
+      List: {
+        Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
+        Request: {
+          SearchTimeString: MonthTime,
+          sort: 'invt_dcl_time',
+          order: 'desc',
+        },
+      },
+      StatusCount: {
+        Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
+        Request: {
+          SearchTimeString: MonthTime,
+        },
+      },
+    };
+
+    order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
+
+    /**审核清单，清单详情，核中**/
+    $(document).on('click', '.order_detail, .order_keep_auth, .order_start_auth', function() {
+      const topLayui = parent === self ? layui : top.layui,
+          href = `/annotation/edit/${$(this).data('id')}`,
+          text = "@{{.ImpexpMarkcdName}}" + `清单制作`;
+      topLayui.index.openTabsPage(href, text);
+    });
+
+    /**取消订单**/
+    $(document).on('click', '.cancel_order', function() {
+      layer.confirm('真的要取消订单吗？一旦取消，订单将被关闭！', {
+        title: '提示',
+      }, async (index) => {
+        const data = await admin.get(`/annotation/cancel/${$(this).data('id')}`);
+        layer.close(index);
+        if (data.status) {
+          window.location.reload();
+        }
+      });
+    });
+
+    /**开始制单/继续制单**/
+    $(document).on('click', '.order_start_maker, .order_keep_maker', async function() {
+      const topLayui = parent === self ? layui : top.layui,
+          href = `/annotation/make/${$(this).data('id')}`,
+          text = `制单/继续制单保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
+      topLayui.index.openTabsPage(href, text);
+    });
+
+    /**修改**/
+    $(document).on('click', '.order_revise', async function() {
+      const topLayui = parent === self ? layui : top.layui,
+          href = `/annotation/remake/${$(this).data('id')}`,
+          text = `修改保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
+      topLayui.index.openTabsPage(href, text);
+    });
+
+    /**重新发送**/
+    $(document).on('click', '.order_check_success_reload', async function() {
+      const data_check = await admin.get(`/annotation/push_xml/${$(this).data('id')}`, 'show');
+      if (data_check.status) {
+        window.location.reload();
+      }
+    });
+
+    /**改单**/
+    $(document).on('click', '.order_switch_bill', async function() {
+      const id = $(this).data('id');
+      const topLayui = parent === self ? layui : top.layui,
+          href = `/annotation/i/${id}/get_change/#/id=${id}`,
+          text = `改单保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
+      topLayui.index.openTabsPage(href, text);
+    });
+
+    /**进入复核页面**/
+    $(document).on('click', '.order_check', async function() {
+      const id = $(this).data('id');
+      const topLayui = parent === self ? layui : top.layui,
+          href = `/annotation/recheck/${id}`,
+          text = `复核保税清单（` + "@{{.ImpexpMarkcdName}}" + `）`;
+      topLayui.index.openTabsPage(href, text);
+    });
+
+    /**催单**/
+    $(document).on('click', '.order_reminder', async function() {
+      const id = $(this).data('id');
+      try {
+        const data = await admin.post(`/annotation/i/${id}/press`);
+      } catch (e) {
+        return layer.msg('接口错误！', {
+          offset: '15px',
+          icon: 2,
+          time: 2000,
+          id: 'Message',
+        });
+      }
+    });
+
+    /**提交到单一窗口**/
+    $(document).on('click', '.order_check_success', async function() {
+      try {
+        const data_check = await admin.get(`/annotation/push_xml/${$(this).data('id')}`, 'show');
+        if (data_check.status) {
+          window.location.reload();
+        }
+      } catch (e) {
+        return layer.msg('接口错误！', {
+          offset: '15px',
+          icon: 2,
+          time: 2000,
+          id: 'Message',
+        });
+      }
+    });
+
+    /**差错登记**/
+    let order_error_logging_index, order_error_logging_id;
+    $(document).on('click', '.order_error_log', async function() {
+      order_error_logging_id = $(this).data('id');
+      order_error_logging_index = layer.open({
+        type: 1,
+        title: '差错登记',
+        shadeClose: true,
+        area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '460px'],
+        content: $('#order_error_logging_template').html(),
+      });
+      form.render();
+    });
+
+    form.on('radio(order_error_logging_type)', function(data) {
+      if (data.value === 0) {
+        $('#order_error_logging_user_id').show();
+      } else {
+        $('#order_error_logging_user_id').hide();
+      }
+    });
+
+    /**差错登记保存**/
+    form.on('submit(order_error_logging_submit)', async (data) => {
+      try {
+        const res = await admin.post(`/annotation/i/${order_error_logging_id}/errors`, data.field);
+        if (res.status) {
+          await admin.get_data_list(
+              `/annotation/e/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`,
+              order_import_list);
+          setTimeout(() => {
+            layer.closeAll();
+          }, 2000);
+        }
+      } catch (e) {
+        return layer.msg('接口错误！', {
+          offset: '15px',
+          icon: 2,
+          time: 2000,
+          id: 'Message',
+        });
+      }
+    });
+
+    /**申请改单**/
+    let order_application_change_index, order_application_change_id;
+    $(document).on('click', '.order_apply_switch_bill', async function() {
+      order_application_change_id = $(this).data('id');
+      order_application_change_index = layer.open({
+        type: 1,
+        title: '申请改单',
+        shadeClose: true,
+        area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
+        content: $('#order_application_change_template').html(),
+      });
+      form.render();
+    });
+
+    $(document).on('input', '#order_application_change_note', function() {
+      $('#order_application_change_note_number span').text($(this).val().length);
+    });
+
+    /**申请改单保存**/
+    form.on('submit(order_application_change_note_submit)', async (data) => {
+      await admin.post(`/annotation/i/${order_application_change_id}/for_change`, data.field);
+      layer.close(order_application_change_index);
+    });
+
+    /**重新开启订单**/
+    $(document).on('click', '.again_open_order', async function() {
+      const id = $(this).data('id');
+      try {
+        const res = await admin.post(`/annotation/i/${id}/restart`);
+        if (res.status) {
+          await admin.get_data_list(
+              `/annotation/e/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`,
+              order_import_list);
+        }
+      } catch (e) {
+        return layer.msg('接口错误！', {
+          offset: '15px',
+          icon: 2,
+          time: 2000,
+          id: 'Message',
+        });
+      }
+    });
+
+    /**运输方式**/
+    try {
+      const data = await admin.post(`/clearance/datagrid`, JSON.stringify({TypeString: '运输方式代码'}), true);
+      laytpl($('#trsp_modecd_template').html()).render(data.rows, function(html) {
+        $('#annotation_trsp_modecd').html(html);
+      });
+
+      form.render('select');
+    } catch (e) {
+      console.log(e);
+    }
+
+    form.on('select(trsp_modecd)', async (data) => {
+      let OrderIndexRequestData = {
+        StatusString: annotationStatusString,
+        List: {
+          Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
+          Request: {
+            TrspModecd: data.value ? data.value : '',
+            SearchTimeString: MonthTime,
+            sort: 'invt_dcl_time',
+            order: 'desc',
+          },
+        },
+        StatusCount: {
+          Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
+          Request: {
+            TrspModecd: data.value ? data.value : '',
+            SearchTimeString: MonthTime,
+          },
+        },
+      };
+
+      order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
+    });
+  });
 </script>

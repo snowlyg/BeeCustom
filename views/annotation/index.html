@@ -236,9 +236,8 @@
                                  {{# } }}
 
                                 {{# if(item.StatusString == "复核不通过"){ }}
-                                    @{{if canArray  .actions .ImpexpMarkcd "canEdit"}}
-                                    <button class="layui-btn tr-bd-{{ status }} order_revise"
-                                    type="button" data-id="{{ item.Id }}">修改</button>
+                                    @{{if canArray  .actions .ImpexpMarkcd "canReMake"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_revise"type="button" data-id="{{ item.Id }}">修改</button>
                                     @{{end}}
                                 {{# } }}
 
@@ -248,7 +247,7 @@
                                             data-id="{{ item.Id }}">暂存到单一
                                     </button>
                                 @{{end}}
-                                @{{if canArray  .actions .ImpexpMarkcd "canEdit"}}
+                                @{{if canArray  .actions .ImpexpMarkcd "canReMake"}}
                                     <a class="order_revise" data-id="{{ item.Id }}">修改</a>
                                 @{{end}}
                                  {{# } }}
@@ -256,7 +255,7 @@
                                 {{# if(item.StatusString == "单一已暂存"){ }}
                                     @{{if canArray  .actions .ImpexpMarkcd "canPushXml"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_check_success_reload"
-                                    type="button" data-id="{{ item.Id }}">重新发送</button>
+                                    type="button" data-id="{{ item.Id }}">重新暂存</button>
                                     @{{end}}
                                  {{# } }}
 
@@ -298,8 +297,7 @@
     </div>
 </script>
 <script type="text/html" id="pdf_toolbar">
-    <a class="custom-edit" lay-event="preview">预览</a>
-    <a class="custom-edit" lay-event="download">下载</a>
+    <a class="custom-edit" lay-event="preview">预览/下载</a>
 </script>
 
 @{{template "/common/order_annotation/distribute.html" .}}
