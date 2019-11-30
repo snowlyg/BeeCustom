@@ -62,6 +62,8 @@ func init() {
 		beego.Router("/annotation/push_xml/?:id", &controllers.AnnotationController{}, "Get:"+flag+"PushXml")
 		//打印
 		beego.Router("/annotation/print/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Print")
+		//附注
+		beego.Router("/annotation/extra_remark/?:id", &controllers.AnnotationController{}, "Post:"+flag+"ExtraRemark")
 		//删除
 		beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:"+flag+"Delete")
 	}

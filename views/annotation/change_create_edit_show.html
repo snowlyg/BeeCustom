@@ -2,87 +2,92 @@
     <div class="custom-order_form_annotation">
         <div class="custom-order_form_top">
             @{{if .m.Id }}
-                @{{if eq  .m.StatusString  "待审核"  "审核中" }}
-                    @{{ if canArray  .actions .m.ImpexpMarkcd  "canAudit"}}
-                    <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
-                        <i class="iconfont iconcheckcircle"></i>审核通过
-                    </button>
-                    @{{ end }}
-                @{{ end }}
+        @{{if eq  .m.StatusString  "待审核"  "审核中" }}
+        @{{ if canArray  .actions .m.ImpexpMarkcd  "canAudit"}}
+        <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
+            <i class="iconfont iconcheckcircle"></i>审核通过
+        </button>
+        @{{ end }}
+        @{{ end }}
 
-                @{{if eq .m.StatusString  "审核通过" }}
-                    @{{ if canArray  .actions .m.ImpexpMarkcd "canDistribute"}}
-                    <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
-                        <i class="iconfont iconfolder-shared"></i>派单
-                    </button>
-                    @{{ end }}
-                @{{ else if eq .m.StatusString  "待制单" }}
-                    @{{ if canArray  .actions .m.ImpexpMarkcd "canDistribute"}}
-                    <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
-                        <i class="iconfont iconfolder-shared"></i>重新派单
-                    </button>
-                    @{{ end }}
-                @{{ else if eq .m.StatusString  "制单中" }}
-                    @{{ if canArray  .actions .m.ImpexpMarkcd "canForRecheck"}}
-                    <button class="layui-btn custom-create_btn" id="order_application_review" type="button" lay-submit lay-filter="order_application_review">
-                        <i class="iconfont iconaddcircle"></i><span>申请复核</span>
-                    </button>
-                    @{{ end }}
-                @{{ end }}
-
-            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print" type="button"><i class="iconfont iconprint"></i>打印</button>
-
-            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note" type="button">
-                <i class="iconfont icontab"></i>附注
-                <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
-            </button>
-            <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="@{{ .m.Id }}"
-                    onclick="layui.admin.annotation_jilu_click(this)" type="button">
-                <i class="iconfont iconassignment1"></i>办理记录
-            </button>
-                @{{if eq .m.StatusString  "已完成"  }}
-                    @{{if .m.annotation_change_logs }}
-                    <div class="order_edit_bill_string">
-                        <p class="order_edit_bill_string_p">
-                            <i class="iconfont iconedit"></i>
-                            <span>@{{ .m.annotation_change_logs }}</span>
-                        </p>
-                    </div>
-                    @{{end }}
-                @{{ end }}
-            @{{ end }}
+        @{{if eq .m.StatusString  "审核通过" }}
+        @{{ if canArray  .actions .m.ImpexpMarkcd "canDistribute"}}
+        <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
+            <i class="iconfont iconfolder-shared"></i>派单
+        </button>
+        @{{ end }}
+        @{{ else if eq .m.StatusString  "待制单" }}
+        @{{ if canArray  .actions .m.ImpexpMarkcd "canDistribute"}}
+        <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
+            <i class="iconfont iconfolder-shared"></i>重新派单
+        </button>
+        @{{ end }}
+        @{{ else if eq .m.StatusString  "制单中" }}
+        @{{ if canArray  .actions .m.ImpexpMarkcd "canForRecheck"}}
+        <button class="layui-btn custom-create_btn" id="order_application_review" type="button" lay-submit
+                lay-filter="order_application_review">
+            <i class="iconfont iconaddcircle"></i><span>申请复核</span>
+        </button>
+        @{{ end }}
+        @{{ end }}
+        @{{ if canArray  .actions .m.ImpexpMarkcd "canPrint"}}
+        <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print" type="button"><i
+                    class="iconfont iconprint"></i>打印
+        </button>
+        @{{ end }}
+        @{{ if canArray  .actions .m.ImpexpMarkcd "canExtraRemark"}}
+        <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note" type="button">
+            <i class="iconfont icontab"></i>附注
+            <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
+        </button>
+        @{{ end }}
+        <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="@{{ .m.Id }}"
+                onclick="layui.admin.annotation_jilu_click(this)" type="button">
+            <i class="iconfont iconassignment1"></i>办理记录
+        </button>
+        @{{if eq .m.StatusString  "已完成"  }}
+        @{{if .m.annotation_change_logs }}
+        <div class="order_edit_bill_string">
+            <p class="order_edit_bill_string_p">
+                <i class="iconfont iconedit"></i>
+                <span>@{{ .m.annotation_change_logs }}</span>
+            </p>
+        </div>
+        @{{end }}
+        @{{ end }}
+        @{{ end }}
         </div>
 
         <div id="order_edit_bill"></div>
         <div class="layui-tab" lay-filter="annotation_header_item">
-        @{{if .m.Id}}
-            <ul class="layui-tab-title template_list">
+            @{{if .m.Id}}
+        <ul class="layui-tab-title template_list">
             <li>表头</li>
             <li id="annotation_item_tab" class="layui-this ">表体</li>
 
-            </ul>
-            <div class="layui-tab-content">
-                <div class="layui-tab-item ">
-                    @{{template "/annotation/create/gauge.html" .}}
-                </div>
-                <div class="layui-tab-item layui-show">
-                    @{{template "/annotation/create/body.html" .}}
-                </div>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item ">
+                @{{template "/annotation/create/gauge.html" .}}
             </div>
+            <div class="layui-tab-item layui-show">
+                @{{template "/annotation/create/body.html" .}}
+            </div>
+        </div>
         @{{else}}
-            <ul class="layui-tab-title template_list">
+        <ul class="layui-tab-title template_list">
             <li class="layui-this">表头</li>
             <li id="annotation_item_tab">表体</li>
 
-            </ul>
-            <div class="layui-tab-content">
-                <div class="layui-tab-item layui-show">
-                    @{{template "/annotation/create/gauge.html" .}}
-                </div>
-                <div class="layui-tab-item ">
-                    @{{template "/annotation/create/body.html" .}}
-                </div>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                @{{template "/annotation/create/gauge.html" .}}
             </div>
+            <div class="layui-tab-item ">
+                @{{template "/annotation/create/body.html" .}}
+            </div>
+        </div>
         @{{end}}
 
         </div>

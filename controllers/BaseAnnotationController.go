@@ -217,7 +217,7 @@ func (c *BaseAnnotationController) bMake(id int64) {
 func (c *BaseAnnotationController) getResponses(impexpMarkcd string) {
 
 	// 页面里按钮权限控制
-	c.getActionData(impexpMarkcd, "Audit", "Distribute", "ForRecheck")
+	c.getActionData(impexpMarkcd, "Audit", "Distribute", "ForRecheck", "Print", "ExtraRemark")
 	c.Data["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(impexpMarkcd)
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
@@ -693,6 +693,22 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 
 		c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
 	}
+}
+
+// bExtraRemark 附注
+func (c *BaseAnnotationController) bExtraRemark(id int64, extraRemark string) {
+	m, err := models.AnnotationOne(id, "")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+	}
+
+	m.ExtraRemark = extraRemark
+
+	if err = models.AnnotationUpdateExtraRemark(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+	}
+
+	c.jsonResult(enums.JRCodeSucc, "操作成功", err)
 }
 
 // 删除

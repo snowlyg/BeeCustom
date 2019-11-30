@@ -4168,7 +4168,8 @@ layui.define('view', function (exports) {
                 layer.load(2);
                 const annotationRecords = await admin.post(`/annotation_record/datagrid`, JSON.stringify({AnnotationId: parseInt(id)}), true);
                 layer.closeAll('loading');
-                laytpl($("#order_take_template").html()).render(annotationRecords.rows, function (html) {
+                let rows = annotationRecords.rows?annotationRecords.rows:[];
+                laytpl($("#order_take_template").html()).render(rows, function (html) {
                     $("#order_take_list").html(html)
                 });
                 layer.open({

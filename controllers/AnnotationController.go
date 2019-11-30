@@ -213,16 +213,30 @@ func (c *AnnotationController) EPushXml() {
 	c.bPushXml(id)
 }
 
-// Print 已提交单一
+// Print 打印
 func (c *AnnotationController) IPrint() {
 	id, _ := c.GetInt64(":id")
 	c.bPrint(id)
 }
 
-// Print 已提交单一
+// Print 打印
 func (c *AnnotationController) EPrint() {
 	id, _ := c.GetInt64(":id")
 	c.bPrint(id)
+}
+
+// ExtraRemark 附注
+func (c *AnnotationController) IExtraRemark() {
+	id, _ := c.GetInt64(":id")
+	extraRemark := c.GetString("ExtraRemark")
+	c.bExtraRemark(id, extraRemark)
+}
+
+// ExtraRemark 附注
+func (c *AnnotationController) EExtraRemark() {
+	id, _ := c.GetInt64(":id")
+	extraRemark := c.GetString("ExtraRemark")
+	c.bExtraRemark(id, extraRemark)
 }
 
 //删除

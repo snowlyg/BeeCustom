@@ -445,7 +445,7 @@
     /**附注保存**/
     form.on('submit(remark_note_submit)', async (data) => {
       order_note_data = data.field.ExtraRemark;
-      await admin.post(`/annotation/i/${@{{.m.Id}}}/extra_remark`, data.field);
+      await admin.post(`/annotation/extra_remark/${@{{.m.Id}}}`, data.field);
       layer.close(order_note_index);
     });
 

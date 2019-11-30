@@ -331,6 +331,21 @@ func AnnotationUpdateStatusRecheckErrorInputIds(m *Annotation) error {
 	return nil
 }
 
+// 保存附注
+func AnnotationUpdateExtraRemark(m *Annotation) error {
+	var err error
+	o := orm.NewOrm()
+
+	_, err = o.Update(m, "ExtraRemark")
+
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
+		return err
+	}
+
+	return nil
+}
+
 // AnnotationUpdateStatus 添加、编辑页面 保存
 func AnnotationUpdateStatus(m *Annotation) error {
 	var err error
