@@ -405,7 +405,7 @@ func TransformAnnotation(id int64, relation string) map[string]interface{} {
 	for _, v := range itemRecheckErrorInputIdsSlice {
 		itemRecheckErrorInputIdsSlices1 := map[int][]string{}
 		itemRecheckErrorInputIdsSlice1 := strings.Split(v, `,"id":["`)
-		if len(itemRecheckErrorInputIdsSlice1) > 0 && len(itemRecheckErrorInputIdsSlice1[0]) > 0 {
+		if len(itemRecheckErrorInputIdsSlice1) > 1 && len(itemRecheckErrorInputIdsSlice1[1]) > 0 {
 			itemRecheckErrorInputIdsSlice1[1] = strings.Replace(itemRecheckErrorInputIdsSlice1[1], `"`, "", -1)
 			itemRecheckErrorInputIdsSlice2 := strings.Split(itemRecheckErrorInputIdsSlice1[1], `,`)
 			i, _ := strconv.ParseInt(itemRecheckErrorInputIdsSlice1[0], 10, 64)

@@ -177,7 +177,7 @@
                                         查看驳回原因</p>
                                     {{# } }}
                                 {{# if(item.StatusString == "复核不通过"){ }}
-                                    <p class="status_detail first_reject_logs_show" data-id="{{ item.Id }}"> 查看失败原因</p>
+                                    <p class="status_detail first_audit_reject_logs_show" data-id="{{ item.Id }}"> 查看失败原因</p>
                                     {{# } }}
                                     <p class="status_detail order_detail" data-id="{{ item.Id }}">订单详情</p>
                                     {{# if(item.StatusString == "单一处理中" || item.StatusString == "已完成"){ }}

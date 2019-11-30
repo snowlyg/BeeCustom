@@ -64,6 +64,8 @@ func init() {
 		beego.Router("/annotation/print/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Print")
 		//附注
 		beego.Router("/annotation/extra_remark/?:id", &controllers.AnnotationController{}, "Post:"+flag+"ExtraRemark")
+		//驳回原因
+		beego.Router("/annotation/audit_first_reject_log/?:id", &controllers.AnnotationController{}, "Get:"+flag+"AuditFirstRejectLog")
 		//删除
 		beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:"+flag+"Delete")
 	}

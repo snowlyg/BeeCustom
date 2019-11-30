@@ -44,10 +44,8 @@ func NewAnnotationRecordQueryParam() AnnotationRecordQueryParam {
 
 // AnnotationRecordPageList 获取分页数据
 func AnnotationRecordPageList(params *AnnotationRecordQueryParam) ([]*AnnotationRecord, int64) {
-
 	query := orm.NewOrm().QueryTable(AnnotationRecordTBName())
 	datas := make([]*AnnotationRecord, 0)
-
 	query = query.Filter("annotation_id", params.AnnotationId).RelatedSel()
 	params.Sort = "Id"
 	params.Order = "desc"

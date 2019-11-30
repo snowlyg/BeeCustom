@@ -239,6 +239,18 @@ func (c *AnnotationController) EExtraRemark() {
 	c.bExtraRemark(id, extraRemark)
 }
 
+// AuditFirstRejectLog 附注
+func (c *AnnotationController) IAuditFirstRejectLog() {
+	id, _ := c.GetInt64(":id")
+	c.bAuditFirstRejectLog(id)
+}
+
+// AuditFirstRejectLog 附注
+func (c *AnnotationController) EAuditFirstRejectLog() {
+	id, _ := c.GetInt64(":id")
+	c.bAuditFirstRejectLog(id)
+}
+
 //删除
 func (c *AnnotationController) IDelete() {
 	id, _ := c.GetInt64(":id")

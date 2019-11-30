@@ -271,14 +271,15 @@
         });
 
         /**查看驳回原因**/
+        let audit_reject_logs_index;
         $(document).on("click", ".first_audit_reject_logs_show", async function () {
-            const id = $(this).data('id');
-            const data = await admin.get(`/annotation/i/${id}/audit_first_reject_log`);
+
+            const data = await admin.get(`/annotation/audit_first_reject_log/${$(this).data('id')}`);
             let content;
-            if (Object.keys(data).length === 0) {
+            if (data.status === 0) {
                 content = '<p class="audit_reject_logs_tips_close" style="color: #888888;text-align: center;">无数据</p>'
             } else {
-                content = `<div class="returns_tips audit_reject_logs_tips_close"><p class="returns_tips_content">驳回原因：</p><p class="returns_tips_content_p">${data.content}</p><p class="returns_tips_content">备注：</p><p class="returns_tips_content_p">${data.remark}</p></div>`;
+                content = `<div class="returns_tips audit_reject_logs_tips_close"><p class="returns_tips_content">驳回原因：</p><p class="returns_tips_content_p">${data.obj.Content}</p><p class="returns_tips_content">备注：</p><p class="returns_tips_content_p">${data.obj.Remark}</p></div>`;
             }
             audit_reject_logs_tips_index = layer.tips(content, this, {
                 tips: [4, '#FFFFFF'],
@@ -289,18 +290,14 @@
                 clearTimeout(audit_reject_logs_index);
             }
         });
-
-        let audit_reject_logs_index;
         $(document).on("mouseleave", ".first_audit_reject_logs_show", function (event) {
             audit_reject_logs_index = setTimeout(() => {
                 layer.close(audit_reject_logs_tips_index);
             }, 1000);
         });
-
         $(document).on("mouseenter", ".audit_reject_logs_tips_close", function () {
             clearTimeout(audit_reject_logs_index);
         });
-
         $(document).on("mouseleave", ".audit_reject_logs_tips_close", function () {
             layer.close(audit_reject_logs_tips_index);
         });
