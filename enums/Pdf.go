@@ -10,19 +10,19 @@ import (
 	"github.com/astaxie/beego"
 )
 
-func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) error {
+func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) (string, error) {
 
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf(" NewPDFGenerator error:%v", err))
-		return err
+		return "", err
 	}
 
 	// Set global options
 	pdfg.Dpi.Set(300)
 	pdfg.Orientation.Set(wkhtmltopdf.OrientationLandscape)
-	pdfg.Grayscale.Set(false) //彩色 false， 灰色 true
+	pdfg.Grayscale.Set(false) // 彩色 false， 灰色 true
 
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
@@ -52,21 +52,22 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) error {
 	err = pdfg.Create()
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf(" pdfg.Create error:%v", err))
-		return err
+		return "", err
 	}
 
 	path := "./static/generate/annotation/" + strconv.FormatInt(Id, 10) + "/" + action
 	if err := file.CreateFile(path); err != nil {
 		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
-		return err
+		return "", err
 	}
 
 	// Write buffer contents to file on disk
-	err = pdfg.WriteFile(path + "/" + etpsInnerInvtNo + ".pdf")
+	fileFullPath := path + "/" + etpsInnerInvtNo + ".pdf"
+	err = pdfg.WriteFile(fileFullPath)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("  pdfg.WriteFile error:%v", err))
-		return err
+		return "", err
 	}
 
-	return nil
+	return fileFullPath, nil
 }

@@ -24,7 +24,7 @@ type AnnotationFileQueryParam struct {
 type AnnotationFile struct {
 	BaseModel
 
-	Type    int8   `orm:"column(type)" description:"附件类型"`
+	Type    string `orm:"column(type)" description:"附件类型"`
 	Name    string `orm:"column(name);size(255)" description:"附件名称"`
 	Url     string `orm:"column(url);size(255)" description:"附件url"`
 	Creator string `orm:"column(creator);size(255)" description:"创建人"`
@@ -61,12 +61,13 @@ func AnnotationFilePageList(params *AnnotationFileQueryParam) ([]*AnnotationFile
 }
 
 // AnnotationFileOne 根据id获取单条
-func AnnotationFileOneByStatusAndAnnotationId(m *AnnotationFile) error {
+func AnnotationFileOneByTypeAndAnnotationId(m *AnnotationFile) error {
 	m.Id = 0
 	o := orm.NewOrm()
 	if err := o.QueryTable(AnnotationFileTBName()).
 		Filter("annotation_id", m.Annotation.Id).
-		RelatedSel().One(m); err != nil {
+		Filter("type", m.Type).
+		One(m); err != nil {
 		return err
 	}
 
@@ -74,12 +75,23 @@ func AnnotationFileOneByStatusAndAnnotationId(m *AnnotationFile) error {
 }
 
 // Save 添加、编辑页面 保存
-func AnnotationFileSave(m *AnnotationFile) error {
+func AnnotationFileSaveOrUpdate(m *AnnotationFile) error {
 	o := orm.NewOrm()
-
-	if _, err := o.Insert(m); err != nil {
+	if err := AnnotationFileOneByTypeAndAnnotationId(m); err != nil {
 		utils.LogDebug(fmt.Sprintf("AnnotationFileSave:%v", err))
 		return err
+	}
+
+	if m.Id == 0 {
+		if _, err := o.Insert(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("AnnotationFileSave:%v", err))
+			return err
+		}
+	} else {
+		if _, err := o.Update(m, "url"); err != nil {
+			utils.LogDebug(fmt.Sprintf("AnnotationFileSave:%v", err))
+			return err
+		}
 	}
 
 	return nil

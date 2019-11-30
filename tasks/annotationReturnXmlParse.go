@@ -76,7 +76,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 				annotation, err := models.GetAnnotationByEtpsInnerInvtNo(v.EtpsPreentNo)
 				if err != nil {
-					utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v", err, f.Name()))
+					// utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v", err, f.Name()))
 					xmlFile.Close()
 					continue
 				}
@@ -144,7 +144,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 			annotation, err := models.GetAnnotationBySeqNo(v.InvPreentNo)
 			if err != nil {
-				utils.LogError(fmt.Sprintf("models.GetAnnotationBySeqNo :%v,filename:%v", err, f.Name()))
+				// utils.LogError(fmt.Sprintf("models.GetAnnotationBySeqNo :%v,filename:%v", err, f.Name()))
 				xmlFile.Close()
 				continue
 			}
@@ -203,7 +203,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 				annotation, err := models.GetAnnotationByEtpsInnerInvtNo(failedName)
 				if err != nil {
-					utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v,failedName:%v", err, f.Name(), failedName))
+					// utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v,failedName:%v", err, f.Name(), failedName))
 					xmlFile.Close()
 					continue
 				}

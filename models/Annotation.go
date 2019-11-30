@@ -276,7 +276,7 @@ func GetAnnotationByEtpsInnerInvtNo(etpsInnerInvtNo string) (*Annotation, error)
 	m := NewAnnotation(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(AnnotationTBName()).Filter("etps_inner_invt_no", etpsInnerInvtNo).One(&m); err != nil {
-		utils.LogDebug(fmt.Sprintf("find annotation:%v", err))
+		// utils.LogDebug(fmt.Sprintf("find annotation:%v", err))
 		return nil, err
 	}
 
@@ -288,7 +288,7 @@ func GetAnnotationBySeqNo(seqNo string) (*Annotation, error) {
 	m := NewAnnotation(0)
 	o := orm.NewOrm()
 	if err := o.QueryTable(AnnotationTBName()).Filter("seq_no", seqNo).One(&m); err != nil {
-		utils.LogDebug(fmt.Sprintf("find annotation:%v", err))
+		// utils.LogDebug(fmt.Sprintf("find annotation:%v", err))
 		return nil, err
 	}
 

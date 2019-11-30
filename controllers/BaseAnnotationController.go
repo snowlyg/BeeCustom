@@ -385,7 +385,7 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 }
 
 // bRecheckPass 通过复核、驳回
-func (c *BaseAnnotationController) bRecheckPassReject(statusString, action string) {
+func (c *BaseAnnotationController) bRecheckPassReject(statusString, action, actionName string) {
 	Id, _ := c.GetInt64(":id", 0)
 
 	m, err := models.AnnotationOne(Id, "Company,AnnotationItems")
@@ -424,8 +424,17 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString, action strin
 	}
 
 	// 生成 pdf 凭证
-	if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf", action); err != nil {
+	if ffp, err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf", action); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+	} else {
+		aFile := models.NewAnnotationFile(0)
+		aFile.Url = ffp
+		aFile.Type = actionName
+		aFile.Name = actionName
+		aFile.Creator = c.curUser.RealName
+		aFile.Annotation = m
+		aFile.Version = "1.0"
+		err = models.AnnotationFileSaveOrUpdate(&aFile)
 	}
 
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -460,10 +469,11 @@ func (c *BaseAnnotationController) bPrint(id int64) {
 
 	if m != nil {
 		// 生成 pdf 凭证
-		if err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_pdf", "report"); err != nil {
+		if ffp, err := enums.NewPDFGenerator(m.Id, m.EtpsInnerInvtNo, "annotation_pdf", "report"); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+		} else {
+			c.Data["json"] = strings.Replace(ffp, ".", "", 1)
 		}
-
 	}
 
 	c.ServeJSON()

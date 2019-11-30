@@ -183,22 +183,22 @@ func (c *AnnotationController) ERecheck() {
 
 // RecheckPass 复核通过
 func (c *AnnotationController) IRecheckPass() {
-	c.bRecheckPassReject("复核通过", "pass")
+	c.bRecheckPassReject("复核通过", "pass", "复核通过凭证")
 }
 
 // RecheckPass 复核通过
 func (c *AnnotationController) ERecheckPass() {
-	c.bRecheckPassReject("复核通过", "pass")
+	c.bRecheckPassReject("复核通过", "pass", "复核通过凭证")
 }
 
 // RecheckReject 复核不通过
 func (c *AnnotationController) IRecheckReject() {
-	c.bRecheckPassReject("复核不通过", "reject")
+	c.bRecheckPassReject("复核不通过", "reject", "复核驳回凭证")
 }
 
 // RecheckReject 复核不通过
 func (c *AnnotationController) ERecheckReject() {
-	c.bRecheckPassReject("复核不通过", "reject")
+	c.bRecheckPassReject("复核不通过", "reject", "复核驳回凭证")
 }
 
 // PushXml 已提交单一
