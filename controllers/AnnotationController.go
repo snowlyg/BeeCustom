@@ -46,7 +46,8 @@ func (c *AnnotationController) IStatusCount() {
 
 //数据统计
 func (c *AnnotationController) EStatusCount() {
-	c.bStatusCount("I")
+	c.bStatusCount("E")
+	c.bStatusCount("E")
 }
 
 // Create 添加 新建 页面
