@@ -99,16 +99,16 @@
         return
       }
 
-      // let _row = {};
-      // $.extend(_row, annotationItems[order_pros_index - 1]);
-      // if (_row && _row.GdsSeqno && _row.GdsSeqno !== data.GdsSeqno) {
-      //     layer.open({
-      //         title: "提示",
-      //         content: "表体序号不能修改！",
-      //         icon: 2
-      //     });
-      //     return;
-      // }
+      let _row = {};
+      $.extend(_row, annotationItems[data.GdsSeqno - 1]);
+      if (_row && _row.GdsSeqno && _row.GdsSeqno !== data.GdsSeqno) {
+          layer.open({
+              title: "提示",
+              content: "表体序号不能修改！",
+              icon: 2
+          });
+          return;
+      }
 
       /*保存表体*/
       let result
@@ -236,34 +236,32 @@
           $('#dcl_currcd_name_batch').focus()
 
           /**最终目的国(地区)*/
-          const destination_natcd = {
-            layuicomplete: layuicomplete,
-            elem: '#DestinationNatcdNameBatch',
-            hideElem: '#DestinationNatcdBatch',
-            type: '国别地区代码',
-            cache: false,
+          let destination_natcd = {
+            name: '国别地区代码',
+            filter_type: 'anns',
+            id: ['#DestinationNatcdNameBatch'],
+            after: ['#DestinationNatcdBatch'],
           }
-          await admin.autoFnClearanceData(destination_natcd)
+          await admin.base_clearance_data_auto(destination_natcd)
 
           /**原产国（地区）*/
-          const natcd = {
-            layuicomplete: layuicomplete,
-            elem: '#NatcdNameBatch',
-            hideElem: '#NatcdBatch',
-            type: '国别地区代码',
-            cache: false,
+          let list_types = {
+            name: '国别地区代码',
+            filter_type: 'anns',
+            id: ['#NatcdNameBatch'],
+            after: ['#NatcdBatch'],
           }
-          await admin.autoFnClearanceData(natcd)
+          await admin.base_clearance_data_auto(list_types)
 
           /**自动完成--币制**/
-          const dcl_currcd = {
-            layuicomplete: layuicomplete,
-            elem: '#DclCurrcdNameBatch',
-            hideElem: '#DclCurrcdBatch',
-            type: '货币代码',
-            cache: false,
+          let dcl_currcd = {
+            name: '货币代码',
+            filter_type: 'anns',
+            id: ['#DclCurrcdNameBatch'],
+            after: ['#DclCurrcdBatch'],
           }
-          await admin.autoFnClearanceData(dcl_currcd)
+          await admin.base_clearance_data_auto(dcl_currcd)
+
 
           break
 
