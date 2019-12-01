@@ -1012,88 +1012,85 @@ layui.define('view', function (exports) {
       //自动完成
       async auto_fn (type) {
         let data_filter = []
-        if (type.url) {
-          let data = await admin.post(type.url, {Limit:5000,Type: type.clearanceType})
-          type.filter(data.rows, data_filter)
-        }
-
-        if (type.id) {
-          //参数默认规则
-          type.id.forEach((value, index) => {
-            $(value).AutoComplete({
-              'data': data_filter,
-              'itemHeight': 20,
-              'listStyle': 'custom',
-              'listDirection': type.listDirection ? 'up' : 'down',
-              'createItemHandler': function (index, data) {
-                return `<p class="auto_list_p">${data.label}</p>`
-              },
-              'afterSelectedHandler': function (data) {
-                if (type.after) {
-                  $(type.after[index]).val(data.id)
-                  if (type.after[index] === '#trans_mode') {
-                    admin.transModeControl(admin.cusIEFlag)
-                  }
-                  if (type.after[index] === '#fee_mark') {
-                    admin.markSelect('fee_mark', 'fee_curr', 'fee_curr_name')
-                  }
-                  if (type.after[index] === '#insur_mark') {
-                    admin.markSelect('insur_mark', 'insur_curr',
-                      'insur_curr_name')
-                  }
-                  if (type.after[index] === '#other_mark') {
-                    admin.markSelect('other_mark', 'other_curr',
-                      'other_curr_name')
-                  }
-                  if (type.after[index] === '#traf_mode') {
-                    if ($('#traf_mode').val() == 4) {
-                      //$("#bill_no").removeAttr("disabled", "disabled");
-                      //启运国(地区)
-                      $('#trade_country').val('HKG')
-                      $('#trade_country_name').val('中国香港')
-                      //经停港
-                      $('#distinate_port').val('HKG003')
-                      $('#distinate_port_name').val('香港（中国香港）')
-                      //贸易国别（地区）
-                      $('#trade_area_code').val('HKG')
-                      $('#trade_area_name').val('中国香港')
-                      //启运港
-                      $('#desp_port_code').val('HKG003')
-                      $('#desp_port_name').val('香港（中国香港）')
-                    } else {
-                      //$("#bill_no").attr("disabled", "disabled");
-                    }
-                  }
-                  if (type.after[index] == '#trsp_modecd') {
-                    if ($('#trsp_modecd').val() == 4) {
-                      $('#stship_trsarv_natcd').val('110')
-                      $('#stship_trsarv_natcd_name').val('中国香港')
-                    }
-                  }
-
-                  if (type.after[index] == '#cus_fie') {
-                    const value = $(type.after[index]).val()
-                    if (value == '5284') {
-                      $('#note_s').val('[装卸口岸：长安车检场]')
-                    }
-                    if (value == '5299') {
-                      $('#note_s').val('[装卸口岸：其它业务]')
-                    }
-                    if (value == '5238') {
-                      $('#note_s').val('[装卸口岸：凤岗车检场]')
-                    }
-                    if (value == '5298') {
-                      $('#note_s').val('[装卸口岸：外关区]')
-                    }
-                    if (value == '5297') {
-                      $('#note_s').val('[装卸口岸：加贸结转]')
-                    }
+        let requestData = JSON.stringify({ Limit: 5000, TypeString: type.clearanceType })
+        let data = await admin.post(type.url, requestData,true)
+        type.filter(data.rows, data_filter)
+        //参数默认规则
+        type.id.forEach((value, index) => {
+          $(value).AutoComplete({
+            'data': data_filter,
+            'itemHeight': 20,
+            'listStyle': 'custom',
+            'listDirection': type.listDirection ? 'up' : 'down',
+            'createItemHandler': function (index, data) {
+              return `<p class="auto_list_p">${data.label}</p>`
+            },
+            'afterSelectedHandler': function (data) {
+              if (type.after) {
+                $(type.after[index]).val(data.id)
+                if (type.after[index] === '#trans_mode') {
+                  admin.transModeControl(admin.cusIEFlag)
+                }
+                if (type.after[index] === '#fee_mark') {
+                  admin.markSelect('fee_mark', 'fee_curr', 'fee_curr_name')
+                }
+                if (type.after[index] === '#insur_mark') {
+                  admin.markSelect('insur_mark', 'insur_curr',
+                    'insur_curr_name')
+                }
+                if (type.after[index] === '#other_mark') {
+                  admin.markSelect('other_mark', 'other_curr',
+                    'other_curr_name')
+                }
+                if (type.after[index] === '#traf_mode') {
+                  if ($('#traf_mode').val() == 4) {
+                    //$("#bill_no").removeAttr("disabled", "disabled");
+                    //启运国(地区)
+                    $('#trade_country').val('HKG')
+                    $('#trade_country_name').val('中国香港')
+                    //经停港
+                    $('#distinate_port').val('HKG003')
+                    $('#distinate_port_name').val('香港（中国香港）')
+                    //贸易国别（地区）
+                    $('#trade_area_code').val('HKG')
+                    $('#trade_area_name').val('中国香港')
+                    //启运港
+                    $('#desp_port_code').val('HKG003')
+                    $('#desp_port_name').val('香港（中国香港）')
+                  } else {
+                    //$("#bill_no").attr("disabled", "disabled");
                   }
                 }
-              },
-            })
+                if (type.after[index] == '#trsp_modecd') {
+                  if ($('#trsp_modecd').val() == 4) {
+                    $('#stship_trsarv_natcd').val('110')
+                    $('#stship_trsarv_natcd_name').val('中国香港')
+                  }
+                }
+
+                if (type.after[index] == '#cus_fie') {
+                  const value = $(type.after[index]).val()
+                  if (value == '5284') {
+                    $('#note_s').val('[装卸口岸：长安车检场]')
+                  }
+                  if (value == '5299') {
+                    $('#note_s').val('[装卸口岸：其它业务]')
+                  }
+                  if (value == '5238') {
+                    $('#note_s').val('[装卸口岸：凤岗车检场]')
+                  }
+                  if (value == '5298') {
+                    $('#note_s').val('[装卸口岸：外关区]')
+                  }
+                  if (value == '5297') {
+                    $('#note_s').val('[装卸口岸：加贸结转]')
+                  }
+                }
+              }
+            },
           })
-        }
+        })
+        data_filter = []
       },
 
       //核注清单商品删除存储
@@ -2469,53 +2466,32 @@ layui.define('view', function (exports) {
           url: url,
           clearanceType: obj.name,
           listDirection: false,
+          id: obj.id,
+          after: obj.after,
           filter: function (data, data_filter) {
             for (let item of data) {
               let value = `${item.Name}`
-              if (`${item.ShortName}` !== 'null') {
-                value = `${item.ShortName}`
-              } else if (`${item.Name}` !== 'null') {
-                value = `${item.Name}`
-              }
+              // if (`${item.ShortName}` !== 'null') {
+              //   value = `${item.ShortName}`
+              // } else if (`${item.Name}` !== 'null') {
+              //   value = `${item.Name}`
+              // }
 
               let label = `${item.CustomsCode}-${value}`
-              if (obj.filter_type === 's') {
-                label = `${item.CustomsCode}-${value}`
-              } else if (obj.filter_type === 'l') {
+              let data_filter_id = item.CustomsCode
+              if (obj.filter_type === 'l') {
                 label = `<span class="auto_list_p_left">${item.CustomsCode}-${value}</span><span class="auto_list_p_right"><i>${item.OldCustomCode}</i><i>${item.OldCiqCode}</i></span>`
+              }else if(obj.filter_type === 'anns'){
+                label = `${item.OldCustomCode}-${value}`
+                data_filter_id = item.OldCustomCode
               }
 
               data_filter.push({
-                id: item.CustomsCode,
+                id:data_filter_id,
                 label: label,
                 value: value,
               })
 
-            }
-          },
-        })
-
-        //清单
-        await admin.auto_fn({
-          url: url,
-          listDirection: false,
-          filter: function (data, data_filter) {
-            for (let item of data) {
-              let value = `${item.Name}`
-              let label = `${item.CustomsCode}-${value}`
-              let id = item.CustomsCode
-              //清单币制原产国使用老代码
-              if (obj.data_name_ann === 'country_area_ann' ||
-                obj.data_name_ann === 'currency_ann') {
-                id = item.OldCustomCode
-                label = `${item.OldCustomCode}-${value}`
-              }
-
-              data_filter.push({
-                id: id, // 隐藏 input 值
-                label: label,// 下拉显示数据
-                value: value,// 显示 input 值
-              })
             }
           },
         })
@@ -2528,7 +2504,7 @@ layui.define('view', function (exports) {
           let list_types = {
             name: '清单类型',
             filter_type: 's',
-            id: ['#invt_type_name'],
+            id: ['#InvtTypeName'],
             after: ['#invt_type'],
           }
           await admin.base_clearance_data_auto(list_types)
@@ -2603,8 +2579,8 @@ layui.define('view', function (exports) {
           let modf_markcd_list = {
             name: '清单表体修改标志',
             filter_type: 's',
-            id: ['#modf_markcd_name'],
-            after: ['#modf_markcd'],
+            id: ['#ModfMarkcdName'],
+            after: ['#ModfMarkcd'],
           }
           await admin.base_clearance_data_auto(modf_markcd_list)
         }
@@ -2616,51 +2592,84 @@ layui.define('view', function (exports) {
             id: [
               '#custom_master_name',
               '#i_e_port_name',
-              '#impexp_portcd_name',
-              '#dcl_plc_cuscd_name',
             ],
             after: [
               '#custom_master',
               '#i_e_port',
-              '#impexp_portcd',
-              '#dcl_plc_cuscd',
             ],
           }
           await admin.base_clearance_data_auto(entry_clearance)
         }
 
+        //清单
+       if ($.inArray('ann_entry_clearance', loadArray) !== -1) {
+                let ann_entry_clearance = {
+                  name: '关区代码',
+                  filter_type: "s",
+                  id: [
+                    '#impexp_portcd_name',
+                    '#dcl_plc_cuscd_name',
+                  ],
+                  after: [
+                    '#impexp_portcd',
+                    '#dcl_plc_cuscd',
+                  ],
+                }
+                await admin.base_clearance_data_auto(ann_entry_clearance)
+              }
+
         if ($.inArray('mode_shipping', loadArray) !== -1) {
           let mode_shipping = {
             name: '运输方式代码',
             filter_type: 'l',
-            filter_type_ann: 's',
-            id: ['#traf_mode_name', '#trsp_modecd_name'],
-            after: ['#traf_mode', '#trsp_modecd'],
+            id: ['#traf_mode_name'],
+            after: ['#traf_mode'],
           }
           await admin.base_clearance_data_auto(mode_shipping)
+        }
+
+        if ($.inArray('ann_mode_shipping', loadArray) !== -1) {
+          let ann_mode_shipping = {
+            name: '运输方式代码',
+            filter_type: 's',
+            id: [ '#trsp_modecd_name'],
+            after: [ '#trsp_modecd'],
+          }
+          await admin.base_clearance_data_auto(ann_mode_shipping)
         }
 
         if ($.inArray('objectives_based', loadArray) !== -1) {
           let objectives_based = {
             name: '监管方式代码',
             filter_type: 'l',
-            filter_ann: 's',
             id: [
               '#trade_mode_name',
-              '#supv_modecd_name',
             ],
             after: [
               '#trade_mode',
-              '#supv_modecd',
             ],
           }
           await admin.base_clearance_data_auto(objectives_based)
         }
 
+        if ($.inArray('ann_objectives_based', loadArray) !== -1) {
+          let ann_objectives_based = {
+            name: '监管方式代码',
+            filter_type: 's',
+            id: [
+              '#supv_modecd_name',
+            ],
+            after: [
+              '#supv_modecd',
+            ],
+          }
+          await admin.base_clearance_data_auto(ann_objectives_based)
+        }
+
         if ($.inArray('nature_exemption', loadArray) !== -1) {
           let nature_exemption = {
             name: '征免性质代码',
-            filter_type: null,
+            filter_type: "s",
             id: ['#cut_mode_name'],
             after: ['#cut_mode'],
           }
@@ -2671,28 +2680,38 @@ layui.define('view', function (exports) {
           let country_area = {
             name: '国别地区代码',
             filter_type: 'l',
-            data_name_ann: 'country_area_ann',
-            filter_type_ann: 's',
             id: [
               '#trade_country_name',
               '#trade_area_name',
               '#destination_country_name',
               '#origin_country_name',
-              '#stship_trsarv_natcd_name',
-              '#destination_natcd_name',
-              '#natcd_name',
             ],
             after: [
               '#trade_country',
               '#trade_area_code',
               '#destination_country',
               '#origin_country',
-              '#stship_trsarv_natcd',
-              '#destination_natcd',
-              '#natcd',
             ],
           }
           await admin.base_clearance_data_auto(country_area)
+        }
+
+        if ($.inArray('ann_country_area', loadArray) !== -1) {
+          let ann_country_area = {
+            name: '国别地区代码',
+            filter_type: 'anns',
+            id: [
+              '#stship_trsarv_natcd_name',
+              '#DestinationNatcdName',
+              '#NatcdName',
+            ],
+            after: [
+              '#stship_trsarv_natcd',
+              '#DestinationNatcd',
+              '#Natcd',
+            ],
+          }
+          await admin.base_clearance_data_auto(ann_country_area)
         }
 
         if ($.inArray('harbour', loadArray) !== -1) {
@@ -2729,24 +2748,34 @@ layui.define('view', function (exports) {
           let currency = {
             name: '货币代码',
             filter_type: 'l',
-            data_name_ann: 'currency_ann',
-            filter_type_ann: 's',
             id: [
               '#fee_curr_name',
               '#insur_curr_name',
               '#other_curr_name',
               '#trade_curr_name',
-              '#dcl_currcd_name',
             ],
             after: [
               '#fee_curr',
               '#insur_curr',
               '#other_curr',
               '#trade_curr',
-              '#dcl_currcd',
             ],
           }
           await admin.base_clearance_data_auto(currency)
+        }
+
+        if ($.inArray('ann_currency', loadArray) !== -1) {
+          let ann_currency = {
+            name: '货币代码',
+            filter_type: 'anns',
+            id: [
+              '#DclCurrcdName',
+            ],
+            after: [
+              '#DclCurrcd',
+            ],
+          }
+          await admin.base_clearance_data_auto(ann_currency)
         }
 
         if ($.inArray('kind_packages', loadArray) !== -1) {
@@ -2792,7 +2821,8 @@ layui.define('view', function (exports) {
               '#org_code',
               '#vsa_org_code',
               '#insp_org_code',
-              '#purp_org_code'],
+              '#purp_org_code'
+            ],
           }
           await admin.base_clearance_data_auto(inspection_quarantine)
         }
@@ -2815,20 +2845,33 @@ layui.define('view', function (exports) {
               '#g_unit_name',
               '#first_unit_name',
               '#second_unit_name',
-              '#dcl_unitcd_name',
-              '#lawf_unitcd_name',
-              '#secd_lawf_unitcd_name',
+
             ],
             after: [
               '#g_unit',
               '#first_unit',
               '#second_unit',
-              '#dcl_unitcd',
-              '#lawf_unitcd',
-              'secd_lawf_unitcd',
             ],
           }
           await admin.base_clearance_data_auto(unit_measurement)
+        }
+
+        if ($.inArray('ann_unit_measurement', loadArray) !== -1) {
+          let ann_unit_measurement = {
+            name: '计量单位代码',
+            filter_type: 's',
+            id: [
+              '#DclUnitcdName',
+              '#LawfUnitcdName',
+              '#SecdLawfUnitcdName',
+            ],
+            after: [
+              '#DclUnitcd',
+              '#LawfUnitcd',
+              '#SecdLawfUnitcd',
+            ],
+          }
+          await admin.base_clearance_data_auto(ann_unit_measurement)
         }
 
         if ($.inArray('origin_area', loadArray) !== -1) {
@@ -2865,10 +2908,20 @@ layui.define('view', function (exports) {
           let exempting_method = {
             name: '征减免税方式代码',
             filter_type: 's',
-            id: ['#duty_mode_name', '#lvyrlf_modecd_name'],
-            after: ['#duty_mode', '#lvyrlf_modecd'],
+            id: ['#duty_mode_name'],
+            after: ['#duty_mode'],
           }
           await admin.base_clearance_data_auto(exempting_method)
+        }
+
+        if ($.inArray('ann_exempting_method', loadArray) !== -1) {
+          let ann_exempting_method = {
+            name: '征减免税方式代码',
+            filter_type: 's',
+            id: ['#LvyrlfModecdName'],
+            after: ['#LvyrlfModecd'],
+          }
+          await admin.base_clearance_data_auto(ann_exempting_method)
         }
 
         if ($.inArray('use', loadArray) !== -1) {
@@ -2921,18 +2974,17 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(site_code)
         }
 
-
         if ($.inArray('two_account_manual', loadArray) !== -1) {
           /**自动完成--手帐册**/
           await admin.auto_fn({
-            url: `/annotation/two_account_manual`,
+            url: `/handbook/datagrid`,
             listDirection: false,
             filter: function (data, data_filter) {
               for (let item of data) {
                 data_filter.push({
                   id: item.id,
-                  label: `${item.name}-${item.CompanyClientName}`,
-                  value: item.name,
+                  label: `${item.Name}-${item.CompanyClientName}`,
+                  value: item.Name,
                 })
               }
             },
