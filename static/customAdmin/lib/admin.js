@@ -1043,7 +1043,7 @@ layui.define('view', function (exports) {
                     'other_curr_name')
                 }
                 if (type.after[index] === '#traf_mode') {
-                  if ($('#traf_mode').val() == 4) {
+                  if ($('#traf_mode').val() === 4) {
                     //$("#bill_no").removeAttr("disabled", "disabled");
                     //启运国(地区)
                     $('#trade_country').val('HKG')
@@ -1062,27 +1062,27 @@ layui.define('view', function (exports) {
                   }
                 }
                 if (type.after[index] == '#trsp_modecd') {
-                  if ($('#trsp_modecd').val() == 4) {
+                  if ($('#trsp_modecd').val() === 4) {
                     $('#stship_trsarv_natcd').val('110')
                     $('#stship_trsarv_natcd_name').val('中国香港')
                   }
                 }
 
-                if (type.after[index] == '#cus_fie') {
+                if (type.after[index] === '#cus_fie') {
                   const value = $(type.after[index]).val()
-                  if (value == '5284') {
+                  if (value === '5284') {
                     $('#note_s').val('[装卸口岸：长安车检场]')
                   }
-                  if (value == '5299') {
+                  if (value === '5299') {
                     $('#note_s').val('[装卸口岸：其它业务]')
                   }
-                  if (value == '5238') {
+                  if (value === '5238') {
                     $('#note_s').val('[装卸口岸：凤岗车检场]')
                   }
-                  if (value == '5298') {
+                  if (value === '5298') {
                     $('#note_s').val('[装卸口岸：外关区]')
                   }
-                  if (value == '5297') {
+                  if (value === '5297') {
                     $('#note_s').val('[装卸口岸：加贸结转]')
                   }
                 }
@@ -1090,7 +1090,6 @@ layui.define('view', function (exports) {
             },
           })
         })
-        data_filter = []
       },
 
       //核注清单商品删除存储
@@ -2982,13 +2981,14 @@ layui.define('view', function (exports) {
             filter: function (data, data_filter) {
               for (let item of data) {
                 data_filter.push({
-                  id: item.id,
-                  label: `${item.Name}-${item.CompanyClientName}`,
-                  value: item.Name,
+                  id: item.Id,
+                  label: `${item.ContractNumber}-${item.CompanyClientName}`,
+                  value: item.ContractNumber,
                 })
               }
             },
             id: ['#putrec_no'],
+            after: ['#hand_book_id'],
           })
         }
       },
