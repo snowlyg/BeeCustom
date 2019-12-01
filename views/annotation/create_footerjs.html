@@ -3,8 +3,8 @@
     base: '/static/customAdmin/',
   }).extend({
     index: 'lib/index',
-  }).use(['index', 'form', 'admin', 'table', 'layuicomplete'], async () => {
-    const {form, admin, table, $, layuicomplete} = layui;
+  }).use(['index', 'form', 'admin', 'table',"AutoComplete"], async () => {
+    const {form, admin, table, $} = layui;
     let order_pros_data_filter = []
         , order_note_data /**附注数据**/
         , annotationItems /**清单表体数据**/
@@ -12,7 +12,18 @@
         , AnnotationSearcIndex;
     /**商品快速查询index**/
 
-    await admin.annotations_auto(layuicomplete);
+    await admin.clearance_data_auto([
+      "list_types",
+      "finished_product",
+      "objectives_based",
+      "mode_shipping",
+      "entry_clearance",
+      "country_area",
+      "nuclear_declaration_lis",
+      "gen_dec_flag_list",
+      "customs_declaration_type",
+      "types_customs",
+    ]);
 
     //禁用表体 tab 点击
     if (!@{{.m.Id}}) {
