@@ -192,8 +192,8 @@ func (c *BaseAnnotationController) bReMake(id int64) {
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
-	c.setStatusOnly(m, "制单中", true)
-	c.Data["m"] = models.TransformAnnotation(id, "AnnotationItems")
+
+	c.Data["m"] = models.TransformAnnotation(id, "AnnotationItems,AnnotationRecords")
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.ImpexpMarkcd)

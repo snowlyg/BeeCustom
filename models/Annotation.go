@@ -500,6 +500,7 @@ func TransformAnnotation(id int64, relation string) map[string]interface{} {
 	annotationItem["EntryDclTime"] = enums.GetDateTimeString(&v.EntryDclTime, enums.BaseDateFormat)
 	annotationItem["InvtDclTime"] = enums.GetDateTimeString(&v.InvtDclTime, enums.BaseDateFormat)
 	annotationItem["AnnotationItems"] = v.AnnotationItems
+	annotationItem["AnnotationRecords"] = v.AnnotationRecords
 
 	return annotationItem
 }

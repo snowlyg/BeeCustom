@@ -58,7 +58,25 @@
         @{{ end }}
         </div>
 
-        <div id="order_edit_bill"></div>
+        @{{/*        <div id="order_edit_bill"></div>*/}}
+        <div id="order_fail">
+        @{{  if eq .m.StatusString  "审核不通过" "复核不通过" }}
+            @{{range .m.AnnotationRecords}}
+                @{{ if eq .Status  "审核不通过" "复核不通过" }}
+                <div class="order_fail_string">
+                    <p class="order_fail_string_p">
+                        <span class="red">不通过原因：</span>
+                        <span>@{{ .Content }}</span>
+                    </p>
+                    <p class="order_fail_string_p">
+                        <span class="red">备注：</span>
+                        <span>@{{ .Remark  }}</span>
+                    </p>
+                </div>
+                @{{ end }}
+            @{{ end }}
+        @{{ end }}
+        </div>
         <div class="layui-tab" lay-filter="annotation_header_item">
             @{{if .m.Id}}
         <ul class="layui-tab-title template_list">
