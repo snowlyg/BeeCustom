@@ -192,6 +192,6 @@ func init() {
 	beego.Router("/ws", &controllers.WebSocketController{})
 
 	// WebSocket.
-	beego.Router("/auto_pull", &controllers.WebHookController{})
+	beego.Router("/auto_pull", &controllers.WebHookController{}, "*:Get")
 
 }
