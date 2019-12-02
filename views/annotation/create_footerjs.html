@@ -153,6 +153,7 @@
                 //有错误显示错误
                 let itemRecheckErrorInputIds = JSON.parse(`@{{ .m.ItemRecheckErrorInputIds}}`);
                 for (let i in itemRecheckErrorInputIds) {
+                    console.log((i , obj.data["GdsSeqno"]))
                     if (i == obj.data["GdsSeqno"]) {
                         let itemRecheckErrorInputId = itemRecheckErrorInputIds[i];
                         for (let ii in itemRecheckErrorInputId) {
