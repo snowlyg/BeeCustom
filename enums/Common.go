@@ -1,12 +1,14 @@
 package enums
 
 import (
+	"bytes"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"math/rand"
+	"os/exec"
 	"reflect"
 	"strconv"
 	"time"
@@ -201,8 +203,19 @@ func SetObjValueIn(objName, v string, t reflect.Value) {
 	}
 }
 
+// hmac 加密
 func Hmac(key string, data []byte) string {
 	hmac := hmac.New(sha1.New, []byte(key))
 	hmac.Write(data)
 	return hex.EncodeToString(hmac.Sum([]byte("")))
+}
+
+func Cmd(action, arg string) {
+	cmd := exec.Command(action, arg)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("calculate_signature:%v", err))
+	}
 }
