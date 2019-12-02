@@ -22,6 +22,7 @@ func (c *WebHookController) Get() {
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("c.Ctx.Request.Body.Read:%v", err))
 	}
+	utils.LogDebug(fmt.Sprintf("ob:%v", ob))
 
 	//mac := hmac.New(sha1.New,[]byte(SECRETTOKEN))
 	//mac.Write([]byte(ob))
