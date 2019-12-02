@@ -1,6 +1,8 @@
 package enums
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -196,4 +198,10 @@ func SetObjValueIn(objName, v string, t reflect.Value) {
 	default:
 		utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", v, objName))
 	}
+}
+
+func Sha1(data string) string {
+	hash := sha1.New()
+	hash.Write([]byte(data))
+	return hex.EncodeToString(hash.Sum([]byte("")))
 }
