@@ -42,7 +42,8 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 	historyPath := beego.AppConfig.String(historyPathCofig)
 	pathCfiles, err := ioutil.ReadDir(returnPath)
 	if err != nil {
-		utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
+		//utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
+		return
 	}
 
 	for _, f := range pathCfiles {
