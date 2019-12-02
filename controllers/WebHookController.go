@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
+	"io/ioutil"
 
 	"BeeCustom/utils"
 )
@@ -17,12 +17,11 @@ type WebHookController struct {
 func (c *WebHookController) Get() {
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature")
 	utils.LogDebug(fmt.Sprintf("calculate_signature:%v", signature))
-	var ob interface{}
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	content, err := ioutil.ReadAll(c.Ctx.Request.Body)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("c.Ctx.Request.Body.Read:%v", err))
 	}
-	utils.LogDebug(fmt.Sprintf("ob:%v", ob))
+	utils.LogDebug(fmt.Sprintf("ob:%v", content))
 
 	//mac := hmac.New(sha1.New,[]byte(SECRETTOKEN))
 	//mac.Write([]byte(ob))
