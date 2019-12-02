@@ -30,6 +30,7 @@ func (c *WebHookController) Get() {
 		enums.Cmd("git", "pull")
 		enums.Cmd("rm", "BeeCustom")
 		enums.Cmd("bee", "run")
+		enums.Cmd("cd", "/etc/supervisord.conf.d")
 		enums.Cmd("supervisorctl", "restart beepkg")
 	}
 
