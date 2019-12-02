@@ -47,10 +47,10 @@
         admin.keydown_input_textarea()
 
         /**首次进入自动聚焦 and 初始数据赋值**/
-        const first_name = $('#invt_type_name').val()
-        $('#invt_type_name').val('').focus().val(first_name)
-        $('#input_time').val(admin.getCurrDate())
-        $('#invt_dcl_time').val(admin.getCurrDate())
+        const first_name = $('#InvtTypeName').val()
+        $('#InvtTypeName').val('').focus().val(first_name)
+        $('#InputTime').val(admin.getCurrDate())
+        $('#InvtDclTime').val(admin.getCurrDate())
 
         /**清单产品/报关草稿列表**/
         annotationItems = await admin.post('/annotation_item/datagrid', JSON.stringify({
@@ -79,7 +79,7 @@
         admin.table_mousedown()
 
         /**备注回车保存商品**/
-        $('body').on('keyup', '#body_rmk', function (event) {
+        $('body').on('keyup', '#BodyRmk', function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
             if (event.shiftKey !== 1 && eCode === 13) {
                 $('#order_pros_submit').click()
@@ -89,7 +89,7 @@
         /**保存商品**/
         const annotation_item_data = async (data) => {
             /**集报不允许新增**/
-            if (($('#invt_type').val() === '1' || $('#invt_type').val() === '8')
+            if (($('#InvtType').val() === '1' || $('#InvtType').val() === '8')
                 && data.GdsSeqno > annotationItems.length) {
                 layer.open({
                     title: '提示',
@@ -143,10 +143,10 @@
         table.on('row(order_pros)', function (obj) {
             for (let item in obj.data) {
                 let id = item
-                if (item === 'rmk_') {
+                if (item === 'Rmk') {
                     id = 'Body' + item
                 } else if (item === 'Id') {
-                    id = 'annotation_item_' + item
+                    id = 'AnnotationItem' + item
                 }
                 //赋值
                 $(`#${id}`).val(obj.data[item]);
@@ -156,6 +156,7 @@
                         let itemRecheckErrorInputId = itemRecheckErrorInputIds[i];
                         for (let ii in itemRecheckErrorInputId) {
                             if (ii == obj.data["GdsSeqno"]) {
+                              console.log()
                             if ($.inArray(item, itemRecheckErrorInputId[ii])) {
                                 $(`#${id}`).addClass("is_check_fail")
                             }else{
@@ -249,14 +250,14 @@
                         })
                     })
 
-                    $('#dcl_currcd_name_batch').focus()
+                    $('#DclCurrcdNameBatch').focus()
 
                     /**最终目的国(地区)*/
                     let destination_natcd = {
                         name: '国别地区代码',
                         filter_type: 'anns',
-                        id: ['#destination_natcd_name_batch'],
-                        after: ['#destination_natcd_batch'],
+                        id: ['#DestinationNatcdNameBatch'],
+                        after: ['#DestinationNatcdBatch'],
                     }
                     await admin.base_clearance_data_auto(destination_natcd)
 
@@ -264,8 +265,8 @@
                     let list_types = {
                         name: '国别地区代码',
                         filter_type: 'anns',
-                        id: ['#natcd_name_batch'],
-                        after: ['#natcd_batch'],
+                        id: ['#NatcdNameBatch'],
+                        after: ['#NatcdBatch'],
                     }
                     await admin.base_clearance_data_auto(list_types)
 
@@ -273,8 +274,8 @@
                     let dcl_currcd = {
                         name: '货币代码',
                         filter_type: 'anns',
-                        id: ['#dcl_currcd_name_batch'],
-                        after: ['#dcl_currcd_batch'],
+                        id: ['#DclCurrcdNameBatch'],
+                        after: ['#DclCurrcdBatch'],
                     }
                     await admin.base_clearance_data_auto(dcl_currcd)
 
@@ -393,24 +394,24 @@
             if (checkData.length === 0) {
                 return layer.msg('请选择')
             }
-            $('#putrec_seqno').val(checkData[0].Serial)
-            $('#gds_mtno').val(checkData[0].RecordNo)
-            $('#gdecd').val(checkData[0].HsCode)
-            $('#gds_nm').val(checkData[0].Name)
-            $('#gds_spcf_model_desc').val(checkData[0].Special)
+            $('#PutrecSeqno').val(checkData[0].Serial)
+            $('#GdsMtno').val(checkData[0].RecordNo)
+            $('#Gdecd').val(checkData[0].HsCode)
+            $('#GdsNm').val(checkData[0].Name)
+            $('#GdsSpcfModelDesc').val(checkData[0].Special)
 
-            $('#dcl_unitcd').val(checkData[0].UnitOneCode)
-            $('#dcl_unitcd_name').val(checkData[0].UnitOne)
+            $('#DclUnitcd').val(checkData[0].UnitOneCode)
+            $('#DclUnitcdName').val(checkData[0].UnitOne)
 
-            $('#dcl_uprc_amt').val(checkData[0].Price)
+            $('#DclUprcAmt').val(checkData[0].Price)
 
-            $('#lawf_unitcd').val(checkData[0].UnitTwoCode)
-            $('#lawf_unitcd_name').val(checkData[0].UnitTwo)
+            $('#LawfUnitcd').val(checkData[0].UnitTwoCode)
+            $('#LawfUnitcdName').val(checkData[0].UnitTwo)
 
-            $('#natcd').val(checkData[0].ManuplaceCode)
-            $('#natcd_name').val(checkData[0].Manuplace)
+            $('#Natcd').val(checkData[0].ManuplaceCode)
+            $('#NatcdName').val(checkData[0].Manuplace)
 
-            $('#entry_gds_seqno').focus()
+            $('#EntryGdsSeqno').focus()
 
             layer.close(AnnotationSearcIndex)
         })

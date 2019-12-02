@@ -5,14 +5,14 @@
             <td class="td-scale-04 text-align-right">序号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" class="non-empty" disabled name="Id" id="annotation_item_id" autocomplete="off" value="">
-                    <input type="text" class="non-empty " disabled name="GdsSeqno" id="gds_seqno" autocomplete="off" value="1">
+                    <input type="hidden" class="non-empty" disabled name="Id" id="AnnotationItemId" autocomplete="off" value="">
+                    <input type="text" class="non-empty " disabled name="GdsSeqno" id="GdsSeqno" autocomplete="off" value="1">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">备案序号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="PutrecSeqno" id="putrec_seqno" autocomplete="off"
+                    <input type="text" class="non-empty" name="PutrecSeqno" id="PutrecSeqno" autocomplete="off"
                            onchange="layui.admin.putrec_seqno_change(this,'@{{.m.ImpexpMarkcd}}','@{{.m.HandBookId}}')"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
@@ -20,7 +20,7 @@
             <td class="td-scale-04 text-align-right">商品料号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled name="GdsMtno" id="gds_mtno" autocomplete="off">
+                    <input type="text" class="non-empty disabled" disabled name="GdsMtno" id="GdsMtno" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -28,14 +28,14 @@
             <td class="td-scale-04 text-align-right">报关单商品序号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="EntryGdsSeqno" id="entry_gds_seqno" autocomplete="off"
+                    <input type="text" class="non-empty" name="EntryGdsSeqno" id="EntryGdsSeqno" autocomplete="off"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">流转申报表序号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="ApplyTbSeqno" id="apply_tb_seqno" autocomplete="off"
+                    <input type="text" class="non-empty" name="ApplyTbSeqno" id="ApplyTbSeqno" autocomplete="off"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
@@ -43,7 +43,7 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           maxlength="10" name="Gdecd" id="gdecd" autocomplete="off"
+                           maxlength="10" name="Gdecd" id="Gdecd" autocomplete="off"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
@@ -53,20 +53,20 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips" name="GdsNm"
-                           id="gds_nm" autocomplete="off">
+                           id="GdsNm" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">规格型号</td>
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="GdsSpcfModelDesc" id="gds_spcf_model_desc" autocomplete="off">
+                           name="GdsSpcfModelDesc" id="GdsSpcfModelDesc" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">币制</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="DclCurrcd" id="dcl_currcd" no_empty>
+                    <input type="hidden" name="DclCurrcd" id="DclCurrcd" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
                            name="DclCurrcdName" id="DclCurrcdName" autocomplete="off" no_empty>
                 </div>
@@ -76,24 +76,24 @@
             <td class="td-scale-04 text-align-right">申报计量单位</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="DclUnitcd" id="dcl_unitcd">
+                    <input type="hidden" name="DclUnitcd" id="DclUnitcd">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="DclUnitcdName" id="dcl_unitcd_name" autocomplete="off">
+                           name="DclUnitcdName" id="DclUnitcdName" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">法定计量单位</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="LawfUnitcd" id="lawf_unitcd">
-                    <input type="text" class="non-empty required" name="LawfUnitcdName" id="lawf_unitcd_name"
+                    <input type="hidden" name="LawfUnitcd" id="LawfUnitcd">
+                    <input type="text" class="non-empty required" name="LawfUnitcdName" id="LawfUnitcdName"
                            autocomplete="off" lay-verify="required" lay-vertype="tips">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">法定第二计量单位</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="SecdLawfUnitcd" id="secd_lawf_unitcd">
-                    <input type="text" class="non-empty" name="SecdLawfUnitcdName" id="secd_lawf_unitcd_name"
+                    <input type="hidden" name="SecdLawfUnitcd" id="SecdLawfUnitcd">
+                    <input type="text" class="non-empty" name="SecdLawfUnitcdName" id="SecdLawfUnitcdName"
                            autocomplete="off">
                 </div>
             </td>
@@ -103,7 +103,7 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="DclQty" id="dcl_qty" autocomplete="off"
+                           name="DclQty" id="DclQty" autocomplete="off"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')"
                            onchange="layui.admin.dcl_qty_change(this)">
                 </div>
@@ -112,14 +112,14 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="LawfQty" id="lawf_qty" autocomplete="off"
+                           name="LawfQty" id="LawfQty" autocomplete="off"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">第二法定数量</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="SecdLawfQty" id="secd_lawf_qty" autocomplete="off"
+                    <input type="text" class="non-empty" name="SecdLawfQty" id="SecdLawfQty" autocomplete="off"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
@@ -129,7 +129,7 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="DclUprcAmt" id="dcl_uprc_amt" autocomplete="off"
+                           name="DclUprcAmt" id="DclUprcAmt" autocomplete="off"
                            onchange="layui.admin.priceChange_ann()" oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
@@ -137,16 +137,16 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="DclTotalAmt" id="dcl_total_amt" autocomplete="off"
+                           name="DclTotalAmt" id="DclTotalAmt" autocomplete="off"
                            onchange="layui.admin.totalChange_ann()" oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">原产国(地区)</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="Natcd" id="natcd">
+                    <input type="hidden" name="Natcd" id="Natcd">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="NatcdName" id="natcd_name" autocomplete="off">
+                           name="NatcdName" id="NatcdName" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -154,21 +154,21 @@
             <td class="td-scale-04 text-align-right">重量比例因子</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled name="WtSfVal" id="wt_sf_val"
+                    <input type="text" class="non-empty disabled" disabled name="WtSfVal" id="WtSfVal"
                            autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">第一比例因子</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled name="FstSfVal" id="fst_sf_val"
+                    <input type="text" class="non-empty disabled" disabled name="FstSfVal" id="FstSfVal"
                            autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">第二比例因子</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled name="SecdSfVal" id="secd_sf_val"
+                    <input type="text" class="non-empty disabled" disabled name="SecdSfVal" id="SecdSfVal"
                            autocomplete="off">
                 </div>
             </td>
@@ -177,7 +177,7 @@
             <td class="td-scale-04 text-align-right">毛重</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="GrossWt" id="gross_wt" autocomplete="off"
+                    <input type="text" class="non-empty" name="GrossWt" id="GrossWt" autocomplete="off"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')"
                            onblur="layui.admin.gross_wet_blur(this)">
                 </div>
@@ -185,16 +185,16 @@
             <td class="td-scale-04 text-align-right">净重</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="NetWt" id="net_wt" autocomplete="off"
+                    <input type="text" class="non-empty" name="NetWt" id="NetWt" autocomplete="off"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')" onblur="layui.admin.net_wt_blur(this)">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">最终目的国(地区)</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="DestinationNatcd" id="destination_natcd" value="142" no_empty>
+                    <input type="hidden" name="DestinationNatcd" id="DestinationNatcd" value="142" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips" no_empty
-                           name="DestinationNatcdName" id="destination_natcd_name" autocomplete="off" value="中国">
+                           name="DestinationNatcdName" id="DestinationNatcdName" autocomplete="off" value="中国">
                 </div>
             </td>
         </tr>
@@ -202,21 +202,21 @@
             <td class="td-scale-04 text-align-right">征免方式</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="LvyrlfModecd" id="lvyrlf_modecd" value="3" no_empty>
+                    <input type="hidden" name="LvyrlfModecd" id="LvyrlfModecd" value="3" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="LvyrlfModecdName" id="lvyrlf_modecd_name" autocomplete="off" value="全免" no_empty>
+                           name="LvyrlfModecdName" id="LvyrlfModecdName" autocomplete="off" value="全免" no_empty>
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">单耗版本号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="UcnsVerno" id="ucns_verno" autocomplete="off">
+                    <input type="text" class="non-empty" name="UcnsVerno" id="UcnsVerno" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">自动备案序号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled name="Param3" id="param3" autocomplete="off">
+                    <input type="text" class="non-empty disabled" disabled name="Param3" id="Param3" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -224,15 +224,15 @@
             <td class="td-scale-04 text-align-right">修改标志</td>
             <td colspan="1">
                 <div class="input-group valid">
-                    <input type="hidden" name="ModfMarkcd" id="modf_markcd" value="3" autocomplete="off" no_empty>
+                    <input type="hidden" name="ModfMarkcd" id="ModfMarkcd" value="3" autocomplete="off" no_empty>
                     <input type="text" class="non-empty disabled" lay-verify="required" name="ModfMarkcdName"
-                           value="增加" id="modf_markcd_name" autocomplete="off" no_empty>
+                           value="增加" id="ModfMarkcdName" autocomplete="off" no_empty>
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">备注</td>
             <td colspan="4">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="Rmk" id="body_rmk" autocomplete="off">
+                    <input type="text" class="non-empty" name="Rmk" id="BodyRmk" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -278,8 +278,8 @@
                     <td class="td-scale-01 text-align-right">币制</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="DclCurrcd" id="dcl_currcd_batch">
-                            <input type="text" class="non-empty" name="DclCurrcdName" id="dcl_currcd_name_batch" autocomplete="off">
+                            <input type="hidden" name="DclCurrcd" id="DclCurrcdBatch">
+                            <input type="text" class="non-empty" name="DclCurrcdName" id="DclCurrcdNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -288,8 +288,8 @@
                     <td class="td-scale-01 text-align-right">原产国（地区）</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="Natcd" id="natcd_batch">
-                            <input type="text" class="non-empty" name="NatcdName" id="natcd_name_batch" autocomplete="off">
+                            <input type="hidden" name="Natcd" id="NatcdBatch">
+                            <input type="text" class="non-empty" name="NatcdName" id="NatcdNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -298,8 +298,8 @@
                     <td class="td-scale-01 text-align-right">最终目的国(地区)</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="DestinationNatcd" id="destination_natcd_batch">
-                            <input type="text" class="non-empty" name="DestinationNatcdName" id="destination_natcd_name_batch" autocomplete="off">
+                            <input type="hidden" name="DestinationNatcd" id="DestinationNatcdBatch">
+                            <input type="text" class="non-empty" name="DestinationNatcdName" id="DestinationNatcdNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>

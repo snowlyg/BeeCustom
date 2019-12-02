@@ -2498,8 +2498,8 @@ layui.define('view', function (exports) {
           let list_types = {
             name: '清单类型',
             filter_type: 's',
-            id: ['#invt_type_name'],
-            after: ['#invt_type'],
+            id: ['#InvtTypeName'],
+            after: ['#InvtType'],
           }
           await admin.base_clearance_data_auto(list_types)
         }
@@ -2509,8 +2509,8 @@ layui.define('view', function (exports) {
           let finished_product = {
             name: '料件成品标记',
             filter_type: 's',
-            id: ['#mtpck_endprd_markcd_name'],
-            after: ['#mtpck_endprd_markcd'],
+            id: ['#MtpckEndprdMarkcdName'],
+            after: ['#MtpckEndprdMarkcd'],
           }
           await admin.base_clearance_data_auto(finished_product)
         }
@@ -2520,8 +2520,8 @@ layui.define('view', function (exports) {
           let types_transfer = {
             name: '流转类型',
             filter_type: 's',
-            id: ['#list_type_name'],
-            after: ['#list_type'],
+            id: ['#ListTypeName'],
+            after: ['#ListType'],
           }
           await admin.base_clearance_data_auto(types_transfer)
         }
@@ -2530,8 +2530,8 @@ layui.define('view', function (exports) {
           let nuclear_declaration_lis = {
             name: '清单报关标志',
             filter_type: 's',
-            id: ['#dclcus_flag_name'],
-            after: ['#dclcus_flag'],
+            id: ['#DclcusFlagName'],
+            after: ['#DclcusFlag'],
           }
           await admin.base_clearance_data_auto(nuclear_declaration_lis)
         }
@@ -2540,8 +2540,8 @@ layui.define('view', function (exports) {
           let customs_declaration_type = {
             name: '报关类型',
             filter_type: 's',
-            id: ['#dclcus_typecd_name'],
-            after: ['#dclcus_typecd'],
+            id: ['#DclcusTypecdName'],
+            after: ['#DclcusTypecd'],
           }
           await admin.base_clearance_data_auto(customs_declaration_type)
         }
@@ -2551,8 +2551,8 @@ layui.define('view', function (exports) {
           let type_declaration_list = {
             name: '清单报关单类型',
             filter_type: 's',
-            id: ['#dec_type_name'],
-            after: ['#dec_type'],
+            id: ['#DecTypeName'],
+            after: ['#DecType'],
           }
           await admin.base_clearance_data_auto(type_declaration_list)
         }
@@ -2562,8 +2562,8 @@ layui.define('view', function (exports) {
           let gen_dec_flag_list = {
             name: '生成报关单标志',
             filter_type: 's',
-            id: ['#gen_dec_flag_name'],
-            after: ['#gen_dec_flag'],
+            id: ['#GenDecFlagName'],
+            after: ['#GenDecFlag'],
           }
           await admin.base_clearance_data_auto(gen_dec_flag_list)
         }
@@ -2573,8 +2573,8 @@ layui.define('view', function (exports) {
           let modf_markcd_list = {
             name: '清单表体修改标志',
             filter_type: 's',
-            id: ['#modf_markcd_name'],
-            after: ['#modf_markcd'],
+            id: ['#ModfMarkcdName'],
+            after: ['#ModfMarkcd'],
           }
           await admin.base_clearance_data_auto(modf_markcd_list)
         }
@@ -2601,12 +2601,12 @@ layui.define('view', function (exports) {
                   name: '关区代码',
                   filter_type: "s",
                   id: [
-                    '#impexp_portcd_name',
-                    '#dcl_plc_cuscd_name',
+                    '#ImpexpPortcdName',
+                    '#DclPlcCuscdName',
                   ],
                   after: [
-                    '#impexp_portcd',
-                    '#dcl_plc_cuscd',
+                    '#ImpexpPortcd',
+                    '#DclPlcCuscd',
                   ],
                 }
                 await admin.base_clearance_data_auto(ann_entry_clearance)
@@ -2626,8 +2626,8 @@ layui.define('view', function (exports) {
           let ann_mode_shipping = {
             name: '运输方式代码',
             filter_type: 's',
-            id: [ '#trsp_modecd_name'],
-            after: [ '#trsp_modecd'],
+            id: [ '#TrspModecdName'],
+            after: [ '#TrspModecd'],
           }
           await admin.base_clearance_data_auto(ann_mode_shipping)
         }
@@ -2651,10 +2651,10 @@ layui.define('view', function (exports) {
             name: '监管方式代码',
             filter_type: 's',
             id: [
-              '#supv_modecd_name',
+              '#SupvModecdName',
             ],
             after: [
-              '#supv_modecd',
+              '#SupvModecd',
             ],
           }
           await admin.base_clearance_data_auto(ann_objectives_based)
@@ -2695,14 +2695,14 @@ layui.define('view', function (exports) {
             name: '国别地区代码',
             filter_type: 'anns',
             id: [
-              '#stship_trsarv_natcd_name',
-              '#destination_natcd_name',
-              '#natcd_name',
+              '#StshipTrsarvNatcdName',
+              '#DestinationNatcdName',
+              '#NatcdName',
             ],
             after: [
-              '#stship_trsarv_natcd',
-              '#destination_natcd',
-              '#natcd',
+              '#StshipTrsarvNatcd',
+              '#DestinationNatcd',
+              '#Natcd',
             ],
           }
           await admin.base_clearance_data_auto(ann_country_area)
@@ -2763,10 +2763,10 @@ layui.define('view', function (exports) {
             name: '货币代码',
             filter_type: 'anns',
             id: [
-              '#dcl_currcd_name',
+              '#DclCurrcdName',
             ],
             after: [
-              '#dcl_currcd',
+              '#DclCurrcd',
             ],
           }
           await admin.base_clearance_data_auto(ann_currency)
@@ -2855,14 +2855,14 @@ layui.define('view', function (exports) {
             name: '计量单位代码',
             filter_type: 's',
             id: [
-              '#dcl_unitcd_name',
-              '#lawf_unitcd_name',
-              '#secd_lawf_unitcd_name',
+              '#DclUnitcdName',
+              '#LawfUnitcdName',
+              '#SecdLawfUnitcdName',
             ],
             after: [
-              '#dcl_unitcd',
-              '#lawf_unitcd',
-              '#secd_lawf_unitcd',
+              '#DclUnitcd',
+              '#LawfUnitcd',
+              '#SecdLawfUnitcd',
             ],
           }
           await admin.base_clearance_data_auto(ann_unit_measurement)
@@ -2912,8 +2912,8 @@ layui.define('view', function (exports) {
           let ann_exempting_method = {
             name: '征减免税方式代码',
             filter_type: 's',
-            id: ['#lvyrlf_modecd_name'],
-            after: ['#lvyrlf_modecd'],
+            id: ['#LvyrlfModecdName'],
+            after: ['#LvyrlfModecd'],
           }
           await admin.base_clearance_data_auto(ann_exempting_method)
         }
