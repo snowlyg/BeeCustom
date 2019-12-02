@@ -1,6 +1,7 @@
 package enums
 
 import (
+	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
@@ -200,8 +201,8 @@ func SetObjValueIn(objName, v string, t reflect.Value) {
 	}
 }
 
-func Sha1(data string) string {
-	hash := sha1.New()
-	hash.Write([]byte(data))
-	return hex.EncodeToString(hash.Sum([]byte("")))
+func Hmac(key string, data []byte) string {
+	hmac := hmac.New(sha1.New, []byte(key))
+	hmac.Write(data)
+	return hex.EncodeToString(hmac.Sum([]byte("")))
 }
