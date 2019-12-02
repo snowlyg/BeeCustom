@@ -28,7 +28,9 @@ func (c *WebHookController) Get() {
 	if calculateSignature == signature {
 		enums.Cmd("cd", "/root/go/src/BeeCustom")
 		enums.Cmd("git", "pull")
-		enums.Cmd("supervisorctl", "start beepkg")
+		enums.Cmd("rm", "BeeCustom")
+		enums.Cmd("bee", "run")
+		enums.Cmd("supervisorctl", "restart beepkg")
 	}
 
 	c.ServeJSON()

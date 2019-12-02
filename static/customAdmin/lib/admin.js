@@ -2470,11 +2470,6 @@ layui.define('view', function (exports) {
           filter: function (data, data_filter) {
             for (let item of data) {
               let value = `${item.Name}`
-              // if (`${item.ShortName}` !== 'null') {
-              //   value = `${item.ShortName}`
-              // } else if (`${item.Name}` !== 'null') {
-              //   value = `${item.Name}`
-              // }
 
               let label = `${item.CustomsCode}-${value}`
               let data_filter_id = item.CustomsCode
@@ -2503,7 +2498,7 @@ layui.define('view', function (exports) {
           let list_types = {
             name: '清单类型',
             filter_type: 's',
-            id: ['#InvtTypeName'],
+            id: ['#invt_type_name'],
             after: ['#invt_type'],
           }
           await admin.base_clearance_data_auto(list_types)
@@ -2578,8 +2573,8 @@ layui.define('view', function (exports) {
           let modf_markcd_list = {
             name: '清单表体修改标志',
             filter_type: 's',
-            id: ['#ModfMarkcdName'],
-            after: ['#ModfMarkcd'],
+            id: ['#modf_markcd_name'],
+            after: ['#modf_markcd'],
           }
           await admin.base_clearance_data_auto(modf_markcd_list)
         }
@@ -2701,13 +2696,13 @@ layui.define('view', function (exports) {
             filter_type: 'anns',
             id: [
               '#stship_trsarv_natcd_name',
-              '#DestinationNatcdName',
-              '#NatcdName',
+              '#destination_natcd_name',
+              '#natcd_name',
             ],
             after: [
               '#stship_trsarv_natcd',
-              '#DestinationNatcd',
-              '#Natcd',
+              '#destination_natcd',
+              '#natcd',
             ],
           }
           await admin.base_clearance_data_auto(ann_country_area)
@@ -2768,10 +2763,10 @@ layui.define('view', function (exports) {
             name: '货币代码',
             filter_type: 'anns',
             id: [
-              '#DclCurrcdName',
+              '#dcl_currcd_name',
             ],
             after: [
-              '#DclCurrcd',
+              '#dcl_currcd',
             ],
           }
           await admin.base_clearance_data_auto(ann_currency)
@@ -2860,14 +2855,14 @@ layui.define('view', function (exports) {
             name: '计量单位代码',
             filter_type: 's',
             id: [
-              '#DclUnitcdName',
-              '#LawfUnitcdName',
-              '#SecdLawfUnitcdName',
+              '#dcl_unitcd_name',
+              '#lawf_unitcd_name',
+              '#secd_lawf_unitcd_name',
             ],
             after: [
-              '#DclUnitcd',
-              '#LawfUnitcd',
-              '#SecdLawfUnitcd',
+              '#dcl_unitcd',
+              '#lawf_unitcd',
+              '#secd_lawf_unitcd',
             ],
           }
           await admin.base_clearance_data_auto(ann_unit_measurement)
@@ -2917,8 +2912,8 @@ layui.define('view', function (exports) {
           let ann_exempting_method = {
             name: '征减免税方式代码',
             filter_type: 's',
-            id: ['#LvyrlfModecdName'],
-            after: ['#LvyrlfModecd'],
+            id: ['#lvyrlf_modecd_name'],
+            after: ['#lvyrlf_modecd'],
           }
           await admin.base_clearance_data_auto(ann_exempting_method)
         }

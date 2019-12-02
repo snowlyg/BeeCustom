@@ -25,7 +25,7 @@
                     <input type="text"
                            class="non-empty required @{{if inArrayStr "InvtTypeName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
                            value="@{{ if .m.InvtTypeName}}@{{.m.InvtTypeName}}@{{ else}}普通清单@{{end}}"
-                           name="InvtTypeName" id="InvtTypeName" autocomplete="off" lay-verify="required"
+                           name="InvtTypeName" id="invt_type_name" autocomplete="off" lay-verify="required"
                            lay-vertype="tips">
                 </div>
             </td>
@@ -153,7 +153,7 @@
             <td class="td-scale-01 text-align-right">申报类型</td>
             <td class="td-scale-04" colspan="1">
                 <div class="input-group valid">
-                    <input type="hidden"  name="DclTypecd" id="DclTypecd" value="1">
+                    <input type="hidden"  name="DclTypecd" id="dcl_typecd" value="1">
                     <input type="text" class="non-empty disabled @{{if inArrayStr "DclTypecdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="备案" name="DclTypecdName" id="DclTypecdName" autocomplete="off" >
                 </div>
             </td>
@@ -161,7 +161,7 @@
             <td class="td-scale-04" colspan="1">
                 <div class="input-group valid">
                     <input type="text" class="non-empty required @{{if inArrayStr "InputTime" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InputTime}}" name="InputTime"
-                           id="InputTime" autocomplete="off" lay-verify="required" lay-vertype="tips"
+                           id="input_time" autocomplete="off" lay-verify="required" lay-vertype="tips"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
@@ -169,7 +169,7 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="text" class="non-empty required @{{if inArrayStr "InvtDclTime" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InvtDclTime}}" name="InvtDclTime"
-                           id="InvtDclTime" autocomplete="off" lay-verify="required" lay-vertype="tips"
+                           id="invt_dcl_time" autocomplete="off" lay-verify="required" lay-vertype="tips"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
