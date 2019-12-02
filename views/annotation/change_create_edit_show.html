@@ -22,7 +22,7 @@
             <i class="iconfont iconfolder-shared"></i>重新派单
         </button>
         @{{ end }}
-        @{{ else if eq .m.StatusString  "制单中" }}
+        @{{ else if eq .m.StatusString  "制单中" "复核不通过" "复核通过" }}
         @{{ if canArray  .actions .m.ImpexpMarkcd "canForRecheck"}}
         <button class="layui-btn custom-create_btn" id="order_application_review" type="button" lay-submit
                 lay-filter="order_application_review">

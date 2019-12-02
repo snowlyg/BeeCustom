@@ -5,22 +5,25 @@
             <td class="td-scale-01 text-align-right">预录入统一编号</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" value="@{{.m.SeqNo}}" id="seq_no" autocomplete="off">
+                    <input type="text"
+                           class="non-empty disabled @{{if inArrayStr "seq_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
+                           value="@{{.m.SeqNo}}" id="seq_no" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-01 text-align-right">清单编号</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" value="@{{.m.BondInvtNo}}" disabled id="bond_invt_no"
-                           autocomplete="off">
+                    <input type="text"
+                           class="non-empty disabled @{{if inArrayStr "bond_invt_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
+                           value="@{{.m.BondInvtNo}}" disabled id="bond_invt_no" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-01 text-align-right">清单类型</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="hidden" name="InvtType" id="invt_type"
-                           value="@{{ if .m.InvtType}}@{{.m.InvtType}}@{{ else}}0@{{end}}">
-                    <input type="text" class="non-empty required"
+                    <input type="hidden" name="InvtType" id="invt_type" value="@{{ if .m.InvtType}}@{{.m.InvtType}}@{{else}}0@{{end}}">
+                    <input type="text"
+                           class="non-empty required @{{if inArrayStr "InvtTypeName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
                            value="@{{ if .m.InvtTypeName}}@{{.m.InvtTypeName}}@{{ else}}普通清单@{{end}}"
                            name="InvtTypeName" id="InvtTypeName" autocomplete="off" lay-verify="required"
                            lay-vertype="tips">
@@ -30,7 +33,9 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="hidden" name="HandBookId" id="hand_book_id" value="@{{.m.HandBookId}}">
-                    <input type="text" class="non-empty required" value="@{{.m.PutrecNo}}" name="PutrecNo"
+                    <input type="text"
+                           class="non-empty required @{{if inArrayStr "putrec_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
+                           value="@{{.m.PutrecNo}}" name="PutrecNo"
                            id="putrec_no" lay-verify="required" lay-vertype="tips">
                 </div>
             </td>
@@ -39,7 +44,7 @@
             <td class="td-scale-01 text-align-right">经营单位编码</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" value="@{{.m.BizopEtpsno}}" name="BizopEtpsno"
+                    <input type="text" class="non-empty required @{{if inArrayStr "bizop_etpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.BizopEtpsno}}" name="BizopEtpsno"
                            id="bizop_etpsno" autocomplete="off" lay-verify="required" lay-vertype="tips"
                            onblur="layui.admin.bizop_etpsno_change(this)">
                 </div>
@@ -47,14 +52,14 @@
             <td class="td-scale-01 text-align-right">经营单位社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" disabled value="@{{.m.BizopEtpsSccd}}" name="BizopEtpsSccd"
+                    <input type="text" class="non-empty @{{if inArrayStr "bizop_etps_sccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.BizopEtpsSccd}}" name="BizopEtpsSccd"
                            id="bizop_etps_sccd" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-01 text-align-right">经营单位名称</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" disabled value="@{{.m.BizopEtpsNm}}"
+                    <input type="text" class="non-empty required @{{if inArrayStr "bizop_etps_nm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.BizopEtpsNm}}"
                            name="BizopEtpsNm" id="bizop_etps_nm" autocomplete="off" lay-verify="required"
                            lay-vertype="tips">
                 </div>
@@ -64,7 +69,7 @@
             <td class="td-scale-01 text-align-right">加工单位编码</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" value="@{{.m.RcvgdEtpsno}}" name="RcvgdEtpsno"
+                    <input type="text" class="non-empty required @{{if inArrayStr "rcvgd_etpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.RcvgdEtpsno}}" name="RcvgdEtpsno"
                            id="rcvgd_etpsno" autocomplete="off" lay-verify="required" lay-vertype="tips"
                            onblur="layui.admin.rcvgd_etpsno_change(this)">
                 </div>
@@ -72,14 +77,14 @@
             <td class="td-scale-01 text-align-right">加工单位社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" disabled value="@{{.m.RvsngdEtpsSccd}}" name="RvsngdEtpsSccd"
+                    <input type="text" class="non-empty @{{if inArrayStr "rvsngd_etps_sccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.RvsngdEtpsSccd}}" name="RvsngdEtpsSccd"
                            id="rvsngd_etps_sccd" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-01 text-align-right">加工单位名称</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" disabled value="@{{.m.RcvgdEtpsNm}}"
+                    <input type="text" class="non-empty required @{{if inArrayStr "rcvgd_etps_nm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.RcvgdEtpsNm}}"
                            name="RcvgdEtpsNm" id="rcvgd_etps_nm" autocomplete="off" lay-verify="required"
                            lay-vertype="tips">
                 </div>
@@ -89,7 +94,7 @@
             <td class="td-scale-01 text-align-right">申报单位编码</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" name="DclEtpsno" id="dcl_etpsno" autocomplete="off"
+                    <input type="text" class="non-empty required @{{if inArrayStr "dcl_etpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="DclEtpsno" id="dcl_etpsno" autocomplete="off"
                            lay-verify="required" lay-vertype="tips"
                            value="@{{ if .m.DclEtpsno}}@{{.m.DclEtpsno}}@{{ else}}4419986507@{{end}}">
                 </div>
@@ -97,7 +102,7 @@
             <td class="td-scale-01 text-align-right">申报单位社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="DclEtpsSccd"
+                    <input type="text" class="non-empty @{{if inArrayStr "dcl_etps_sccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="DclEtpsSccd"
                            value="@{{ if .m.DclEtpsSccd}}@{{.m.DclEtpsSccd}}@{{ else}}914419007962277606@{{end}}"
                            id="dcl_etps_sccd" autocomplete="off">
                 </div>
@@ -105,7 +110,7 @@
             <td class="td-scale-01 text-align-right">申报单位名称</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" name="DclEtpsNm" id="dcl_etps_nm" autocomplete="off"
+                    <input type="text" class="non-empty required @{{if inArrayStr "dcl_etps_nm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="DclEtpsNm" id="dcl_etps_nm" autocomplete="off"
                            lay-verify="required" lay-vertype="tips"
                            value="@{{ if .m.DclEtpsNm}}@{{.m.DclEtpsNm}}@{{ else}}广东东华报关服务有限公司@{{end}}">
                 </div>
@@ -115,7 +120,7 @@
             <td class="td-scale-01 text-align-right">录入单位编码</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled name="InputCode" id="input_code"
+                    <input type="text" class="non-empty disabled @{{if inArrayStr "input_code" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled name="InputCode" id="input_code"
                            autocomplete="off"
                            value="@{{ if .m.InputCode}}@{{.m.InputCode}}@{{ else}}4419986507@{{end}}">
                 </div>
@@ -123,7 +128,7 @@
             <td class="td-scale-01 text-align-right">录入单位社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="InputCreditCode" id="input_credit_code"
+                    <input type="text" class="non-empty @{{if inArrayStr "input_credit_code" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="InputCreditCode" id="input_credit_code"
                            autocomplete="off"
                            value="@{{ if .m.InputCreditCode}}@{{.m.InputCreditCode}}@{{ else}}914419007962277606@{{end}}">
                 </div>
@@ -131,7 +136,7 @@
             <td class="td-scale-01 text-align-right">录入单位名称</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" name="InputName" id="input_name" autocomplete="off"
+                    <input type="text" class="non-empty required @{{if inArrayStr "input_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="InputName" id="input_name" autocomplete="off"
                            lay-verify="required" lay-vertype="tips"
                            value="@{{ if .m.InputName}}@{{.m.InputName}}@{{ else}}广东东华报关服务有限公司@{{end}}">
                 </div>
@@ -139,16 +144,23 @@
         </tr>
         <tr>
             <td class="td-scale-01 text-align-right">企业内部编号</td>
-            <td class="td-scale-04" colspan="2">
+            <td class="td-scale-04" colspan="1">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" disabled value="@{{.m.EtpsInnerInvtNo}}"
+                    <input type="text" class="non-empty disabled @{{if inArrayStr "etps_inner_invt_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.EtpsInnerInvtNo}}"
                            name="EtpsInnerInvtNo" id="etps_inner_invt_no" autocomplete="off">
                 </div>
             </td>
-            <td class="td-scale-01 text-align-right">录入日期</td>
-            <td class="td-scale-04" colspan="2">
+            <td class="td-scale-01 text-align-right">申报类型</td>
+            <td class="td-scale-04" colspan="1">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" value="@{{.m.InputTime}}" name="InputTime"
+                    <input type="hidden"  name="DclTypecd" id="DclTypecd" value="1">
+                    <input type="text" class="non-empty disabled @{{if inArrayStr "DclTypecdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="备案" name="DclTypecdName" id="DclTypecdName" autocomplete="off" >
+                </div>
+            </td>
+            <td class="td-scale-01 text-align-right">录入日期</td>
+            <td class="td-scale-04" colspan="1">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required @{{if inArrayStr "InputTime" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InputTime}}" name="InputTime"
                            id="InputTime" autocomplete="off" lay-verify="required" lay-vertype="tips"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
@@ -156,7 +168,7 @@
             <td class="td-scale-01 text-align-right">清单申报日期</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" value="@{{.m.InvtDclTime}}" name="InvtDclTime"
+                    <input type="text" class="non-empty required @{{if inArrayStr "InvtDclTime" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InvtDclTime}}" name="InvtDclTime"
                            id="InvtDclTime" autocomplete="off" lay-verify="required" lay-vertype="tips"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
@@ -166,10 +178,8 @@
             <td class="td-scale-01 text-align-right">料件、成品标志</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="hidden"
-                           value="@{{ if .m.MtpckEndprdMarkcd}}@{{.m.MtpckEndprdMarkcd}}@{{ else}}I@{{end}}"
-                           name="MtpckEndprdMarkcd" id="mtpck_endprd_markcd">
-                    <input type="text" class="non-empty required"
+                    <input type="hidden" value="@{{ if .m.MtpckEndprdMarkcd}}@{{.m.MtpckEndprdMarkcd}}@{{ else}}I@{{end}}" name="MtpckEndprdMarkcd" id="mtpck_endprd_markcd">
+                    <input type="text" class="non-empty required  @{{if inArrayStr "mtpck_endprd_markcd_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
                            value="@{{ if .m.MtpckEndprdMarkcdName}}@{{.m.MtpckEndprdMarkcdName}}@{{ else}}料件@{{end}}"
                            name="MtpckEndprdMarkcdName" id="mtpck_endprd_markcd_name" autocomplete="off"
                            lay-verify="required" lay-vertype="tips">
@@ -179,7 +189,7 @@
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="hidden" value="@{{.m.SupvModecd}}" name="SupvModecd" id="supv_modecd">
-                    <input type="text" class="non-empty required" value="@{{.m.SupvModecdName}}" name="SupvModecdName"
+                    <input type="text" class="non-empty required  @{{if inArrayStr "supv_modecd_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.SupvModecdName}}" name="SupvModecdName"
                            id="supv_modecd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                 </div>
             </td>
@@ -187,7 +197,7 @@
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="hidden" value="@{{.m.TrspModecd}}" name="TrspModecd" id="trsp_modecd">
-                    <input type="text" class="non-empty required" value="@{{.m.TrspModecdName}}" name="TrspModecdName"
+                    <input type="text" class="non-empty required  @{{if inArrayStr "trsp_modecd_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.TrspModecdName}}" name="TrspModecdName"
                            id="trsp_modecd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                 </div>
             </td>
@@ -197,7 +207,7 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="hidden" value="@{{.m.ImpexpPortcd}}" name="ImpexpPortcd" id="impexp_portcd">
-                    <input type="text" class="non-empty required" value="@{{.m.ImpexpPortcdName}}"
+                    <input type="text" class="non-empty required  @{{if inArrayStr "impexp_portcd_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.ImpexpPortcdName}}"
                            name="ImpexpPortcdName" id="impexp_portcd_name" autocomplete="off" lay-verify="required"
                            lay-vertype="tips">
                 </div>
@@ -206,14 +216,14 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="hidden" value="@{{.m.DclPlcCuscd}}" name="DclPlcCuscd" id="dcl_plc_cuscd">
-                    <input type="text" class="non-empty required" value="@{{.m.DclPlcCuscdName}}" name="DclPlcCuscdName"
+                    <input type="text" class="non-empty required  @{{if inArrayStr "dcl_plc_cuscd_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.DclPlcCuscdName}}" name="DclPlcCuscdName"
                            id="dcl_plc_cuscd_name" autocomplete="off" lay-verify="required" lay-vertype="tips">
                 </div>
             </td>
             <td class="td-scale-01 text-align-right">核扣标志</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" value="@{{.m.VrfdedMarkcd}}" id="vrfded_markcd"
+                    <input type="text" class="non-empty disabled  @{{if inArrayStr "vrfded_markcd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.VrfdedMarkcd}}" id="vrfded_markcd"
                            autocomplete="off" disabled>
                 </div>
             </td>
@@ -222,7 +232,7 @@
                 <div class="input-group valid">
                     <input type="hidden" value="@{{.m.StshipTrsarvNatcd}}" name="StshipTrsarvNatcd"
                            id="stship_trsarv_natcd">
-                    <input type="text" class="non-empty required" value="@{{.m.StshipTrsarvNatcdName}}"
+                    <input type="text" class="non-empty required  @{{if inArrayStr "stship_trsarv_natcd_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.StshipTrsarvNatcdName}}"
                            name="StshipTrsarvNatcdName" id="stship_trsarv_natcd_name" autocomplete="off"
                            lay-verify="required" lay-vertype="tips">
                 </div>
@@ -232,14 +242,14 @@
             <td class="td-scale-01 text-align-right">清单进出卡口状态</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty disabled" value="@{{.m.InvtIochkptStucd}}"
+                    <input type="text" class="non-empty disabled  @{{if inArrayStr "invt_iochkpt_stucd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InvtIochkptStucd}}"
                            id="invt_iochkpt_stucd" autocomplete="off" disabled>
                 </div>
             </td>
             <td class="td-scale-01 text-align-right">申报表编号</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" value="@{{.m.ApplyNo}}" name="ApplyNo" id="apply_no"
+                    <input type="text" class="non-empty  @{{if inArrayStr "apply_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.ApplyNo}}" name="ApplyNo" id="apply_no"
                            autocomplete="off">
                 </div>
             </td>
@@ -247,7 +257,7 @@
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="hidden" value="@{{.m.ListType}}" name="ListType" id="list_type">
-                    <input type="text" class="non-empty" value="@{{.m.ListTypeName}}" name="ListTypeName"
+                    <input type="text" class="non-empty  @{{if inArrayStr "list_type_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.ListTypeName}}" name="ListTypeName"
                            id="list_type_name" autocomplete="off">
                 </div>
             </td>
@@ -258,7 +268,7 @@
                 <div class="input-group valid">
                     <input type="hidden" value="@{{ if .m.DclcusFlag}}@{{.m.DclcusFlag}}@{{ else}}1@{{end}}"
                            name="DclcusFlag" id="dclcus_flag">
-                    <input type="text" class="non-empty required"
+                    <input type="text" class="non-empty required  @{{if inArrayStr "dclcus_flag_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
                            value="@{{ if .m.DclcusFlagName}}@{{.m.DclcusFlagName}}@{{ else}}报关@{{end}}"
                            name="DclcusFlagName" id="dclcus_flag_name" autocomplete="off" lay-verify="required"
                            lay-vertype="tips">
@@ -269,28 +279,27 @@
                 <input type="hidden" value="@{{ if .m.GenDecFlag}}@{{.m.GenDecFlag}}@{{ else}}1@{{end}}"
                        name="GenDecFlag" id="gen_dec_flag">
                 <input type="text" value="@{{ if .m.GenDecFlagName}}@{{.m.GenDecFlagName}}@{{ else}}生成@{{end}}"
-                       name="GenDecFlagName" id="gen_dec_flag_name" class="non-empty required">
+                       name="GenDecFlagName" id="gen_dec_flag_name" class="non-empty required  @{{if inArrayStr "gen_dec_flag_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
             </td>
 
             <td class="td-scale-01 text-align-right">报关类型</td>
             <td class="td-scale-04">
                 <input type="hidden" value="@{{.m.DclcusTypecd}}" name="DclcusTypecd" id="dclcus_typecd">
                 <input type="text" value="@{{.m.DclcusTypecdName}}" name="DclcusTypecdName" id="dclcus_typecd_name"
-                       class="non-empty">
+                       class="non-empty  @{{if inArrayStr "dclcus_typecd_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
             </td>
             <td class="td-scale-01 text-align-right">报关单类型</td>
             <td class="td-scale-04" colspan="2">
-                <input type="hidden" value="@{{ if .m.DecType}}@{{.m.DecType}}@{{ else}}1@{{end}}" name="DecType"
-                       id="dec_type">
+                <input type="hidden" value="@{{ if .m.DecType}}@{{.m.DecType}}@{{ else}}1@{{end}}" name="DecType" id="dec_type">
                 <input type="text" value="@{{ if .m.DecTypeName}}@{{.m.DecTypeName}}@{{ else}}进口报关单@{{end}}"
-                       name="DecTypeName" id="dec_type_name" class="non-empty">
+                       name="DecTypeName" id="dec_type_name" class="non-empty  @{{if inArrayStr "dec_type_name" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
             </td>
         </tr>
         <tr>
             <td class="td-scale-01 text-align-right">对应报关单编号</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" value="@{{.m.EntryNo}}" class="non-empty disabled" id="entry_no"
+                    <input type="text" value="@{{.m.EntryNo}}" class="non-empty disabled  @{{if inArrayStr "entry_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" id="entry_no"
                            autocomplete="off" disabled>
                 </div>
             </td>
@@ -298,13 +307,13 @@
             <td class="td-scale-04" colspan="2">
                 <input type="text"
                        value="@{{ if .m.CorrEntryDclEtpsNo}}@{{.m.CorrEntryDclEtpsNo}}@{{ else}}4419986507@{{end}}"
-                       name="CorrEntryDclEtpsNo" id="corr_entry_dcl_etps_no" class="non-empty">
+                       name="CorrEntryDclEtpsNo" id="corr_entry_dcl_etps_no" class="non-empty  @{{if inArrayStr "corr_entry_dcl_etps_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
             </td>
             <td class="td-scale-01 text-align-right">对应报关单申报单位社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <input type="text"
                        value="@{{ if .m.CorrEntryDclEtpsSccd}}@{{.m.CorrEntryDclEtpsSccd}}@{{ else}}914419007962277606@{{end}}"
-                       name="CorrEntryDclEtpsSccd" id="corr_entry_dcl_etps_sccd" class="non-empty">
+                       name="CorrEntryDclEtpsSccd" id="corr_entry_dcl_etps_sccd" class="non-empty  @{{if inArrayStr "corr_entry_dcl_etps_sccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
             </td>
         </tr>
         <tr>
@@ -313,7 +322,7 @@
                 <div class="input-group valid">
                     <input type="text"
                            value="@{{ if .m.CorrEntryDclEtpsNm}}@{{.m.CorrEntryDclEtpsNm}}@{{ else}}广东东华报关服务有限公司@{{end}}"
-                           name="CorrEntryDclEtpsNm" id="corr_entry_dcl_etps_nm" class="non-empty" autocomplete="off">
+                           name="CorrEntryDclEtpsNm" id="corr_entry_dcl_etps_nm" class="non-empty  @{{if inArrayStr "corr_entry_dcl_etps_nm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -322,13 +331,13 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryNo}}" name="RltEntryNo" id="rlt_entry_no"
-                           class="non-empty disabled" autocomplete="off" disabled>
+                           class="non-empty disabled  @{{if inArrayStr "rlt_entry_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off" disabled>
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">关联清单编号</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltInvtNo}}" name="RltInvtNo" id="rlt_invt_no" class="non-empty"
+                    <input type="text" value="@{{.m.RltInvtNo}}" name="RltInvtNo" id="rlt_invt_no" class="non-empty  @{{if inArrayStr "rlt_invt_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
                            autocomplete="off">
                 </div>
             </td>
@@ -336,7 +345,7 @@
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltPutrecNo}}" name="RltPutrecNo" id="rlt_putrec_no"
-                           class="non-empty" autocomplete="off">
+                           class="non-empty  @{{if inArrayStr "rlt_putrec_no" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -345,21 +354,21 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryBizopEtpsno}}" name="RltEntryBizopEtpsno"
-                           id="rlt_entry_bizop_etpsno" class="non-empty" autocomplete="off">
+                           id="rlt_entry_bizop_etpsno" class="non-empty  @{{if inArrayStr "rlt_entry_bizop_etpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">关联报关单境内收发货人社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryBizopEtpsSccd}}" name="RltEntryBizopEtpsSccd"
-                           id="rlt_entry_bizop_etps_sccd" class="non-empty" autocomplete="off">
+                           id="rlt_entry_bizop_etps_sccd" class="non-empty  @{{if inArrayStr "rlt_entry_bizop_etps_sccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">关联报关单境内收发货人名称</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryBizopEtpsNm}}" name="RltEntryBizopEtpsNm"
-                           id="rlt_entry_bizop_etps_nm" class="non-empty" autocomplete="off">
+                           id="rlt_entry_bizop_etps_nm" class="non-empty  @{{if inArrayStr "rlt_entry_bizop_etps_nm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -368,21 +377,21 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryRcvgdEtpsno}}" name="RltEntryRcvgdEtpsno"
-                           id="rlt_entry_rcvgd_etpsno" class="non-empty" autocomplete="off">
+                           id="rlt_entry_rcvgd_etpsno" class="non-empty  @{{if inArrayStr "rlt_entry_rcvgd_etpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">关联报关单生产销售(消费使用)社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryRvsngdEtpsSccd}}" name="RltEntryRvsngdEtpsSccd"
-                           id="rlt_entry_rvsngd_etps_sccd" class="non-empty" autocomplete="off">
+                           id="rlt_entry_rvsngd_etps_sccd" class="non-empty  @{{if inArrayStr "rlt_entry_rvsngd_etps_sccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">关联报关单生产销售(消费使用)单位名称</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryRcvgdEtpsNm}}" name="RltEntryRcvgdEtpsNm"
-                           id="rlt_entry_rcvgd_etps_nm" class="non-empty" autocomplete="off">
+                           id="rlt_entry_rcvgd_etps_nm" class="non-empty  @{{if inArrayStr "rlt_entry_rcvgd_etps_nm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -391,21 +400,21 @@
             <td class="td-scale-04">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryDclEtpsno}}" name="RltEntryDclEtpsno"
-                           id="rlt_entry_dcl_etpsno" class="non-empty" autocomplete="off">
+                           id="rlt_entry_dcl_etpsno" class="non-empty  @{{if inArrayStr "rlt_entry_dcl_etpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">关联报关单申报单位社会信用代码</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryDclEtpsSccd}}" name="RltEntryDclEtpsSccd"
-                           id="rlt_entry_dcl_etps_sccd" class="non-empty" autocomplete="off">
+                           id="rlt_entry_dcl_etps_sccd" class="non-empty  @{{if inArrayStr "rlt_entry_dcl_etps_sccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">关联报关单申报单位名称</td>
             <td class="td-scale-04" colspan="2">
                 <div class="input-group valid">
                     <input type="text" value="@{{.m.RltEntryDclEtpsNm}}" name="RltEntryDclEtpsNm"
-                           id="rlt_entry_dcl_etps_nm" class="non-empty" autocomplete="off">
+                           id="rlt_entry_dcl_etps_nm" class="non-empty  @{{if inArrayStr "rlt_entry_dcl_etps_nm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -413,14 +422,14 @@
             <td class="td-scale-04 text-align-right">报关单申报日期</td>
             <td class="td-scale-04">
                 <div class="input-group valid">
-                    <input type="text" value="@{{.m.EntryDclTime}}" id="entry_dcl_time" class="non-empty disabled"
+                    <input type="text" value="@{{.m.EntryDclTime}}" id="entry_dcl_time" class="non-empty disabled  @{{if inArrayStr "entry_dcl_time" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
                            autocomplete="off" disabled>
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">备注</td>
             <td class="td-scale-04" colspan="5">
                 <div class="input-group valid">
-                    <input type="text" value="@{{.m.Rmk}}" name="Rmk" id="rmk" class="non-empty" autocomplete="off">
+                    <input type="text" value="@{{.m.Rmk}}" name="Rmk" id="rmk" class="non-empty  @{{if inArrayStr "rmk" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -428,7 +437,7 @@
             <td class="td-scale-04 text-align-right">报关单草稿(备注)</td>
             <td class="td-scale-04" colspan="7">
                 <div class="input-group valid">
-                    <input type="text" value="@{{.m.DecRmk}}" name="DecRmk" id="dec_rmk" class="non-empty disabled"
+                    <input type="text" value="@{{.m.DecRmk}}" name="DecRmk" id="dec_rmk" class="non-empty disabled  @{{if inArrayStr "dec_rmk" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
                            autocomplete="off" disabled>
                 </div>
             </td>
@@ -445,9 +454,9 @@
 </form>
 <div style="text-align: center;margin-top: 35px">
     @{{if .canStore }}
-    <button class="layui-btn custom-create_btn" id="order_save" type="button">
-        <i class="iconfont iconsave"></i>保存表头
-    </button>
-    @{{end}}
+<button class="layui-btn custom-create_btn" id="order_save" type="button">
+    <i class="iconfont iconsave"></i>保存表头
+</button>
+@{{end}}
 </div>
 
