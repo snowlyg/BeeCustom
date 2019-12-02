@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 
-	"BeeCustom/enums"
 	"BeeCustom/utils"
 )
 
@@ -15,15 +15,21 @@ type WebHookController struct {
 }
 
 func (c *WebHookController) Get() {
-
-	signature := c.GetString("X-Coding-Signature")
-	//content := request.body.read()
-	sha1 := enums.Sha1(SECRETTOKEN)
-
-	CalculateSignature := "sha1=" + sha1
-	if CalculateSignature == signature {
-		utils.LogDebug(fmt.Sprintf("calculate_signature:%v", CalculateSignature))
+	signature := c.Ctx.Request.Header.Get("X-Coding-Signature")
+	utils.LogDebug(fmt.Sprintf("calculate_signature:%v", signature))
+	var ob interface{}
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("c.Ctx.Request.Body.Read:%v", err))
 	}
+
+	//mac := hmac.New(sha1.New,[]byte(SECRETTOKEN))
+	//mac.Write([]byte(ob))
+	//
+	//CalculateSignature := "sha1=" + mac.Sum(nil)
+	//if CalculateSignature == signature {
+	//	utils.LogDebug(fmt.Sprintf("calculate_signature:%v", CalculateSignature))
+	//}
 
 	c.ServeJSON()
 }
