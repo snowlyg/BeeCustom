@@ -4,14 +4,13 @@
     }).extend({
         index: 'lib/index',
     }).use(['index', 'form', 'admin', 'table', 'AutoComplete'], async () => {
-        const {form, admin, table, $} = layui
+        const {form, admin, table, $} = layui;
         let order_pros_data_filter = []
             , order_note_data /**附注数据**/
             , annotationItems /**清单表体数据**/
             , decListData = [] /**默认报关单数据**/
-            , AnnotationSearcIndex
+            , AnnotationSearcIndex;
         /**商品快速查询index**/
-
         await admin.clearance_data_auto([
             'list_types',
             'types_transfer',
@@ -31,56 +30,49 @@
             'ann_currency',
             'ann_unit_measurement',
 
-        ])
-
+        ]);
         //禁用表体 tab 点击
         if (!@{{.m.Id}}) {
-            let $annotationItemTab = $('#annotation_item_tab')
+            let $annotationItemTab = $('#annotation_item_tab');
             $annotationItemTab.click(function (event) {
                 return false
             })
         }
-
         /**根据屏幕等比例缩小**/
-        admin.sideFlexible_window()
+        admin.sideFlexible_window();
         /**回车键光标跳转**/
-        admin.keydown_input_textarea()
-
+        admin.keydown_input_textarea();
         /**首次进入自动聚焦 and 初始数据赋值**/
-        const first_name = $('#InvtTypeName').val()
-        $('#InvtTypeName').val('').focus().val(first_name)
-        $('#InputTime').val(admin.getCurrDate())
-        $('#InvtDclTime').val(admin.getCurrDate())
+        const first_name = $('#InvtTypeName').val();
+        $('#InvtTypeName').val('').focus().val(first_name);
+        $('#InputTime').val(admin.getCurrDate());
+        $('#InvtDclTime').val(admin.getCurrDate());
 
         /**清单产品/报关草稿列表**/
         annotationItems = await admin.post('/annotation_item/datagrid', JSON.stringify({
             AnnotationId: parseInt(
                 @{{.m.Id}}),
-        }), true)
-
-        admin.getAnnotationTable(annotationItems, [])
-
+        }), true);
+        admin.getAnnotationTable(annotationItems, []);
         /**光标进入全选**/
         $('body').on('focus', 'input,textarea', function (e) {
-            $(this).select()
-            let tipText = ''
+            $(this).select();
+            let tipText = '';
             for (let item of admin.tipsJson) {
                 if (item.id === this.id) {
-                    tipText = item.name
+                    tipText = item.name;
                     break
                 }
             }
             $('#tipsMessagetext').text(tipText)
-        })
-
+        });
         /**table点击行选中**/
-        admin.table_radio_click()
+        admin.table_radio_click();
         /**table左右拖动**/
-        admin.table_mousedown()
-
+        admin.table_mousedown();
         /**备注回车保存商品**/
         $('body').on('keyup', '#BodyRmk', function (event) {
-            const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
+            const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
             if (event.shiftKey !== 1 && eCode === 13) {
                 $('#order_pros_submit').click()
             }
@@ -113,7 +105,7 @@
             /*保存表体*/
             let result
             if (data.Id) {
-                data.AnnotationId = "@{{.m.Id}}"
+                data.AnnotationId = "@{{.m.Id}}";
                 result = await admin.patch('/annotation_item/update/' + data.Id, data)
             } else {
                 result = await admin.post('/annotation_item/store/' + @{{.m.Id}}, data)
@@ -123,7 +115,7 @@
                 await transformAnnotationItemsTable(result.obj.Annotation.Id, data)
             }
 
-        }
+        };
 
         form.on('submit(order_pros_submit)', function (form) {
             if (annotationItems.rows.length > 1) {
@@ -137,7 +129,7 @@
             }
 
             annotation_item_data(form.field)/*加载表体数据*/
-        })
+        });
 
         /**商品--点击行反填数据**/
         table.on('row(order_pros)', function (obj) {
@@ -164,11 +156,6 @@
                 let itemRecheckErrorInputIds = JSON.parse(`@{{ .m.ItemRecheckErrorInputIds}}`);
                 for (let i in itemRecheckErrorInputIds) {
                     let itemRecheckErrorInputIdElement = itemRecheckErrorInputIds[i][obj.data["GdsSeqno"]];
-                    if (item == "GdsMtno") {
-                        console.log(item)
-                        console.log( itemRecheckErrorInputIdElement)
-                        console.log($.inArray(item, itemRecheckErrorInputIdElement))
-                    }
                     if ($.inArray(item, itemRecheckErrorInputIdElement) >= 0) {
                         $(`#${id}`).addClass("is_check_fail")
                     }
@@ -178,40 +165,38 @@
 
         /**批量修改表体*/
         layui.form.on('submit(batch_edit_save)', async (data) => {
-            let result = await admin.patch('/annotation_item_update/' + @{{.m.Id}}, data.field)
+            let result = await admin.patch('/annotation_item_update/' + @{{.m.Id}}, data.field);
             if (result.status) {
                 setTimeout(function () {
                     window.location.reload()
                 }, 150)
             }
-        })
+        });
 
         /**商品列表--按钮操作**/
         table.on('toolbar(order_pros)', async function (obj) {
-            let checkStatus = table.checkStatus(obj.config.id)
-            let checkData = checkStatus.data
+            let checkStatus = table.checkStatus(obj.config.id);
+            let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
-                    order_pros_form_focus()
-                    break
+                    order_pros_form_focus();
+                    break;
                 case 'delete':
-
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据')
                     }
-
                     layer.confirm('真的删除么', {
                         title: '提示',
                     }, async (index) => {
                         if (checkData[0].Id) {
-                            let result = await admin.delete('/annotation_item/delete/' + checkData[0].Id)
+                            let result = await admin.delete('/annotation_item/delete/' + checkData[0].Id);
                             if (result.status === 1) {
                                 await transformAnnotationItemsTable(@{{.m.Id}}, '')
                             }
                         }
                         layer.close(index)
-                    })
-                    break
+                    });
+                    break;
                 case 'copy':
 
                     if (checkData.length === 0) {
@@ -227,20 +212,19 @@
                             title: '提示',
                             content: '本保税清单对应的报关单表体已经50条(不可超过50条)，请确认后重新录入！',
                             icon: 2,
-                        })
+                        });
                         return
                     }
 
-                    checkData[0].GdsSeqno = annotationItems.total + 1
+                    checkData[0].GdsSeqno = annotationItems.total + 1;
                     if (checkData[0].Id) {
                         delete checkData[0].Id
                     }
 
-                    await annotation_item_data(checkData[0])
+                    await annotation_item_data(checkData[0]);
+                    $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${annotationItems.total - 1}]`).click();
 
-                    $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${annotationItems.total - 1}]`).click()
-
-                    break
+                    break;
                 case 'batch_edit':
                     if (annotationItems.total === 0) {
                         return layer.msg('没有数据！')
@@ -254,9 +238,9 @@
                             area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', 'auto'],
                             content: html,
                         })
-                    })
+                    });
 
-                    $('#DclCurrcdNameBatch').focus()
+                    $('#DclCurrcdNameBatch').focus();
 
                     /**最终目的国(地区)*/
                     let destination_natcd = {
@@ -264,8 +248,8 @@
                         filter_type: 'anns',
                         id: ['#DestinationNatcdNameBatch'],
                         after: ['#DestinationNatcdBatch'],
-                    }
-                    await admin.base_clearance_data_auto(destination_natcd)
+                    };
+                    await admin.base_clearance_data_auto(destination_natcd);
 
                     /**原产国（地区）*/
                     let list_types = {
@@ -273,8 +257,8 @@
                         filter_type: 'anns',
                         id: ['#NatcdNameBatch'],
                         after: ['#NatcdBatch'],
-                    }
-                    await admin.base_clearance_data_auto(list_types)
+                    };
+                    await admin.base_clearance_data_auto(list_types);
 
                     /**自动完成--币制**/
                     let dcl_currcd = {
@@ -282,11 +266,9 @@
                         filter_type: 'anns',
                         id: ['#DclCurrcdNameBatch'],
                         after: ['#DclCurrcdBatch'],
-                    }
-                    await admin.base_clearance_data_auto(dcl_currcd)
-
-
-                    break
+                    };
+                    await admin.base_clearance_data_auto(dcl_currcd);
+                    break;
 
                 case 'search':
                     if (!@{{.m.HandBookId}}) {
@@ -299,9 +281,9 @@
                         shadeClose: true,
                         area: admin.screen() < 2 ? ['80%', '300px'] : ['950px', '540px'],
                         content: $('#annotation_search_template').html(),
-                    })
+                    });
 
-                    $('#gds_mtno_filter').focus()
+                    $('#gds_mtno_filter').focus();
 
                     table.render({
                         elem: '#annotation_search_table',
@@ -356,10 +338,10 @@
                         data: order_pros_data_filter,
                         limit: order_pros_data_filter.length,
                         height: 370,
-                    })
+                    });
                     break
             }
-        })
+        });
 
         /**商品快速查询--查询**/
         form.on('submit(order_search_filter)', (data) => {
@@ -373,12 +355,12 @@
                 return layer.msg('查询条件不能为空')
             }
 
-            let data_search = get_ann_goods_materials_data("@{{.m.ImpexpMarkcd }}")
+            let data_search = get_ann_goods_materials_data("@{{.m.ImpexpMarkcd }}");
             const condition = {
                 RecordNo: data.field.gds_mtno_filter,
                 HsCode: data.field.gdecd_filter,
                 Name: data.field.gds_nm_filter,
-            }
+            };
             const data_filter = (condition, data) => {
                 return data.filter(item => {
                     return Object.keys(condition).every(key => {
@@ -386,53 +368,52 @@
                             String(condition[key]).trim().toLowerCase())
                     })
                 })
-            }
-            order_pros_data_filter = data_filter(condition, data_search)
+            };
+            order_pros_data_filter = data_filter(condition, data_search);
             table.reload('annotation_search_table', {
                 data: order_pros_data_filter,
                 limit: order_pros_data_filter.length,
             })
-        })
+        });
 
         /**商品快速查询--保存反填**/
         $('body').on('click', '#annotation_search_save', function () {
-            const checkData = table.checkStatus('annotation_search_table').data
+            const checkData = table.checkStatus('annotation_search_table').data;
             if (checkData.length === 0) {
                 return layer.msg('请选择')
             }
-            $('#PutrecSeqno').val(checkData[0].Serial)
-            $('#GdsMtno').val(checkData[0].RecordNo)
-            $('#Gdecd').val(checkData[0].HsCode)
-            $('#GdsNm').val(checkData[0].Name)
-            $('#GdsSpcfModelDesc').val(checkData[0].Special)
+            $('#PutrecSeqno').val(checkData[0].Serial);
+            $('#GdsMtno').val(checkData[0].RecordNo);
+            $('#Gdecd').val(checkData[0].HsCode);
+            $('#GdsNm').val(checkData[0].Name);
+            $('#GdsSpcfModelDesc').val(checkData[0].Special);
 
-            $('#DclUnitcd').val(checkData[0].UnitOneCode)
-            $('#DclUnitcdName').val(checkData[0].UnitOne)
+            $('#DclUnitcd').val(checkData[0].UnitOneCode);
+            $('#DclUnitcdName').val(checkData[0].UnitOne);
 
-            $('#DclUprcAmt').val(checkData[0].Price)
+            $('#DclUprcAmt').val(checkData[0].Price);
 
-            $('#LawfUnitcd').val(checkData[0].UnitTwoCode)
-            $('#LawfUnitcdName').val(checkData[0].UnitTwo)
+            $('#LawfUnitcd').val(checkData[0].UnitTwoCode);
+            $('#LawfUnitcdName').val(checkData[0].UnitTwo);
 
-            $('#Natcd').val(checkData[0].ManuplaceCode)
-            $('#NatcdName').val(checkData[0].Manuplace)
+            $('#Natcd').val(checkData[0].ManuplaceCode);
+            $('#NatcdName').val(checkData[0].Manuplace);
 
-            $('#EntryGdsSeqno').focus()
+            $('#EntryGdsSeqno').focus();
 
             layer.close(AnnotationSearcIndex)
-        })
+        });
 
         /**进口清单保存**/
         $('body').on('click', '#order_save', function () {
             $('#annotation_save').click()
-        })
-
+        });
         form.on('submit(annotation_save)', async (data) => {
-            layer.load(2)
+            layer.load(2);
             /**表体商品数据**/
-            data.field.ImpexpMarkcd = "@{{.ImpexpMarkcd}}"
+            data.field.ImpexpMarkcd = "@{{.ImpexpMarkcd}}";
             if (@{{ .m.Id }}) {
-                const annotation_data = await admin.patch('/annotation/update/' + @{{ .m.Id }}, data.field)
+                const annotation_data = await admin.patch('/annotation/update/' + @{{ .m.Id }}, data.field);
                 if (annotation_data.status === 1) {
                     setTimeout(() => {
                         window.location.reload()
@@ -440,7 +421,7 @@
 
                 }
             } else {
-                const annotation_data = await admin.post('/annotation/store/' + @{{ .ImpexpMarkcd }}, data.field)
+                const annotation_data = await admin.post('/annotation/store/' + @{{ .ImpexpMarkcd }}, data.field);
                 if (annotation_data.status === 1) {
                     setTimeout(() => {
                         window.location.href = '/annotation/edit/' + annotation_data.obj.Id
@@ -449,11 +430,9 @@
                 }
             }
             layer.closeAll('loading')
-        })
-
+        });
         /**派单**/
-        admin.distribute('#order_dispatch', @{{.m.Id}}, "@{{.ImpexpMarkcdName}}")
-
+        admin.distribute('#order_dispatch', @{{.m.Id}}, "@{{.ImpexpMarkcdName}}");
         /**附注**/
         let order_note_index;
         let extraRemark = "@{{.m.ExtraRemark}}";
@@ -461,55 +440,46 @@
             if (!@{{.m.Id}}) {
                 return layer.msg('请先保存订单！')
             }
-
             order_note_index = layer.open({
                 type: 1,
                 title: '附注',
                 shadeClose: true,
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
                 content: $('#remark_note_template').html(),
-            })
-
-            form.render()
-
+            });
+            form.render();
             if (extraRemark) {
                 $('#remark_note').val(extraRemark);
             }
-
         });
-
         if (extraRemark) {
             $('#order_note_dot').show()
         }
-
         $('body').on('input', '#remark_note', function () {
             $('#remark_note_number span').text($(this).val().length)
-        })
-
+        });
         /**附注保存**/
         form.on('submit(remark_note_submit)', async (data) => {
-            order_note_data = data.field.ExtraRemark
-            await admin.post(`/annotation/extra_remark/${@{{.m.Id}}}`, data.field)
+            order_note_data = data.field.ExtraRemark;
+            await admin.post(`/annotation/extra_remark/${@{{.m.Id}}}`, data.field);
             layer.close(order_note_index)
-        })
-
+        });
         /**审核通过**/
         $('body').on('click', '#order_save_pass', function () {
             $('#annotation_save_pass').click()
-        })
+        });
 
         form.on('submit(annotation_save_pass)', async () => {
-            layer.load(2)
-            let result = await admin.get(`/annotation/audit/` + @{{.m.Id}})
+            layer.load(2);
+            let result = await admin.get(`/annotation/audit/` + @{{.m.Id}});
             if (result.status === 1) {
-                admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe')
+                admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
                 setTimeout(() => {
                     window.location.reload()
                 }, 150)
             }
-
             layer.closeAll('loading')
-        })
+        });
 
         /**打印**/
         $('body').on('click', '#order_print', async function () {
@@ -517,58 +487,56 @@
                 return layer.msg('请先保存订单！')
             }
 
-            let url = await admin.get(`/annotation/print/${@{{.m.Id}}}`)
+            let url = await admin.get(`/annotation/print/${@{{.m.Id}}}`);
             if (url) {
                 window.open(url, '打印清单')
             }
-        })
+        });
 
         /**申请复核**/
         $('body').on('click', '#annotaiton_for_recheck', function () {
             $('#annotation_application_review').click()
-        })
+        });
 
         form.on('submit(annotation_application_review)', async (data) => {
             if (annotationItems.total === 0) {
                 return layer.msg('请先输入表体商品')
             }
-
-            layer.load(2)
-
-            const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`, 'show')
+            layer.load(2);
+            const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`, 'show');
             if (result.status === 1) {
-                admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe')
+                admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
                 setTimeout(() => {
                     window.location.reload()
                 }, 150)
             }
 
             layer.closeAll('loading')
-        })
+        });
 
         /**重新申请复核**/
         $('body').on('click', '#annotaiton_refor_recheck', function () {
             $('#annotation_application_rereview').click()
-        })
+        });
 
         form.on('submit(annotation_application_rereview)', async (data) => {
             if (annotationItems.total === 0) {
                 return layer.msg('请先输入表体商品')
             }
-            layer.load(2)
-            const result = await admin.get(`/annotation/refor_recheck/${@{{.m.Id}}}`, 'show')
+            layer.load(2);
+            const result = await admin.get(`/annotation/refor_recheck/${@{{.m.Id}}}`, 'show');
             if (result.status === 1) {
-                admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe')
+                admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
                 setTimeout(() => {
                     window.location.reload()
                 }, 150)
             }
 
             layer.closeAll('loading')
-        })
+        });
 
         /**表单验证规则**/
-        await form.verify({})
+        await form.verify({});
 
         /**置空表单，定位焦点*/
         function order_pros_form_focus() {
@@ -580,16 +548,16 @@
                         $(this).val('')
                     }
                 }
-            })
+            });
             $('#putrec_seqno').focus()
         }
 
         /**加载表体表格*/
         async function transformAnnotationItemsTable(id, data) {
-            let data1 = JSON.stringify({AnnotationId: parseInt(id)})
-            annotationItems = await admin.post('/annotation_item/datagrid', data1, true)
+            let data1 = JSON.stringify({AnnotationId: parseInt(id)});
+            annotationItems = await admin.post('/annotation_item/datagrid', data1, true);
             /**加载清单产品/报关草稿表格列表**/
-            admin.getAnnotationTable(annotationItems, decListData)
+            admin.getAnnotationTable(annotationItems, decListData);
             order_pros_form_focus()
         }
 
