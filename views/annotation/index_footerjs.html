@@ -499,11 +499,9 @@
     $(document).on('click', '.again_open_order', async function() {
       const id = $(this).data('id');
       try {
-        const res = await admin.post(`/annotation/i/${id}/restart`);
+        const res = await admin.post(`/annotation/restart/${id}`);
         if (res.status) {
-          await admin.get_data_list(
-              `/annotation/e/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`,
-              order_import_list);
+          window.location.reload()
         }
       } catch (e) {
         return layer.msg('接口错误！', {

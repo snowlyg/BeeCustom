@@ -68,6 +68,8 @@ func init() {
 		beego.Router("/annotation/print/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Print")
 		// 附注
 		beego.Router("/annotation/extra_remark/?:id", &controllers.AnnotationController{}, "Post:"+flag+"ExtraRemark")
+		// 重启
+		beego.Router("/annotation/restart/?:id", &controllers.AnnotationController{}, "Post:"+flag+"Restart")
 		// 驳回原因
 		beego.Router("/annotation/audit_first_reject_log/?:id", &controllers.AnnotationController{}, "Get:"+flag+"AuditFirstRejectLog")
 		// 删除

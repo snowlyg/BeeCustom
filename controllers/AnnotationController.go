@@ -276,6 +276,18 @@ func (c *AnnotationController) EAuditFirstRejectLog() {
 	c.bAuditFirstRejectLog(id)
 }
 
+// Restart 重启
+func (c *AnnotationController) IRestart() {
+	id, _ := c.GetInt64(":id")
+	c.bRestart(id)
+}
+
+// Restart 附注
+func (c *AnnotationController) ERestart() {
+	id, _ := c.GetInt64(":id")
+	c.bRestart(id)
+}
+
 //删除
 func (c *AnnotationController) IDelete() {
 	id, _ := c.GetInt64(":id")

@@ -325,6 +325,25 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 }
 
+// bRestart 重新开启
+func (c *BaseAnnotationController) bRestart(id int64) {
+	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+	if err = UpdateAnnotationStatus(m, "待审核", true); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
+	if err := models.AnnotationUpdateStatus(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
+	annotationRecord := c.newAnnotationRecord(m, "重新开启订单")
+	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
+	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
+}
+
 // bReForRecheck 重新申请复核
 func (c *BaseAnnotationController) bReForRecheck(id int64) {
 	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
@@ -477,7 +496,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			}
 		}
 
-		path_temp := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/temp/"
+		pathTemp := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/temp/"
 		// 报文名称
 		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.EtpsInnerInvtNo
 		fileName := mName + ".xml"
@@ -602,24 +621,24 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		if err := file.CreateFile(path_temp); err != nil {
+		if err := file.CreateFile(pathTemp); err != nil {
 			utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = file.WriteFile(path_temp+fileName, []byte(xml.Header))
+		err = file.WriteFile(pathTemp+fileName, []byte(xml.Header))
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = file.WriteFile(path_temp+fileName, output)
+		err = file.WriteFile(pathTemp+fileName, output)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		f1, err := os.Open(path_temp + fileName)
+		f1, err := os.Open(pathTemp + fileName)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("os.Open error:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
@@ -633,7 +652,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = os.Remove(path_temp + fileName)
+		err = os.Remove(pathTemp + fileName)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("os.Remove error:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
