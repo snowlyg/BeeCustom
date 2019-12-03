@@ -145,15 +145,15 @@
             <td class="td-scale-04">
                 @{{if .M.SeqNo}}
                     @{{if eq .M.StatusString "复核通过"}}
-                    <span  id="seq_no" class="is_success">@{{.M.SeqNo}}<i class="iconfont iconcheck font-12"></i></span>
+                    <span  id="SeqNo" class="is_success">@{{.M.SeqNo}}<i class="iconfont iconcheck font-12"></i></span>
                     @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "seq_no"  .M.RecheckErrorInputIds }}
-                    <span  id="seq_no" class="is_error"  >@{{.M.SeqNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "SeqNo"  .M.RecheckErrorInputIds }}
+                    <span  id="SeqNo" class="is_error"  >@{{.M.SeqNo}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="seq_no">@{{.M.SeqNo}}</span>
+            <span  id="SeqNo">@{{.M.SeqNo}}</span>
                 @{{end}}
             @{{else}}
-                    <span  id="seq_no">@{{.M.SeqNo}}</span>
+                    <span  id="SeqNo">@{{.M.SeqNo}}</span>
                     @{{end}}
                 @{{end}}
             </td>
@@ -161,15 +161,15 @@
             <td class="td-scale-04">
                 @{{if .M.BondInvtNo}}
                     @{{if eq .M.StatusString "复核通过"}}
-                    <span  id="bond_invt_no" class="is_success">@{{.M.BondInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
+                    <span  id="BondInvtNo" class="is_success">@{{.M.BondInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
                     @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "bond_invt_no" .M.RecheckErrorInputIds }}
-                    <span  id="bond_invt_no" class="is_error">@{{.M.BondInvtNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "BondInvtNo" .M.RecheckErrorInputIds }}
+                    <span  id="BondInvtNo" class="is_error">@{{.M.BondInvtNo}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="bond_invt_no">@{{.M.BondInvtNo}}</span>
+            <span  id="BondInvtNo">@{{.M.BondInvtNo}}</span>
                 @{{end}}
             @{{else}}
-                    <span  id="bond_invt_no">@{{.M.BondInvtNo}}</span>
+                    <span  id="BondInvtNo">@{{.M.BondInvtNo}}</span>
                     @{{end}}
                 @{{end}}
             </td>
@@ -177,15 +177,15 @@
             <td class="td-scale-04">
                 @{{if .M.InvtTypeName}}
                     @{{if eq .M.StatusString "复核通过"}}
-                    <span  id="invt_type_name" class="is_success">@{{.M.InvtTypeName}}<i class="iconfont iconcheck font-12"></i></span>
+                    <span  id="InvtTypeName" class="is_success">@{{.M.InvtTypeName}}<i class="iconfont iconcheck font-12"></i></span>
                     @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "invt_type_name"  .M.RecheckErrorInputIds }}
-                    <span  id="invt_type_name" class="is_error">@{{.M.InvtTypeName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "InvtTypeName"  .M.RecheckErrorInputIds }}
+                    <span  id="InvtTypeName" class="is_error">@{{.M.InvtTypeName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="invt_type_name">@{{.M.InvtTypeName }}</span>
+            <span  id="InvtTypeName">@{{.M.InvtTypeName }}</span>
                 @{{end}}
             @{{else}}
-                    <span  id="invt_type_name">@{{.M.InvtTypeName }}</span>
+                    <span  id="InvtTypeName">@{{.M.InvtTypeName }}</span>
                     @{{end}}
                 @{{end}}
             </td>
@@ -193,15 +193,15 @@
             <td class="td-scale-04">
                 @{{if .M.PutrecNo}}
                     @{{if eq .M.StatusString "复核通过"}}
-                    <span  id="putrec_no" class="is_success">@{{.M.PutrecNo}}<i class="iconfont iconcheck font-12"></i></span>
+                    <span  id="PutrecNo" class="is_success">@{{.M.PutrecNo}}<i class="iconfont iconcheck font-12"></i></span>
                     @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "putrec_no"  .M.RecheckErrorInputIds }}
-                    <span  id="putrec_no" class="is_error"  >@{{.M.PutrecNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "PutrecNo"  .M.RecheckErrorInputIds }}
+                    <span  id="PutrecNo" class="is_error"  >@{{.M.PutrecNo}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="putrec_no">@{{.M.PutrecNo}}</span>
+            <span  id="PutrecNo">@{{.M.PutrecNo}}</span>
             @{{end}}
             @{{else}}
-                    <span  id="putrec_no">@{{.M.PutrecNo}}</span>
+                    <span  id="PutrecNo">@{{.M.PutrecNo}}</span>
                     @{{end}}
                 @{{end}}
             </td>
@@ -211,15 +211,15 @@
             <td class="td-scale-04">
                 @{{if .M.BizopEtpsno}}
                     @{{if eq .M.StatusString "复核通过"}}
-                    <span  id="bizop_etpsno" class="is_success">@{{.M.BizopEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+                    <span  id="BizopEtpsno" class="is_success">@{{.M.BizopEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
                     @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "bizop_etpsno" .M.RecheckErrorInputIds }}
-                    <span  id="bizop_etpsno" class="is_error"  >@{{.M.BizopEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "BizopEtpsno" .M.RecheckErrorInputIds }}
+                    <span  id="BizopEtpsno" class="is_error"  >@{{.M.BizopEtpsno}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="bizop_etpsno">@{{.M.BizopEtpsno}}</span>
+            <span  id="BizopEtpsno">@{{.M.BizopEtpsno}}</span>
                 @{{end}}
             @{{else}}
-                    <span  id="bizop_etpsno">@{{.M.BizopEtpsno}}</span>
+                    <span  id="BizopEtpsno">@{{.M.BizopEtpsno}}</span>
                     @{{end}}
                 @{{end}}
             </td>
@@ -227,15 +227,15 @@
             <td class="td-scale-04">
                 @{{if .M.BizopEtpsSccd}}
                     @{{if eq .M.StatusString "复核通过"}}
-                    <span  id="bizop_etps_sccd" class="is_success">@{{.M.BizopEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+                    <span  id="BizopEtpsSccd" class="is_success">@{{.M.BizopEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
                     @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "bizop_etps_sccd" .M.RecheckErrorInputIds }}
-                    <span  id="bizop_etps_sccd" class="is_error"  >@{{.M.BizopEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "BizopEtpsSccd" .M.RecheckErrorInputIds }}
+                    <span  id="BizopEtpsSccd" class="is_error"  >@{{.M.BizopEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="bizop_etps_sccd">@{{.M.BizopEtpsSccd}}</span>
+            <span  id="BizopEtpsSccd">@{{.M.BizopEtpsSccd}}</span>
                 @{{end}}
             @{{else}}
-                    <span  id="bizop_etps_sccd">@{{.M.BizopEtpsSccd}}</span>
+                    <span  id="BizopEtpsSccd">@{{.M.BizopEtpsSccd}}</span>
                     @{{end}}
                 @{{end}}
             </td>
@@ -243,15 +243,15 @@
             <td class="td-scale-04">
                 @{{if .M.BizopEtpsNm}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="bizop_etps_nm" class="is_success">@{{.M.BizopEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="BizopEtpsNm" class="is_success">@{{.M.BizopEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "bizop_etps_nm" .M.RecheckErrorInputIds }}
-            <span  id="bizop_etps_nm" class="is_error"  >@{{.M.BizopEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "BizopEtpsNm" .M.RecheckErrorInputIds }}
+            <span  id="BizopEtpsNm" class="is_error"  >@{{.M.BizopEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="bizop_etps_nm">@{{.M.BizopEtpsNm}}</span>
+            <span  id="BizopEtpsNm">@{{.M.BizopEtpsNm}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="bizop_etps_nm">@{{.M.BizopEtpsNm}}</span>
+            <span  id="BizopEtpsNm">@{{.M.BizopEtpsNm}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -259,15 +259,15 @@
             <td class="td-scale-04">
                 @{{if .M.RcvgdEtpsno}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rcvgd_etpsno" class="is_success">@{{.M.RcvgdEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RcvgdEtpsno" class="is_success">@{{.M.RcvgdEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rcvgd_etpsno" .M.RecheckErrorInputIds }}
-            <span  id="rcvgd_etpsno" class="is_error"  >@{{.M.RcvgdEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RcvgdEtpsno" .M.RecheckErrorInputIds }}
+            <span  id="RcvgdEtpsno" class="is_error"  >@{{.M.RcvgdEtpsno}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="rcvgd_etpsno">@{{.M.RcvgdEtpsno}}</span>
+            <span  id="RcvgdEtpsno">@{{.M.RcvgdEtpsno}}</span>
             @{{end}}
             @{{else}}
-            <span  id="rcvgd_etpsno">@{{.M.RcvgdEtpsno}}</span>
+            <span  id="RcvgdEtpsno">@{{.M.RcvgdEtpsno}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -277,15 +277,15 @@
             <td class="td-scale-04">
                 @{{if .M.RvsngdEtpsSccd}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rvsngd_etps_sccd" class="is_success">@{{.M.RvsngdEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RvsngdEtpsSccd" class="is_success">@{{.M.RvsngdEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rvsngd_etps_sccd" .M.RecheckErrorInputIds }}
-            <span  id="rvsngd_etps_sccd" class="is_error"  >@{{.M.RvsngdEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RvsngdEtpsSccd" .M.RecheckErrorInputIds }}
+            <span  id="RvsngdEtpsSccd" class="is_error"  >@{{.M.RvsngdEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="rvsngd_etps_sccd">@{{.M.RvsngdEtpsSccd}}</span>
+            <span  id="RvsngdEtpsSccd">@{{.M.RvsngdEtpsSccd}}</span>
             @{{end}}
             @{{else}}
-            <span  id="rvsngd_etps_sccd">@{{.M.RvsngdEtpsSccd}}</span>
+            <span  id="RvsngdEtpsSccd">@{{.M.RvsngdEtpsSccd}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -293,15 +293,15 @@
             <td class="td-scale-04">
                 @{{if .M.RcvgdEtpsNm}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rcvgd_etps_nm" class="is_success">@{{.M.RcvgdEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RcvgdEtpsNm" class="is_success">@{{.M.RcvgdEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rcvgd_etps_nm" .M.RecheckErrorInputIds }}
-            <span  id="rcvgd_etps_nm" class="is_error"  >@{{.M.RcvgdEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RcvgdEtpsNm" .M.RecheckErrorInputIds }}
+            <span  id="RcvgdEtpsNm" class="is_error"  >@{{.M.RcvgdEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="rcvgd_etps_nm">@{{.M.RcvgdEtpsNm}}</span>
+            <span  id="RcvgdEtpsNm">@{{.M.RcvgdEtpsNm}}</span>
             @{{end}}
             @{{else}}
-            <span  id="rcvgd_etps_nm">@{{.M.RcvgdEtpsNm}}</span>
+            <span  id="RcvgdEtpsNm">@{{.M.RcvgdEtpsNm}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -309,15 +309,15 @@
             <td class="td-scale-04">
                 @{{if .M.DclEtpsno}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="dcl_etpsno" class="is_success">@{{.M.DclEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="DclEtpsno" class="is_success">@{{.M.DclEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "dcl_etpsno" .M.RecheckErrorInputIds }}
-            <span  id="dcl_etpsno" class="is_error"  >@{{.M.DclEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "DclEtpsno" .M.RecheckErrorInputIds }}
+            <span  id="DclEtpsno" class="is_error"  >@{{.M.DclEtpsno}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="dcl_etpsno">@{{.M.DclEtpsno}}</span>
+            <span  id="DclEtpsno">@{{.M.DclEtpsno}}</span>
             @{{end}}
             @{{else}}
-            <span  id="dcl_etpsno">@{{.M.DclEtpsno}}</span>
+            <span  id="DclEtpsno">@{{.M.DclEtpsno}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -325,15 +325,15 @@
             <td class="td-scale-04">
                 @{{if .M.DclEtpsSccd}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="dcl_etps_sccd" class="is_success">@{{.M.DclEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="DclEtpsSccd" class="is_success">@{{.M.DclEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "dcl_etps_sccd" .M.RecheckErrorInputIds }}
-            <span  id="dcl_etps_sccd" class="is_error"  >@{{.M.DclEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "DclEtpsSccd" .M.RecheckErrorInputIds }}
+            <span  id="DclEtpsSccd" class="is_error"  >@{{.M.DclEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="dcl_etps_sccd">@{{.M.DclEtpsSccd}}</span>
+            <span  id="DclEtpsSccd">@{{.M.DclEtpsSccd}}</span>
             @{{end}}
             @{{else}}
-            <span  id="dcl_etps_sccd">@{{.M.DclEtpsSccd}}</span>
+            <span  id="DclEtpsSccd">@{{.M.DclEtpsSccd}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -343,15 +343,15 @@
             <td class="td-scale-04">
                 @{{if .M.DclEtpsNm}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="dcl_etps_nm" class="is_success">@{{.M.DclEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="DclEtpsNm" class="is_success">@{{.M.DclEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "dcl_etps_nm" .M.RecheckErrorInputIds }}
-            <span  id="dcl_etps_nm" class="is_error"  >@{{.M.DclEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "DclEtpsNm" .M.RecheckErrorInputIds }}
+            <span  id="DclEtpsNm" class="is_error"  >@{{.M.DclEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="dcl_etps_nm">@{{.M.DclEtpsNm}}</span>
+            <span  id="DclEtpsNm">@{{.M.DclEtpsNm}}</span>
             @{{end}}
             @{{else}}
-            <span  id="dcl_etps_nm">@{{.M.DclEtpsNm}}</span>
+            <span  id="DclEtpsNm">@{{.M.DclEtpsNm}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -359,15 +359,15 @@
             <td class="td-scale-04">
                 @{{if .M.InputCode}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="input_code" class="is_success">@{{.M.InputCode}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="InputCode" class="is_success">@{{.M.InputCode}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "input_code" .M.RecheckErrorInputIds }}
-            <span  id="input_code" class="is_error"  >@{{.M.InputCode}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "InputCode" .M.RecheckErrorInputIds }}
+            <span  id="InputCode" class="is_error"  >@{{.M.InputCode}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="input_code">@{{.M.InputCode}}</span>
+            <span  id="InputCode">@{{.M.InputCode}}</span>
             @{{end}}
             @{{else}}
-            <span  id="input_code">@{{.M.InputCode}}</span>
+            <span  id="InputCode">@{{.M.InputCode}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -375,15 +375,15 @@
             <td class="td-scale-04">
                 @{{if .M.InputCreditCode}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="input_credit_code" class="is_success">@{{.M.InputCreditCode}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="InputCreditCode" class="is_success">@{{.M.InputCreditCode}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "input_credit_code" .M.RecheckErrorInputIds }}
-            <span  id="input_credit_code" class="is_error"  >@{{.M.InputCreditCode}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "InputCreditCode" .M.RecheckErrorInputIds }}
+            <span  id="InputCreditCode" class="is_error"  >@{{.M.InputCreditCode}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="input_credit_code">@{{.M.InputCreditCode}}</span>
+            <span  id="InputCreditCode">@{{.M.InputCreditCode}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="input_credit_code">@{{.M.InputCreditCode}}</span>
+            <span  id="InputCreditCode">@{{.M.InputCreditCode}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -391,15 +391,15 @@
             <td class="td-scale-04">
                 @{{if .M.InputName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="input_name" class="is_success">@{{.M.InputName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="InputName" class="is_success">@{{.M.InputName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "input_name" .M.RecheckErrorInputIds }}
-            <span  id="input_name" class="is_error"  >@{{.M.InputName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "InputName" .M.RecheckErrorInputIds }}
+            <span  id="InputName" class="is_error"  >@{{.M.InputName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="input_name">@{{.M.InputName}}</span>
+            <span  id="InputName">@{{.M.InputName}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="input_name">@{{.M.InputName}}</span>
+            <span  id="InputName">@{{.M.InputName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -409,15 +409,15 @@
             <td class="td-scale-04">
                 @{{if .M.InputTime}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="input_time" class="is_success">@{{.M.InputTime}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="InputTime" class="is_success">@{{.M.InputTime}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "input_time" .M.RecheckErrorInputIds }}
-            <span  id="input_time" class="is_error"  >@{{.M.InputTime}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "InputTime" .M.RecheckErrorInputIds }}
+            <span  id="InputTime" class="is_error"  >@{{.M.InputTime}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="input_time">@{{.M.InputTime}}</span>
+            <span  id="InputTime">@{{.M.InputTime}}</span>
             @{{end}}
             @{{else}}
-            <span  id="input_time">@{{.M.InputTime}}</span>
+            <span  id="InputTime">@{{.M.InputTime}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -425,15 +425,15 @@
             <td class="td-scale-04">
                 @{{if .M.InvtDclTime}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="invt_dcl_time" class="is_success">@{{.M.InvtDclTime}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="InvtDclTime" class="is_success">@{{.M.InvtDclTime}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "invt_dcl_time" .M.RecheckErrorInputIds }}
-            <span  id="invt_dcl_time" class="is_error"  >@{{.M.InvtDclTime}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "InvtDclTime" .M.RecheckErrorInputIds }}
+            <span  id="InvtDclTime" class="is_error"  >@{{.M.InvtDclTime}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="invt_dcl_time">@{{.M.InvtDclTime}}</span>
+            <span  id="InvtDclTime">@{{.M.InvtDclTime}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="invt_dcl_time">@{{.M.InvtDclTime}}</span>
+            <span  id="InvtDclTime">@{{.M.InvtDclTime}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -441,15 +441,15 @@
             <td class="td-scale-04">
                 @{{if .M.InvtIochkptStucd}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="invt_iochkpt_stucd" class="is_success">@{{.M.InvtIochkptStucd}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="InvtIochkptStucd" class="is_success">@{{.M.InvtIochkptStucd}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "invt_iochkpt_stucd" .M.RecheckErrorInputIds }}
-            <span  id="invt_iochkpt_stucd" class="is_error"  >@{{.M.InvtIochkptStucd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "InvtIochkptStucd" .M.RecheckErrorInputIds }}
+            <span  id="InvtIochkptStucd" class="is_error"  >@{{.M.InvtIochkptStucd}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="invt_iochkpt_stucd">@{{.M.InvtIochkptStucd}}</span>
+            <span  id="InvtIochkptStucd">@{{.M.InvtIochkptStucd}}</span>
             @{{end}}
             @{{else}}
-            <span  id="invt_iochkpt_stucd">@{{.M.InvtIochkptStucd}}</span>
+            <span  id="InvtIochkptStucd">@{{.M.InvtIochkptStucd}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -457,15 +457,15 @@
             <td class="td-scale-04">
                 @{{if .M.VrfdedMarkcd}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="vrfded_markcd" class="is_success">@{{.M.VrfdedMarkcd}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="VrfdedMarkcd" class="is_success">@{{.M.VrfdedMarkcd}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "vrfded_markcd" .M.RecheckErrorInputIds }}
-            <span  id="vrfded_markcd" class="is_error"  >@{{.M.VrfdedMarkcd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "VrfdedMarkcd" .M.RecheckErrorInputIds }}
+            <span  id="VrfdedMarkcd" class="is_error"  >@{{.M.VrfdedMarkcd}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="vrfded_markcd">@{{.M.VrfdedMarkcd}}</span>
+            <span  id="VrfdedMarkcd">@{{.M.VrfdedMarkcd}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="vrfded_markcd">@{{.M.VrfdedMarkcd}}</span>
+            <span  id="VrfdedMarkcd">@{{.M.VrfdedMarkcd}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -475,15 +475,15 @@
             <td class="td-scale-04">
                 @{{if .M.EtpsInnerInvtNo}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="etps_inner_invt_no" class="is_success">@{{.M.EtpsInnerInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="EtpsInnerInvtNo" class="is_success">@{{.M.EtpsInnerInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "etps_inner_invt_no" .M.RecheckErrorInputIds }}
-            <span  id="etps_inner_invt_no" class="is_error"  >@{{.M.EtpsInnerInvtNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "EtpsInnerInvtNo" .M.RecheckErrorInputIds }}
+            <span  id="EtpsInnerInvtNo" class="is_error"  >@{{.M.EtpsInnerInvtNo}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="etps_inner_invt_no">@{{.M.EtpsInnerInvtNo}}</span>
+            <span  id="EtpsInnerInvtNo">@{{.M.EtpsInnerInvtNo}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="etps_inner_invt_no">@{{.M.EtpsInnerInvtNo}}</span>
+            <span  id="EtpsInnerInvtNo">@{{.M.EtpsInnerInvtNo}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -491,15 +491,15 @@
             <td class="td-scale-04">
                 @{{if .M.ImpexpPortcdName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="impexp_portcd_name" class="is_success">@{{.M.ImpexpPortcdName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="ImpexpPortcdName" class="is_success">@{{.M.ImpexpPortcdName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "impexp_portcd_name" .M.RecheckErrorInputIds }}
-            <span  id="impexp_portcd_name" class="is_error"  >@{{.M.ImpexpPortcdName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "ImpexpPortcdName" .M.RecheckErrorInputIds }}
+            <span  id="ImpexpPortcdName" class="is_error"  >@{{.M.ImpexpPortcdName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="impexp_portcd_name">@{{.M.ImpexpPortcdName}}</span>
+            <span  id="ImpexpPortcdName">@{{.M.ImpexpPortcdName}}</span>
             @{{end}}
             @{{else}}
-            <span  id="impexp_portcd_name">@{{.M.ImpexpPortcdName}}</span>
+            <span  id="ImpexpPortcdName">@{{.M.ImpexpPortcdName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -507,15 +507,15 @@
             <td class="td-scale-04">
                 @{{if .M.DclPlcCuscdName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="dcl_plc_cuscd_name" class="is_success">@{{.M.DclPlcCuscdName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="DclPlcCuscdName" class="is_success">@{{.M.DclPlcCuscdName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "dcl_plc_cuscd_name" .M.RecheckErrorInputIds }}
-            <span  id="dcl_plc_cuscd_name" class="is_error"  >@{{.M.DclPlcCuscdName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "DclPlcCuscdName" .M.RecheckErrorInputIds }}
+            <span  id="DclPlcCuscdName" class="is_error"  >@{{.M.DclPlcCuscdName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="dcl_plc_cuscd_name">@{{.M.DclPlcCuscdName}}</span>
+            <span  id="DclPlcCuscdName">@{{.M.DclPlcCuscdName}}</span>
             @{{end}}
             @{{else}}
-            <span  id="dcl_plc_cuscd_name">@{{.M.DclPlcCuscdName}}</span>
+            <span  id="DclPlcCuscdName">@{{.M.DclPlcCuscdName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -523,15 +523,15 @@
             <td class="td-scale-04">
                 @{{if .M.StshipTrsarvNatcdName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="stship_trsarv_natcd_name" class="is_success">@{{.M.StshipTrsarvNatcdName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="StshipTrsarvNatcdName" class="is_success">@{{.M.StshipTrsarvNatcdName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "stship_trsarv_natcd_name" .M.RecheckErrorInputIds }}
-            <span  id="stship_trsarv_natcd_name" class="is_error"  >@{{.M.StshipTrsarvNatcdName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "StshipTrsarvNatcdName" .M.RecheckErrorInputIds }}
+            <span  id="StshipTrsarvNatcdName" class="is_error"  >@{{.M.StshipTrsarvNatcdName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="stship_trsarv_natcd_name">@{{.M.StshipTrsarvNatcdName}}</span>
+            <span  id="StshipTrsarvNatcdName">@{{.M.StshipTrsarvNatcdName}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="stship_trsarv_natcd_name">@{{.M.StshipTrsarvNatcdName}}</span>
+            <span  id="StshipTrsarvNatcdName">@{{.M.StshipTrsarvNatcdName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -541,15 +541,15 @@
             <td class="td-scale-04">
                 @{{if .M.MtpckEndprdMarkcdName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="mtpck_endprd_markcd_name" class="is_success">@{{.M.MtpckEndprdMarkcdName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="MtpckEndprdMarkcdName" class="is_success">@{{.M.MtpckEndprdMarkcdName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "mtpck_endprd_markcd_name" .M.RecheckErrorInputIds }}
-            <span  id="mtpck_endprd_markcd_name" class="is_error"  >@{{.M.MtpckEndprdMarkcdName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "MtpckEndprdMarkcdName" .M.RecheckErrorInputIds }}
+            <span  id="MtpckEndprdMarkcdName" class="is_error"  >@{{.M.MtpckEndprdMarkcdName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="mtpck_endprd_markcd_name">@{{.M.MtpckEndprdMarkcdName}}</span>
+            <span  id="MtpckEndprdMarkcdName">@{{.M.MtpckEndprdMarkcdName}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="mtpck_endprd_markcd_name">@{{.M.MtpckEndprdMarkcdName}}</span>
+            <span  id="MtpckEndprdMarkcdName">@{{.M.MtpckEndprdMarkcdName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -557,15 +557,15 @@
             <td class="td-scale-04">
                 @{{if .M.SupvModecdName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="supv_modecd_name" class="is_success">@{{.M.SupvModecdName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="SupvModecdName" class="is_success">@{{.M.SupvModecdName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "supv_modecd_name" .M.RecheckErrorInputIds }}
-            <span  id="supv_modecd_name" class="is_error"  >@{{.M.SupvModecdName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "SupvModecdName" .M.RecheckErrorInputIds }}
+            <span  id="SupvModecdName" class="is_error"  >@{{.M.SupvModecdName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-            <span  id="supv_modecd_name">@{{.M.SupvModecdName}}</span>
+            <span  id="SupvModecdName">@{{.M.SupvModecdName}}</span>
             @{{end}}
             @{{else}}
-            <span  id="supv_modecd_name">@{{.M.SupvModecdName}}</span>
+            <span  id="SupvModecdName">@{{.M.SupvModecdName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -573,15 +573,15 @@
             <td class="td-scale-04">
                 @{{if .M.TrspModecdName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="trsp_modecd_name" class="is_success">@{{.M.TrspModecdName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="TrspModecdName" class="is_success">@{{.M.TrspModecdName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "trsp_modecd_name" .M.RecheckErrorInputIds }}
-            <span  id="trsp_modecd_name" class="is_error"  >@{{.M.TrspModecdName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "TrspModecdName" .M.RecheckErrorInputIds }}
+            <span  id="TrspModecdName" class="is_error"  >@{{.M.TrspModecdName}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="trsp_modecd_name">@{{.M.TrspModecdName}}</span>
+                <span  id="TrspModecdName">@{{.M.TrspModecdName}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="trsp_modecd_name">@{{.M.TrspModecdName}}</span>
+            <span  id="TrspModecdName">@{{.M.TrspModecdName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -589,15 +589,15 @@
             <td class="td-scale-04">
                 @{{if .M.ApplyNo}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="apply_no" class="is_success">@{{.M.ApplyNo}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="ApplyNo" class="is_success">@{{.M.ApplyNo}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "apply_no" .M.RecheckErrorInputIds }}
-            <span  id="apply_no" class="is_error"  >@{{.M.ApplyNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "ApplyNo" .M.RecheckErrorInputIds }}
+            <span  id="ApplyNo" class="is_error"  >@{{.M.ApplyNo}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="apply_no">@{{.M.ApplyNo}}</span>
+                <span  id="ApplyNo">@{{.M.ApplyNo}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="apply_no">@{{.M.ApplyNo}}</span>
+            <span  id="ApplyNo">@{{.M.ApplyNo}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -608,15 +608,15 @@
             <td class="td-scale-04">
                 @{{if .M.ListTypeName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="list_type_name" class="is_success">@{{.M.ListTypeName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="ListTypeName" class="is_success">@{{.M.ListTypeName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "list_type_name" .M.RecheckErrorInputIds }}
-            <span  id="list_type_name" class="is_error"  >@{{.M.ListTypeName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "ListTypeName" .M.RecheckErrorInputIds }}
+            <span  id="ListTypeName" class="is_error"  >@{{.M.ListTypeName}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="list_type_name">@{{.M.ListTypeName}}</span>
+                <span  id="ListTypeName">@{{.M.ListTypeName}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="list_type_name">@{{.M.ListTypeName}}</span>
+            <span  id="ListTypeName">@{{.M.ListTypeName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -624,15 +624,15 @@
             <td class="td-scale-04">
                 @{{if .M.DclcusFlagName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="dclcus_flag_name" class="is_success">@{{.M.DclcusFlagName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="DclcusFlagName" class="is_success">@{{.M.DclcusFlagName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "dclcus_flag_name" .M.RecheckErrorInputIds }}
-            <span  id="dclcus_flag_name" class="is_error"  >@{{.M.DclcusFlagName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "DclcusFlagName" .M.RecheckErrorInputIds }}
+            <span  id="DclcusFlagName" class="is_error"  >@{{.M.DclcusFlagName}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="dclcus_flag_name">@{{.M.DclcusFlagName}}</span>
+                <span  id="DclcusFlagName">@{{.M.DclcusFlagName}}</span>
             @{{end}}
             @{{else}}
-            <span  id="dclcus_flag_name">@{{.M.DclcusFlagName}}</span>
+            <span  id="DclcusFlagName">@{{.M.DclcusFlagName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -640,15 +640,15 @@
             <td class="td-scale-04">
                 @{{if .M.DclcusTypecdName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="dclcus_typecd_name" class="is_success">@{{.M.DclcusTypecdName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="DclcusTypecdName" class="is_success">@{{.M.DclcusTypecdName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "dclcus_typecd_name" .M.RecheckErrorInputIds }}
-            <span  id="dclcus_typecd_name" class="is_error"  >@{{.M.DclcusTypecdName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "DclcusTypecdName" .M.RecheckErrorInputIds }}
+            <span  id="DclcusTypecdName" class="is_error"  >@{{.M.DclcusTypecdName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-                <span  id="dclcus_typecd_name">@{{.M.DclcusTypecdName}}</span>
+                <span  id="DclcusTypecdName">@{{.M.DclcusTypecdName}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="dclcus_typecd_name">@{{.M.DclcusTypecdName}}</span>
+            <span  id="DclcusTypecdName">@{{.M.DclcusTypecdName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -656,15 +656,15 @@
             <td class="td-scale-04">
                 @{{if .M.DecTypeName}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="dec_type_name" class="is_success">@{{.M.DecTypeName}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="DecTypeName" class="is_success">@{{.M.DecTypeName}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "dec_type_name" .M.RecheckErrorInputIds }}
-            <span  id="dec_type_name" class="is_error"  >@{{.M.DecTypeName}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "DecTypeName" .M.RecheckErrorInputIds }}
+            <span  id="DecTypeName" class="is_error"  >@{{.M.DecTypeName}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-                <span  id="dec_type_name">@{{.M.DecTypeName}}</span>
+                <span  id="DecTypeName">@{{.M.DecTypeName}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="dec_type_name">@{{.M.DecTypeName}}</span>
+            <span  id="DecTypeName">@{{.M.DecTypeName}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -674,15 +674,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltInvtNo}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_invt_no" class="is_success">@{{.M.RltInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltInvtNo" class="is_success">@{{.M.RltInvtNo}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_invt_no" .M.RecheckErrorInputIds }}
-            <span  id="rlt_invt_no" class="is_error"  >@{{.M.RltInvtNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltInvtNo" .M.RecheckErrorInputIds }}
+            <span  id="RltInvtNo" class="is_error"  >@{{.M.RltInvtNo}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_invt_no">@{{.M.RltInvtNo}}</span>
+                <span  id="RltInvtNo">@{{.M.RltInvtNo}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_invt_no">@{{.M.RltInvtNo}}</span>
+            <span  id="RltInvtNo">@{{.M.RltInvtNo}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -690,15 +690,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltPutrecNo}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_putrec_no" class="is_success">@{{.M.RltPutrecNo}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltPutrecNo" class="is_success">@{{.M.RltPutrecNo}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_putrec_no" .M.RecheckErrorInputIds }}
-            <span  id="rlt_putrec_no" class="is_error"  >@{{.M.RltPutrecNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltPutrecNo" .M.RecheckErrorInputIds }}
+            <span  id="RltPutrecNo" class="is_error"  >@{{.M.RltPutrecNo}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_putrec_no">@{{.M.RltPutrecNo}}</span>
+                <span  id="RltPutrecNo">@{{.M.RltPutrecNo}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_putrec_no">@{{.M.RltPutrecNo}}</span>
+            <span  id="RltPutrecNo">@{{.M.RltPutrecNo}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -706,15 +706,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltEntryNo}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_no" class="is_success">@{{.M.RltEntryNo}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryNo" class="is_success">@{{.M.RltEntryNo}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_no" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_no" class="is_error"  >@{{.M.RltEntryNo}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryNo" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryNo" class="is_error"  >@{{.M.RltEntryNo}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_entry_no">@{{.M.RltEntryNo}}</span>
+                <span  id="RltEntryNo">@{{.M.RltEntryNo}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_entry_no">@{{.M.RltEntryNo}}</span>
+            <span  id="RltEntryNo">@{{.M.RltEntryNo}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -722,15 +722,15 @@
             <td class="td-scale-04">
                 @{{if .M.EntryDclTime}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="entry_dcl_time" class="is_success">@{{.M.EntryDclTime}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="EntryDclTime" class="is_success">@{{.M.EntryDclTime}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "entry_dcl_time" .M.RecheckErrorInputIds }}
-            <span  id="entry_dcl_time" class="is_error"  >@{{.M.EntryDclTime}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "EntryDclTime" .M.RecheckErrorInputIds }}
+            <span  id="EntryDclTime" class="is_error"  >@{{.M.EntryDclTime}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-                <span  id="entry_dcl_time">@{{.M.EntryDclTime}}</span>
+                <span  id="EntryDclTime">@{{.M.EntryDclTime}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="entry_dcl_time">@{{.M.EntryDclTime}}</span>
+            <span  id="EntryDclTime">@{{.M.EntryDclTime}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -740,15 +740,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltEntryBizopEtpsno}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_bizop_etpsno" class="is_success">@{{.M.RltEntryBizopEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryBizopEtpsno" class="is_success">@{{.M.RltEntryBizopEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_bizop_etpsno" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_bizop_etpsno" class="is_error"  >@{{.M.RltEntryBizopEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryBizopEtpsno" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryBizopEtpsno" class="is_error"  >@{{.M.RltEntryBizopEtpsno}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-                <span  id="rlt_entry_bizop_etpsno">@{{.M.RltEntryBizopEtpsno}}</span>
+                <span  id="RltEntryBizopEtpsno">@{{.M.RltEntryBizopEtpsno}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_entry_bizop_etpsno">@{{.M.RltEntryBizopEtpsno}}</span>
+            <span  id="RltEntryBizopEtpsno">@{{.M.RltEntryBizopEtpsno}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -756,15 +756,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltEntryBizopEtpsSccd}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_bizop_etps_sccd" class="is_success">@{{.M.RltEntryBizopEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryBizopEtpsSccd" class="is_success">@{{.M.RltEntryBizopEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_bizop_etps_sccd" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_bizop_etps_sccd" class="is_error"  >@{{.M.RltEntryBizopEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryBizopEtpsSccd" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryBizopEtpsSccd" class="is_error"  >@{{.M.RltEntryBizopEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_entry_bizop_etps_sccd">@{{.M.RltEntryBizopEtpsSccd}}</span>
+                <span  id="RltEntryBizopEtpsSccd">@{{.M.RltEntryBizopEtpsSccd}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_entry_bizop_etps_sccd">@{{.M.RltEntryBizopEtpsSccd}}</span>
+            <span  id="RltEntryBizopEtpsSccd">@{{.M.RltEntryBizopEtpsSccd}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -772,15 +772,15 @@
             <td class="td-scale-04" colspan="2">
                 @{{if .M.RltEntryBizopEtpsNm}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_bizop_etps_nm" class="is_success">@{{.M.RltEntryBizopEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryBizopEtpsNm" class="is_success">@{{.M.RltEntryBizopEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_bizop_etps_nm" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_bizop_etps_nm" class="is_error"  >@{{.M.RltEntryBizopEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryBizopEtpsNm" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryBizopEtpsNm" class="is_error"  >@{{.M.RltEntryBizopEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_entry_bizop_etps_nm">@{{.M.RltEntryBizopEtpsNm}}</span>
+                <span  id="RltEntryBizopEtpsNm">@{{.M.RltEntryBizopEtpsNm}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_entry_bizop_etps_nm">@{{.M.RltEntryBizopEtpsNm}}</span>
+            <span  id="RltEntryBizopEtpsNm">@{{.M.RltEntryBizopEtpsNm}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -790,15 +790,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltEntryRcvgdEtpsno}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_rcvgd_etpsno" class="is_success">@{{.M.RltEntryRcvgdEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryRcvgdEtpsno" class="is_success">@{{.M.RltEntryRcvgdEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_rcvgd_etpsno" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_rcvgd_etpsno" class="is_error"  >@{{.M.RltEntryRcvgdEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryRcvgdEtpsno" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryRcvgdEtpsno" class="is_error"  >@{{.M.RltEntryRcvgdEtpsno}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_entry_rcvgd_etpsno">@{{.M.RltEntryRcvgdEtpsno}}</span>
+                <span  id="RltEntryRcvgdEtpsno">@{{.M.RltEntryRcvgdEtpsno}}</span>
             @{{end}}
             @{{else}}
-            <span  id="rlt_entry_rcvgd_etpsno">@{{.M.RltEntryRcvgdEtpsno}}</span>
+            <span  id="RltEntryRcvgdEtpsno">@{{.M.RltEntryRcvgdEtpsno}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -806,15 +806,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltEntryRvsngdEtpsSccd}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_rvsngd_etps_sccd" class="is_success">@{{.M.RltEntryRvsngdEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryRvsngdEtpsSccd" class="is_success">@{{.M.RltEntryRvsngdEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_rvsngd_etps_sccd" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_rvsngd_etps_sccd" class="is_error"  >@{{.M.RltEntryRvsngdEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryRvsngdEtpsSccd" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryRvsngdEtpsSccd" class="is_error"  >@{{.M.RltEntryRvsngdEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-                <span  id="rlt_entry_rvsngd_etps_sccd">@{{.M.RltEntryRvsngdEtpsSccd}}</span>
+                <span  id="RltEntryRvsngdEtpsSccd">@{{.M.RltEntryRvsngdEtpsSccd}}</span>
             @{{end}}
             @{{else}}
-            <span  id="rlt_entry_rvsngd_etps_sccd">@{{.M.RltEntryRvsngdEtpsSccd}}</span>
+            <span  id="RltEntryRvsngdEtpsSccd">@{{.M.RltEntryRvsngdEtpsSccd}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -822,15 +822,15 @@
             <td class="td-scale-04" colspan="2">
                 @{{if .M.RltEntryRcvgdEtpsNm}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_rcvgd_etps_nm" class="is_success">@{{.M.RltEntryRcvgdEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryRcvgdEtpsNm" class="is_success">@{{.M.RltEntryRcvgdEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
                 @{{if inArrayStr  .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_rcvgd_etps_nm" class="is_error"  >@{{.M.RltEntryRcvgdEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+            <span  id="RltEntryRcvgdEtpsNm" class="is_error"  >@{{.M.RltEntryRcvgdEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-                <span  id="rlt_entry_rcvgd_etps_nm">@{{.M.RltEntryRcvgdEtpsNm}}</span>
+                <span  id="RltEntryRcvgdEtpsNm">@{{.M.RltEntryRcvgdEtpsNm}}</span>
             @{{end}}
             @{{else}}
-            <span  id="rlt_entry_rcvgd_etps_nm">@{{.M.RltEntryRcvgdEtpsNm}}</span>
+            <span  id="RltEntryRcvgdEtpsNm">@{{.M.RltEntryRcvgdEtpsNm}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -840,15 +840,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltEntryDclEtpsno}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_dcl_etpsno" class="is_success">@{{.M.RltEntryDclEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryDclEtpsno" class="is_success">@{{.M.RltEntryDclEtpsno}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_dcl_etpsno" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_dcl_etpsno" class="is_error"  >@{{.M.RltEntryDclEtpsno}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryDclEtpsno" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryDclEtpsno" class="is_error"  >@{{.M.RltEntryDclEtpsno}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_entry_dcl_etpsno">@{{.M.RltEntryDclEtpsno}}</span>
+                <span  id="RltEntryDclEtpsno">@{{.M.RltEntryDclEtpsno}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_entry_dcl_etpsno">@{{.M.RltEntryDclEtpsno}}</span>
+            <span  id="RltEntryDclEtpsno">@{{.M.RltEntryDclEtpsno}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -856,15 +856,15 @@
             <td class="td-scale-04">
                 @{{if .M.RltEntryDclEtpsSccd}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_dcl_etps_sccd" class="is_success">@{{.M.RltEntryDclEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryDclEtpsSccd" class="is_success">@{{.M.RltEntryDclEtpsSccd}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_dcl_etps_sccd" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_dcl_etps_sccd" class="is_error"  >@{{.M.RltEntryDclEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryDclEtpsSccd" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryDclEtpsSccd" class="is_error"  >@{{.M.RltEntryDclEtpsSccd}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_entry_dcl_etps_sccd">@{{.M.RltEntryDclEtpsSccd}}</span>
+                <span  id="RltEntryDclEtpsSccd">@{{.M.RltEntryDclEtpsSccd}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_entry_dcl_etps_sccd">@{{.M.RltEntryDclEtpsSccd}}</span>
+            <span  id="RltEntryDclEtpsSccd">@{{.M.RltEntryDclEtpsSccd}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -872,15 +872,15 @@
             <td class="td-scale-04" colspan="2">
                 @{{if .M.RltEntryDclEtpsNm}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rlt_entry_dcl_etps_nm" class="is_success">@{{.M.RltEntryDclEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="RltEntryDclEtpsNm" class="is_success">@{{.M.RltEntryDclEtpsNm}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rlt_entry_dcl_etps_nm" .M.RecheckErrorInputIds }}
-            <span  id="rlt_entry_dcl_etps_nm" class="is_error"  >@{{.M.RltEntryDclEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "RltEntryDclEtpsNm" .M.RecheckErrorInputIds }}
+            <span  id="RltEntryDclEtpsNm" class="is_error"  >@{{.M.RltEntryDclEtpsNm}}<i class="iconfont iconclose font-12"></i></span>
                 @{{else}}
-                <span  id="rlt_entry_dcl_etps_nm">@{{.M.RltEntryDclEtpsNm}}</span>
+                <span  id="RltEntryDclEtpsNm">@{{.M.RltEntryDclEtpsNm}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rlt_entry_dcl_etps_nm">@{{.M.RltEntryDclEtpsNm}}</span>
+            <span  id="RltEntryDclEtpsNm">@{{.M.RltEntryDclEtpsNm}}</span>
             @{{end}}
             @{{end}}
             </td>
@@ -890,15 +890,15 @@
             <td class="td-scale-04" colspan="7" style="position: relative;">
                 @{{if .M.Rmk}}
             @{{if eq .M.StatusString "复核通过"}}
-            <span  id="rmk" class="is_success">@{{.M.Rmk}}<i class="iconfont iconcheck font-12"></i></span>
+            <span  id="Rmk" class="is_success">@{{.M.Rmk}}<i class="iconfont iconcheck font-12"></i></span>
             @{{else if eq .M.StatusString "复核不通过"}}
-                @{{if inArrayStr "rmk" .M.RecheckErrorInputIds }}
-            <span  id="rmk" class="is_error"  >@{{.M.Rmk}}<i class="iconfont iconclose font-12"></i></span>
+                @{{if inArrayStr "Rmk" .M.RecheckErrorInputIds }}
+            <span  id="Rmk" class="is_error"  >@{{.M.Rmk}}<i class="iconfont iconclose font-12"></i></span>
             @{{else}}
-                <span  id="rmk">@{{.M.Rmk}}</span>
+                <span  id="Rmk">@{{.M.Rmk}}</span>
                 @{{end}}
             @{{else}}
-            <span  id="rmk">@{{.M.Rmk}}</span>
+            <span  id="Rmk">@{{.M.Rmk}}</span>
             @{{end}}
             @{{end}}
                 <div class="chapter_img">
@@ -947,149 +947,149 @@
         <tr>
 
         @{{if eq $.M.StatusString "复核通过"}}
-        <td><span class="is_success" id="gds_seqno@{{.GdsSeqno }}">@{{.GdsSeqno }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="entry_gds_seqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="putrec_seqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="gds_mtno@{{.GdsSeqno }}">@{{.GdsMtno }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="gdecd@{{.GdsSeqno }}">@{{.Gdecd }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="gds_nm@{{.GdsSeqno }}">@{{.GdsNm }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="gds_spcf_model_desc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="natcd_name@{{.GdsSeqno }}">@{{.NatcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="destination_natcd_name@{{.GdsSeqno }}">@{{.DestinationNatcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="dcl_currcd_name@{{.GdsSeqno }}">@{{.DclCurrcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="dcl_uprc_amt@{{.GdsSeqno }}">@{{.DclUprcAmt }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="dcl_qty@{{.GdsSeqno }}">@{{.DclQty }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="dcl_unitcd_name@{{.GdsSeqno }}">@{{.DclUnitcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="dcl_total_amt@{{.GdsSeqno }}">@{{.DclTotalAmt }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="lawf_qty@{{.GdsSeqno }}">@{{.LawfQty }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="lawf_unitcd_name@{{.GdsSeqno }}">@{{.LawfUnitcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="secd_lawf_qty@{{.GdsSeqno }}">@{{.SecdLawfQty }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="secd_lawf_unitcd_name@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="lvyrlf_modecd_name@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}<i class="iconfont iconcheck font-12"></i></span></td>
-        <td><span class="is_success" id="ucns_verno@{{.GdsSeqno }}">@{{.UcnsVerno }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="GdsSeqno@{{.GdsSeqno }}">@{{.GdsSeqno }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="EntryGdsSeqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="PutrecSeqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="GdsMtno@{{.GdsSeqno }}">@{{.GdsMtno }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="Gdecd@{{.GdsSeqno }}">@{{.Gdecd }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="GdsNm@{{.GdsSeqno }}">@{{.GdsNm }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="GdsSpcfModelDesc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="NatcdName@{{.GdsSeqno }}">@{{.NatcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="DestinationNatcdName@{{.GdsSeqno }}">@{{.DestinationNatcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="DclCurrcdName@{{.GdsSeqno }}">@{{.DclCurrcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="DclUprcAmt@{{.GdsSeqno }}">@{{.DclUprcAmt }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="DclQty@{{.GdsSeqno }}">@{{.DclQty }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="DclUnitcdName@{{.GdsSeqno }}">@{{.DclUnitcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="DclTotalAmt@{{.GdsSeqno }}">@{{.DclTotalAmt }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="LawfQty@{{.GdsSeqno }}">@{{.LawfQty }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="LawfUnitcdName@{{.GdsSeqno }}">@{{.LawfUnitcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="SecdLawfQty@{{.GdsSeqno }}">@{{.SecdLawfQty }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="SecdLawfUnitcdName@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="LvyrlfModecdName@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}<i class="iconfont iconcheck font-12"></i></span></td>
+        <td><span class="is_success" id="UcnsVerno@{{.GdsSeqno }}">@{{.UcnsVerno }}<i class="iconfont iconcheck font-12"></i></span></td>
         @{{else if eq $.M.StatusString "复核不通过"}}
-        @{{if inArrayStrSlice "gds_seqno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="gds_seqno@{{.GdsSeqno }}">@{{.GdsSeqno }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "GdsSeqno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="GdsSeqno@{{.GdsSeqno }}">@{{.GdsSeqno }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="gds_seqno@{{.GdsSeqno }}">@{{.GdsSeqno }}</span></td>
+        <td><span id="GdsSeqno@{{.GdsSeqno }}">@{{.GdsSeqno }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "entry_gds_seqno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="entry_gds_seqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "EntryGdsSeqno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="EntryGdsSeqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="entry_gds_seqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}</span></td>
+        <td><span id="EntryGdsSeqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "putrec_seqno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="putrec_seqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "PutrecSeqno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="PutrecSeqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="putrec_seqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}</span></td>
+        <td><span id="PutrecSeqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "gds_mtno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="gds_mtno@{{.GdsSeqno }}">@{{.GdsMtno }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "GdsMtno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="GdsMtno@{{.GdsSeqno }}">@{{.GdsMtno }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="gds_mtno@{{.GdsSeqno }}">@{{.GdsMtno }}</span></td>
+        <td><span id="GdsMtno@{{.GdsSeqno }}">@{{.GdsMtno }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "gdecd" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="gdecd@{{.GdsSeqno }}">@{{.Gdecd }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "Gdecd" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="Gdecd@{{.GdsSeqno }}">@{{.Gdecd }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="gdecd@{{.GdsSeqno }}">@{{.Gdecd }}</span></td>
+        <td><span id="Gdecd@{{.GdsSeqno }}">@{{.Gdecd }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "gds_nm" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="gds_nm@{{.GdsSeqno }}">@{{.GdsNm }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "GdsNm" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="GdsNm@{{.GdsSeqno }}">@{{.GdsNm }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="gds_nm@{{.GdsSeqno }}">@{{.GdsNm }}</span></td>
+        <td><span id="GdsNm@{{.GdsSeqno }}">@{{.GdsNm }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "gds_spcf_model_desc" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="gds_spcf_model_desc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "GdsSpcfModelDesc" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="GdsSpcfModelDesc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="gds_spcf_model_desc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}</span></td>
+        <td><span id="GdsSpcfModelDesc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "natcd_name" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="natcd_name@{{.GdsSeqno }}">@{{.NatcdName }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "NatcdName" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="NatcdName@{{.GdsSeqno }}">@{{.NatcdName }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="natcd_name@{{.GdsSeqno }}">@{{.NatcdName }}</span></td>
+        <td><span id="NatcdName@{{.GdsSeqno }}">@{{.NatcdName }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "destination_natcd_name" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="destination_natcd_name@{{.GdsSeqno }}">@{{.DestinationNatcdName }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "DestinationNatcdName" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="DestinationNatcdName@{{.GdsSeqno }}">@{{.DestinationNatcdName }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="destination_natcd_name@{{.GdsSeqno }}">@{{.DestinationNatcdName }}</span></td>
+        <td><span id="DestinationNatcdName@{{.GdsSeqno }}">@{{.DestinationNatcdName }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "dcl_currcd_name" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="dcl_currcd_name@{{.GdsSeqno }}">@{{.DclCurrcdName }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "DclCurrcdName" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="DclCurrcdName@{{.GdsSeqno }}">@{{.DclCurrcdName }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="dcl_currcd_name@{{.GdsSeqno }}">@{{.DclCurrcdName }}</span></td>
+        <td><span id="DclCurrcdName@{{.GdsSeqno }}">@{{.DclCurrcdName }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "dcl_uprc_amt" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="dcl_uprc_amt@{{.GdsSeqno }}">@{{.DclUprcAmt }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "DclUprcAmt" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="DclUprcAmt@{{.GdsSeqno }}">@{{.DclUprcAmt }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="dcl_uprc_amt@{{.GdsSeqno }}">@{{.DclUprcAmt }}</span></td>
+        <td><span id="DclUprcAmt@{{.GdsSeqno }}">@{{.DclUprcAmt }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "dcl_qty" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="dcl_qty@{{.GdsSeqno }}">@{{.DclQty }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "DclQty" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="DclQty@{{.GdsSeqno }}">@{{.DclQty }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="dcl_qty@{{.GdsSeqno }}">@{{.DclQty }}</span></td>
+        <td><span id="DclQty@{{.GdsSeqno }}">@{{.DclQty }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "dcl_unitcd_name" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="dcl_unitcd_name@{{.GdsSeqno }}">@{{.DclUnitcdName }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "DclUnitcdName" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="DclUnitcdName@{{.GdsSeqno }}">@{{.DclUnitcdName }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="dcl_unitcd_name@{{.GdsSeqno }}">@{{.DclUnitcdName }}</span></td>
+        <td><span id="DclUnitcdName@{{.GdsSeqno }}">@{{.DclUnitcdName }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "dcl_total_amt" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="dcl_total_amt@{{.GdsSeqno }}">@{{.DclTotalAmt }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "DclTotalAmt" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="DclTotalAmt@{{.GdsSeqno }}">@{{.DclTotalAmt }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="dcl_total_amt@{{.GdsSeqno }}">@{{.DclTotalAmt }}</span></td>
+        <td><span id="DclTotalAmt@{{.GdsSeqno }}">@{{.DclTotalAmt }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "lawf_qty" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="lawf_qty@{{.GdsSeqno }}">@{{.LawfQty }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "LawfQty" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="LawfQty@{{.GdsSeqno }}">@{{.LawfQty }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="lawf_qty@{{.GdsSeqno }}">@{{.LawfQty }}</span></td>
+        <td><span id="LawfQty@{{.GdsSeqno }}">@{{.LawfQty }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "lawf_unitcd_name" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="lawf_unitcd_name@{{.GdsSeqno }}">@{{.LawfUnitcdName }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "LawfUnitcdName" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="LawfUnitcdName@{{.GdsSeqno }}">@{{.LawfUnitcdName }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="lawf_unitcd_name@{{.GdsSeqno }}">@{{.LawfUnitcdName }}</span></td>
+        <td><span id="LawfUnitcdName@{{.GdsSeqno }}">@{{.LawfUnitcdName }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "secd_lawf_qty" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="secd_lawf_qty@{{.GdsSeqno }}">@{{.SecdLawfQty }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "SecdLawfQty" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="SecdLawfQty@{{.GdsSeqno }}">@{{.SecdLawfQty }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="secd_lawf_qty@{{.GdsSeqno }}">@{{.SecdLawfQty }}</span></td>
+        <td><span id="SecdLawfQty@{{.GdsSeqno }}">@{{.SecdLawfQty }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "secd_lawf_unitcd_name" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="secd_lawf_unitcd_name@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "SecdLawfUnitcdName" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="SecdLawfUnitcdName@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="secd_lawf_unitcd_name@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}</span></td>
+        <td><span id="SecdLawfUnitcdName@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "lvyrlf_modecd_name" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="lvyrlf_modecd_name@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "LvyrlfModecdName" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="LvyrlfModecdName@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="lvyrlf_modecd_name@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}</span></td>
+        <td><span id="LvyrlfModecdName@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}</span></td>
         @{{end}}
-        @{{if inArrayStrSlice "ucns_verno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
-        <td><span class="is_error" id="ucns_verno@{{.GdsSeqno }}">@{{.UcnsVerno }}<i class="iconfont iconclose font-12"></i></span></td>
+        @{{if inArrayStrSlice "UcnsVerno" .GdsSeqno  $.M.ItemRecheckErrorInputIds }}
+        <td><span class="is_error" id="UcnsVerno@{{.GdsSeqno }}">@{{.UcnsVerno }}<i class="iconfont iconclose font-12"></i></span></td>
         @{{else}}
-        <td><span id="ucns_verno@{{.GdsSeqno }}">@{{.UcnsVerno }}</span></td>
+        <td><span id="UcnsVerno@{{.GdsSeqno }}">@{{.UcnsVerno }}</span></td>
         @{{end}}
 
         @{{else}}
-        <td><span id="gds_seqno@{{.GdsSeqno }}">@{{.GdsSeqno }}</span></td>
-        <td><span id="entry_gds_seqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}</span></td>
-        <td><span id="putrec_seqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}</span></td>
-        <td><span id="gds_mtno@{{.GdsSeqno }}">@{{.GdsMtno }}</span></td>
-        <td><span id="gdecd@{{.GdsSeqno }}">@{{.Gdecd }}</span></td>
-        <td><span id="gds_nm@{{.GdsSeqno }}">@{{.GdsNm }}</span></td>
-        <td><span id="gds_spcf_model_desc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}</span></td>
-        <td><span id="natcd_name@{{.GdsSeqno }}">@{{.NatcdName }}</span></td>
-        <td><span id="destination_natcd_name@{{.GdsSeqno }}">@{{.DestinationNatcdName }}</span></td>
-        <td><span id="dcl_currcd_name@{{.GdsSeqno }}">@{{.DclCurrcdName }}</span></td>
-        <td><span id="dcl_uprc_amt@{{.GdsSeqno }}">@{{.DclUprcAmt }}</span></td>
-        <td><span id="dcl_qty@{{.GdsSeqno }}">@{{.DclQty }}</span></td>
-        <td><span id="dcl_unitcd_name@{{.GdsSeqno }}">@{{.DclUnitcdName }}</span></td>
-        <td><span id="dcl_total_amt@{{.GdsSeqno }}">@{{.DclTotalAmt }}</span></td>
-        <td><span id="lawf_qty@{{.GdsSeqno }}">@{{.LawfQty }}</span></td>
-        <td><span id="lawf_unitcd_name@{{.GdsSeqno }}">@{{.LawfUnitcdName }}</span></td>
-        <td><span id="secd_lawf_qty@{{.GdsSeqno }}">@{{.SecdLawfQty }}</span></td>
-        <td><span id="secd_lawf_unitcd_name@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}</span></td>
-        <td><span id="lvyrlf_modecd_name@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}</span></td>
-        <td><span id="ucns_verno@{{.GdsSeqno }}">@{{.UcnsVerno }}</span></td>
+        <td><span id="GdsSeqno@{{.GdsSeqno }}">@{{.GdsSeqno }}</span></td>
+        <td><span id="EntryGdsSeqno@{{.GdsSeqno }}">@{{.EntryGdsSeqno }}</span></td>
+        <td><span id="PutrecSeqno@{{.GdsSeqno }}">@{{.PutrecSeqno }}</span></td>
+        <td><span id="GdsMtno@{{.GdsSeqno }}">@{{.GdsMtno }}</span></td>
+        <td><span id="Gdecd@{{.GdsSeqno }}">@{{.Gdecd }}</span></td>
+        <td><span id="GdsNm@{{.GdsSeqno }}">@{{.GdsNm }}</span></td>
+        <td><span id="GdsSpcfModelDesc@{{.GdsSeqno }}">@{{.GdsSpcfModelDesc }}</span></td>
+        <td><span id="NatcdName@{{.GdsSeqno }}">@{{.NatcdName }}</span></td>
+        <td><span id="DestinationNatcdName@{{.GdsSeqno }}">@{{.DestinationNatcdName }}</span></td>
+        <td><span id="DclCurrcdName@{{.GdsSeqno }}">@{{.DclCurrcdName }}</span></td>
+        <td><span id="DclUprcAmt@{{.GdsSeqno }}">@{{.DclUprcAmt }}</span></td>
+        <td><span id="DclQty@{{.GdsSeqno }}">@{{.DclQty }}</span></td>
+        <td><span id="DclUnitcdName@{{.GdsSeqno }}">@{{.DclUnitcdName }}</span></td>
+        <td><span id="DclTotalAmt@{{.GdsSeqno }}">@{{.DclTotalAmt }}</span></td>
+        <td><span id="LawfQty@{{.GdsSeqno }}">@{{.LawfQty }}</span></td>
+        <td><span id="LawfUnitcdName@{{.GdsSeqno }}">@{{.LawfUnitcdName }}</span></td>
+        <td><span id="SecdLawfQty@{{.GdsSeqno }}">@{{.SecdLawfQty }}</span></td>
+        <td><span id="SecdLawfUnitcdName@{{.GdsSeqno }}">@{{.SecdLawfUnitcdName }}</span></td>
+        <td><span id="LvyrlfModecdName@{{.GdsSeqno }}">@{{.LvyrlfModecdName }}</span></td>
+        <td><span id="UcnsVerno@{{.GdsSeqno }}">@{{.UcnsVerno }}</span></td>
         @{{end}}
         </tr>
         @{{end}}

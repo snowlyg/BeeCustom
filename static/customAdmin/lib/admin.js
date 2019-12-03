@@ -2493,7 +2493,7 @@ layui.define('view', function (exports) {
 
       /* 通关参数加载 */
       async clearance_data_auto (loadArray) {
-        if ($.inArray('list_types', loadArray) !== -1) {
+        if ($.inArray('list_types', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let list_types = {
             name: '清单类型',
@@ -2504,7 +2504,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(list_types)
         }
 
-        if ($.inArray('finished_product', loadArray) !== -1) {
+        if ($.inArray('finished_product', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let finished_product = {
             name: '料件成品标记',
@@ -2515,7 +2515,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(finished_product)
         }
 
-        if ($.inArray('types_transfer', loadArray) !== -1) {
+        if ($.inArray('types_transfer', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let types_transfer = {
             name: '流转类型',
@@ -2525,7 +2525,7 @@ layui.define('view', function (exports) {
           }
           await admin.base_clearance_data_auto(types_transfer)
         }
-        if ($.inArray('nuclear_declaration_lis', loadArray) !== -1) {
+        if ($.inArray('nuclear_declaration_lis', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let nuclear_declaration_lis = {
             name: '清单报关标志',
@@ -2535,7 +2535,7 @@ layui.define('view', function (exports) {
           }
           await admin.base_clearance_data_auto(nuclear_declaration_lis)
         }
-        if ($.inArray('customs_declaration_type', loadArray) !== -1) {
+        if ($.inArray('customs_declaration_type', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let customs_declaration_type = {
             name: '报关类型',
@@ -2546,7 +2546,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(customs_declaration_type)
         }
 
-        if ($.inArray('type_declaration_list', loadArray) !== -1) {
+        if ($.inArray('type_declaration_list', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let type_declaration_list = {
             name: '清单报关单类型',
@@ -2557,7 +2557,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(type_declaration_list)
         }
 
-        if ($.inArray('gen_dec_flag_list', loadArray) !== -1) {
+        if ($.inArray('gen_dec_flag_list', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let gen_dec_flag_list = {
             name: '生成报关单标志',
@@ -2568,7 +2568,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(gen_dec_flag_list)
         }
 
-        if ($.inArray('modf_markcd_list', loadArray) !== -1) {
+        if ($.inArray('modf_markcd_list', loadArray) >=0) {
           //`${item.customs_code}-${item.name}`
           let modf_markcd_list = {
             name: '清单表体修改标志',
@@ -2579,7 +2579,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(modf_markcd_list)
         }
 
-        if ($.inArray('entry_clearance', loadArray) !== -1) {
+        if ($.inArray('entry_clearance', loadArray) >=0) {
           let entry_clearance = {
             name: '关区代码',
             filter_type: null,
@@ -2596,7 +2596,7 @@ layui.define('view', function (exports) {
         }
 
         //清单
-       if ($.inArray('ann_entry_clearance', loadArray) !== -1) {
+       if ($.inArray('ann_entry_clearance', loadArray) >=0) {
                 let ann_entry_clearance = {
                   name: '关区代码',
                   filter_type: "s",
@@ -2612,7 +2612,7 @@ layui.define('view', function (exports) {
                 await admin.base_clearance_data_auto(ann_entry_clearance)
               }
 
-        if ($.inArray('mode_shipping', loadArray) !== -1) {
+        if ($.inArray('mode_shipping', loadArray) >=0) {
           let mode_shipping = {
             name: '运输方式代码',
             filter_type: 'l',
@@ -2622,7 +2622,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(mode_shipping)
         }
 
-        if ($.inArray('ann_mode_shipping', loadArray) !== -1) {
+        if ($.inArray('ann_mode_shipping', loadArray) >=0) {
           let ann_mode_shipping = {
             name: '运输方式代码',
             filter_type: 's',
@@ -2632,7 +2632,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(ann_mode_shipping)
         }
 
-        if ($.inArray('objectives_based', loadArray) !== -1) {
+        if ($.inArray('objectives_based', loadArray) >=0) {
           let objectives_based = {
             name: '监管方式代码',
             filter_type: 'l',
@@ -2646,7 +2646,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(objectives_based)
         }
 
-        if ($.inArray('ann_objectives_based', loadArray) !== -1) {
+        if ($.inArray('ann_objectives_based', loadArray) >=0) {
           let ann_objectives_based = {
             name: '监管方式代码',
             filter_type: 's',
@@ -2660,7 +2660,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(ann_objectives_based)
         }
 
-        if ($.inArray('nature_exemption', loadArray) !== -1) {
+        if ($.inArray('nature_exemption', loadArray) >=0) {
           let nature_exemption = {
             name: '征免性质代码',
             filter_type: "s",
@@ -2670,7 +2670,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(nature_exemption)
         }
 
-        if ($.inArray('country_area', loadArray) !== -1) {
+        if ($.inArray('country_area', loadArray) >=0) {
           let country_area = {
             name: '国别地区代码',
             filter_type: 'l',
@@ -2690,7 +2690,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(country_area)
         }
 
-        if ($.inArray('ann_country_area', loadArray) !== -1) {
+        if ($.inArray('ann_country_area', loadArray) >=0) {
           let ann_country_area = {
             name: '国别地区代码',
             filter_type: 'anns',
@@ -2708,7 +2708,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(ann_country_area)
         }
 
-        if ($.inArray('harbour', loadArray) !== -1) {
+        if ($.inArray('harbour', loadArray) >=0) {
           let harbour = {
             name: '港口代码',
             filter_type: 'l',
@@ -2718,7 +2718,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(harbour)
         }
 
-        if ($.inArray('terms_delivery', loadArray) !== -1) {
+        if ($.inArray('terms_delivery', loadArray) >=0) {
           let terms_delivery = {
             name: '成交方式代码',
             filter_type: 's',
@@ -2728,7 +2728,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(terms_delivery)
         }
 
-        if ($.inArray('cost_tag', loadArray) !== -1) {
+        if ($.inArray('cost_tag', loadArray) >=0) {
           let cost_tag = {
             name: '费用标记',
             filter_type: 's',
@@ -2738,7 +2738,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(cost_tag)
         }
 
-        if ($.inArray('currency', loadArray) !== -1) {
+        if ($.inArray('currency', loadArray) >=0) {
           let currency = {
             name: '货币代码',
             filter_type: 'l',
@@ -2758,7 +2758,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(currency)
         }
 
-        if ($.inArray('ann_currency', loadArray) !== -1) {
+        if ($.inArray('ann_currency', loadArray) >=0) {
           let ann_currency = {
             name: '货币代码',
             filter_type: 'anns',
@@ -2772,7 +2772,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(ann_currency)
         }
 
-        if ($.inArray('kind_packages', loadArray) !== -1) {
+        if ($.inArray('kind_packages', loadArray) >=0) {
           let kind_packages = {
             name: '包装种类代码',
             filter_type: 'l',
@@ -2782,7 +2782,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(kind_packages)
         }
 
-        if ($.inArray('domestic_ports', loadArray) !== -1) {
+        if ($.inArray('domestic_ports', loadArray) >=0) {
           let domestic_ports = {
             name: '国内口岸代码',
             filter_type: 's',
@@ -2792,7 +2792,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(domestic_ports)
         }
 
-        if ($.inArray('types_customs', loadArray) !== -1) {
+        if ($.inArray('types_customs', loadArray) >=0) {
           let types_customs = {
             name: '报关单类型',
             filter_type: 's',
@@ -2802,7 +2802,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(types_customs)
         }
 
-        if ($.inArray('inspection_quarantine', loadArray) !== -1) {
+        if ($.inArray('inspection_quarantine', loadArray) >=0) {
           let inspection_quarantine = {
             name: '检验检疫机关代码',
             filter_type: 's',
@@ -2821,7 +2821,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(inspection_quarantine)
         }
 
-        if ($.inArray('related_reasons', loadArray) !== -1) {
+        if ($.inArray('related_reasons', loadArray) >=0) {
           let related_reasons = {
             name: '关联理由代码',
             filter_type: 's',
@@ -2831,7 +2831,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(related_reasons)
         }
 
-        if ($.inArray('unit_measurement', loadArray) !== -1) {
+        if ($.inArray('unit_measurement', loadArray) >=0) {
           let unit_measurement = {
             name: '计量单位代码',
             filter_type: 's',
@@ -2850,7 +2850,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(unit_measurement)
         }
 
-        if ($.inArray('ann_unit_measurement', loadArray) !== -1) {
+        if ($.inArray('ann_unit_measurement', loadArray) >=0) {
           let ann_unit_measurement = {
             name: '计量单位代码',
             filter_type: 's',
@@ -2868,7 +2868,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(ann_unit_measurement)
         }
 
-        if ($.inArray('origin_area', loadArray) !== -1) {
+        if ($.inArray('origin_area', loadArray) >=0) {
           let origin_area = {
             name: '原产地区代码',
             filter_type: 's',
@@ -2878,7 +2878,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(origin_area)
         }
 
-        if ($.inArray('domestic_area', loadArray) !== -1) {
+        if ($.inArray('domestic_area', loadArray) >=0) {
           let domestic_area = {
             name: '国内地区代码',
             filter_type: 's',
@@ -2888,7 +2888,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(domestic_area)
         }
 
-        if ($.inArray('destination', loadArray) !== -1) {
+        if ($.inArray('destination', loadArray) >=0) {
           let destination = {
             name: '中华人民共和国行政区划代码',
             filter_type: 's',
@@ -2898,7 +2898,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(destination)
         }
 
-        if ($.inArray('exempting_method', loadArray) !== -1) {
+        if ($.inArray('exempting_method', loadArray) >=0) {
           let exempting_method = {
             name: '征减免税方式代码',
             filter_type: 's',
@@ -2908,7 +2908,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(exempting_method)
         }
 
-        if ($.inArray('ann_exempting_method', loadArray) !== -1) {
+        if ($.inArray('ann_exempting_method', loadArray) >=0) {
           let ann_exempting_method = {
             name: '征减免税方式代码',
             filter_type: 's',
@@ -2918,7 +2918,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(ann_exempting_method)
         }
 
-        if ($.inArray('use', loadArray) !== -1) {
+        if ($.inArray('use', loadArray) >=0) {
           let use = {
             name: '用途代码',
             filter_type: 's',
@@ -2928,7 +2928,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(use)
         }
 
-        if ($.inArray('type_container', loadArray) !== -1) {
+        if ($.inArray('type_container', loadArray) >=0) {
           let type_container = {
             name: '集装箱规格代码',
             filter_type: 's',
@@ -2938,7 +2938,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(type_container)
         }
 
-        if ($.inArray('documents_attached', loadArray) !== -1) {
+        if ($.inArray('documents_attached', loadArray) >=0) {
           let documents_attached = {
             name: '随附单证代码',
             filter_type: 's',
@@ -2948,7 +2948,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(documents_attached)
         }
 
-        if ($.inArray('enterprise_product', loadArray) !== -1) {
+        if ($.inArray('enterprise_product', loadArray) >=0) {
           let enterprise_product = {
             name: '企业产品许可类别代码',
             filter_type: 's',
@@ -2958,7 +2958,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(enterprise_product)
         }
 
-        if ($.inArray('site_code', loadArray) !== -1) {
+        if ($.inArray('site_code', loadArray) >=0) {
           let site_code = {
             name: '场地代码',
             filter_type: 's',
@@ -2968,7 +2968,7 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(site_code)
         }
 
-        if ($.inArray('two_account_manual', loadArray) !== -1) {
+        if ($.inArray('two_account_manual', loadArray) >=0) {
           /**自动完成--手帐册**/
           await admin.auto_fn({
             url: `/handbook/datagrid`,

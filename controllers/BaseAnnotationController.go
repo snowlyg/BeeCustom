@@ -203,7 +203,7 @@ func (c *BaseAnnotationController) bReMake(id int64) {
 // 编辑相关页面返回
 func (c *BaseAnnotationController) getResponses(impexpMarkcd string) {
 	// 页面里按钮权限控制
-	c.getActionData(impexpMarkcd, "Audit", "Distribute", "ForRecheck", "Print", "ExtraRemark")
+	c.getActionData(impexpMarkcd, "Audit", "Distribute", "ForRecheck", "Print", "ExtraRemark", "ReForRecheck")
 	c.Data["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(impexpMarkcd)
 	c.setTpl("annotation/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
@@ -313,6 +313,25 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 	if err = UpdateAnnotationStatus(m, "待复核", false); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
+	if err := models.AnnotationUpdateStatus(m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
+	annotationRecord := c.newAnnotationRecord(m, "复核")
+	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	}
+	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
+}
+
+// bReForRecheck 重新申请复核
+func (c *BaseAnnotationController) bReForRecheck(id int64) {
+	m, err := models.AnnotationOne(id, "Company,AnnotationItems")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+	if err = UpdateAnnotationStatus(m, "待复核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	if err := models.AnnotationUpdateStatus(m); err != nil {

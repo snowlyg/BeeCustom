@@ -182,6 +182,18 @@ func (c *AnnotationController) EForRecheck() {
 	c.bForRecheck(Id)
 }
 
+// ReForRecheck 重新申请复核
+func (c *AnnotationController) IReForRecheck() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bReForRecheck(Id)
+}
+
+// ReForRecheck 申请复核
+func (c *AnnotationController) EReForRecheck() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bReForRecheck(Id)
+}
+
 // IRecheck 复核
 func (c *AnnotationController) IRecheck() {
 	Id, _ := c.GetInt64(":id", 0)
