@@ -210,8 +210,8 @@ func Hmac(key string, data []byte) string {
 	return hex.EncodeToString(hmac.Sum([]byte("")))
 }
 
-func Cmd(action, arg string) {
-	cmd := exec.Command(action, arg)
+func Cmd(action string, arg []string) {
+	cmd := exec.Command(action, arg...)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
