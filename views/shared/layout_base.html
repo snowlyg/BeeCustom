@@ -5,11 +5,8 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="_xsrf" content="@{{.xsrf_token}}"/>
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>BeeCustom</title>
-
     <link rel="stylesheet" href="/static/customAdmin/layui/css/layui.css" media="all">
     <link rel="stylesheet/less" type="text/css" href="/static/customAdmin/style/admin.less" media="all">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_1467689_pww9k03uhaq.css" media="all">
@@ -83,8 +80,8 @@
                                     class="layui-icon iconfont iconlocalshipping"></i><cite>货物申报</cite><span
                                     class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="">进口报关整合申报</a></dd>
-                            <dd><a lay-href="">出口报关整合申报</a></dd>
+                            <dd><a lay-href="@{{ urlfor "AnnotationController.IIndex" }}">进口报关整合申报</a></dd>
+                            <dd><a lay-href="@{{ urlfor "AnnotationController.EIndex" }}">出口报关整合申报</a></dd>
                             <dd><a lay-href="" id="回收站">回收站</a></dd>
                         </dl>
                     </li>

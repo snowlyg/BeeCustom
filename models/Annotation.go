@@ -120,7 +120,7 @@ type Annotation struct {
 	Company      *Company       `orm:"column(company_id);rel(fk)"`
 	CompanyId    int64          `orm:"-" form:"CompanyId"` // 关联管理会自动生成 CompanyId 字段，此处不生成字段
 	HandBookId   int64          `orm:"column(hand_book_id)" form:"HandBookId"`
-	OrderId      int64          `orm:"-" form:"OrderId"` // 关联管理会自动生成 OrderId 字段，此处不生成字段
+	Order        int64          `orm:"null;rel(one);on_delete(set_null)"` //
 
 	AnnotationItems   []*AnnotationItem   `orm:"reverse(many)"` // 设置一对多关系
 	AnnotationRecords []*AnnotationRecord `orm:"reverse(many)"` // 设置一对多关系

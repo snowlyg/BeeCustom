@@ -24,6 +24,58 @@ func init() {
 	beego.Router("/annotation_item/delete/?:id", &controllers.AnnotationItemController{}, "Delete:Delete")
 
 	flags := [2]string{"I", "E"}
+	/**货物申报管理*/
+	for _, flag := range flags {
+		// 订单
+		beego.Router("/order/index/"+flag, &controllers.OrderController{}, "Get:"+flag+"Index")
+		// 代客下单
+		beego.Router("/order/create/"+flag, &controllers.OrderController{}, "Get:"+flag+"Create")
+		// 列表
+		beego.Router("/order/datagrid/"+flag, &controllers.OrderController{}, "Post:"+flag+"DataGrid")
+		// 数量统计
+		beego.Router("/order/statuscount/"+flag, &controllers.OrderController{}, "Post:"+flag+"StatusCount")
+		// 保存
+		beego.Router("/order/store/"+flag, &controllers.OrderController{}, "Post:"+flag+"Store")
+		// 开始审单
+		beego.Router("/order/edit/?:id", &controllers.OrderController{}, "Get:"+flag+"Edit")
+		// 开始制单
+		beego.Router("/order/make/?:id", &controllers.OrderController{}, "Get:"+flag+"Make")
+		// 驳回修改订单
+		beego.Router("/order/remake/?:id", &controllers.OrderController{}, "Get:"+flag+"ReMake")
+		// 取消订单
+		beego.Router("/order/cancel/?:id", &controllers.OrderController{}, "Get:"+flag+"Cancel")
+		// 复制订单
+		beego.Router("/order/copy/?:id", &controllers.OrderController{}, "Get:"+flag+"Copy")
+		// 审核通过
+		beego.Router("/order/audit/?:id", &controllers.OrderController{}, "Get:"+flag+"Audit")
+		// 更新
+		beego.Router("/order/update/?:id", &controllers.OrderController{}, "Patch:"+flag+"Update")
+		// 派单
+		beego.Router("/order/distribute/?:id", &controllers.OrderController{}, "Post:"+flag+"Distribute")
+		// 申请复核
+		beego.Router("/order/for_recheck/?:id", &controllers.OrderController{}, "Get:"+flag+"ForRecheck")
+		// 申请复核
+		beego.Router("/order/refor_recheck/?:id", &controllers.OrderController{}, "Get:"+flag+"ReForRecheck")
+		// 复核
+		beego.Router("/order/recheck/?:id", &controllers.OrderController{}, "Get:"+flag+"Recheck")
+		// 复核通过
+		beego.Router("/order/recheck_pass/?:id", &controllers.OrderController{}, "Post:"+flag+"RecheckPass")
+		// 复核驳回
+		beego.Router("/order/recheck_reject/?:id", &controllers.OrderController{}, "Post:"+flag+"RecheckReject")
+		// 报文提交
+		beego.Router("/order/push_xml/?:id", &controllers.OrderController{}, "Get:"+flag+"PushXml")
+		// 打印
+		beego.Router("/order/print/?:id", &controllers.OrderController{}, "Get:"+flag+"Print")
+		// 附注
+		beego.Router("/order/extra_remark/?:id", &controllers.OrderController{}, "Post:"+flag+"ExtraRemark")
+		// 重启
+		beego.Router("/order/restart/?:id", &controllers.OrderController{}, "Post:"+flag+"Restart")
+		// 驳回原因
+		beego.Router("/order/audit_first_reject_log/?:id", &controllers.OrderController{}, "Get:"+flag+"AuditFirstRejectLog")
+		// 删除
+		beego.Router("/order/delete/?:id", &controllers.OrderController{}, "Delete:"+flag+"Delete")
+	}
+
 	/**清单管理*/
 	for _, flag := range flags {
 		// 清单

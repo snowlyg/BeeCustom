@@ -1,0 +1,47 @@
+<script type="text/html" id="annotation_search_template">
+    <div class="manual_no_list">
+        <div class="code_t_s_p">
+            <form class="layui-form" onkeydown="if(event.keyCode===13){return false}">
+                <table class="layui-table order_table_form">
+                    <tbody>
+                    <tr>
+                        <td class="td-scale-01 text-align-right">商品料号</td>
+                        <td class="td-scale-04 percent-15">
+                            <div class="input-group valid">
+                                <input type="text" class="non-empty" name="gds_mtno_filter" id="gds_mtno_filter"
+                                       autocomplete="off">
+                            </div>
+                        </td>
+                        <td class="td-scale-01 text-align-right">商品编码</td>
+                        <td class="td-scale-05 percent-15">
+                            <div class="input-group valid">
+                                <input type="text" class="non-empty" name="gdecd_filter" id="gdecd_filter"
+                                       autocomplete="off">
+                            </div>
+                        </td>
+                        <td class="td-scale-01 text-align-right">商品名称</td>
+                        <td class="td-scale-04 percent-15">
+                            <div class="input-group valid">
+                                <input type="text" class="non-empty" name="gds_nm_filter" id="gds_nm_filter"
+                                       autocomplete="off">
+                            </div>
+                        </td>
+                        <td class="td-btn">
+                            <button class="layui-btn layui-btn-primary custom-create_btn_primary"
+                                    id="order_search_filter" type="button" lay-submit lay-filter="order_search_filter">
+                                <i class="iconfont iconsearch"></i>查询
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <table class="layui-hide DetailDiv" id="annotation_search_table" lay-filter="annotation_search_table"></table>
+        <div class="manual_no_btn">
+            <button class="layui-btn custom-create_btn" id="annotation_search_save" type="button">
+                确定
+            </button>
+        </div>
+    </div>
+</script>

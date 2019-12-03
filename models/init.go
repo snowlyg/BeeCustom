@@ -28,6 +28,10 @@ func init() {
 		new(AnnotationRecord),
 		new(AnnotationReturn),
 		new(AnnotationFile),
+		new(Order),
+		new(OrderUserRel),
+		new(OrderRecord),
+		new(OrderFile),
 	)
 }
 
@@ -135,4 +139,24 @@ func AnnotationReturnTBName() string {
 // AnnotationFileTBName 获取 AnnotationFileTBName 对应的表名称
 func AnnotationFileTBName() string {
 	return TableName("annotation_files")
+}
+
+// OrderTBName 获取 OrderTBName 对应的表名称
+func OrderTBName() string {
+	return TableName("orders")
+}
+
+// OrderUserRelTBName 获取 OrderUserRelTBName 对应的表名称
+func OrderUserRelTBName() string {
+	return "order_user_rel"
+}
+
+// OrderRecordTBName 获取 OrderRecordTBName 对应的表名称
+func OrderRecordTBName() string {
+	return TableName("order_records")
+}
+
+// OrderFileTBName 获取 OrderFileTBName 对应的表名称
+func OrderFileTBName() string {
+	return TableName("order_files")
 }

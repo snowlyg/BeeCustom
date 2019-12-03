@@ -1,0 +1,311 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="custom-order_import">
+                <div class="status_flex">
+                    <div class="status_flex_list" id="status_flex_list"></div>
+                    <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
+                        <i class="iconfont icondelete"></i>
+                        <span>订单回收站</span>
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        @{{if  canArray  .actions .ImpexpMarkcd "canCreate" }}
+                    <span class="custom-new_btn" lay-href="/annotation/create/@{{.ImpexpMarkcd}}"
+                          lay-text="@{{.ImpexpMarkcdName}}清单制作" id="order_import_new">代客下单</span>
+                    @{{else}}
+                    <span class="custom-new_btn hidden" style="visibility:hidden;"></span>
+                    @{{end}}
+                    </div>
+                    <div class="layui-col-md4 layui-col-md-offset2">
+                        <div class="custom-tool-right">
+                            <div class="layui-form width-25">
+                                <div class="layui-input-inline" id="annotation_trsp_modecd"></div>
+                            </div>
+                            <div class="width-75">
+                                <label class="custom-tool-right-search iconfont iconsearch"></label>
+                                <input type="text" name="order_import_search" id="order_import_search"
+                                       placeholder="搜索订单号/清单号" class="custom-tool-right-input layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-order_import-table">
+                    <table class="layui-table" lay-skin="nob" id="order-i-table">
+                        <colgroup>
+                            <col width="35%">
+                            <col width="20%">
+                            <col width="20%">
+                            <col width="15%">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>
+                                <div class="order-time-flex">
+                                    <div class="order-time-cont">
+                                        <span>时间：</span>
+                                        <div class="layui-input-inline">
+                                            <form class="layui-form">
+                                                <select name="time_table" lay-filter="time_table" id="time_table">
+                                                    <option value="">请选择</option>
+                                                    <option selected="" value="今天">今天</option>
+                                                    <option value="昨天">昨天</option>
+                                                    <option value="最近三天">最近三天</option>
+                                                    <option value="本周">本周</option>
+                                                    <option value="上周">上周</option>
+                                                    <option value="本月">本月</option>
+                                                    <option value="上月">上月</option>
+                                                    <option value="本季度">本季度</option>
+                                                    <option value="上季度">上季度</option>
+                                                    <option value="今年">今年</option>
+                                                    <option value="去年">去年</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="order-time-txt">订单详情</div>
+                                </div>
+                            </th>
+                            <th>申报日期</th>
+                            <th>物流信息</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                    </table>
+
+                    <script type="text/html" id="order_i_list">
+                        {{# layui.each(d, function(index, item){ }}
+                        <tbody>
+                        <tr class="sep-row">
+                            <td colspan="5"></td>
+                        </tr>
+                        {{#
+                        let status = "assigned";
+                        if(item.StatusString == "审核中"||
+                            item.StatusString == "制单中"||
+                            item.StatusString == "复核中"||
+                            item.StatusString == "审核通过"||
+                            item.StatusString == "复核通过"){status ="making"}
+                        if(item.StatusString == "审核不通过" || item.StatusString =="复核不通过"){status ="fail"}
+                        if(item.StatusString == "已完成" || item.StatusString == "订单关闭"){status ="success"}
+                        }}
+                        <tr class="tr-th {{ status }}">
+                            <td colspan="5">
+                                <div class="tr-th-flex">
+                                    <div class="tr-th-flex-left">
+                                        <b>{{ item.CreatedAt || "" }}</b>
+                                        <span class="left-margin">订单号：{{ item.EtpsInnerInvtNo || "" }}</span>
+                                        <span class="left-margin">制单人：{{ item.DeclareName || "--" }}</span>
+                                        {{# if(item.StatusString == "待复核" || item.StatusString ==
+                                        "复核中" || item.StatusString == "复核通过" || item.StatusString ==
+                                        "复核不通过" || item.StatusString == "待暂存" || item.StatusString ==
+                                        "单一处理中" || item.StatusString == "已完成"){ }}
+                                        <span class="left-margin">复核员：{{ item.RecheckName || "--" }}</span>
+                                        {{# } }}
+                                    {{# if(item.StatusString == "已完成"){ }}
+                                        <div class="copy_number copy_order" data-id="{{ item.Id }}">
+                                            <i class="iconfont iconcontent-copy"></i>
+                                            <span>复制订单</span>
+                                        </div>
+                                        {{# } }}
+                                    </div>
+                                    <div class="tr-th-flex-center">
+                                        <p>{{ item.CompanyName || "" }}</p>
+                                    </div>
+                                    <div class="tr-th-flex-right">
+                                        <i class="iconfont iconxiaoxi blue person_tips" data-id="{{ item.Id }}" title="客户信息"></i>
+                                        <i class="iconfont iconjilu" data-id="{{ item.Id }}" onclick="layui.admin.annotation_jilu_click(this)" title="办理记录"></i>
+                                        <i class="iconfont iconattach-file" data-id="{{ item.Id }}" title="附件"></i>
+                                        <i class="iconfont iconshanchu1" data-id="{{ item.Id }}" title="删除"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="tr-bd {{ status }}">
+                            <td>
+                                <div class="tr-bd-one">
+                                    <div class="tr-bd-one-img">
+                                        <img width="100" src="/static/images/annotation_import_i.png">
+                                    </div>
+                                    <div class="tr-bd-one-txt">
+                                        <p>
+                                            <span style="color:#999999;">手/账册号：</span>
+                                            <span style="color:#101010;">{{ item.PutrecNo || "" }}</span>
+                                        </p>
+                                        <p>
+                                            <span style="color:#999999;">进境关别/代码：</span>
+                                            {{# const impexp_portcd_name = item.ImpexpPortcdName ? `${item.ImpexpPortcdName}/` : "无"; }}
+                                            <span style="color:#101010;">{{ impexp_portcd_name }}{{ item.ImpexpPortcd || "" }}</span>
+                                        </p>
+                                        <p>
+                                            <span style="color:#999999;">清单编码/关联报关单号：</span>
+                                            <span style="color:#101010;">{{ item.BondInvtNo || "无" }}</span>/
+                                            {{# if(item.EntryNo !== ""){ }}
+                                            <span style="color:#101010;" lay-href="/order/i/{{ item.OrderId }}/show"
+                                                  lay-text="订单详情{{ item.EntryNo }}">{{ item.EntryNo }}</span>
+                                            {{# }else{ }}
+                                            <span style="color:#101010;">无</span>
+                                            {{# } }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td rowspan="1">
+                                <p class="center">{{ item.InvtDclTime || "" }}</p>
+                            </td>
+                            <td rowspan="1" class="tr-bd-person_list">
+                                <div class="tr-bd-one-txt">
+                                    <p>
+                                        <span style="color:#999999;">监管方式：</span>
+                                        <span style="color:#101010;">{{ item.SupvModecdName || "无" }}</span>
+                                    </p>
+                                    <p>
+                                        <span style="color:#999999;">运输方式：</span>
+                                        <span style="color:#101010;">{{ item.TrspModecdName || "无" }}</span>
+                                    </p>
+                                </div>
+                            </td>
+                            <td rowspan="1">
+                                <div class="tr-bd-status">
+                                    <p class="status_p">{{ item.StatusString }}</p>
+                                    {{# if(item.StatusString == "审核不通过"){ }}
+                                    <p class="status_detail first_audit_reject_logs_show" data-id="{{ item.Id }}">
+                                        查看驳回原因</p>
+                                    {{# } }}
+                                {{# if(item.StatusString == "复核不通过"){ }}
+                                    <p class="status_detail first_audit_reject_logs_show" data-id="{{ item.Id }}"> 查看失败原因</p>
+                                    {{# } }}
+                                    <p class="status_detail order_detail" data-id="{{ item.Id }}">订单详情</p>
+                                    {{# if(item.StatusString == "单一处理中" || item.StatusString == "已完成"){ }}
+                                    <p class="status_detail returns_show" data-id="{{ item.Id }}">查看回执</p>
+                                    {{# } }}
+                                </div>
+                            </td>
+                            <td rowspan="1">
+                                <div class="center tr-bd-operate">
+                                    {{# if(item.StatusString == "待审核"){ }}
+                                @{{ if canArray  .actions .ImpexpMarkcd  "canEdit"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_start_auth" type="button"
+                                            data-id="{{ item.Id }}">开始审核
+                                    </button>
+                                @{{end}}
+                                 {{# } }}
+
+                                {{# if(item.StatusString == "审核中"){ }}
+                                @{{ if canArray  .actions .ImpexpMarkcd "canEdit"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_keep_auth" type="button"
+                                            data-id="{{ item.Id }}">继续审核
+                                    </button>
+                                @{{end}}
+                                {{# } }}
+
+                                {{# if(item.StatusString == "审核通过"){ }}
+                                @{{ if canArray  .actions .ImpexpMarkcd "canDistribute"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_distribute"
+                                    type="button" data-id="{{ item.Id }}">派单</button>
+                                    @{{end}}
+                                {{# } }}
+
+                                {{# if(item.StatusString == "待制单"){ }}
+                                    @{{ if canArray  .actions .ImpexpMarkcd "canMake"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_start_maker"
+                                    type="button" data-id="{{ item.Id }}">开始制单</button>
+                                    @{{end}}
+                                 {{# } }}
+
+                                {{# if(item.StatusString == "制单中"){ }}
+                                    @{{ if canArray  .actions .ImpexpMarkcd "canMake"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_keep_maker"
+                                    type="button" data-id="{{ item.Id }}">继续制单</button>
+                                    @{{end}}
+                                {{# } }}
+
+                                {{# if(item.StatusString == "待复核" || item.StatusString == "复核中"){ }}
+                                @{{ if canArray  .actions .ImpexpMarkcd "canRecheck"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_check" type="button"
+                                            data-id="{{ item.Id }}">复核
+                                    </button>
+                                @{{end}}
+                                @{{ if canArray  .actions .ImpexpMarkcd "canPush"}}
+                                    <a class="margin_top_10 order_reminder" data-id="{{ item.Id }}">催单</a>
+                                @{{end}}
+                                 {{# } }}
+
+                                {{# if(item.StatusString == "复核不通过"){ }}
+                                    @{{if canArray  .actions .ImpexpMarkcd "canReMake"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_revise"type="button" data-id="{{ item.Id }}">修改</button>
+                                    @{{end}}
+                                {{# } }}
+
+                                {{# if(item.StatusString == "复核通过"){ }}
+                                @{{if canArray  .actions .ImpexpMarkcd "canPushXml"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_check_success" type="button"
+                                            data-id="{{ item.Id }}">暂存到单一
+                                    </button>
+                                @{{end}}
+                                @{{if canArray  .actions .ImpexpMarkcd "canReMake"}}
+                                    <a class="order_revise" data-id="{{ item.Id }}">修改</a>
+                                @{{end}}
+                                 {{# } }}
+
+                                {{# if(item.StatusString == "单一已暂存"){ }}
+                                    @{{if canArray  .actions .ImpexpMarkcd "canPushXml"}}
+                                    <button class="layui-btn tr-bd-{{ status }} order_check_success_reload"
+                                    type="button" data-id="{{ item.Id }}">重新暂存</button>
+                                    @{{end}}
+                                 {{# } }}
+
+                                {{# if(item.StatusString == "已完成"){ }}
+                                    @{{if canArray  .actions .ImpexpMarkcd "canStoreError"}}
+                                    <a class="order_error_log" data-id="{{ item.Id }}">差错登记</a>
+                                    @{{end}}
+                                    @{{if canArray  .actions .ImpexpMarkcd "canChange"}}
+                                    <a class="order_switch_bill" data-id="{{ item.Id }}">改单</a>
+                                    @{{end}}
+                                {{# } }}
+
+                                {{# if(item.StatusString == "订单关闭"){ }}
+                                    @{{if canArray  .actions .ImpexpMarkcd "canRestart"}}
+                                    <a class="blue again_open_order" data-id="{{ item.Id }}">重新开启订单</a>
+                                    @{{end}}
+                                {{# } }}
+
+                                {{# if(item.StatusString !== "已完成" || item.StatusString !== "订单关闭" || item.StatusString !== "单一已暂存" || item.StatusString !== "单一处理中" ){ }}
+                                @{{ if canArray  .actions .ImpexpMarkcd "canCancel"}}
+                                    <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
+                                @{{end}}
+                                {{# } }}
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        {{# }) }}
+                    </script>
+                </div>
+                <div class="custom-order_import-page" id="order_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="pdf_lists_template">
+    <div class="custom-order_import-pdf">
+        <table class="layui-hide" id="pdf_lists" lay-filter="pdf_lists"></table>
+    </div>
+</script>
+<script type="text/html" id="pdf_toolbar">
+    <a class="custom-edit" lay-event="preview">预览/下载</a>
+</script>
+
+@{{template "/common/order_annotation/distribute.html" .}}
+@{{template "/common/order_annotation/application_change.html" .}}
+@{{template "/common/order_annotation/error_logging.html" .}}
+@{{template "/common/order_annotation/enclosure_check.html" .}}
+@{{template "/common/order_annotation/take.html" .}}
+
+@{{template "/common/order_annotation/status_count.html" }}
+@{{template "/common/order_annotation/trsp_modecd_template.html" }}
+

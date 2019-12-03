@@ -281,3 +281,20 @@ func UpdateAnnotationStatus(m *models.Annotation, StatusString string, isRestart
 
 	return nil
 }
+
+// 更新状态和状态更新时间
+func UpdateOrderStatus(m *models.Order, StatusString string, isRestart bool) error {
+	aStatus, err := enums.GetSectionWithString(StatusString, "status_status")
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("转换清单状态出错:%v", err))
+		return err
+	}
+
+	// 禁止状态回退
+	if m.Status < aStatus || isRestart {
+		m.Status = aStatus
+		m.StatusUpdatedAt = time.Now()
+	}
+
+	return nil
+}
