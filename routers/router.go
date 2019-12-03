@@ -67,7 +67,7 @@ func init() {
 		// 打印
 		beego.Router("/order/print/?:id", &controllers.OrderController{}, "Get:"+flag+"Print")
 		// 附注
-		beego.Router("/order/extra_remark/?:id", &controllers.OrderController{}, "Post:"+flag+"ExtraRemark")
+		beego.Router("/order/extra_remark/?:id", &controllers.OrderController{}, "Post:"+flag+"Remark")
 		// 重启
 		beego.Router("/order/restart/?:id", &controllers.OrderController{}, "Post:"+flag+"Restart")
 		// 驳回原因

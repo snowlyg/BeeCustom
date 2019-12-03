@@ -250,18 +250,18 @@ func (c *OrderController) EPrint() {
 	c.bPrint(id)
 }
 
-// ExtraRemark 附注
-func (c *OrderController) IExtraRemark() {
+// Remark 附注
+func (c *OrderController) IRemark() {
 	id, _ := c.GetInt64(":id")
-	extraRemark := c.GetString("ExtraRemark")
-	c.bExtraRemark(id, extraRemark)
+	remark := c.GetString("Remark")
+	c.bRemark(id, remark)
 }
 
-// ExtraRemark 附注
-func (c *OrderController) EExtraRemark() {
+// Remark 附注
+func (c *OrderController) ERemark() {
 	id, _ := c.GetInt64(":id")
-	extraRemark := c.GetString("ExtraRemark")
-	c.bExtraRemark(id, extraRemark)
+	remark := c.GetString("Remark")
+	c.bRemark(id, remark)
 }
 
 // AuditFirstRejectLog 附注
