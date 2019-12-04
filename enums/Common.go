@@ -216,6 +216,6 @@ func Cmd(action string, arg []string) {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("calculate_signature:%v", err))
+		utils.LogDebug(fmt.Sprintf("cmd:%v:%v--%v", err, action, arg))
 	}
 }
