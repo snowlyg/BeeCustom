@@ -7,7 +7,6 @@ import (
 	"BeeCustom/enums"
 	"BeeCustom/file"
 	"BeeCustom/utils"
-	"github.com/astaxie/beego"
 )
 
 const SECRETTOKEN = "bee_custom_auto_pull"
@@ -28,22 +27,9 @@ func (c *WebHookController) Get() {
 	calculateSignature := "sha1=" + sha1
 
 	if calculateSignature == signature {
-		dbType := beego.AppConfig.String("db_type")
-		// 数据库名称
-		dbName := beego.AppConfig.String(dbType + "::db_name")
-		// 数据库连接用户名
-		dbUser := beego.AppConfig.String(dbType + "::db_user")
-		// 数据库连接用户名
-		dbPwd := beego.AppConfig.String(dbType + "::db_pwd")
-		// 数据库IP（域名）
-		dbHost := beego.AppConfig.String(dbType + "::db_host")
-		// 数据库端口
-		dbPort := beego.AppConfig.String(dbType + "::db_port")
-		arv := []string{"migrate", "-driver=mysql", fmt.Sprintf(`-conn="%s:%s@tcp(%s:%s)/%s"`, dbUser, dbPwd, dbHost, dbPort, dbName)}
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", "", []string{"pull"})
 		enums.Cmd("bee", "", []string{"pack"})
-		enums.Cmd("bee", "", arv)
 		if file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") {
 			enums.Cmd("mv", "", []string{"BeeCustom.tar.gz", "/root/back"})
 			utils.LogDebug("mv BeeCustom.tar.gz")
