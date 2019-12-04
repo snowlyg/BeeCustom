@@ -43,7 +43,7 @@ func (c *WebHookController) Get() {
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", "", []string{"pull"})
 		enums.Cmd("bee", "", []string{"pack"})
-		enums.CmdStart("bee", arv)
+		enums.Cmd("bee", "", arv)
 		if file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") {
 			enums.Cmd("mv", "", []string{"BeeCustom.tar.gz", "/root/back"})
 			utils.LogDebug("mv BeeCustom.tar.gz")
@@ -53,7 +53,7 @@ func (c *WebHookController) Get() {
 
 		if !file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") && file.IsExist("/root/back/BeeCustom.tar.gz") {
 			enums.Cmd("cd", "", []string{"/root/back"})
-			enums.CmdStart("tar", []string{"-zxvf", "BeeCustom.tar.gz", "BeeCustom"})
+			enums.Cmd("tar", "", []string{"-zxvf", "BeeCustom.tar.gz", "BeeCustom"})
 			enums.Cmd("rm", "y", []string{"BeeCustom.tar.gz"})
 			utils.LogDebug("tar BeeCustom.tar.gz")
 		} else {
@@ -68,7 +68,7 @@ func (c *WebHookController) Get() {
 		}
 
 		enums.Cmd("cd", "", []string{"/etc/supervisord.conf.d"})
-		enums.CmdStart("supervisorctl", []string{"restart", "beepkg"})
+		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
 
 	c.ServeJSON()
