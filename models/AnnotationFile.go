@@ -24,11 +24,12 @@ type AnnotationFileQueryParam struct {
 type AnnotationFile struct {
 	BaseModel
 
-	Type    string `orm:"column(type)" description:"附件类型"`
-	Name    string `orm:"column(name);size(255)" description:"附件名称"`
-	Url     string `orm:"column(url);size(255)" description:"附件url"`
-	Creator string `orm:"column(creator);size(255)" description:"创建人"`
-	Version string `orm:"column(version);size(255)" description:"版本"`
+	Type      string    `orm:"column(type)" description:"附件类型"`
+	Name      string    `orm:"column(name);size(255)" description:"附件名称"`
+	Url       string    `orm:"column(url);size(255)" description:"附件url"`
+	Creator   string    `orm:"column(creator);size(255)" description:"创建人"`
+	Version   string    `orm:"column(version);size(255)" description:"版本"`
+	DeletedAt time.Time `form:"-" orm:"column(deleted_at);type(timestamp);null" `
 
 	Annotation   *Annotation `orm:"column(annotation_id);rel(fk)"`
 	AnnotationId int64       `orm:"-" form:"AnnotationId"` // 关联管理会自动生成字段，此处不生成字段

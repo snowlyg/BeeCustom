@@ -73,7 +73,8 @@
                         <dl class="layui-nav-child">
                             <dd><a lay-href="@{{ urlfor "AnnotationController.IIndex" }}">进口核注清单</a></dd>
                             <dd><a lay-href="@{{ urlfor "AnnotationController.EIndex" }}">出口核注清单</a></dd>
-                            <dd><a lay-href="">回收站</a></dd>
+                            <dd><a lay-href="@{{ urlfor "AnnotationController.IRecycle" }}">出口清单回收站</a></dd>
+                            <dd><a lay-href="@{{ urlfor "AnnotationController.ERecycle" }}">进口清单回收站</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="javascript:;" lay-tips="货物申报"><i

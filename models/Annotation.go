@@ -26,6 +26,7 @@ type AnnotationQueryParam struct {
 	StatusString        string
 	SearchTimeString    string
 	EtpsInnerInvtNoLike string
+	IsDelete            bool
 }
 
 // Annotation 实体类
@@ -106,15 +107,15 @@ type Annotation struct {
 	ExtraRemark              string    `orm:"column(extra_remark);null" description:"附注"`
 	GenDecFlag               string    `orm:"column(gen_dec_flag);size(2);null" valid:"Required;MaxSize(2)" description:"是否生成报关单 1 生成，2 不生成"`
 	GenDecFlagName           string    `orm:"column(gen_dec_flag_name);size(100);null" valid:"Required;MaxSize(100)" description:"是否生成报关单名称"`
+	RecheckErrorInputIds     string    `orm:"column(recheck_error_input_ids);type(text);null" description:"复核input id"`
+	ItemRecheckErrorInputIds string    `orm:"column(item_recheck_error_input_ids);type(text);null" description:"复核input id"`
 	InputTime                time.Time `form:"-" orm:"column(input_time);type(datetime);null" valid:"Required"  description:"录入日期"`
 	PrevdTime                time.Time `form:"-" orm:"column(prevd_time);type(datetime);null" description:"预核扣时间"`
 	FormalVrfdedTime         time.Time `form:"-" orm:"column(formal_vrfded_time);type(datetime);null" description:"正式核扣时间 (返填)"`
-	DeletedAt                time.Time `form:"-" orm:"column(deleted_at);type(timestamp);null" `
 	StatusUpdatedAt          time.Time `form:"-" orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
 	InvtDclTime              time.Time `form:"-" orm:"column(invt_dcl_time);type(datetime);null" valid:"Required" description:"清单申报时间(清单申报日期)(返填)"`
 	EntryDclTime             time.Time `form:"-" orm:"column(entry_dcl_time);type(datetime);null"  description:"报关单申报日期(返填)清单报关时使用。海关端报关单入库时，反填并反馈企业端"`
-	RecheckErrorInputIds     string    `orm:"column(recheck_error_input_ids);type(text);null" description:"复核input id"`
-	ItemRecheckErrorInputIds string    `orm:"column(item_recheck_error_input_ids);type(text);null" description:"复核input id"`
+	DeletedAt                time.Time `form:"-" orm:"column(deleted_at);type(timestamp);null" `
 
 	BackendUsers []*BackendUser `orm:"rel(m2m);rel_through(BeeCustom/models.AnnotationUserRel)"` // 设置一对多的反向关系
 	Company      *Company       `orm:"column(company_id);rel(fk)"`
@@ -193,6 +194,12 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 	if len(params.StatusString) > 0 && params.StatusString != "全部订单" {
 		aStatus, _ := enums.GetSectionWithString(params.StatusString, "annotation_status")
 		sql += " AND status = " + strconv.Itoa(int(aStatus))
+	}
+
+	if params.IsDelete {
+		sql += " AND  deleted_at  IS NOT NULL"
+	} else {
+		sql += " AND deleted_at IS NULL "
 	}
 
 	// 默认排序

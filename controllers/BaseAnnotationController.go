@@ -42,6 +42,7 @@ func (c *BaseAnnotationController) bDataGrid(impexpMarkcd string) {
 	c.ServeJSON()
 }
 
+// 清单
 func (c *BaseAnnotationController) bIndex(impexpMarkcd string) {
 	// 页面模板设置
 	c.setTpl("annotation/index.html")
@@ -57,6 +58,50 @@ func (c *BaseAnnotationController) bIndex(impexpMarkcd string) {
 	c.Data["ImpexpMarkcd"] = impexpMarkcd
 	c.Data["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(impexpMarkcd)
 	c.GetXSRFToken()
+}
+
+// 回收站
+func (c *BaseAnnotationController) bRecycle(impexpMarkcd string) {
+	// 页面模板设置
+	c.setTpl("annotation/index.html")
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
+
+	// 页面里按钮权限控制
+	c.getActionData(impexpMarkcd, "Restore")
+
+	c.Data["ImpexpMarkcd"] = impexpMarkcd
+	c.Data["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(impexpMarkcd)
+	c.GetXSRFToken()
+}
+
+//还原删除订单
+func (c *BaseAnnotationController) bRestore(id int64) {
+	m, err := models.AnnotationOne(id, "")
+	if m != nil && id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
+
+	c.setStatusOnly(m, "待审核", false)
+	annotationRecord := c.newAnnotationRecord(m, "还原删除订单")
+	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "还原失败", m)
+	}
+	c.jsonResult(enums.JRCodeSucc, "还原成功", m)
+}
+
+//彻底删除订单
+func (c *BaseAnnotationController) bForceDelete(id int64) {
+	m, err := models.AnnotationOne(id, "")
+	if m != nil && id > 0 {
+		if err != nil {
+			c.pageError("数据无效，请刷新后重试")
+		}
+	}
+
+	c.jsonResult(enums.JRCodeSucc, "删除成功", m)
 }
 
 // 数据统计

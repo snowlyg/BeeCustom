@@ -126,6 +126,12 @@ func init() {
 		beego.Router("/annotation/audit_first_reject_log/?:id", &controllers.AnnotationController{}, "Get:"+flag+"AuditFirstRejectLog")
 		// 删除
 		beego.Router("/annotation/delete/?:id", &controllers.AnnotationController{}, "Delete:"+flag+"Delete")
+		// 回收站
+		beego.Router("/annotation/recycle/", &controllers.AnnotationController{}, "Get:"+flag+"Recycle")
+		// 还原订单
+		beego.Router("/annotation/restore/", &controllers.AnnotationController{}, "Get:"+flag+"Restore")
+		// 彻底删除订单
+		beego.Router("/annotation/forceDelete/", &controllers.AnnotationController{}, "Get:"+flag+"ForceDelete")
 	}
 
 	//手账册

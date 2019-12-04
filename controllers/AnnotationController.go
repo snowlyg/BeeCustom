@@ -29,6 +29,37 @@ func (c *AnnotationController) EIndex() {
 	c.bIndex("E")
 }
 
+// 回收站
+func (c *AnnotationController) IRecycle() {
+	c.bRecycle("I")
+}
+
+func (c *AnnotationController) ERecycle() {
+	c.bRecycle("E")
+}
+
+//还原删除订单
+func (c *AnnotationController) IRestore() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRestore(Id)
+}
+
+func (c *AnnotationController) ERestore() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bRestore(Id)
+}
+
+//彻底删除订单
+func (c *AnnotationController) IForceDelete() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bForceDelete(Id)
+}
+
+func (c *AnnotationController) EForceDelete() {
+	Id, _ := c.GetInt64(":id", 0)
+	c.bForceDelete(Id)
+}
+
 //列表数据
 func (c *AnnotationController) IDataGrid() {
 	c.bDataGrid("I")

@@ -34,6 +34,7 @@ type AnnotationReturn struct {
 	Reason       string    `orm:"column(reason);size(255);null" description:"检查信息"`
 	CreateDate   time.Time `orm:"column(create_date);type(datetime);null" description:"处理日期"`
 	Rmk          string    `orm:"column(rmk);size(255);null" description:"备注"`
+	DeletedAt    time.Time `form:"-" orm:"column(deleted_at);type(timestamp);null" `
 
 	Annotation   *Annotation `orm:"column(annotation_id);rel(fk)"`
 	AnnotationId int64       `orm:"-" form:"AnnotationId"` // 关联管理会自动生成字段，此处不生成字段

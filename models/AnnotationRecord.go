@@ -24,9 +24,11 @@ type AnnotationRecordQueryParam struct {
 type AnnotationRecord struct {
 	BaseModel
 
-	Content       string       `orm:"column(content)" description:"办理记录内容"`
-	Status        string       `orm:"column(status);size(255);null" description:"办理记录内容时状态"`
-	Remark        string       `orm:"column(remark);size(255);null" description:"备注"`
+	Content   string    `orm:"column(content)" description:"办理记录内容"`
+	Status    string    `orm:"column(status);size(255);null" description:"办理记录内容时状态"`
+	Remark    string    `orm:"column(remark);size(255);null" description:"备注"`
+	DeletedAt time.Time `form:"-" orm:"column(deleted_at);type(timestamp);null" `
+
 	BackendUser   *BackendUser `orm:"column(user_id);rel(fk)"`
 	BackendUserId int64        `orm:"-" form:"BackendUserId"` // 关联管理会自动生成字段，此处不生成字段
 	Annotation    *Annotation  `orm:"column(annotation_id);rel(fk)"`
