@@ -206,9 +206,9 @@ func SetObjValueIn(objName, v string, t reflect.Value) {
 
 // hmac 加密
 func Hmac(key string, data []byte) string {
-	hmac := hmac.New(sha1.New, []byte(key))
-	hmac.Write(data)
-	return hex.EncodeToString(hmac.Sum([]byte("")))
+	hmacSha1 := hmac.New(sha1.New, []byte(key))
+	hmacSha1.Write(data)
+	return hex.EncodeToString(hmacSha1.Sum([]byte("")))
 }
 
 func Cmd(action, input string, arg []string) {
@@ -222,6 +222,6 @@ func Cmd(action, input string, arg []string) {
 	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("cmd:%v:%v--%v --v", err, action, arg, stderr.String()))
+		utils.LogDebug(fmt.Sprintf("cmd:%v:%v--%v --%v", err, action, arg, stderr.String()))
 	}
 }
