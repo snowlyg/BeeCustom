@@ -222,8 +222,6 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 		sql += " LIMIT " + offset + "," + limit
 	}
 
-	utils.LogDebug(sql)
-
 	// 分页数据
 	_, err = o.Raw(sql).QueryRows(&datas)
 	if err != nil {
