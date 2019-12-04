@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 
 	"BeeCustom/enums"
+	"BeeCustom/file"
 	"BeeCustom/utils"
 )
 
@@ -28,7 +29,19 @@ func (c *WebHookController) Get() {
 	if calculateSignature == signature {
 		enums.Cmd("cd", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", []string{"pull"})
-		enums.Cmd("bee", []string{"run"})
+		enums.Cmd("bee", []string{"pack"})
+		if file.IsExist("/root/go/src/BeeCustom/Beecustom.tar.gz") {
+			enums.Cmd("mv", []string{"Beecustom.tar.gz", "/root/back"})
+		}
+
+		if !file.IsExist("/root/go/src/BeeCustom/Beecustom.tar.gz") && file.IsExist("/root/back/Beecustom.tar.gz") {
+			enums.Cmd("tar", []string{"-zxvf", "Beecustom.tar.gz"})
+		}
+
+		if file.IsExist("/root/back/BeeCustom") {
+			enums.Cmd("mv", []string{"BeeCustom", "/root/go/src/BeeCustom"})
+		}
+
 		enums.Cmd("cd", []string{"/etc/supervisord.conf.d"})
 		enums.Cmd("supervisorctl", []string{"restart", "beepkg"})
 	}
