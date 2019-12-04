@@ -77,7 +77,7 @@ func (c *BaseAnnotationController) bRecycle(impexpMarkcd string) {
 	c.GetXSRFToken()
 }
 
-//还原删除订单
+// 还原删除订单
 func (c *BaseAnnotationController) bRestore(id int64) {
 	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
@@ -94,7 +94,7 @@ func (c *BaseAnnotationController) bRestore(id int64) {
 	c.jsonResult(enums.JRCodeSucc, "还原成功", m)
 }
 
-//彻底删除订单
+// 彻底删除订单
 func (c *BaseAnnotationController) bForceDelete(id int64) {
 	m, err := models.AnnotationOne(id, "")
 	if err != nil {
@@ -756,7 +756,9 @@ func (c *BaseAnnotationController) bDelete(id int64) {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
-	if err := models.AnnotationUpdate(m, []string{"DeleteAt"}); err != nil {
+
+	m.DeletedAt = time.Now()
+	if err := models.AnnotationUpdate(m, []string{"DeletedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
 	annotationRecord := c.newAnnotationRecord(m, "删除订单")
