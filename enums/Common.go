@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 
 	"BeeCustom/utils"
@@ -210,12 +211,29 @@ func Hmac(key string, data []byte) string {
 	return hex.EncodeToString(hmac.Sum([]byte("")))
 }
 
-func Cmd(action string, arg []string) {
+func Cmd(action, input string, arg []string) {
 	cmd := exec.Command(action, arg...)
+	if len(input) > 0 {
+		cmd.Stdin = strings.NewReader(input)
+	}
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("cmd:%v:%v--%v", err, action, arg))
 	}
+}
+
+func CmdStart(action string, arg []string) {
+	cmd := exec.Command(action, arg...)
+	err := cmd.Start()
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("Start:%v:%v--%v", err, action, arg))
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("Wait:%v:%v--%v", err, action, arg))
+	}
+
 }
