@@ -222,6 +222,8 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 		sql += " LIMIT " + offset + "," + limit
 	}
 
+	utils.LogDebug(sql)
+
 	// 分页数据
 	_, err = o.Raw(sql).QueryRows(&datas)
 	if err != nil {
@@ -347,8 +349,7 @@ func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
 	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
 	if len(params.EtpsInnerInvtNoLike) > 0 {
-		sql += " AND etps_inner_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%'"
-		sql += " OR bond_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%'"
+		sql += " AND (etps_inner_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%'" + " OR bond_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%')"
 	}
 	if len(params.TrspModecd) > 0 {
 		sql += " AND trsp_modecd = '" + params.TrspModecd + "'"
@@ -360,9 +361,6 @@ func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 	} else {
 		sql += " AND deleted_at IS NULL "
 	}
-
-	utils.LogDebug(sql)
-	utils.LogDebug(params.IsDelete)
 
 	return sql
 }
