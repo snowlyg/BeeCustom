@@ -55,6 +55,7 @@ func (c *BaseAnnotationController) bIndex(impexpMarkcd string) {
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("AnnotationController.Make")
 	c.Data["BackendUsers"] = backendUsers
+	c.Data["IsDelete"] = false
 	c.Data["ImpexpMarkcd"] = impexpMarkcd
 	c.Data["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(impexpMarkcd)
 	c.GetXSRFToken()
