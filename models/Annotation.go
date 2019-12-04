@@ -316,41 +316,13 @@ func AnnotationUpdateOrSave(m *Annotation) error {
 	return nil
 }
 
-// Save 添加、编辑页面 保存
-func AnnotationUpdateStatusRecheckErrorInputIds(m *Annotation) error {
-	var err error
-	o := orm.NewOrm()
-
-	_, err = o.Update(m, "Status", "StatusUpdatedAt", "RecheckErrorInputIds", "ItemRecheckErrorInputIds")
-
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
-		return err
-	}
-
-	return nil
-}
-
 // 保存附注
-func AnnotationUpdateExtraRemark(m *Annotation) error {
+func AnnotationUpdate(m *Annotation, arg []string) error {
 	var err error
 	o := orm.NewOrm()
 
-	_, err = o.Update(m, "ExtraRemark")
+	_, err = o.Update(m, arg...)
 
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
-		return err
-	}
-
-	return nil
-}
-
-// AnnotationUpdateStatus 添加、编辑页面 保存
-func AnnotationUpdateStatus(m *Annotation) error {
-	var err error
-	o := orm.NewOrm()
-	_, err = o.Update(m, "Status", "StatusUpdatedAt", "SeqNo", "BondInvtNo")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 		return err

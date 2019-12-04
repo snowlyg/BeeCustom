@@ -97,13 +97,18 @@ func (c *BaseAnnotationController) bRestore(id int64) {
 //彻底删除订单
 func (c *BaseAnnotationController) bForceDelete(id int64) {
 	m, err := models.AnnotationOne(id, "")
-	if m != nil && id > 0 {
-		if err != nil {
-			c.pageError("数据无效，请刷新后重试")
-		}
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
+	}
+	if _, err := models.AnnotationDelete(id); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
+	}
+	annotationRecord := c.newAnnotationRecord(m, "删除订单")
+	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "删除失败", m)
 	}
 
-	c.jsonResult(enums.JRCodeSucc, "删除成功", m)
+	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", 1), "")
 }
 
 // 数据统计
@@ -269,7 +274,7 @@ func (c *BaseAnnotationController) bCancel(id int64) {
 	if err = UpdateAnnotationStatus(m, "订单关闭", false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
-	if err := models.AnnotationUpdateStatus(m); err != nil {
+	if err := models.AnnotationUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 	annotationRecord := c.newAnnotationRecord(m, "取消订单")
@@ -362,7 +367,7 @@ func (c *BaseAnnotationController) bForRecheck(id int64) {
 	if err = UpdateAnnotationStatus(m, "待复核", false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	if err := models.AnnotationUpdateStatus(m); err != nil {
+	if err := models.AnnotationUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	annotationRecord := c.newAnnotationRecord(m, "复核")
@@ -381,7 +386,7 @@ func (c *BaseAnnotationController) bRestart(id int64) {
 	if err = UpdateAnnotationStatus(m, "待审核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	if err := models.AnnotationUpdateStatus(m); err != nil {
+	if err := models.AnnotationUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	annotationRecord := c.newAnnotationRecord(m, "重新开启订单")
@@ -400,7 +405,8 @@ func (c *BaseAnnotationController) bReForRecheck(id int64) {
 	if err = UpdateAnnotationStatus(m, "待复核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	if err := models.AnnotationUpdateStatus(m); err != nil {
+
+	if err := models.AnnotationUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	annotationRecord := c.newAnnotationRecord(m, "复核")
@@ -425,7 +431,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString, action, acti
 	itemRecheckErrorInputIds := c.GetString("ItemRecheckErrorInputIds")
 	m.RecheckErrorInputIds = recheckErrorInputIds
 	m.ItemRecheckErrorInputIds = itemRecheckErrorInputIds
-	if err := models.AnnotationUpdateStatusRecheckErrorInputIds(m); err != nil {
+	if err := models.AnnotationUpdate(m, []string{"Status", "StatusUpdatedAt", "RecheckErrorInputIds", "ItemRecheckErrorInputIds"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	content := c.GetString("Content")
@@ -716,7 +722,7 @@ func (c *BaseAnnotationController) bExtraRemark(id int64, extraRemark string) {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	}
 	m.ExtraRemark = extraRemark
-	if err = models.AnnotationUpdateExtraRemark(m); err != nil {
+	if err = models.AnnotationUpdate(m, []string{"ExtraRemark"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	}
 	c.jsonResult(enums.JRCodeSucc, "操作成功", err)
@@ -750,7 +756,7 @@ func (c *BaseAnnotationController) bDelete(id int64) {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
-	if _, err := models.AnnotationDelete(id); err != nil {
+	if err := models.AnnotationUpdate(m, []string{"DeleteAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
 	annotationRecord := c.newAnnotationRecord(m, "删除订单")
@@ -840,7 +846,7 @@ func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusStr
 	if err := UpdateAnnotationStatus(m, statusString, isRestart); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
-	if err := models.AnnotationUpdateStatus(m); err != nil {
+	if err := models.AnnotationUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 }
