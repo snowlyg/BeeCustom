@@ -4,14 +4,16 @@
             <div class="custom-order_import">
                 <div class="status_flex">
                     <div class="status_flex_list" id="status_flex_list"></div>
-                    <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
+                    @{{if eq .IsDelete false}}
+                    <div class="right_del" lay-href="/annotation/recycle/@{{.ImpexpMarkcd}}" lay-text="保税清单回收站">
                         <i class="iconfont icondelete"></i>
                         <span>订单回收站</span>
                     </div>
+                    @{{end}}
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6">
-                        @{{if  canArray  .actions .ImpexpMarkcd "canCreate" }}
+                     @{{if  canArray  .actions .ImpexpMarkcd "canCreate" }}
                     <span class="custom-new_btn" lay-href="/annotation/create/@{{.ImpexpMarkcd}}"
                           lay-text="@{{.ImpexpMarkcdName}}清单制作" id="order_import_new">代客下单</span>
                     @{{else}}

@@ -196,12 +196,6 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 		sql += " AND status = " + strconv.Itoa(int(aStatus))
 	}
 
-	if params.IsDelete {
-		sql += " AND  deleted_at  IS NOT NULL"
-	} else {
-		sql += " AND deleted_at IS NULL "
-	}
-
 	// 默认排序
 	sortorder := "Id"
 	if len(params.Sort) > 0 {
@@ -386,6 +380,13 @@ func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 	}
 	if len(params.TrspModecd) > 0 {
 		sql += " AND trsp_modecd = '" + params.TrspModecd + "'"
+	}
+
+	// 是否删除
+	if params.IsDelete {
+		sql += " AND  deleted_at  IS NOT NULL"
+	} else {
+		sql += " AND deleted_at IS NULL "
 	}
 
 	return sql

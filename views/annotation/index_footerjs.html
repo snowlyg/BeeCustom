@@ -116,6 +116,7 @@
         List: {
           Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
           Request: {
+            IsDelete: @{{.IsDelete}},
             SearchTimeString: MonthTime,
             sort: 'invt_dcl_time',
             order: 'desc',
@@ -124,6 +125,7 @@
         StatusCount: {
           Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
           Request: {
+            IsDelete: @{{.IsDelete}},
             SearchTimeString: MonthTime,
           },
         },
@@ -149,6 +151,7 @@
           List: {
             Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
             Request: {
+              IsDelete: @{{.IsDelete}},
               EtpsInnerInvtNoLike: $(this).val(),
               SearchTimeString: MonthTime,
               sort: 'invt_dcl_time',
@@ -158,6 +161,7 @@
           StatusCount: {
             Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
             Request: {
+              IsDelete: @{{.IsDelete}},
               EtpsInnerInvtNoLike: $(this).val(),
               SearchTimeString: MonthTime,
             },
@@ -177,6 +181,7 @@
         List: {
           Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
           Request: {
+            IsDelete: @{{.IsDelete}},
             SearchTimeString: MonthTime,
             sort: 'invt_dcl_time',
             order: 'desc',
@@ -185,6 +190,7 @@
         StatusCount: {
           Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
           Request: {
+            IsDelete: @{{.IsDelete}},
             SearchTimeString: MonthTime,
           },
         },
@@ -317,6 +323,7 @@
       List: {
         Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
         Request: {
+          IsDelete: @{{.IsDelete}},
           SearchTimeString: MonthTime,
           sort: 'invt_dcl_time',
           order: 'desc',
@@ -325,6 +332,7 @@
       StatusCount: {
         Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
         Request: {
+          IsDelete: @{{.IsDelete}},
           SearchTimeString: MonthTime,
         },
       },
@@ -531,6 +539,7 @@
         List: {
           Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
           Request: {
+            IsDelete: @{{.IsDelete}},
             TrspModecd: data.value ? data.value : '',
             SearchTimeString: MonthTime,
             sort: 'invt_dcl_time',
@@ -540,6 +549,7 @@
         StatusCount: {
           Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
           Request: {
+            IsDelete: @{{.IsDelete}},
             TrspModecd: data.value ? data.value : '',
             SearchTimeString: MonthTime,
           },

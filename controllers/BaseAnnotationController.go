@@ -70,6 +70,7 @@ func (c *BaseAnnotationController) bRecycle(impexpMarkcd string) {
 	// 页面里按钮权限控制
 	c.getActionData(impexpMarkcd, "Restore")
 
+	c.Data["IsDelete"] = true
 	c.Data["ImpexpMarkcd"] = impexpMarkcd
 	c.Data["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(impexpMarkcd)
 	c.GetXSRFToken()
