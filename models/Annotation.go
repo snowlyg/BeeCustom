@@ -306,7 +306,6 @@ func AnnotationUpdateOrSave(m *Annotation) error {
 		}
 	} else {
 		_, err = o.Update(m)
-
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationSave:%v", err))
 			return err

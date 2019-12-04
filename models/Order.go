@@ -24,8 +24,8 @@ type OrderQueryParam struct {
 	IEFlag           string
 	StatusString     string
 	SearchTimeString string
-	//TrspModecd          string
-	ClientSeqNoLike string
+	TrafMode         string
+	ClientSeqNoLike  string
 }
 
 // Order 实体类

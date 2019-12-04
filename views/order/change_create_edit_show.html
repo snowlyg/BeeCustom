@@ -1,9 +1,19 @@
 <div class="custom-order_form">
     <div class="custom-order_form_annotation">
         <div class="custom-order_form_top">
+            <button class="layui-btn custom-create_btn" id="order_save_reload" lay-submit lay-filter="order_save_reload" type="button">
+                <i class="iconfont icon-save"></i>保存并发送到单一窗口
+            </button>
+            <button type="button" id="order_save_reload_submit" lay-submit lay-filter="order_save_reload_submit" style="display: none;"></button>
+            <button class="layui-btn custom-create_btn" id="order_save" type="button" lay-submit lay-filter="order_save">
+                <i class="iconfont icon-save"></i>保存
+            </button>
+            <button class="layui-btn custom-create_btn" id="order_i_import" type="button">
+                <i class="iconfont icon-input"></i>导入
+            </button>
             @{{if .m.Id }}
                 @{{if eq  .m.StatusString  "待审核"  "审核中" }}
-                    @{{ if canArray  .actions .m.ImpexpMarkcd  "canAudit"}}
+                    @{{ if canArray  .actions .m.IEFlag  "canAudit"}}
                     <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
                         <i class="iconfont iconcheckcircle"></i>审核通过
                     </button>
@@ -11,38 +21,38 @@
                 @{{ end }}
 
             @{{if eq .m.StatusString  "审核通过" }}
-                @{{ if canArray  .actions .m.ImpexpMarkcd "canDistribute"}}
+                @{{ if canArray  .actions .m.IEFlag "canDistribute"}}
                 <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                     <i class="iconfont iconfolder-shared"></i>派单
                 </button>
                 @{{ end }}
             @{{ else if eq .m.StatusString  "待制单" }}
-                @{{ if canArray  .actions .m.ImpexpMarkcd "canDistribute"}}
+                @{{ if canArray  .actions .m.IEFlag "canDistribute"}}
                 <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                     <i class="iconfont iconfolder-shared"></i>重新派单
                 </button>
                 @{{ end }}
             @{{ else if eq .m.StatusString  "制单中" }}
-                @{{ if canArray  .actions .m.ImpexpMarkcd "canForRecheck"}}
+                @{{ if canArray  .actions .m.IEFlag "canForRecheck"}}
                 <button class="layui-btn custom-create_btn" id="annotaiton_for_recheck" type="button" lay-submit
                         lay-filter="order_application_review">
                     <i class="iconfont iconaddcircle"></i><span>申请复核</span>
                 </button>
                 @{{ end }}
         @{{ else if eq .m.StatusString "复核不通过"}}
-                @{{ if canArray  .actions .m.ImpexpMarkcd "canReForRecheck"}}
+                @{{ if canArray  .actions .m.IEFlag "canReForRecheck"}}
                 <button class="layui-btn custom-create_btn" id="annotaiton_refor_recheck" type="button" lay-submit
                         lay-filter="order_application_review">
                     <i class="iconfont iconaddcircle"></i><span>重新申请复核</span>
                 </button>
                 @{{ end }}
             @{{ end }}
-            @{{ if canArray  .actions .m.ImpexpMarkcd "canPrint"}}
+            @{{ if canArray  .actions .m.IEFlag "canPrint"}}
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print" type="button"><i
                         class="iconfont iconprint"></i>打印
             </button>
             @{{ end }}
-            @{{ if canArray  .actions .m.ImpexpMarkcd "canExtraRemark"}}
+            @{{ if canArray  .actions .m.IEFlag "canRemark"}}
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note" type="button">
                 <i class="iconfont icontab"></i>附注
                 <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
@@ -66,7 +76,6 @@
         @{{ end }}
         </div>
 
-        @{{/*        <div id="order_edit_bill"></div>*/}}
         <div id="order_fail">
         @{{  if  .m.Id }}
         @{{  if eq .m.StatusString  "审核不通过" "复核不通过" }}
@@ -87,42 +96,67 @@
         @{{ end }}
         @{{ end }}
         </div>
-        <div class="layui-tab" lay-filter="annotation_header_item">
-            @{{if .m.Id}}
-        <ul class="layui-tab-title template_list">
-            <li>表头</li>
-            <li id="annotation_item_tab" class="layui-this ">表体</li>
 
-        </ul>
-        <div class="layui-tab-content">
-            <div class="layui-tab-item ">
-                @{{template "/annotation/create/gauge.html" .}}
-            </div>
-            <div class="layui-tab-item layui-show">
-                @{{template "/annotation/create/body.html" .}}
-            </div>
-        </div>
-        @{{else}}
-        <ul class="layui-tab-title template_list">
-            <li class="layui-this">表头</li>
-            <li id="annotation_item_tab">表体</li>
+@{{/*        <script type="text/html" id="order_edit_bill_template">*/}}
+@{{/*            {{# if(d.order_status_string == '已完成'){ }}*/}}
+@{{/*            {{# if(d.order_change_logs.length > 0){ }}*/}}
+@{{/*            <div class="order_edit_bill_string">*/}}
+@{{/*                <p class="order_edit_bill_string_p">*/}}
+@{{/*                    <i class="iconfont icon-edit"></i>*/}}
+@{{/*                    <span>@{{ d.order_change_logs[d.order_change_logs.length-1].content }}</span>*/}}
+@{{/*                </p>*/}}
+@{{/*            </div>*/}}
+@{{/*            {{# } }}*/}}
+@{{/*            {{# } }}*/}}
+@{{/*        </script>*/}}
+@{{/*        <div id="order_edit_bill"></div>*/}}
 
-        </ul>
-        <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
-                @{{template "/annotation/create/gauge.html" .}}
-            </div>
-            <div class="layui-tab-item ">
-                @{{template "/annotation/create/body.html" .}}
-            </div>
-        </div>
-        @{{end}}
-
-        </div>
+        @{{template "order/create/gauge.html" .}}
+        @{{template "order/create/order_tip.html" .}}
+        </form>
+        @{{template "order/create/order_pros.html" .}}
+    </div>
+    <div class="content_right">
+        @{{template "order/create/order_containers.html" .}}
+        @{{template "order/create/order_documents.html" .}}
+    </div>
+    <div class="head-item">
+        <p id="tipsMessagetext">申报地海关：输入4位代码或名称（如‘北京海关’应输入‘0100’或‘北京海关’）</p>
     </div>
 </div>
 
 @{{template "/common/order_annotation/distribute.html" .}}
-@{{template "/annotation/create/remark_note.html" .}}
+@{{template "/order/create/remark_note.html" .}}
 @{{template "/common/order_annotation/take.html" .}}
-@{{template "/annotation/create/annotation_search.html" .}}
+@{{template "order/create/manual_no.html" .}}
+@{{template "order/create/bill_no.html" .}}
+@{{template "order/create/other_packs.html" .}}
+@{{template "order/create/note_s.html" .}}
+@{{template "order/create/mark_no.html" .}}
+@{{template "order/create/ent_qualif.html" .}}
+@{{template "order/create/dec_users.html" .}}
+@{{template "order/create/spec_decl_flag.html" .}}
+@{{template "order/create/dec_request_certs.html" .}}
+@{{template "order/create/contr_item.html" .}}
+@{{template "order/create/code_t_s.html" .}}
+@{{template "order/create/declaration.html" .}}
+@{{template "order/create/ciq_name.html" .}}
+@{{template "order/create/goods_spec.html" .}}
+@{{template "order/create/dec_goods.html" .}}
+@{{template "order/create/dec_goods_vin.html" .}}
+@{{template "order/create/goods_attr_data.html" .}}
+@{{template "order/create/dang.html" .}}
+@{{template "order/create/elements_his.html" .}}
+@{{template "order/create/batch_edit.html" .}}
+@{{template "order/create/goods_attr_batch_data.html" .}}
+@{{template "order/create/goods_no.html" .}}
+@{{template "order/create/order_document_eco_relations.html" .}}
+@{{template "order/create/print.html" .}}
+@{{template "order/create/order_enclosure.html" .}}
+@{{template "order/create/order_init.html" .}}
+@{{template "order/create/print_edit_contract.html" .}}
+@{{template "order/create/print_edit_invoice.html" .}}
+@{{template "order/create/print_edit_driver.html" .}}
+@{{template "order/create/print_save_contract.html" .}}
+@{{template "order/create/print_save_invoice.html" .}}
+@{{template "order/create/print_save_driver.html" .}}

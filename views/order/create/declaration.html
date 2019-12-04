@@ -1,0 +1,109 @@
+<script type="text/html" id="declaration_template">
+    <div class="manual_no_list">
+        <p class="dec_p_red">下面为规格型号（根据海关规定，以下要素应全部填报）</p>
+        <form class="layui-form" onkeydown="if(event.keyCode===13){return false}">
+            <table class="layui-table order_table_form order_table_form_show">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">规格型号</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="elements" id="elements"
+                                   autocomplete="off" value="|3" onchange="layui.admin.elements_change(this)">
+                            <p class="declaration_number">(<span id="elementsByteTotal">2</span>/255字节)</p>
+                        </div>
+                    </td>
+                </tr>
+                
+                {{# layui.each(d, function(index, item){ }}
+                {{# if(item){ }}
+                <tr>
+                    {{# let dec_id = d.length > (index + 2) ? "val"+(index + 2) : 0 }}
+                    <td class="td-scale-01 text-align-right">{{ item }}</td>
+                    {{# if(item == "CAS" || item == "其他"){ }}
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="dyanInput" id="val{{ index }}"
+                                   autocomplete="off" onkeyup="layui.admin.decFocus(event,'{{ dec_id }}')">
+                        </div>
+                    </td>
+                    {{# } else if(item == "GTIN"){ }}
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="dyanInput" id="val{{ index }}"
+                                   autocomplete="off" onblur="layui.admin.decFocus(event,'{{ dec_id }}')"
+                                   onkeyup="layui.admin.decCheckInt(this)">
+                        </div>
+                    </td>
+                    {{# } else if(item == "品牌类型"){ }}
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="hidden" class="non-empty" name="dyanInput" id="val{{ index }}">
+                            <input type="text" class="non-empty required" name="val{{ index }}Name"
+                                   id="val{{ index }}Name" autocomplete="off" lay-verify="required" lay-vertype="tips"
+                                   onblur="layui.admin.decFocus(event,'{{ dec_id }}')">
+                        </div>
+                    </td>
+                    {{# } else if(item == "出口享惠情况"){ }}
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="hidden" class="non-empty" name="dyanInput" id="val{{ index }}" value="3">
+                            <input type="text" class="non-empty" disabled name="val{{ index }}Name"
+                                   id="val{{ index }}Name" autocomplete="off" value="不适用于进口报关单">
+                        </div>
+                    </td>
+                    {{# } else { }}
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty required" name="dyanInput" id="val{{ index }}"
+                                   autocomplete="off" lay-verify="required" lay-vertype="tips"
+                                   onkeyup="layui.admin.decFocus(event,'{{ dec_id }}')">
+                        </div>
+                    </td>
+                    {{# } }}
+                </tr>
+                {{# } }}
+                {{# }) }}
+
+                </tbody>
+            </table>
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">商品名称</td>
+                    <td class="td-scale-02 td-btn" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled name="selectCodeTs" id="selectCodeTs"
+                                   autocomplete="off">
+                            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="his_dec"
+                                    type="button">
+                                历史申报数据
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">商品信息</td>
+                    <td class="td-scale-02 td-btn" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="good_information" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="declaration_save" id="declaration_save" type="button">
+                    确定
+                </button>
+            </div>
+
+            <div class="manual_no_btn_next" style="display:none;">
+                <button class="layui-btn custom-create_btn" lay-submit id="declaration_last"  lay-filter="declaration_last" type="button">上一条</button>
+                <button class="layui-btn custom-create_btn" lay-submit id="declaration_next" lay-filter="declaration_next" type="button">下一条</button>
+            </div>
+
+        </form>
+    </div>
+</script>
+<script type="text/html" id="declaration_list"></script>

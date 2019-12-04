@@ -1,0 +1,288 @@
+<form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+    <table class="layui-hide" id="order_pros" lay-filter="order_pros"></table>
+    <table class="layui-table order_table_form" id="order_pros_form">
+        <tbody>
+        <tr>
+            <td class="td-scale-04 text-align-right">序号</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" disabled name="g_no" id="g_no" autocomplete="off"
+                           value="1">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">备案序号</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty"  name="contr_item" id="contr_item" autocomplete="off"
+                           onchange="layui.admin.contr_item_change(this)" data-flag="I">
+                    <i class="iconfont iconmore-horiz input_more" id="contr_item_open"></i>
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">商品编号</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="code_t_s" id="code_t_s" autocomplete="off" maxlength="10"
+                           onkeyup="layui.admin.openGoodsWindow(event);" oninput="layui.admin.is_onlynumber(this)">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">检验检疫名称</td>
+            <td colspan="3">
+                <div class="input-group valid">
+                    <input type="hidden" name="ciq_code" id="ciq_code">
+                    <input type="text" class="non-empty" disabled name="ciq_name" id="ciq_name" autocomplete="off">
+                    <i class="iconfont iconmore-horiz input_more" id="ciq_name_open"></i>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-04 text-align-right">商品名称</td>
+            <td colspan="4">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="g_name" id="g_name" autocomplete="off">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">规格型号</td>
+            <td colspan="4">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" disabled name="g_model" id="g_model" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-04 text-align-right">成交数量</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="g_qty" id="g_qty" autocomplete="off" onchange="layui.admin.g_qty_change(this)"
+                           oninput="layui.admin.is_onlyNumFloat(this, 'four')">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">成交计量单位</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="hidden" name="g_unit" id="g_unit">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="g_unit_name" id="g_unit_name" autocomplete="off" onchange="layui.admin.g_unit_name_change(this)">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">单价</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="decl_price" id="decl_price" autocomplete="off" onchange="layui.admin.priceChange()"
+                           oninput="layui.admin.is_onlyNumFloat(this, 'four')">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">总价</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="decl_total" id="decl_total" autocomplete="off" onchange="layui.admin.totalChange()"
+                           oninput="layui.admin.is_onlyNumFloat(this, 'four')">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">币制</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="hidden" name="trade_curr" id="trade_curr" no_empty>
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="trade_curr_name" id="trade_curr_name" autocomplete="off" no_empty>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-04 text-align-right">法定第一数量</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="first_qty" id="first_qty" autocomplete="off"
+                           oninput="layui.admin.is_onlyNumFloat(this, 'four')">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">法定第一计量单位</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="hidden" name="first_unit" id="first_unit">
+                    <input type="text" class="non-empty required" name="first_unit_name" id="first_unit_name"
+                           autocomplete="off" lay-verify="required" lay-vertype="tips">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">加工成品单耗版本号</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" name="exg_version" id="exg_version"
+                        autocomplete="off" maxlength="8" oninput="layui.admin.is_onlynumber(this)">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">货号</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" name="exg_no" id="exg_no" autocomplete="off">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">最终目的国(地区)</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="hidden" name="destination_country" id="destination_country" value="CHN" no_empty>
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="destination_country_name" id="destination_country_name" autocomplete="off" value="中国"
+                           no_empty>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-04 text-align-right">法定第二数量</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" name="second_qty" id="second_qty" autocomplete="off"
+                           oninput="layui.admin.is_onlyNumFloat(this, 'four')">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">法定第二计量单位</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="hidden" name="second_unit" id="second_unit">
+                    <input type="text" class="non-empty" name="second_unit_name" id="second_unit_name"
+                           autocomplete="off">
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">原产国（地区）</td>
+            <td colspan="3">
+                <div class="input-group valid">
+                    <input type="hidden" name="origin_country" id="origin_country" no_empty>
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="origin_country_name" id="origin_country_name" autocomplete="off" no_empty>
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">原产地区</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="hidden" name="orig_place_code" id="orig_place_code">
+                    <input type="text" class="non-empty" name="orig_place_code_name" id="orig_place_code_name"
+                           autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="td-scale-04 text-align-right">
+                <div class="non-disabled-btn" id="decListShow" isdeclistshow="0">
+                    <i class="iconfont iconjiantou_xia transform_xia"></i>
+                    <span>报检信息录入</span>
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">境内目的地</td>
+            <td colspan="2">
+                <div class="input-group valid">
+                    <input type="hidden" name="district_code" id="district_code" no_empty>
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="district_code_name" id="district_code_name" autocomplete="off" placeholder="境内目的地代码"
+                           no_empty>
+                </div>
+            </td>
+            <td colspan="3">
+                <div class="input-group valid">
+                    <input type="hidden" name="dest_code" id="dest_code" no_empty>
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="dest_code_name" id="dest_code_name" autocomplete="off" placeholder="目的地代码" no_empty>
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">征免方式</td>
+            <td>
+                <div class="input-group valid">
+                    <input type="hidden" name="duty_mode" id="duty_mode" no_empty value="1">
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="duty_mode_name" id="duty_mode_name" autocomplete="off" no_empty value="照章征税">
+                </div>
+            </td>
+        </tr>
+        <tr style="display: none;">
+            <td class="td-scale-04 text-align-right">检验检疫货物规格</td>
+            <td colspan="7">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" disabled id="goods_spec_data" autocomplete="off">
+                    <i class="iconfont iconmore-horiz input_more" id="goods_spec_open"></i>
+                </div>
+            </td>
+            <td colspan="2" class="td-btn">
+                <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="goodsTargetBtn"
+                        type="button">
+                    产品资质
+                </button>
+            </td>
+        </tr>
+        <tr style="display: none;">
+            <td class="td-scale-04 text-align-right">货物属性</td>
+            <td colspan="4">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" disabled id="goods_attr" autocomplete="off">
+                    <i class="iconfont iconmore-horiz input_more" id="goods_attr_open"></i>
+                </div>
+            </td>
+            <td class="td-scale-04 text-align-right">用途</td>
+            <td colspan="2">
+                <div class="input-group valid">
+                    <input type="hidden" name="purpose" id="purpose">
+                    <input type="text" class="non-empty required" name="purpose_name" id="purpose_name"
+                           lay-vertype="tips" autocomplete="off">
+                </div>
+            </td>
+            <td colspan="2" class="td-btn">
+                <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="dangerBtn"
+                        type="button">
+                    危险货物信息
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+<script type="text/html" id="order_pros_tool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_submit" lay-event="add" type="button">
+            新增
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="order_pros_submit" lay-submit
+                lay-filter="order_pros_submit" type="button">
+            保存
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_delete" lay-event="delete"
+                type="button">
+            删除
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_copy" lay-event="copy"
+                type="button">
+            复制
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_up" lay-event="up"
+                type="button">
+            上移
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_down" lay-event="down"
+                type="button">
+            下移
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_insert" lay-event="insert"
+                type="button">
+            &nbsp;插入
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_again" lay-event="again"
+                type="button">
+            重新归类
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_look" lay-event="look"
+                type="button">
+            归类查看
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_batch_edit" lay-event="batch_edit"
+                type="button">
+            批量修改
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_users_commodity" lay-event="commodity"
+                type="button" onclick="layui.admin.dec_users_commodity_click()">
+            商品库
+        </button>
+    </div>
+</script>
+@{{template "order/create/commodity_storehouse.html" .}}

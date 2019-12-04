@@ -1,0 +1,26 @@
+<script type="text/html" id="print_edit_invoice_template">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">目的地</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="hidden" name="dest_code" id="dest_code_invoice">
+                            <input type="text" class="non-empty" name="district_code_name" id="dest_code_name_invoice"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="print_edit_invoice_save"
+                        id="print_edit_invoice_save" type="button">
+                    预览
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

@@ -1,0 +1,146 @@
+<script type="text/html" id="order_enclosure_template">
+    <div class="custom-order_import-pdf">
+        <div class="order_enclosure_top">
+            @can('i.order.create_pdf')
+                <button class="layui-btn custom-create_btn" id="add_enclosure" type="button">
+                    新建附件
+                </button>
+            @endcan
+        </div>
+        <table class="layui-hide" id="order_enclosure_lists" lay-filter="order_enclosure_lists"></table>
+    </div>
+</script>
+<script type="text/html" id="order_enclosure_toolbar">
+    <a class="custom-edit" lay-event="preview">预览</a>
+    <a class="custom-edit" lay-event="download">下载</a>
+    <a class="custom-edit" lay-event="edit">修改</a>
+    <a class="custom-edit" lay-event="delete">删除</a>
+    <a class="custom-edit" lay-event="recreate">重新生成</a>
+</script>
+<script type="text/html" id="order_enclosure_template_add">
+    <div class="custom-order_import-pdf">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md6">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>附件类型：</label>
+                    <div class="layui-input-block">
+                        <select name="edoc_code" lay-verify="required" lay-vertype="tips" lay-filter="edoc_code">
+                            <option value="">请选择</option>
+                            <option value="00000001,发票">发票</option>
+                            <option value="00000002,装箱单">装箱单</option>
+                            <option value="00000004,购销合同">购销合同</option>
+                            <option value="local_1,导入模版">导入模版</option>
+                            <option value="local_2,原始资料" selected>原始资料</option>
+                            <option value="local_3,放行通知书">放行通知书</option>
+                            <option value="local_4,审结通知书">审结通知书</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md12">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>文件上传：</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button class="layui-btn layui-btn-primary custom-create_btn_primary"
+                                    id="order_enclosure_upload"
+                                    type="button">
+                                选择文件
+                            </button>
+                            <div class="layui-upload-list">
+                                <table class="layui-table">
+                                    <thead>
+                                    <tr>
+                                        <th width="150">文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="order_enclosure_upload_list"></tbody>
+                                </table>
+                            </div>
+                            <button class="layui-btn custom-create_btn" id="order_enclosure_upload_action"
+                                    type="button">
+                                开始上传
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="order_enclosure_submit"
+                            id="order_enclosure_submit" type="button">
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="order_enclosure_template_edit">
+    <div class="custom-order_import-pdf">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md6">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>附件类型：</label>
+                    <div class="layui-input-block">
+                        <select name="edoc_code" lay-verify="required" lay-vertype="tips" lay-filter="edoc_code_edit"
+                                id="edoc_code_edit">
+                            <option value="">请选择</option>
+                            <option value="00000001,发票">发票</option>
+                            <option value="00000002,装箱单">装箱单</option>
+                            <option value="00000004,购销合同">购销合同</option>
+                            <option value="local_1,导入模版">导入模版</option>
+                            <option value="local_2,原始资料">原始资料</option>
+                            <option value="local_3,放行通知书">放行通知书</option>
+                            <option value="local_4,审结通知书">审结通知书</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md12">
+                    <label class="layui-form-label"><i class="red margin-right-4">*</i>文件上传：</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button class="layui-btn layui-btn-primary custom-create_btn_primary"
+                                    id="order_enclosure_upload_edit"
+                                    type="button">
+                                选择文件
+                            </button>
+                            <div class="layui-upload-list">
+                                <table class="layui-table">
+                                    <thead>
+                                    <tr>
+                                        <th width="150">文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="order_enclosure_upload_list_edit"></tbody>
+                                </table>
+                            </div>
+                            <button class="layui-btn custom-create_btn" id="order_enclosure_upload_action_edit"
+                                    type="button">
+                                开始上传
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn custom-create_btn" lay-submit lay-filter="order_enclosure_submit_edit"
+                            id="order_enclosure_submit_edit" type="button">
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>

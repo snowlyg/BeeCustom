@@ -1017,60 +1017,60 @@ layui.define('view', function (exports) {
                                 type.after.forEach((avalue, aindex) => {
                                     $(type.after[aindex]).val(data.id[aindex]);
                                 });
-                                if (type.after[index] === '#trans_mode') {
+                                if (type.after[index] === '#TransMode') {
                                     admin.transModeControl(admin.cusIEFlag)
                                 }
-                                if (type.after[index] === '#fee_mark') {
-                                    admin.markSelect('fee_mark', 'fee_curr', 'fee_curr_name')
+                                if (type.after[index] === '#FeeMark') {
+                                    admin.markSelect('FeeMark', 'FeeCurr', 'FeeCurrName')
                                 }
-                                if (type.after[index] === '#insur_mark') {
-                                    admin.markSelect('insur_mark', 'insur_curr', 'insur_curr_name')
+                                if (type.after[index] === '#InsurMark') {
+                                    admin.markSelect('InsurMark', 'InsurCurr', 'insur curr name')
                                 }
-                                if (type.after[index] === '#other_mark') {
-                                    admin.markSelect('other_mark', 'other_curr', 'other_curr_name')
+                                if (type.after[index] === '#OtherMark') {
+                                    admin.markSelect('OtherMark', 'OtherCurr', 'OtherCurrName')
                                 }
-                                if (type.after[index] === '#traf_mode') {
-                                    if ($('#traf_mode').val() === 4) {
+                                if (type.after[index] === '#TrafMode') {
+                                    if ($('#TrafMode').val() === 4) {
                                         //$("#bill_no").removeAttr("disabled", "disabled");
                                         //启运国(地区)
-                                        $('#trade_country').val('HKG');
-                                        $('#trade_country_name').val('中国香港');
+                                        $('#TradeCountry').val('HKG');
+                                        $('#TradeCountryName').val('中国香港');
                                         //经停港
-                                        $('#distinate_port').val('HKG003');
-                                        $('#distinate_port_name').val('香港（中国香港）');
+                                        $('#DistinatePort').val('HKG003');
+                                        $('#DistinatePortName').val('香港（中国香港）');
                                         //贸易国别（地区）
-                                        $('#trade_area_code').val('HKG');
-                                        $('#trade_area_name').val('中国香港');
+                                        $('#TradeAreaCode').val('HKG');
+                                        $('#TradeAreaName').val('中国香港');
                                         //启运港
-                                        $('#desp_port_code').val('HKG003');
-                                        $('#desp_port_name').val('香港（中国香港）')
+                                        $('#DespPortCode').val('HKG003');
+                                        $('#DespPortName').val('香港（中国香港）')
                                     } else {
                                         //$("#bill_no").attr("disabled", "disabled");
                                     }
                                 }
-                                if (type.after[index] == '#trsp_modecd') {
-                                    if ($('#trsp_modecd').val() === 4) {
-                                        $('#stship_trsarv_natcd').val('110');
-                                        $('#stship_trsarv_natcd_name').val('中国香港')
+                                if (type.after[index] == '#TrspModecd') {
+                                    if ($('#TrspModecd').val() === 4) {
+                                        $('#StshipTrsarvNatcd').val('110');
+                                        $('#StshipTrsarvNatcdName').val('中国香港')
                                     }
                                 }
 
-                                if (type.after[index] === '#cus_fie') {
+                                if (type.after[index] === '#CusFie') {
                                     const value = $(type.after[index]).val();
                                     if (value === '5284') {
-                                        $('#note_s').val('[装卸口岸：长安车检场]')
+                                        $('#NoteS').val('[装卸口岸：长安车检场]')
                                     }
                                     if (value === '5299') {
-                                        $('#note_s').val('[装卸口岸：其它业务]')
+                                        $('#NoteS').val('[装卸口岸：其它业务]')
                                     }
                                     if (value === '5238') {
-                                        $('#note_s').val('[装卸口岸：凤岗车检场]')
+                                        $('#NoteS').val('[装卸口岸：凤岗车检场]')
                                     }
                                     if (value === '5298') {
-                                        $('#note_s').val('[装卸口岸：外关区]')
+                                        $('#NoteS').val('[装卸口岸：外关区]')
                                     }
                                     if (value === '5297') {
-                                        $('#note_s').val('[装卸口岸：加贸结转]')
+                                        $('#NoteS').val('[装卸口岸：加贸结转]')
                                     }
                                 }
                             }
@@ -1175,75 +1175,6 @@ layui.define('view', function (exports) {
                 }
                 layui.layer.close(admin.dec_users_commodity_index)
             },
-
-            //选择合同备案号
-            async manual_no_open() {
-                layui.layer.open({
-                    type: 1,
-                    title: '选择合同备案号',
-                    shadeClose: true,
-                    area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '730px'],
-                    content: $('#manual_no_list').html(),
-                })
-                const data = await admin.get(`/order/account_manual`)
-                layui.table.render({
-                    elem: '#manual_no_list_table',
-                    toolbar: true,
-                    defaultToolbar: ['filter'],
-                    colFilterRecord: 'local',
-                    cols: [
-                        [
-                            {
-                                type: 'radio',
-                            }, {
-                            field: 'name',
-                            title: '合同备案号',
-                            width: 200,
-                        }, {
-                            field: 'company_manage_name',
-                            title: '境内收发货人',
-                            width: 220,
-                        }, {
-                            field: 'company_credit_code',
-                            title: '企业信用代码',
-                            width: 220,
-                        }, {
-                            field: 'foreign_trade_company_name',
-                            title: '外商公司名称',
-                            width: 220,
-                        }, {
-                            field: 'taxationxz_code',
-                            title: '征免性质代码',
-                            width: 220,
-                        }, {
-                            field: 'taxationxz_name',
-                            title: '征免性质',
-                            width: 220,
-                        }, {
-                            field: 'company_credit_code',
-                            title: '收发货单位信用代码',
-                            width: 240,
-                        }, {
-                            field: 'company_credit_code',
-                            title: '消费使用单位信用代码',
-                            width: 240,
-                        }, {
-                            field: 'company_registration',
-                            title: '收发货单位CIQ编码',
-                            width: 240,
-                        }, {
-                            field: 'company_registration',
-                            title: '消费使用单位CIQ编码',
-                            width: 240,
-                        }],
-                    ],
-                    data: data,
-                    limit: 10,
-                    page: true,
-                    height: 550,
-                })
-            },
-
             //派单
             distribute(clickEnum, id, impexpMarkcdName) {
 
@@ -1566,9 +1497,8 @@ layui.define('view', function (exports) {
                 }
             },
 
-            //监听进口报关整合申报备案号
-            manual_no_change
-                (dom) {
+            /** 监听进口报关整合申报备案号*/
+            manual_no_change(dom) {
                 setTimeout(async () => {
                     if ($(dom).val().trim()) {
                         const data = await admin.get(
@@ -1580,84 +1510,80 @@ layui.define('view', function (exports) {
                                 time: 1000,
                                 id: 'Message',
                             })
-                            $('#contr_item').removeAttr('disabled', 'disabled')
-                            $('#trade_code').removeAttr('disabled', 'disabled')
-                            $('#owner_code').removeAttr('disabled', 'disabled')
+                            $('#ContrItem').removeAttr('disabled', 'disabled')
+                            $('#TradeCode').removeAttr('disabled', 'disabled')
+                            $('#OwnerCode').removeAttr('disabled', 'disabled')
                         } else if (data.length > 1) {
-                            $('#manual_no_open').click()
-                            $('#manual_no_search').val($(dom).val())
-                            const data_manual = await admin.get(
-                                `/order/account_manual?search=${$(dom).val()}`)
+                            $('#ManualNoOpen').click()
+                            $('#ManualNoSearch').val($(dom).val())
+                            const data_manual = await admin.get(`/order/account_manual?search=${$(dom).val()}`)
                             layui.table.reload('manual_no_list_table', {
                                 data: data_manual,
                             })
                         } else {
                             let data_detail
-                            if (data[0].is_account) {
+                            if (data[0].IsAccount) {
                                 data_detail = await admin.get(`/account/${data[0].id}`)
                             } else {
                                 data_detail = await admin.get(`/manual/manual/${data[0].id}`)
                             }
                             const flag = $(dom).data('flag')
-                            $('#foreign_company_name').val(data[0].foreign_trade_company_name)
-                            $('#contr_no').val(data[0].contr_no)
-                            $('#trade_co_scc').val(data[0].company_credit_code)
-                            $('#trade_code').val(data[0].company_number)
-                            $('#trade_ciq_code').val(data[0].company_registration)
-                            $('#trade_name').val(data[0].company_manage_name)
+                            $('#ForeignCompanyName').val(data[0].ForeignTradeCompanyName)
+                            $('#ContrNo').val(data[0].ContrNo)
+                            $('#TradeCoScc').val(data[0].CompanyCreditCode)
+                            $('#TradeCode').val(data[0].CompanyNumber)
+                            $('#TradeCiqCode').val(data[0].CompanyRegistration)
+                            $('#TradeName').val(data[0].CompanyManageName)
 
-                            $('#owner_code_scc').val(data[0].company_credit_code)
-                            $('#owner_code').val(data[0].company_number)
-                            $('#owner_ciq_code').val(data[0].company_registration)
-                            $('#owner_name').val(data[0].company_manage_name)
+                            $('#OwnerCodeScc').val(data[0].CompanyCreditCode)
+                            $('#OwnerCode').val(data[0].CompanyNumber)
+                            $('#OwnerCiqCode').val(data[0].CompanyRegistration)
+                            $('#OwnerName').val(data[0].CompanyManageName)
 
                             for (let item in data_detail.data) {
                                 if (item == 'supervise_mode_code') {
                                     if (data_detail.data[item]) {
-                                        $('#trade_mode').val(data_detail.data.supervise_mode_code)
-                                        $('#trade_mode_name').val(data_detail.data.supervise_mode)
+                                        $('#TradeMode').val(data_detail.data.SuperviseModeCode)
+                                        $('#TradeModeName').val(data_detail.data.SuperviseMode)
                                     } else {
-                                        $('#trade_mode').val('')
-                                        $('#trade_mode_name').val('')
+                                        $('#TradeMode').val('')
+                                        $('#TradeModeName').val('')
                                     }
                                 }
                                 if (item == 'trade_mode_code') {
                                     if (data_detail.data[item]) {
-                                        $('#trade_mode').val(data_detail.data.trade_mode_code)
-                                        $('#trade_mode_name').val(data_detail.data.trade_mode)
+                                        $('#TradeMode').val(data_detail.data.TradeModeCode)
+                                        $('#TradeModeName').val(data_detail.data.TradeMode)
                                     } else {
-                                        $('#trade_mode').val('')
-                                        $('#trade_mode_name').val('')
+                                        $('#TradeMode').val('')
+                                        $('#TradeModeName').val('')
                                     }
                                 }
                                 if (item == 'taxationxz_code') {
                                     if (data_detail.data[item]) {
-                                        $('#cut_mode').val(data_detail.data.taxationxz_code)
-                                        $('#cut_mode_name').val(data_detail.data.taxationxz_name)
+                                        $('#CutMode').val(data_detail.data.TaxationxzCode)
+                                        $('#CutModeName').val(data_detail.data.TaxationxzName)
                                     } else {
-                                        $('#cut_mode').val('')
-                                        $('#cut_mode_name').val('')
+                                        $('#CutMode').val('')
+                                        $('#CutModeName').val('')
                                     }
                                 }
                             }
 
-                            $('#contr_item').removeAttr('disabled', 'disabled')
-                            $('#trade_code').attr('disabled', 'disabled')
-                            $('#owner_code').attr('disabled', 'disabled')
+                            $('#ContrItem').removeAttr('disabled', 'disabled')
+                            $('#TradeCode').attr('disabled', 'disabled')
+                            $('#OwnerCode').attr('disabled', 'disabled')
 
-                            admin.materials_data = data_detail.data.materials.data
-                            admin.goods_data = data_detail.data.goods.data
-
-                            $('#duty_mode').val('3')
-                            $('#duty_mode_name').val('全免')
-                            if (data[0].company_number.substring(0, 5) == '44199') {
-                                $('#district_code').val('44199')
-                                $('#district_code_name').val('东莞')
+                            $('#DutyMode').val('3')
+                            $('#DutyModeName').val('全免')
+                            if (data[0].CompanyNumber.substring(0, 5) == '44199') {
+                                $('#DistrictCode').val('44199')
+                                $('#DistrictCodeName').val('东莞')
                             }
                         }
                     } else {
-                        $('#trade_code').removeAttr('disabled', 'disabled')
-                        $('#owner_code').removeAttr('disabled', 'disabled')
+                        $('#TradeCode').removeAttr('disabled', 'disabled')
+                        $('#OwnerCode').removeAttr('disabled', 'disabled')
                     }
                 }, 100)
             }
@@ -2568,12 +2494,12 @@ layui.define('view', function (exports) {
                         name: '关区代码',
                         filter_type: null,
                         id: [
-                            '#custom_master_name',
-                            '#i_e_port_name',
+                            '#CustomMasterName',
+                            '#IEPortName',
                         ],
                         after: [
-                            '#custom_master',
-                            '#i_e_port',
+                            '#CustomMaster',
+                            '#IEPort',
                         ],
                     }
                     await admin.base_clearance_data_auto(entry_clearance)
@@ -2600,8 +2526,8 @@ layui.define('view', function (exports) {
                     let mode_shipping = {
                         name: '运输方式代码',
                         filter_type: 'l',
-                        id: ['#traf_mode_name'],
-                        after: ['#traf_mode'],
+                        id: ['#TrafModeName'],
+                        after: ['#TrafMode'],
                     }
                     await admin.base_clearance_data_auto(mode_shipping)
                 }
@@ -2621,10 +2547,10 @@ layui.define('view', function (exports) {
                         name: '监管方式代码',
                         filter_type: 'l',
                         id: [
-                            '#trade_mode_name',
+                            '#TradeModeName',
                         ],
                         after: [
-                            '#trade_mode',
+                            '#TradeMode',
                         ],
                     }
                     await admin.base_clearance_data_auto(objectives_based)
@@ -2648,8 +2574,8 @@ layui.define('view', function (exports) {
                     let nature_exemption = {
                         name: '征免性质代码',
                         filter_type: "s",
-                        id: ['#cut_mode_name'],
-                        after: ['#cut_mode'],
+                        id: ['#CutModeName'],
+                        after: ['#CutMode'],
                     }
                     await admin.base_clearance_data_auto(nature_exemption)
                 }
@@ -2659,16 +2585,16 @@ layui.define('view', function (exports) {
                         name: '国别地区代码',
                         filter_type: 'l',
                         id: [
-                            '#trade_country_name',
-                            '#trade_area_name',
-                            '#destination_country_name',
-                            '#origin_country_name',
+                            '#TradeCountryName',
+                            '#TradeAreaName',
+                            '#DestinationCountryName',
+                            '#OriginCountryName',
                         ],
                         after: [
-                            '#trade_country',
-                            '#trade_area_code',
-                            '#destination_country',
-                            '#origin_country',
+                            '#TradeCountry',
+                            '#TradeAreaCode',
+                            '#DestinationCountry',
+                            '#OriginCountry',
                         ],
                     }
                     await admin.base_clearance_data_auto(country_area)
@@ -2696,8 +2622,8 @@ layui.define('view', function (exports) {
                     let harbour = {
                         name: '港口代码',
                         filter_type: 'l',
-                        id: ['#distinate_port_name', '#desp_port_name'],
-                        after: ['#distinate_port', '#desp_port_code'],
+                        id: ['#DistinatePortName', '#DespPortName'],
+                        after: ['#DistinatePort', '#DespPortCode'],
                     }
                     await admin.base_clearance_data_auto(harbour)
                 }
@@ -2706,8 +2632,8 @@ layui.define('view', function (exports) {
                     let terms_delivery = {
                         name: '成交方式代码',
                         filter_type: 's',
-                        id: ['#trans_mode_name'],
-                        after: ['#trans_mode'],
+                        id: ['#TransModeName'],
+                        after: ['#TransMode'],
                     }
                     await admin.base_clearance_data_auto(terms_delivery)
                 }
@@ -2716,8 +2642,8 @@ layui.define('view', function (exports) {
                     let cost_tag = {
                         name: '费用标记',
                         filter_type: 's',
-                        id: ['#fee_mark_name', '#insur_mark_name', '#other_mark_name'],
-                        after: ['#fee_mark', '#insur_mark', '#other_mark'],
+                        id: ['#FeeMarkName', '#InsurMarkName', '#OtherMarkName'],
+                        after: ['#FeeMark', '#InsurMark', '#OtherMark'],
                     }
                     await admin.base_clearance_data_auto(cost_tag)
                 }
@@ -2727,16 +2653,16 @@ layui.define('view', function (exports) {
                         name: '货币代码',
                         filter_type: 'l',
                         id: [
-                            '#fee_curr_name',
-                            '#insur_curr_name',
-                            '#other_curr_name',
-                            '#trade_curr_name',
+                            '#FeeCurrName',
+                            '#InsurCurrName',
+                            '#OtherCurrName',
+                            '#TradeCurrName',
                         ],
                         after: [
-                            '#fee_curr',
-                            '#insur_curr',
-                            '#other_curr',
-                            '#trade_curr',
+                            '#FeeCurr',
+                            '#InsurCurr',
+                            '#OtherCurr',
+                            '#TradeCurr',
                         ],
                     }
                     await admin.base_clearance_data_auto(currency)
@@ -2760,8 +2686,8 @@ layui.define('view', function (exports) {
                     let kind_packages = {
                         name: '包装种类代码',
                         filter_type: 'l',
-                        id: ['#wrap_type_name'],
-                        after: ['#wrap_type'],
+                        id: ['#WrapTypeName'],
+                        after: ['#WrapType'],
                     }
                     await admin.base_clearance_data_auto(kind_packages)
                 }
@@ -2770,8 +2696,8 @@ layui.define('view', function (exports) {
                     let domestic_ports = {
                         name: '国内口岸代码',
                         filter_type: 's',
-                        id: ['#enty_port_name'],
-                        after: ['#enty_port_code'],
+                        id: ['#EntyPortName'],
+                        after: ['#EntyPortCode'],
                     }
                     await admin.base_clearance_data_auto(domestic_ports)
                 }
@@ -2780,8 +2706,8 @@ layui.define('view', function (exports) {
                     let types_customs = {
                         name: '报关单类型',
                         filter_type: 's',
-                        id: ['#entry_type_name'],
-                        after: ['#entry_type'],
+                        id: ['#EntryTypeName'],
+                        after: ['#EntryType'],
                     }
                     await admin.base_clearance_data_auto(types_customs)
                 }
@@ -2791,15 +2717,15 @@ layui.define('view', function (exports) {
                         name: '检验检疫机关代码',
                         filter_type: 's',
                         id: [
-                            '#org_code_name',
-                            '#vsa_org_code_name',
-                            '#insp_org_name',
+                            '#OrgCodeName',
+                            '#VsaOrgCodeName',
+                            '#InspOrgName',
                             '#purp_org_name'],
                         after: [
-                            '#org_code',
-                            '#vsa_org_code',
-                            '#insp_org_code',
-                            '#purp_org_code'
+                            '#OrgCode',
+                            '#VsaOrgCode',
+                            '#InspOrgCode',
+                            '#PurpOrgCode'
                         ],
                     }
                     await admin.base_clearance_data_auto(inspection_quarantine)
@@ -2809,8 +2735,8 @@ layui.define('view', function (exports) {
                     let related_reasons = {
                         name: '关联理由代码',
                         filter_type: 's',
-                        id: ['#correlation_reason_flag_name'],
-                        after: ['#correlation_reason_flag'],
+                        id: ['#CorrelationReasonFlagName'],
+                        after: ['#CorrelationReasonFlag'],
                     }
                     await admin.base_clearance_data_auto(related_reasons)
                 }
@@ -2820,15 +2746,15 @@ layui.define('view', function (exports) {
                         name: '计量单位代码',
                         filter_type: 's',
                         id: [
-                            '#g_unit_name',
-                            '#first_unit_name',
-                            '#second_unit_name',
+                            '#GUnitName',
+                            '#FirstUnitName',
+                            '#SecondUnitName',
 
                         ],
                         after: [
-                            '#g_unit',
-                            '#first_unit',
-                            '#second_unit',
+                            '#GUnit',
+                            '#FirstUnit',
+                            '#SecondUnit',
                         ],
                     }
                     await admin.base_clearance_data_auto(unit_measurement)
@@ -2856,8 +2782,8 @@ layui.define('view', function (exports) {
                     let origin_area = {
                         name: '原产地区代码',
                         filter_type: 's',
-                        id: ['#orig_place_code_name'],
-                        after: ['#orig_place_code'],
+                        id: ['#OrigPlaceCodeName'],
+                        after: ['#OrigPlaceCode'],
                     }
                     await admin.base_clearance_data_auto(origin_area)
                 }
@@ -2866,8 +2792,8 @@ layui.define('view', function (exports) {
                     let domestic_area = {
                         name: '国内地区代码',
                         filter_type: 's',
-                        id: ['#district_code_name'],
-                        after: ['#district_code'],
+                        id: ['#DistrictCodeName'],
+                        after: ['#DistrictCode'],
                     }
                     await admin.base_clearance_data_auto(domestic_area)
                 }
@@ -2876,8 +2802,8 @@ layui.define('view', function (exports) {
                     let destination = {
                         name: '中华人民共和国行政区划代码',
                         filter_type: 's',
-                        id: ['#dest_code_name'],
-                        after: ['#dest_code'],
+                        id: ['#DestCodeName'],
+                        after: ['#DestCode'],
                     }
                     await admin.base_clearance_data_auto(destination)
                 }
@@ -2886,8 +2812,8 @@ layui.define('view', function (exports) {
                     let exempting_method = {
                         name: '征减免税方式代码',
                         filter_type: 's',
-                        id: ['#duty_mode_name'],
-                        after: ['#duty_mode'],
+                        id: ['#DutyModeName'],
+                        after: ['#DutyMode'],
                     }
                     await admin.base_clearance_data_auto(exempting_method)
                 }
@@ -2906,8 +2832,8 @@ layui.define('view', function (exports) {
                     let use = {
                         name: '用途代码',
                         filter_type: 's',
-                        id: ['#purpose_name'],
-                        after: ['#purpose'],
+                        id: ['#PurposeName'],
+                        after: ['#Purpose'],
                     }
                     await admin.base_clearance_data_auto(use)
                 }
@@ -2916,8 +2842,8 @@ layui.define('view', function (exports) {
                     let type_container = {
                         name: '集装箱规格代码',
                         filter_type: 's',
-                        id: ['#container_md_name'],
-                        after: ['#container_md'],
+                        id: ['#ContainerMdName'],
+                        after: ['#ContainerMd'],
                     }
                     await admin.base_clearance_data_auto(type_container)
                 }
@@ -2926,8 +2852,8 @@ layui.define('view', function (exports) {
                     let documents_attached = {
                         name: '随附单证代码',
                         filter_type: 's',
-                        id: ['#docu_code_name'],
-                        after: ['#docu_code'],
+                        id: ['#DocuCodeName'],
+                        after: ['#DocuCode'],
                     }
                     await admin.base_clearance_data_auto(documents_attached)
                 }
@@ -2936,8 +2862,8 @@ layui.define('view', function (exports) {
                     let enterprise_product = {
                         name: '企业产品许可类别代码',
                         filter_type: 's',
-                        id: ['#ent_qualif_type_name_tem'],
-                        after: ['#ent_qualif_type_code_tem'],
+                        id: ['#EntQualifTypeNameTem'],
+                        after: ['#EntQualifTypeCodeTem'],
                     }
                     await admin.base_clearance_data_auto(enterprise_product)
                 }
@@ -2946,8 +2872,8 @@ layui.define('view', function (exports) {
                     let site_code = {
                         name: '场地代码',
                         filter_type: 's',
-                        id: ['#cus_fie_name'],
-                        after: ['#cus_fie'],
+                        id: ['#CusFieName'],
+                        after: ['#CusFie'],
                     }
                     await admin.base_clearance_data_auto(site_code)
                 }
@@ -2980,14 +2906,14 @@ layui.define('view', function (exports) {
                 }
             },
 
-//数组上移、下移
+           /** 数组上移、下移*/
             swapItems(arr, index1, index2) {
-                arr[index1] = arr.splice(index2, 1, arr[index1])[0]
+                arr[index1] = arr.splice(index2, 1, arr[index1])[0];
                 return arr
             }
             ,
 
-//进口报关打印列表
+            /** 进口报关打印列表*/
             order_i_print_list: [
                 {
                     id: 1,

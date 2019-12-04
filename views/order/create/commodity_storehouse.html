@@ -1,0 +1,15 @@
+<script type="text/html" id="commodity_storehouse_list">
+    <div class="manual_no_list">
+        <div class="manual_no_search">
+            <label class="custom-tool-right-search iconfont icon-search"></label>
+            <input type="text" name="manual_no_search" id="commodity_storehouse_search"
+                   placeholder="搜索商品编码/商品名称" class="layui-input" oninput="layui.admin.commodity_storehouse_search(this)">
+        </div>
+        <table class="layui-hide DetailDiv" id="commodity_storehouse_table" lay-filter="commodity_storehouse_table"></table>
+        <div class="manual_no_btn">
+            <button class="layui-btn custom-create_btn" id="commodity_storehouse_save" type="button" onclick="layui.admin.commodity_storehouse_save()">
+                保存
+            </button>
+        </div>
+    </div>
+</script>

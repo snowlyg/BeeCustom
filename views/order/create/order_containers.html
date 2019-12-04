@@ -1,0 +1,71 @@
+<form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+    <table class="layui-hide DetailDiv" id="order_containers_table" lay-filter="order_containers_table"></table>
+    <table class="layui-table order_table_form" id="order_containers_form">
+        <tbody>
+        <tr>
+            <td class="td-scale-01 text-align-right">集装箱号</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" name="container_id" id="container_id"
+                           autocomplete="off" lay-verify="required" lay-vertype="tips">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-01 text-align-right">集装箱规格</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="hidden" name="container_md" id="container_md">
+                    <input type="text" class="non-empty required" name="container_md_name" id="container_md_name"
+                           autocomplete="off" lay-verify="required" lay-vertype="tips">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-01 text-align-right">自重(KG)</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" name="container_wt" id="container_wt" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-01 text-align-right">拼箱规格</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="hidden" name="lcl_flag" id="lcl_flag">
+                    <input type="text" class="non-empty" name="lcl_flag_name" id="lcl_flag_name"
+                           autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-01 text-align-right">商品项号关系</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty required" name="goods_no" id="goods_no"
+                           autocomplete="off" lay-verify="required" lay-vertype="tips">
+                    <i class="iconfont icon-more-horiz input_more" id="goods_no_open"></i>
+                </div>
+            </td>
+        </tr>
+        <tr>
+        </tbody>
+    </table>
+    <script type="text/html" id="order_containers_tool">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm ent_qualif_new" id="order_containers_add" lay-event="add"
+                    type="button">
+                新增
+            </button>
+            <button class="layui-btn layui-btn-sm ent_qualif_new" id="order_containers_submit" lay-submit
+                    lay-filter="order_containers_submit" type="button">
+                保存
+            </button>
+            <button class="layui-btn layui-btn-sm ent_qualif_del" id="order_containers_delete" lay-event="delete"
+                    type="button">
+                删除
+            </button>
+        </div>
+    </script>
+</form>

@@ -1,0 +1,18 @@
+<script type="text/html" id="goods_attr_batch_data_template">
+    <div class="manual_no_list">
+        <div id="tableDiv_spec">
+            <table class="percent-100">
+                <tbody>
+                {{# layui.each(d, function(index, item){ }}
+                <tr>
+                    {{# layui.each(item, function(index2, item2){ }}
+                    <td name="{{ item2.name }}" data-id="{{ item2.customs_code }}" class="tableDiv_attr_batch_td">{{ item2.customs_code }}-{{ item2.name }}</td>
+                    {{# }) }}
+                </tr>
+                {{# }) }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="goods_attr_batch_data_list"></script>

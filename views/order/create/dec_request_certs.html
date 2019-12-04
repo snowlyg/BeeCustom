@@ -1,0 +1,65 @@
+<script type="text/html" id="dec_request_certs_template">
+    <div class="manual_no_list">
+        <table class="layui-hide" id="dec_request_certs_table" lay-filter="dec_request_certs_table"></table>
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">境内收发货人名称(外文)</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="domestic_consignee_ename"
+                                   id="domestic_consignee_ename" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">境外收发货人名称(中文)</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="overseas_consignor_cname"
+                                   id="overseas_consignor_cname"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">境外发货人地址</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="overseas_consignor_addr"
+                                   id="overseas_consignor_addr"
+                                   autocomplete="off" placeholder="发货人地址">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">卸毕日期</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="cmpl_dschrg_dt" id="cmpl_dschrg_dt"
+                                   autocomplete="off" placeholder="年/月/日">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">商品英文名称</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled name="decl_goods_enames"
+                                   id="decl_goods_enames"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="dec_request_certs_submit"
+                        id="dec_request_certs_submit" type="button">
+                    保存
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

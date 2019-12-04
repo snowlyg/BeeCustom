@@ -1,0 +1,97 @@
+<script type="text/html" id="goods_spec_list">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">成分/原料/组分</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="stuff" id="stuff"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">产品有效期</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="prod_valid_dt" id="prod_valid_dt"
+                                   autocomplete="off" placeholder="年/月/日">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">产品保质期(天)</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="prod_qgp" id="prod_qgp"
+                                   autocomplete="off" onkeyup="layui.admin.decCheckInt(this)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">境外生产企业</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="eng_man_ent_cnm" id="eng_man_ent_cnm"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">货物规格</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="goods_spec" id="goods_spec"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">货物型号</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="goods_model" id="goods_model"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">货物品牌</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="goods_brand" id="goods_brand"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">生产日期</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="produce_date" id="produce_date"
+                                   autocomplete="off" placeholder="年/月/日">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">生产批次</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="prod_batch_no" id="prod_batch_no"
+                                   autocomplete="off" onkeyup="layui.admin.changeFoucsTogoodsAttr(event)">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="goods_spec_save"
+                        id="goods_spec_save" type="button">
+                    确定
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

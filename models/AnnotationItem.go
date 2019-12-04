@@ -145,6 +145,20 @@ func AnnotationItemOne(id int64) (*AnnotationItem, error) {
 //Save 添加、编辑页面 保存
 func AnnotationItemSave(m *AnnotationItem) error {
 	o := orm.NewOrm()
+
+	//进出口原产国和目的国是相反的数据
+	if m.Annotation.ImpexpMarkcd == "E" {
+		natcd := m.Natcd
+		natcdName := m.NatcdName
+		destinationNatcd := m.DestinationNatcd
+		destinationNatcdName := m.DestinationNatcdName
+
+		m.Natcd = destinationNatcd
+		m.NatcdName = destinationNatcdName
+		m.DestinationNatcd = natcd
+		m.DestinationNatcdName = natcdName
+	}
+
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("AnnotationItemSave:%v", err))

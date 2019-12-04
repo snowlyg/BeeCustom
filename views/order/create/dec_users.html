@@ -1,0 +1,44 @@
+<script type="text/html" id="dec_users_template">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">使用单位联系人</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty required" name="use_org_person_code"
+                                   id="use_org_person_code" autocomplete="off" lay-verify="required"
+                                   lay-vertype="tips">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">使用单位联系电话</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="use_org_person_tel" id="use_org_person_tel"
+                                   autocomplete="off" oninput="layui.admin.is_onlynumberLine(this)">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="layui-hide DetailDiv" id="dec_users_table" lay-filter="dec_users_table"></table>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="dec_users_tool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="dec_users_add" lay-event="add" type="button">
+            新增
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="dec_users_submit_tem" lay-submit
+                lay-filter="dec_users_submit_tem" type="button">
+            保存
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_del" id="dec_users_delete" lay-event="delete" type="button">
+            删除
+        </button>
+    </div>
+</script>

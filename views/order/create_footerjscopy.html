@@ -48,10 +48,10 @@
         /**回车键光标跳转**/
         admin.keydown_input_textarea();
         /**首次进入自动聚焦 and 初始数据赋值**/
-        const first_name = $("#CustomMasterName").val();
-        $("#CustomMasterName").val("").focus().val(first_name);
-        $("#IEDate").val(admin.getCurrDate());
-        $("#AplDate").val(admin.getCurrDate());
+        const first_name = $('#InvtTypeName').val();
+        $('#InvtTypeName').val('').focus().val(first_name);
+        $('#InputTime').val(admin.getCurrDate());
+        $('#InvtDclTime').val(admin.getCurrDate());
 
         /**清单产品/报关草稿列表**/
         annotationItems = await admin.post('/annotation_item/datagrid', JSON.stringify({

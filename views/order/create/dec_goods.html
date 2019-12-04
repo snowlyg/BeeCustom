@@ -1,0 +1,97 @@
+<script type="text/html" id="dec_goods_template">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">商品编码</td>
+                    <td class="td-scale-02 percent-15">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="licenceCodeTs"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">商品名称</td>
+                    <td class="td-scale-02 percent-30">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="licenceGName" autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">检疫检验名称</td>
+                    <td class="td-scale-02 percent-15">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="licenceCiqName" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">序号</td>
+                    <td class="td-scale-02 percent-15">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="goodsLimitSeqNo" autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">许可证类别</td>
+                    <td class="td-scale-02 percent-30">
+                        <div class="input-group valid">
+                            <input type="hidden" name="lic_type_code" id="lic_type_code">
+                            <input type="text" class="non-empty required" name="lic_type_name" id="lic_type_name"
+                                   autocomplete="off" lay-verify="required" lay-vertype="tips">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">许可证编号</td>
+                    <td class="td-scale-02 percent-15">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty required" name="licence_no" id="licence_no"
+                                   autocomplete="off" lay-verify="required" lay-vertype="tips">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">核销货物序号</td>
+                    <td class="td-scale-02 percent-15">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" id="lic_wrtof_detail_no" name="lic_wrtof_detail_no"
+                                   autocomplete="off" maxlength="4">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">核销数量</td>
+                    <td class="td-scale-02 percent-15">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" id="lic_wrtof_qty" name="lic_wrtof_qty"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">核销数量单位</td>
+                    <td class="td-scale-02 percent-15">
+                        <div class="input-group valid">
+                            <input type="hidden" name="lic_wrtof_qty_unit" id="lic_wrtof_qty_unit">
+                            <input type="text" class="non-empty" id="lic_wrtof_qty_unit_name"
+                                   name="lic_wrtof_qty_unit_name" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="layui-hide DetailDiv" id="dec_goods_table" lay-filter="dec_goods_table"></table>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="dec_goods_tool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="dec_goods_add" lay-event="add" type="button">
+            新增
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="dec_goods_submit" lay-submit
+                lay-filter="dec_goods_submit" type="button">
+            保存
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_del" id="dec_goods_delete" lay-event="delete" type="button">
+            删除
+        </button>
+        <button class="layui-btn layui-btn-sm order_pros_btn" id="dec_goods_vin" lay-submit
+                lay-filter="dec_goods_vin" type="button">
+            许可证VIN信息
+        </button>
+    </div>
+</script>

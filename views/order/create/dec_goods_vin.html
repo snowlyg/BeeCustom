@@ -1,0 +1,135 @@
+<script type="text/html" id="dec_goods_vin_template">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">序号</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="goodsLimitVinSeqNo"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">许可证类别</td>
+                    <td colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="licTypeCodeVinName" autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">许可证编号</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="licenceNo" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">VIN序号</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" id="vin_no" name="vin_no"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">提/运单日期</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty required" name="bill_lad_date" id="bill_lad_date"
+                                   autocomplete="off" lay-verify="required" lay-vertype="tips"
+                                   onkeypress="return false">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">质量保质期</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty required" name="quality_qgp" id="quality_qgp"
+                                   autocomplete="off" lay-verify="required" lay-vertype="tips">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">车辆识别代码(VIN)</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="vin_code" id="vin_code" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">发动机号或电机号</td>
+                    <td colspan="2">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" id="motor_no" name="motor_no"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">发票号</td>
+                    <td colspan="2">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="invoice_no" id="invoice_no"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">发票所列数量</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="invoice_num" id="invoice_num" autocomplete="off"
+                                   onkeyup="this.value=this.value.replace(/\D/g,'')" placeholder="只能输入自然数">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">品名(中文名称)</td>
+                    <td colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" id="prod_cnnm" name="prod_cnnm" autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">品名(英文名称)</td>
+                    <td colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="prod_ennm" id="prod_ennm" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">型号(英文名称)</td>
+                    <td colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" id="model_en" name="model_en" autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">底盘(车架)号</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="chassis_no" id="chassis_no" autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">单价</td>
+                    <td>
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="price_per_unit" id="price_per_unit"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="layui-hide DetailDiv" id="dec_goods_vin_table" lay-filter="dec_goods_vin_table"></table>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="dec_goods_vin_tool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="dec_goods_vin_add" lay-event="add" type="button">
+            新增
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="dec_goods_vin_submit" lay-submit
+                lay-filter="dec_goods_vin_submit" type="button">
+            保存
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_del" id="dec_goods_vin_delete" lay-event="delete"
+                type="button">
+            删除
+        </button>
+    </div>
+</script>

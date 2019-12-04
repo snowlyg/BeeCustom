@@ -37,16 +37,16 @@ func (c *BaseOrderController) bDataGrid(ieFlag string) {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
 	// 格式化数据
-	annotationList := c.TransformOrderList(data)
-	c.ResponseList(annotationList, total)
+	orderList := c.TransformOrderList(data)
+	c.ResponseList(orderList, total)
 	c.ServeJSON()
 }
 
 func (c *BaseOrderController) bIndex(ieFlag string) {
 	// 页面模板设置
-	c.setTpl("annotation/index.html")
+	c.setTpl("order/index.html")
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "annotation/index_footerjs.html"
+	c.LayoutSections["footerjs"] = "order/index_footerjs.html"
 
 	// 页面里按钮权限控制
 	c.getActionData(ieFlag, "Index", "Create", "Edit", "Make", "ReMake", "Audit", "Delete", "Distribute", "Recheck", "Push", "PushXml", "StoreError", "Change", "Restart", "Cancel", "Copy")
@@ -113,8 +113,8 @@ func (c *BaseOrderController) bStore(iEFlag string) {
 		if err := c.setAnnotaionUserRelType(&m, nil, "创建人"); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
-		annotationRecord := c.newOrderRecord(&m, "创建订单")
-		if err := models.OrderRecordSave(annotationRecord); err != nil {
+		orderRecord := c.newOrderRecord(&m, "创建订单")
+		if err := models.OrderRecordSave(orderRecord); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
@@ -144,8 +144,8 @@ func (c *BaseOrderController) bCopy(id int64) {
 		if err := c.setAnnotaionUserRelType(m, nil, "创建人"); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
-		annotationRecord := c.newOrderRecord(m, "创建订单")
-		if err := models.OrderRecordSave(annotationRecord); err != nil {
+		orderRecord := c.newOrderRecord(m, "创建订单")
+		if err := models.OrderRecordSave(orderRecord); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		}
 		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
@@ -206,9 +206,9 @@ func (c *BaseOrderController) getResponses(ieflag string) {
 	// 页面里按钮权限控制
 	c.getActionData(ieflag, "Audit", "Distribute", "ForRecheck", "Print", "Remark", "ReForRecheck")
 	c.Data["IEFlagName"] = enums.GetImpexpMarkcdCNName(ieflag)
-	c.setTpl("annotation/change_create_edit_show.html")
+	c.setTpl("order/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "annotation/create_footerjs.html"
+	c.LayoutSections["footerjs"] = "order/create_footerjs.html"
 	c.GetXSRFToken()
 }
 
@@ -226,8 +226,8 @@ func (c *BaseOrderController) bCancel(id int64) {
 	if err := models.OrderUpdateStatus(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
-	annotationRecord := c.newOrderRecord(m, "取消订单")
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "取消订单")
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 	c.jsonResult(enums.JRCodeSucc, "取消成功", m)
@@ -245,8 +245,8 @@ func (c *BaseOrderController) bAudit(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
 	c.setStatusOnly(m, "审核通过", false)
-	annotationRecord := c.newOrderRecord(m, "审核订单")
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "审核订单")
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "审核失败", m)
 	}
 	c.jsonResult(enums.JRCodeSucc, "审核通过", m)
@@ -275,8 +275,8 @@ func (c *BaseOrderController) bDistribute(backendUserId, id int64) {
 	if err := models.OrderUpdateOrSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
-	annotationRecord := c.newOrderRecord(m, "派单："+bu.RealName)
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "派单："+bu.RealName)
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "派单失败", m)
 	}
 	c.jsonResult(enums.JRCodeSucc, "派单通过", m)
@@ -301,8 +301,8 @@ func (c *BaseOrderController) bUpdate(id int64) {
 	if err := models.OrderUpdateOrSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
-	annotationRecord := c.newOrderRecord(m, "保存数据")
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "保存数据")
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
 	}
 	c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
@@ -320,8 +320,8 @@ func (c *BaseOrderController) bForRecheck(id int64) {
 	if err := models.OrderUpdateStatus(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	annotationRecord := c.newOrderRecord(m, "复核")
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "复核")
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -339,8 +339,8 @@ func (c *BaseOrderController) bRestart(id int64) {
 	if err := models.OrderUpdateStatus(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	annotationRecord := c.newOrderRecord(m, "重新开启订单")
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "重新开启订单")
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -358,8 +358,8 @@ func (c *BaseOrderController) bReForRecheck(id int64) {
 	if err := models.OrderUpdateStatus(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	annotationRecord := c.newOrderRecord(m, "复核")
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "复核")
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -388,16 +388,16 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 	if len(content) > 0 {
 		statusString += ":" + content
 	}
-	annotationRecord := c.newOrderRecord(m, statusString)
-	annotationRecord.Remark = remark
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, statusString)
+	orderRecord.Remark = remark
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	if err := c.setAnnotaionUserRelType(m, nil, "复核人"); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 	// 生成 pdf 凭证
-	if ffp, err := enums.NewPDFGenerator(m.Id, m.ClientSeqNo, "annotation_recheck_pdf", action); err != nil {
+	if ffp, err := enums.NewPDFGenerator(m.Id, m.ClientSeqNo, "order_recheck_pdf", action); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
 		aFile := models.NewOrderFile(0)
@@ -426,11 +426,11 @@ func (c *BaseOrderController) bRecheck(id int64) {
 		c.getActionData(m.IEFlag, "RecheckPass", "RecheckReject")
 	}
 	c.setStatusOnly(m, "复核中", false)
-	annotation := models.TransformOrder(id, "OrderItems")
-	c.Data["m"] = annotation
-	c.setTpl("annotation/recheck.html")
+	order := models.TransformOrder(id, "OrderItems")
+	c.Data["m"] = order
+	c.setTpl("order/recheck.html")
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "annotation/recheck_footerjs.html"
+	c.LayoutSections["footerjs"] = "order/recheck_footerjs.html"
 	// 页面里按钮权限控制
 	c.GetXSRFToken()
 }
@@ -443,7 +443,7 @@ func (c *BaseOrderController) bPrint(id int64) {
 	}
 	if m != nil {
 		// 生成 pdf 凭证
-		if ffp, err := enums.NewPDFGenerator(m.Id, m.ClientSeqNo, "annotation_pdf", "report"); err != nil {
+		if ffp, err := enums.NewPDFGenerator(m.Id, m.ClientSeqNo, "order_pdf", "report"); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		} else {
 			c.Data["json"] = strings.Replace(ffp, ".", "", 1)
@@ -488,17 +488,17 @@ func (c *BaseOrderController) bPushXml(id int64) {
 			if handBook.Type == handBookType1 {
 				receiverId = beego.AppConfig.String("OrderReceiverIdC")
 				sysId = beego.AppConfig.String("OrderSysIdC")
-				path = beego.AppConfig.String("annotation_xml_path_c")
+				path = beego.AppConfig.String("order_xml_path_c")
 			} else if handBook.Type == handBookType2 {
 				receiverId = beego.AppConfig.String("OrderReceiverIdE")
 				sysId = beego.AppConfig.String("OrderSysIdE")
-				path = beego.AppConfig.String("annotation_xml_path_e")
+				path = beego.AppConfig.String("order_xml_path_e")
 			} else {
 				c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
 			}
 		}
 
-		pathTemp := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/temp/"
+		pathTemp := "./static/generate/order/" + strconv.FormatInt(id, 10) + "/temp/"
 		// 报文名称
 		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.ClientSeqNo
 		fileName := mName + ".xml"
@@ -687,7 +687,7 @@ func (c *BaseOrderController) bAuditFirstRejectLog(id int64) {
 	aRecord := models.NewOrderRecord(0)
 	aRecord.Order = m
 
-	sSting, err := enums.GetSectionWithInt(m.Status, "annotation_status")
+	sSting, err := enums.GetSectionWithInt(m.Status, "order_status")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	}
@@ -708,8 +708,8 @@ func (c *BaseOrderController) bDelete(id int64) {
 	if _, err := models.OrderDelete(id); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 	}
-	annotationRecord := c.newOrderRecord(m, "删除订单")
-	if err := models.OrderRecordSave(annotationRecord); err != nil {
+	orderRecord := c.newOrderRecord(m, "删除订单")
+	if err := models.OrderRecordSave(orderRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", m)
 	}
 
@@ -726,7 +726,7 @@ func (c *BaseOrderController) setAnnotaionUserRelType(m *models.Order, bu *model
 	rs := strings.Split(userTypes, ",")
 	for _, v := range rs {
 		aur := models.NewOrderUserRel(0)
-		aStatus, err := enums.GetSectionWithString(v, "annotation_user_type")
+		aStatus, err := enums.GetSectionWithString(v, "order_user_type")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 			return err
@@ -748,15 +748,15 @@ func (c *BaseOrderController) setAnnotaionUserRelType(m *models.Order, bu *model
 
 // TransformOrderList 格式化列表数据
 func (c *BaseOrderController) TransformOrderList(ms []*models.Order) []*map[string]interface{} {
-	var annotationCreatorName string // 制单人
-	var annotationList []*map[string]interface{}
+	var orderCreatorName string // 制单人
+	var orderList []*map[string]interface{}
 	for _, v := range ms {
-		annotationItem := make(map[string]interface{})
-		aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
+		orderItem := make(map[string]interface{})
+		aStatus, err := enums.GetSectionWithInt(v.Status, "order_status")
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
 		}
-		userType, err := enums.GetSectionWithString("制单人", "annotation_user_type")
+		userType, err := enums.GetSectionWithString("制单人", "order_user_type")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 		}
@@ -767,26 +767,26 @@ func (c *BaseOrderController) TransformOrderList(ms []*models.Order) []*map[stri
 					c.jsonResult(enums.JRCodeFailed, "获取制单人出错", nil)
 				}
 				if abur != nil && abur.Id != 0 {
-					annotationCreatorName = bu.RealName
+					orderCreatorName = bu.RealName
 				}
 			}
 		}
-		annotationItem["Id"] = strconv.FormatInt(v.Id, 10)
-		annotationItem["StatusString"] = aStatus
-		//annotationItem["PutrecNo"] = v.PutrecNo
-		//annotationItem["ImpexpPortcd"] = v.ImpexpPortcd
-		//annotationItem["ImpexpPortcdName"] = v.ImpexpPortcdName
-		//annotationItem["BondInvtNo"] = v.BondInvtNo
-		//annotationItem["EntryNo"] = v.EntryNo
-		//annotationItem["SupvModecdName"] = v.SupvModecdName
-		//annotationItem["TrspModecdName"] = v.TrspModecdName
-		//annotationItem["InvtDclTime"] = v.InvtDclTime.Format(enums.BaseDateTimeFormat)
-		annotationItem["ClientSeqNo"] = v.ClientSeqNo
-		annotationItem["CompanyName"] = v.Company.Name
-		annotationItem["DeclareName"] = annotationCreatorName
-		annotationList = append(annotationList, &annotationItem)
+		orderItem["Id"] = strconv.FormatInt(v.Id, 10)
+		orderItem["StatusString"] = aStatus
+		//orderItem["PutrecNo"] = v.PutrecNo
+		//orderItem["ImpexpPortcd"] = v.ImpexpPortcd
+		//orderItem["ImpexpPortcdName"] = v.ImpexpPortcdName
+		//orderItem["BondInvtNo"] = v.BondInvtNo
+		//orderItem["EntryNo"] = v.EntryNo
+		//orderItem["SupvModecdName"] = v.SupvModecdName
+		//orderItem["TrspModecdName"] = v.TrspModecdName
+		//orderItem["InvtDclTime"] = v.InvtDclTime.Format(enums.BaseDateTimeFormat)
+		orderItem["ClientSeqNo"] = v.ClientSeqNo
+		orderItem["CompanyName"] = v.Company.Name
+		orderItem["DeclareName"] = orderCreatorName
+		orderList = append(orderList, &orderItem)
 	}
-	return annotationList
+	return orderList
 }
 
 // 仅仅更新状态
@@ -801,13 +801,13 @@ func (c *BaseOrderController) setStatusOnly(m *models.Order, statusString string
 
 // 操作记录
 func (c *BaseOrderController) newOrderRecord(m *models.Order, content string) *models.OrderRecord {
-	statusString, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
-	annotationRecord := models.NewOrderRecord(0)
-	annotationRecord.Content = content
-	annotationRecord.BackendUser = &c.curUser
-	annotationRecord.Status = statusString
-	annotationRecord.Order = m
-	return &annotationRecord
+	statusString, _ := enums.GetSectionWithInt(m.Status, "order_status")
+	orderRecord := models.NewOrderRecord(0)
+	orderRecord.Content = content
+	orderRecord.BackendUser = &c.curUser
+	orderRecord.Status = statusString
+	orderRecord.Order = m
+	return &orderRecord
 }
 
 // 是否能保存
@@ -819,12 +819,12 @@ func (c *BaseOrderController) getCanStore(m *models.Order, ieflag string) bool {
 		return c.checkActionAuthor(c.controllerName, ieflag+"Audit")
 	} else {
 		if c.checkActionAuthor(c.controllerName, m.IEFlag+"Audit") {
-			aStatus, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
+			aStatus, _ := enums.GetSectionWithInt(m.Status, "order_status")
 			if aStatus == "待审核" || aStatus == "审核中" {
 				return true
 			}
 		} else if c.checkActionAuthor(c.controllerName, m.IEFlag+"Make") {
-			aStatus, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
+			aStatus, _ := enums.GetSectionWithInt(m.Status, "order_status")
 			if aStatus == "待制单" || aStatus == "制单中" {
 				return true
 			}

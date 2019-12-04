@@ -1,0 +1,46 @@
+<script type="text/html" id="order_document_eco_relations_list">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">报关单商品序号</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty required" name="dec_g_no" id="dec_g_no"
+                                   autocomplete="off" lay-verify="dec_g_no" lay-vertype="tips">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">对应随附单证商品项号</td>
+                    <td class="td-scale-02" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="eco_g_no" id="eco_g_no"
+                                   autocomplete="off" maxlength="3">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="layui-hide DetailDiv" id="order_document_eco_relations_table"
+                   lay-filter="order_document_eco_relations_table"></table>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="order_document_eco_relations_tool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="order_document_eco_relations_add" lay-event="add"
+                type="button">
+            新增
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_new" id="order_document_eco_relations_submit" lay-submit
+                lay-filter="order_document_eco_relations_submit" type="button">
+            保存
+        </button>
+        <button class="layui-btn layui-btn-sm ent_qualif_del" id="order_document_eco_relations_delete"
+                lay-event="delete" type="button">
+            删除
+        </button>
+    </div>
+</script>

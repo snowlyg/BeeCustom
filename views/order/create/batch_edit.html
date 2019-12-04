@@ -1,0 +1,151 @@
+<script type="text/html" id="batch_edit_list">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">币制</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="hidden" name="trade_curr" id="trade_curr_batch">
+                            <input type="text" class="non-empty" name="trade_curr_name"
+                                   id="trade_curr_name_batch" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">原产国（地区）</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="hidden" name="origin_country" id="origin_country_batch">
+                            <input type="text" class="non-empty" name="origin_country_name"
+                                   id="origin_country_name_batch" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">境内目的地</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="hidden" name="district_code" id="district_code_batch">
+                            <input type="text" class="non-empty" name="district_code_name"
+                                   id="district_code_name_batch" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">征免方式</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="hidden" name="duty_mode" id="duty_mode_batch">
+                            <input type="text" class="non-empty" name="duty_mode_name" id="duty_mode_name_batch"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">货物属性</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" disabled id="goods_attr_batch" autocomplete="off">
+                            <i class="iconfont icon-more-horiz input_more" id="goods_attr_open_batch"></i>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="batch_edit_type">检验检疫货物规格</p>
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">成分/原料/组分</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_stuff" id="stuff_batch"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">产品有效期</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_prod_valid_dt" id="prod_valid_dt_batch"
+                                   autocomplete="off" placeholder="年/月/日">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">产品保质期(天)</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_prod_qgp" id="prod_qgp_batch"
+                                   autocomplete="off" onkeyup="layui.admin.decCheckInt(this)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">境外生产企业</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_eng_man_ent_cnm" id="eng_man_ent_cnm_batch"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">货物规格</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_goods_spec" id="goods_spec_batch"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">货物型号</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_goods_model" id="goods_model_batch"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">货物品牌</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_goods_brand" id="goods_brand_batch"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">生产日期</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_produce_date" id="produce_date_batch"
+                                   autocomplete="off" placeholder="年/月/日">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">生产批次</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="type_prod_batch_no" id="prod_batch_no_batch"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="batch_edit_save"
+                        id="batch_edit_save" type="button">
+                    提交
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

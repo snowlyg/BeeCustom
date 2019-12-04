@@ -1,0 +1,19 @@
+<script type="text/html" id="order_application_change_template">
+    <div class="custom-order_import-distribute">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                    <textarea name="content" id="order_application_change_note" placeholder="请输入改单的需求"
+                              class="layui-textarea" maxlength="300"></textarea>
+                <p class="custom-order_import-distribute-number" id="order_application_change_note_number">
+                    <span>0</span>/300
+                </p>
+            </div>
+            <div class="layui-form-item distribute_submit">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="order_application_change_note_submit"
+                        id="order_application_change_note_submit" type="button">
+                    提交
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

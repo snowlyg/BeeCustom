@@ -1,0 +1,48 @@
+<div class="position-dec-head">
+    <table class="layui-table order_table_form">
+        <tbody>
+        <tr>
+            <td class="td-scale-01 text-align-right">关联报关单</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" name="rel_id" id="rel_id" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-01 text-align-right">关联备案</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" name="rel_man_no" id="rel_man_no" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-01 text-align-right">保税/监管场地</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="text" class="non-empty" name="bon_no" id="bon_no" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-scale-01 text-align-right">场地代码</td>
+            <td class="td-scale-02" colspan="3">
+                <div class="input-group valid">
+                    <input type="hidden" name="cus_fie" id="cus_fie">
+                    <input type="text" class="non-empty" name="cus_fie_name" id="cus_fie_name" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="position-dec-head-tip">
+        <span class="f1_tips">tips:</span>
+        <div class="f1">
+            <div class="f1_line_height"><span>总价</span><span id="totalPrice">0</span></div>
+            <div class="f1_line_height"><span>成交数量合计</span><span id="totalGQty">0</span></div>
+            <div class="f1_line_height"><span>法定第一数量合计</span><span id="totalQty1">0</span></div>
+            <div class="f1_line_height"><span>法定第二数量合计</span><span id="totalQty2">0</span></div>
+        </div>
+    </div>
+</div>

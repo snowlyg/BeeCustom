@@ -1,0 +1,61 @@
+<script type="text/html" id="dang_list">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">非危险化学品</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="hidden" name="no_dang_flag" id="no_dang_flag">
+                            <input type="text" class="non-empty" name="no_dang_flag_name" id="no_dang_flag_name"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">UN编码</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="un_code" id="un_code" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">危险货物名称</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="dang_name" id="dang_name" autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">危包类别</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="hidden" name="dang_pack_type" id="dang_pack_type">
+                            <input type="text" class="non-empty" name="dang_pack_type_name" id="dang_pack_type_name"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">危包规格</td>
+                    <td class="td-scale-02 td-btn">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="dang_pack_spec" id="dang_pack_spec"
+                                   autocomplete="off" onkeyup="layui.admin.changeFoucsDanger(event)">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="dang_save"
+                        id="dang_save" type="button">
+                    确定
+                </button>
+            </div>
+        </form>
+    </div>
+</script>

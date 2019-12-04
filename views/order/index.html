@@ -4,16 +4,16 @@
             <div class="custom-order_import">
                 <div class="status_flex">
                     <div class="status_flex_list" id="status_flex_list"></div>
-                    <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="保税清单回收站">
+                    <div class="right_del" lay-href=@{{urlfor "AnnotationController.Recycle"}} lay-text="货物订单回收站">
                         <i class="iconfont icondelete"></i>
                         <span>订单回收站</span>
                     </div>
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6">
-                        @{{if  canArray  .actions .ImpexpMarkcd "canCreate" }}
-                    <span class="custom-new_btn" lay-href="/annotation/create/@{{.ImpexpMarkcd}}"
-                          lay-text="@{{.ImpexpMarkcdName}}清单制作" id="order_import_new">代客下单</span>
+                        @{{if  canArray  .actions .IEFlag "canCreate" }}
+                    <span class="custom-new_btn" lay-href="/order/create/@{{.IEFlag}}"
+                          lay-text="@{{.IEFlagName}}货物订单制作" id="order_import_new">代客下单</span>
                     @{{else}}
                     <span class="custom-new_btn hidden" style="visibility:hidden;"></span>
                     @{{end}}
@@ -21,12 +21,12 @@
                     <div class="layui-col-md4 layui-col-md-offset2">
                         <div class="custom-tool-right">
                             <div class="layui-form width-25">
-                                <div class="layui-input-inline" id="annotation_trsp_modecd"></div>
+                                <div class="layui-input-inline" id="order_traf_mode"></div>
                             </div>
                             <div class="width-75">
                                 <label class="custom-tool-right-search iconfont iconsearch"></label>
                                 <input type="text" name="order_import_search" id="order_import_search"
-                                       placeholder="搜索订单号/清单号" class="custom-tool-right-input layui-input">
+                                       placeholder="搜索订单号/货物订单号" class="custom-tool-right-input layui-input">
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,7 @@
                                             <span style="color:#101010;">{{ impexp_portcd_name }}{{ item.ImpexpPortcd || "" }}</span>
                                         </p>
                                         <p>
-                                            <span style="color:#999999;">清单编码/关联报关单号：</span>
+                                            <span style="color:#999999;">货物编码/关联报关单号：</span>
                                             <span style="color:#101010;">{{ item.BondInvtNo || "无" }}</span>/
                                             {{# if(item.EntryNo !== ""){ }}
                                             <span style="color:#101010;" lay-href="/order/i/{{ item.OrderId }}/show"
@@ -188,7 +188,7 @@
                             <td rowspan="1">
                                 <div class="center tr-bd-operate">
                                     {{# if(item.StatusString == "待审核"){ }}
-                                @{{ if canArray  .actions .ImpexpMarkcd  "canEdit"}}
+                                @{{ if canArray  .actions .IEFlag  "canEdit"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_start_auth" type="button"
                                             data-id="{{ item.Id }}">开始审核
                                     </button>
@@ -196,7 +196,7 @@
                                  {{# } }}
 
                                 {{# if(item.StatusString == "审核中"){ }}
-                                @{{ if canArray  .actions .ImpexpMarkcd "canEdit"}}
+                                @{{ if canArray  .actions .IEFlag "canEdit"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_keep_auth" type="button"
                                             data-id="{{ item.Id }}">继续审核
                                     </button>
@@ -204,78 +204,78 @@
                                 {{# } }}
 
                                 {{# if(item.StatusString == "审核通过"){ }}
-                                @{{ if canArray  .actions .ImpexpMarkcd "canDistribute"}}
+                                @{{ if canArray  .actions .IEFlag "canDistribute"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_distribute"
                                     type="button" data-id="{{ item.Id }}">派单</button>
                                     @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == "待制单"){ }}
-                                    @{{ if canArray  .actions .ImpexpMarkcd "canMake"}}
+                                    @{{ if canArray  .actions .IEFlag "canMake"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_start_maker"
                                     type="button" data-id="{{ item.Id }}">开始制单</button>
                                     @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == "制单中"){ }}
-                                    @{{ if canArray  .actions .ImpexpMarkcd "canMake"}}
+                                    @{{ if canArray  .actions .IEFlag "canMake"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_keep_maker"
                                     type="button" data-id="{{ item.Id }}">继续制单</button>
                                     @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == "待复核" || item.StatusString == "复核中"){ }}
-                                @{{ if canArray  .actions .ImpexpMarkcd "canRecheck"}}
+                                @{{ if canArray  .actions .IEFlag "canRecheck"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_check" type="button"
                                             data-id="{{ item.Id }}">复核
                                     </button>
                                 @{{end}}
-                                @{{ if canArray  .actions .ImpexpMarkcd "canPush"}}
+                                @{{ if canArray  .actions .IEFlag "canPush"}}
                                     <a class="margin_top_10 order_reminder" data-id="{{ item.Id }}">催单</a>
                                 @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == "复核不通过"){ }}
-                                    @{{if canArray  .actions .ImpexpMarkcd "canReMake"}}
+                                    @{{if canArray  .actions .IEFlag "canReMake"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_revise"type="button" data-id="{{ item.Id }}">修改</button>
                                     @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == "复核通过"){ }}
-                                @{{if canArray  .actions .ImpexpMarkcd "canPushXml"}}
+                                @{{if canArray  .actions .IEFlag "canPushXml"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_check_success" type="button"
                                             data-id="{{ item.Id }}">暂存到单一
                                     </button>
                                 @{{end}}
-                                @{{if canArray  .actions .ImpexpMarkcd "canReMake"}}
+                                @{{if canArray  .actions .IEFlag "canReMake"}}
                                     <a class="order_revise" data-id="{{ item.Id }}">修改</a>
                                 @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == "单一已暂存"){ }}
-                                    @{{if canArray  .actions .ImpexpMarkcd "canPushXml"}}
+                                    @{{if canArray  .actions .IEFlag "canPushXml"}}
                                     <button class="layui-btn tr-bd-{{ status }} order_check_success_reload"
                                     type="button" data-id="{{ item.Id }}">重新暂存</button>
                                     @{{end}}
                                  {{# } }}
 
                                 {{# if(item.StatusString == "已完成"){ }}
-                                    @{{if canArray  .actions .ImpexpMarkcd "canStoreError"}}
+                                    @{{if canArray  .actions .IEFlag "canStoreError"}}
                                     <a class="order_error_log" data-id="{{ item.Id }}">差错登记</a>
                                     @{{end}}
-                                    @{{if canArray  .actions .ImpexpMarkcd "canChange"}}
+                                    @{{if canArray  .actions .IEFlag "canChange"}}
                                     <a class="order_switch_bill" data-id="{{ item.Id }}">改单</a>
                                     @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString == "订单关闭"){ }}
-                                    @{{if canArray  .actions .ImpexpMarkcd "canRestart"}}
+                                    @{{if canArray  .actions .IEFlag "canRestart"}}
                                     <a class="blue again_open_order" data-id="{{ item.Id }}">重新开启订单</a>
                                     @{{end}}
                                 {{# } }}
 
                                 {{# if(item.StatusString !== "已完成" || item.StatusString !== "订单关闭" || item.StatusString !== "单一已暂存" || item.StatusString !== "单一处理中" ){ }}
-                                @{{ if canArray  .actions .ImpexpMarkcd "canCancel"}}
+                                @{{ if canArray  .actions .IEFlag "canCancel"}}
                                     <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
                                 @{{end}}
                                 {{# } }}
@@ -307,5 +307,5 @@
 @{{template "/common/order_annotation/take.html" .}}
 
 @{{template "/common/order_annotation/status_count.html" }}
-@{{template "/common/order_annotation/trsp_modecd_template.html" }}
+@{{template "/order/create/traf_mode_template.html" }}
 

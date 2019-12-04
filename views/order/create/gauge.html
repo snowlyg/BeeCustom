@@ -1,461 +1,602 @@
-<form class="layui-form layui-form-relative" id="order_i_form" onkeydown="if(event.keyCode==13){return false}">
-    <table class="layui-table order_table_form">
-        <tbody>
-        <tr>
-            <td class="td-scale-01 text-align-right">预录入统一编号</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text"
-                           class="non-empty disabled @{{if inArrayStr "SeqNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           value="@{{.m.SeqNo}}" id="SeqNo" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">清单编号</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text"
-                           class="non-empty disabled @{{if inArrayStr "BondInvtNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           value="@{{.m.BondInvtNo}}" disabled id="BondInvtNo" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">清单类型</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="hidden" name="InvtType" id="InvtType" value="@{{ if .m.InvtType}}@{{.m.InvtType}}@{{else}}0@{{end}}">
-                    <input type="text"
-                           class="non-empty required @{{if inArrayStr "InvtTypeName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           value="@{{ if .m.InvtTypeName}}@{{.m.InvtTypeName}}@{{ else}}普通清单@{{end}}"
-                           name="InvtTypeName" id="InvtTypeName" autocomplete="off" lay-verify="required"
-                           lay-vertype="tips">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">手(账)册编号</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="hidden" name="HandBookId" id="HandBookId" value="@{{.m.HandBookId}}">
-                    <input type="text"
-                           class="non-empty required @{{if inArrayStr "PutrecNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           value="@{{.m.PutrecNo}}" name="PutrecNo"
-                           id="PutrecNo" lay-verify="required" lay-vertype="tips">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">经营单位编码</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "BizopEtpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.BizopEtpsno}}" name="BizopEtpsno"
-                           id="BizopEtpsno" autocomplete="off" lay-verify="required" lay-vertype="tips"
-                           onblur="layui.admin.bizop_etpsno_change(this)">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">经营单位社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty @{{if inArrayStr "BizopEtpsSccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.BizopEtpsSccd}}" name="BizopEtpsSccd"
-                           id="BizopEtpsSccd" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">经营单位名称</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "BizopEtpsNm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.BizopEtpsNm}}"
-                           name="BizopEtpsNm" id="BizopEtpsNm" autocomplete="off" lay-verify="required"
-                           lay-vertype="tips">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">加工单位编码</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "RcvgdEtpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.RcvgdEtpsno}}" name="RcvgdEtpsno"
-                           id="RcvgdEtpsno" autocomplete="off" lay-verify="required" lay-vertype="tips"
-                           onblur="layui.admin.rcvgd_etpsno_change(this)">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">加工单位社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty @{{if inArrayStr "RvsngdEtpsSccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.RvsngdEtpsSccd}}" name="RvsngdEtpsSccd"
-                           id="RvsngdEtpsSccd" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">加工单位名称</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "RcvgdEtpsNm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.RcvgdEtpsNm}}"
-                           name="RcvgdEtpsNm" id="RcvgdEtpsNm" autocomplete="off" lay-verify="required"
-                           lay-vertype="tips">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">申报单位编码</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "DclEtpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="DclEtpsno" id="DclEtpsno" autocomplete="off"
-                           lay-verify="required" lay-vertype="tips"
-                           value="@{{ if .m.DclEtpsno}}@{{.m.DclEtpsno}}@{{ else}}4419986507@{{end}}">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">申报单位社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty @{{if inArrayStr "DclEtpsSccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="DclEtpsSccd"
-                           value="@{{ if .m.DclEtpsSccd}}@{{.m.DclEtpsSccd}}@{{ else}}914419007962277606@{{end}}"
-                           id="DclEtpsSccd" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">申报单位名称</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "DclEtpsNm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="DclEtpsNm" id="DclEtpsNm" autocomplete="off"
-                           lay-verify="required" lay-vertype="tips"
-                           value="@{{ if .m.DclEtpsNm}}@{{.m.DclEtpsNm}}@{{ else}}广东东华报关服务有限公司@{{end}}">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">录入单位编码</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty disabled @{{if inArrayStr "InputCode" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled name="InputCode" id="InputCode"
-                           autocomplete="off"
-                           value="@{{ if .m.InputCode}}@{{.m.InputCode}}@{{ else}}4419986507@{{end}}">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">录入单位社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty @{{if inArrayStr "InputCreditCode" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="InputCreditCode" id="InputCreditCode"
-                           autocomplete="off"
-                           value="@{{ if .m.InputCreditCode}}@{{.m.InputCreditCode}}@{{ else}}914419007962277606@{{end}}">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">录入单位名称</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "InputName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" name="InputName" id="InputName" autocomplete="off"
-                           lay-verify="required" lay-vertype="tips"
-                           value="@{{ if .m.InputName}}@{{.m.InputName}}@{{ else}}广东东华报关服务有限公司@{{end}}">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">企业内部编号</td>
-            <td class="td-scale-04" colspan="1">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty disabled @{{if inArrayStr "EtpsInnerInvtNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" disabled value="@{{.m.EtpsInnerInvtNo}}"
-                           name="EtpsInnerInvtNo" id="EtpsInnerInvtNo" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">申报类型</td>
-            <td class="td-scale-04" colspan="1">
-                <div class="input-group valid">
-                    <input type="hidden"  name="DclTypecd" id="DclTypecd" value="1">
-                    <input type="text" class="non-empty disabled @{{if inArrayStr "DclTypecdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="备案" name="DclTypecdName" id="DclTypecdName" autocomplete="off" >
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">录入日期</td>
-            <td class="td-scale-04" colspan="1">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "InputTime" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InputTime}}" name="InputTime"
-                           id="InputTime" autocomplete="off" lay-verify="required" lay-vertype="tips"
-                           oninput="layui.admin.is_onlynumber(this)">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">清单申报日期</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty required @{{if inArrayStr "InvtDclTime" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InvtDclTime}}" name="InvtDclTime"
-                           id="InvtDclTime" autocomplete="off" lay-verify="required" lay-vertype="tips"
-                           oninput="layui.admin.is_onlynumber(this)">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">料件、成品标志</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{ if .m.MtpckEndprdMarkcd}}@{{.m.MtpckEndprdMarkcd}}@{{ else}}I@{{end}}" name="MtpckEndprdMarkcd" id="MtpckEndprdMarkcd">
-                    <input type="text" class="non-empty required  @{{if inArrayStr "MtpckEndprdMarkcdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           value="@{{ if .m.MtpckEndprdMarkcdName}}@{{.m.MtpckEndprdMarkcdName}}@{{ else}}料件@{{end}}"
-                           name="MtpckEndprdMarkcdName" id="MtpckEndprdMarkcdName" autocomplete="off"
-                           lay-verify="required" lay-vertype="tips">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">监管方式</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{.m.SupvModecd}}" name="SupvModecd" id="SupvModecd">
-                    <input type="text" class="non-empty required  @{{if inArrayStr "SupvModecdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.SupvModecdName}}" name="SupvModecdName"
-                           id="SupvModecdName" autocomplete="off" lay-verify="required" lay-vertype="tips">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">运输方式</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{.m.TrspModecd}}" name="TrspModecd" id="TrspModecd">
-                    <input type="text" class="non-empty required  @{{if inArrayStr "TrspModecdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.TrspModecdName}}" name="TrspModecdName"
-                           id="TrspModecdName" autocomplete="off" lay-verify="required" lay-vertype="tips">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">出境关别</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{.m.ImpexpPortcd}}" name="ImpexpPortcd" id="ImpexpPortcd">
-                    <input type="text" class="non-empty required  @{{if inArrayStr "ImpexpPortcdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.ImpexpPortcdName}}"
-                           name="ImpexpPortcdName" id="ImpexpPortcdName" autocomplete="off" lay-verify="required"
-                           lay-vertype="tips">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">主管海关</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{.m.DclPlcCuscd}}" name="DclPlcCuscd" id="DclPlcCuscd">
-                    <input type="text" class="non-empty required  @{{if inArrayStr "DclPlcCuscdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.DclPlcCuscdName}}" name="DclPlcCuscdName"
-                           id="DclPlcCuscdName" autocomplete="off" lay-verify="required" lay-vertype="tips">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">核扣标志</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty disabled  @{{if inArrayStr "VrfdedMarkcd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.VrfdedMarkcd}}" id="VrfdedMarkcd"
-                           autocomplete="off" disabled>
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">启运国(地区)</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{.m.StshipTrsarvNatcd}}" name="StshipTrsarvNatcd"
-                           id="StshipTrsarvNatcd">
-                    <input type="text" class="non-empty required  @{{if inArrayStr "StshipTrsarvNatcdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.StshipTrsarvNatcdName}}"
-                           name="StshipTrsarvNatcdName" id="StshipTrsarvNatcdName" autocomplete="off"
-                           lay-verify="required" lay-vertype="tips">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">清单进出卡口状态</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty disabled  @{{if inArrayStr "InvtIochkptStucd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.InvtIochkptStucd}}"
-                           id="InvtIochkptStucd" autocomplete="off" disabled>
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">申报表编号</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" class="non-empty  @{{if inArrayStr "ApplyNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.ApplyNo}}" name="ApplyNo" id="ApplyNo"
-                           autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">流转类型</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{.m.ListType}}" name="ListType" id="ListType">
-                    <input type="text" class="non-empty  @{{if inArrayStr "ListTypeName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" value="@{{.m.ListTypeName}}" name="ListTypeName"
-                           id="ListTypeName" autocomplete="off">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">报关标志</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="hidden" value="@{{ if .m.DclcusFlag}}@{{.m.DclcusFlag}}@{{ else}}1@{{end}}"
-                           name="DclcusFlag" id="DclcusFlag">
-                    <input type="text" class="non-empty required  @{{if inArrayStr "DclcusFlagName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           value="@{{ if .m.DclcusFlagName}}@{{.m.DclcusFlagName}}@{{ else}}报关@{{end}}"
-                           name="DclcusFlagName" id="DclcusFlagName" autocomplete="off" lay-verify="required"
-                           lay-vertype="tips">
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">是否系统生成报关单</td>
-            <td class="td-scale-04">
-                <input type="hidden" value="@{{ if .m.GenDecFlag}}@{{.m.GenDecFlag}}@{{ else}}1@{{end}}"
-                       name="GenDecFlag" id="GenDecFlag">
-                <input type="text" value="@{{ if .m.GenDecFlagName}}@{{.m.GenDecFlagName}}@{{ else}}生成@{{end}}"
-                       name="GenDecFlagName" id="GenDecFlagName" class="non-empty required  @{{if inArrayStr "GenDecFlagName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
-            </td>
-
-            <td class="td-scale-01 text-align-right">报关类型</td>
-            <td class="td-scale-04">
-                <input type="hidden" value="@{{.m.DclcusTypecd}}" name="DclcusTypecd" id="DclcusTypecd">
-                <input type="text" value="@{{.m.DclcusTypecdName}}" name="DclcusTypecdName" id="DclcusTypecdName"
-                       class="non-empty  @{{if inArrayStr "DclcusTypecdName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
-            </td>
-            <td class="td-scale-01 text-align-right">报关单类型</td>
-            <td class="td-scale-04" colspan="2">
-                <input type="hidden" value="@{{ if .m.DecType}}@{{.m.DecType}}@{{ else}}1@{{end}}" name="DecType" id="DecType">
-                <input type="text" value="@{{ if .m.DecTypeName}}@{{.m.DecTypeName}}@{{ else}}进口报关单@{{end}}"
-                       name="DecTypeName" id="DecTypeName" class="non-empty  @{{if inArrayStr "DecTypeName" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-01 text-align-right">对应报关单编号</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.EntryNo}}" class="non-empty disabled  @{{if inArrayStr "EntryNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" id="EntryNo"
-                           autocomplete="off" disabled>
-                </div>
-            </td>
-            <td class="td-scale-01 text-align-right">对应报关单申报单位编码</td>
-            <td class="td-scale-04" colspan="2">
-                <input type="text"
-                       value="@{{ if .m.CorrEntryDclEtpsNo}}@{{.m.CorrEntryDclEtpsNo}}@{{ else}}4419986507@{{end}}"
-                       name="CorrEntryDclEtpsNo" id="CorrEntryDclEtpsNo" class="non-empty  @{{if inArrayStr "CorrEntryDclEtpsNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
-            </td>
-            <td class="td-scale-01 text-align-right">对应报关单申报单位社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <input type="text"
-                       value="@{{ if .m.CorrEntryDclEtpsSccd}}@{{.m.CorrEntryDclEtpsSccd}}@{{ else}}914419007962277606@{{end}}"
-                       name="CorrEntryDclEtpsSccd" id="CorrEntryDclEtpsSccd" class="non-empty  @{{if inArrayStr "CorrEntryDclEtpsSccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}">
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-04 text-align-right">对应报关单申报单位名称</td>
-            <td class="td-scale-04" colspan="7">
-                <div class="input-group valid">
-                    <input type="text"
-                           value="@{{ if .m.CorrEntryDclEtpsNm}}@{{.m.CorrEntryDclEtpsNm}}@{{ else}}广东东华报关服务有限公司@{{end}}"
-                           name="CorrEntryDclEtpsNm" id="CorrEntryDclEtpsNm" class="non-empty  @{{if inArrayStr "CorrEntryDclEtpsNm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-04 text-align-right">关联报关单编号</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryNo}}" name="RltEntryNo" id="RltEntryNo"
-                           class="non-empty disabled  @{{if inArrayStr "RltEntryNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off" disabled>
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联清单编号</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltInvtNo}}" name="RltInvtNo" id="RltInvtNo" class="non-empty  @{{if inArrayStr "RltInvtNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联手(账)册备案号</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltPutrecNo}}" name="RltPutrecNo" id="RltPutrecNo"
-                           class="non-empty  @{{if inArrayStr "RltPutrecNo" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-04 text-align-right">关联报关单境内收发货人编码</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryBizopEtpsno}}" name="RltEntryBizopEtpsno"
-                           id="RltEntryBizopEtpsno" class="non-empty  @{{if inArrayStr "RltEntryBizopEtpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联报关单境内收发货人社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryBizopEtpsSccd}}" name="RltEntryBizopEtpsSccd"
-                           id="RltEntryBizopEtpsSccd" class="non-empty  @{{if inArrayStr "RltEntryBizopEtpsSccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联报关单境内收发货人名称</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryBizopEtpsNm}}" name="RltEntryBizopEtpsNm"
-                           id="RltEntryBizopEtpsNm" class="non-empty  @{{if inArrayStr "RltEntryBizopEtpsNm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-04 text-align-right">关联报关单生产销售(消费使用)单位编码</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryRcvgdEtpsno}}" name="RltEntryRcvgdEtpsno"
-                           id="RltEntryRcvgdEtpsno" class="non-empty  @{{if inArrayStr "RltEntryRcvgdEtpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联报关单生产销售(消费使用)社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryRvsngdEtpsSccd}}" name="RltEntryRvsngdEtpsSccd"
-                           id="RltEntryRvsngdEtpsSccd" class="non-empty  @{{if inArrayStr "RltEntryRvsngdEtpsSccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联报关单生产销售(消费使用)单位名称</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryRcvgdEtpsNm}}" name="RltEntryRcvgdEtpsNm"
-                           id="RltEntryRcvgdEtpsNm" class="non-empty  @{{if inArrayStr "RltEntryRcvgdEtpsNm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-04 text-align-right">关联报关单申报单位编码</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryDclEtpsno}}" name="RltEntryDclEtpsno"
-                           id="RltEntryDclEtpsno" class="non-empty  @{{if inArrayStr "RltEntryDclEtpsno" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联报关单申报单位社会信用代码</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryDclEtpsSccd}}" name="RltEntryDclEtpsSccd"
-                           id="RltEntryDclEtpsSccd" class="non-empty  @{{if inArrayStr "RltEntryDclEtpsSccd" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">关联报关单申报单位名称</td>
-            <td class="td-scale-04" colspan="2">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.RltEntryDclEtpsNm}}" name="RltEntryDclEtpsNm"
-                           id="RltEntryDclEtpsNm" class="non-empty  @{{if inArrayStr "RltEntryDclEtpsNm" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-04 text-align-right">报关单申报日期</td>
-            <td class="td-scale-04">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.EntryDclTime}}" id="EntryDclTime" class="non-empty disabled  @{{if inArrayStr "EntryDclTime" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           autocomplete="off" disabled>
-                </div>
-            </td>
-            <td class="td-scale-04 text-align-right">备注</td>
-            <td class="td-scale-04" colspan="5">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.Rmk}}" name="Rmk" id="Rmk" class="non-empty  @{{if inArrayStr "Rmk" .m.RecheckErrorInputIds }}is_check_fail@{{end}}" autocomplete="off">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="td-scale-04 text-align-right">报关单草稿(备注)</td>
-            <td class="td-scale-04" colspan="7">
-                <div class="input-group valid">
-                    <input type="text" value="@{{.m.DecRmk}}" name="DecRmk" id="DecRmk" class="non-empty disabled  @{{if inArrayStr "DecRmk" .m.RecheckErrorInputIds }}is_check_fail@{{end}}"
-                           autocomplete="off" disabled>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <button type="button" id="annotation_save" lay-submit lay-filter="annotation_save" style="display: none;"></button>
-    <button type="button" id="annotation_save_pass" lay-submit lay-filter="annotation_save_pass" style="display: none;"></button>
-    <button type="button" id="annotation_application_review" lay-submit lay-filter="annotation_application_review" style="display: none;"></button>
-    <button type="button" id="annotation_application_rereview" lay-submit lay-filter="annotation_application_rereview" style="display: none;"></button>
-    <button type="button" id="annotation_save_reload" lay-submit lay-filter="annotation_save_reload"
-            style="display: none;"></button>
-</form>
-<div style="text-align: center;margin-top: 35px">
-    @{{if .canStore }}
-<button class="layui-btn custom-create_btn" id="order_save" type="button">
-    <i class="iconfont iconsave"></i>保存表头
-</button>
-@{{end}}
+<div class="order_table_form_check_is_other">
+    异地报关 <input type="checkbox" name="IsOther" id="IsOther" title="异地报关" lay-skin="primary" value="1" onchange="layui.admin.is_other_change(this)">
 </div>
-
+<table class="layui-table order_table_form">
+    <tbody>
+    <tr>
+        <td class="td-scale-01 text-align-right">申报地海关</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="hidden" name="CustomMaster" id="CustomMaster" value="5207">
+                <input type="text" class="non-empty required" name="CustomMasterName"
+                       id="CustomMasterName" autocomplete="off" value="凤岗海关" lay-verify="required"
+                       lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-01 text-align-right">申报状态</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty disabled" disabled id="CustomMasterName"
+                       autocomplete="off">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">订单号</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty disabled" disabled id="ClientSeqNo"
+                       autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-01 text-align-right">外商公司</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty" name="ForeignCompanyName"
+                       id="ForeignCompanyName" autocomplete="off" enter="-1">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">海关编号</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty disabled" disabled id="EntryId"
+                       autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-01 text-align-right">进境关别</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="hidden" name="IEPort" id="IEPort">
+                <input type="text" class="non-empty required" name="IEPortName"
+                       id="IEPortName" lay-verify="i_e_port_name" lay-vertype="tips"
+                       autocomplete="off" onblur="layui.admin.i_e_port_name_blur(this)">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">备案号</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty" name="ManualNo"
+                       id="ManualNo" autocomplete="off" data-flag="I"
+                       onchange="layui.admin.manual_no_change(this)">
+            </div>
+        </td>
+        <td class="td-scale-01 text-align-right">合同协议号</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty" name="ContrNo"
+                       id="ContrNo" autocomplete="off" oninput="layui.admin.is_noCork(this)">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">进口日期</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" name="IEDate" id="IEDate"
+                       autocomplete="off" lay-verify="required" lay-vertype="tips"
+                       oninput="layui.admin.is_onlynumber(this)">
+            </div>
+        </td>
+        <td class="td-scale-01 text-align-right">申报日期</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty" name="AplDate"
+                       id="AplDate" autocomplete="off" oninput="layui.admin.is_onlynumber(this)">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">境内收发货人</td>
+        <td colspan="2">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" disabled name="TradeCoScc"
+                       id="TradeCoScc"
+                       autocomplete="off" lay-verify="required" lay-vertype="tips"
+                       placeholder="18位社会信用代码" maxlength="18">
+            </div>
+        </td>
+        <td class="td-scale-03" colspan="2">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" name="TradeCode" id="TradeCode"
+                       autocomplete="off" lay-verify="required" lay-vertype="tips"
+                       placeholder="10位海关编码" maxlength="10"
+                       onblur="layui.admin.owner_code_change(this)">
+                <input type="text" class="non-empty" disabled name="TradeCiqCode"
+                       id="TradeCiqCode"
+                       autocomplete="off" placeholder="10位检验检疫编码" maxlength="10">
+            </div>
+        </td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" disabled name="TradeName"
+                       id="TradeName" lay-verify="required" lay-vertype="tips" autocomplete="off"
+                       placeholder="企业名称（中文）">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">境外收发货人</td>
+        <td colspan="4">
+            <div class="input-group valid">
+                <input type="text" class="non-empty" name="OverseasConsignorCode"
+                       id="OverseasConsignorCode" autocomplete="off" placeholder="境外收货人代码">
+            </div>
+        </td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" name="OverseasConsignorEname"
+                       id="OverseasConsignorEname" lay-verify="required" lay-vertype="tips"
+                       autocomplete="off" placeholder="企业名称（外文）">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">消费使用单位</td>
+        <td colspan="2">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" disabled name="OwnerCodeScc"
+                       id="OwnerCodeScc"
+                       autocomplete="off" lay-verify="required" lay-vertype="tips"
+                       placeholder="18位社会信用代码" maxlength="18">
+            </div>
+        </td>
+        <td class="td-scale-03" colspan="2">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" name="OwnerCode" id="OwnerCode"
+                       autocomplete="off" lay-verify="required" lay-vertype="tips"
+                       placeholder="10位海关编码" maxlength="10"
+                       onblur="layui.admin.owner_code_change(this)">
+                <input type="text" class="non-empty" disabled name="OwnerCiqCode"
+                       id="OwnerCiqCode"
+                       autocomplete="off" placeholder="10位检验检疫编码" maxlength="10">
+            </div>
+        </td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" disabled name="OwnerName"
+                       id="OwnerName" lay-verify="required" lay-vertype="tips" autocomplete="off"
+                       placeholder="企业名称">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">申报单位</td>
+        <td colspan="2">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" name="AgentCodeScc"
+                       id="AgentCodeScc" autocomplete="off" lay-verify="required"
+                       lay-vertype="tips" placeholder="18位社会信用代码" maxlength="18"
+                       value="914419007962277606">
+            </div>
+        </td>
+        <td class="td-scale-03" colspan="2">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" name="AgentCode" id="AgentCode"
+                       autocomplete="off" lay-verify="required" lay-vertype="tips"
+                       placeholder="10位海关编码" maxlength="10" value="4419986507">
+                <input type="text" class="non-empty" name="DeclCiqCode" id="DeclCiqCode"
+                       autocomplete="off" placeholder="10位检验检疫编码" maxlength="10" value="4400510052">
+            </div>
+        </td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty required" name="AgentName"
+                       id="AgentName" lay-verify="required" lay-vertype="tips" autocomplete="off"
+                       placeholder="企业名称" value="广东东华报关服务有限公司">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">运输方式</td>
+        <td class="td-scale-05">
+            <div class="input-group valid">
+                <input type="hidden" name="TrafMode" id="TrafMode">
+                <input type="text" name="TrafModeName" id="TrafModeName"
+                       class="non-empty required"
+                       lay-verify="traf_mode_name" lay-vertype="tips" autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-01 text-align-right">运输工具名称</td>
+        <td class="td-scale-05">
+            <input type="text" name="TrafName" id="TrafName" maxlength="50" class="non-empty">
+        </td>
+        <td class="td-scale-01 text-align-right">航次号</td>
+        <td colspan="3">
+            <input type="text" name="VoyNo" id="VoyNo" class="non-empty" maxlength="32">
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-01 text-align-right">提运单号</td>
+        <td class="td-scale-02" colspan="3">
+            <div class="input-group valid">
+                <input type="text" class="non-empty" name="BillNo" id="BillNo" autocomplete="off">
+                <i class="iconfont iconic_add input_more" id="BillNoCreate" onclick="layui.admin.bill_no_create()"></i>
+                <i class="iconfont iconmore-horiz input_more" id="BillNoOpen"></i>
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">监管方式</td>
+        <td class="percent-13">
+            <div class="input-group valid">
+                <input type="hidden" name="TradeMode" id="TradeMode">
+                <input type="text" name="TradeModeName" id="TradeModeName"
+                       class="non-empty required"
+                       lay-verify="required" lay-vertype="tips" autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">征免性质</td>
+        <td class="percent-13">
+            <div class="input-group valid">
+                <input type="hidden" name="CutMode" id="CutMode">
+                <input type="text" name="CutModeName" id="CutModeName" class="non-empty"
+                       autocomplete="off">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-04 text-align-right">许可证号</td>
+        <td class="percent-13">
+            <div class="input-group valid">
+                <input type="text" name="LicenseNo" id="LicenseNo" class="non-empty"
+                       autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">启运国(地区)</td>
+        <td class="percent-13">
+            <div class="input-group valid">
+                <input type="hidden" name="TradeCountry" id="TradeCountry">
+                <input type="text" name="TradeCountryName" id="TradeCountryName"
+                       lay-verify="trade_country_name" lay-vertype="tips" class="non-empty required"
+                       autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">经停港</td>
+        <td class="percent-13">
+            <div class="input-group valid">
+                <input type="hidden" name="DistinatePort" id="DistinatePort">
+                <input type="text" name="DistinatePortName" id="DistinatePortName"
+                       class="non-empty required" autocomplete="off"
+                       lay-verify="distinate_port_name" lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">成交方式</td>
+        <td class="percent-13">
+            <div class="input-group valid">
+                <input type="hidden" name="TransMode" id="TransMode" value="1">
+                <input type="text" name="TransModeName" id="TransModeName"
+                       class="non-empty required" autocomplete="off" value="CIF"
+                       lay-verify="required" lay-vertype="tips">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-04 text-align-right">运费</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="FeeMark" id="FeeMark">
+                <input type="text" name="FeeMarkName" id="FeeMarkName"
+                       class="non-empty required percent-40" lay-verify="required"
+                       lay-vertype="tips" autocomplete="off">
+                <input type="text" name="FeeRate" id="FeeRate" class="non-empty line"
+                       autocomplete="off">
+                <input type="hidden" name="FeeCurr" id="FeeCurr">
+                <input type="text" name="FeeCurrName" id="FeeCurrName"
+                       class="non-empty percent-50 line" autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">保险费</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="InsurMark" id="InsurMark">
+                <input type="text" name="InsurMarkName" id="InsurMarkName"
+                       class="non-empty percent-40" autocomplete="off">
+                <input type="text" name="InsurRate" id="InsurRate" class="non-empty line"
+                       autocomplete="off">
+                <input type="hidden" name="InsurCurr" id="InsurCurr">
+                <input type="text" name="InsurCurrName" id="InsurCurrName"
+                       class="non-empty percent-50 line" autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">杂费</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="OtherMark" id="OtherMark">
+                <input type="text" name="OtherMarkName" id="OtherMarkName"
+                       class="non-empty percent-40" autocomplete="off">
+                <input type="text" name="OtherRate" id="OtherRate" class="non-empty line"
+                       autocomplete="off">
+                <input type="hidden" name="OtherCurr" id="OtherCurr">
+                <input type="text" name="OtherCurrName" id="OtherCurrName"
+                       class="non-empty percent-50 line" autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">件数</td>
+        <td>
+            <div class="input-group valid">
+                <input type="text" name="PackNo" id="PackNo" class="non-empty required"
+                       maxlength="9" onkeyup="layui.admin.decCheckInt(this)"
+                       onblur="layui.admin.decCheckInt(this)" lay-verify="required"
+                       lay-vertype="tips">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-04 text-align-right">包装种类</td>
+        <td colspan="2">
+            <div class="input-group valid">
+                <input type="hidden" name="WrapType" id="WrapType">
+                <input type="text" name="WrapTypeName" id="WrapTypeName"
+                       class="non-empty required" autocomplete="off" lay-verify="required"
+                       lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-btn">
+            <input type="hidden" id="DecOtherPacks" name="DecOtherPacks">
+            <button class="layui-btn layui-btn-primary custom-create_btn_primary"
+                    id="package info btn" type="button">
+                其他包装
+            </button>
+        </td>
+        <td class="td-scale-04 text-align-right">毛重(KG)</td>
+        <td>
+            <div class="input-group valid">
+                <input type="text" name="GrossWet" id="GrossWet" class="non-empty required"
+                       autocomplete="off" lay-verify="gross_wet" lay-vertype="tips"
+                       onblur="layui.admin.gross_wet_blur(this)" oninput="layui.admin.is_onlyNumFloat(this, 'four')">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">净重(KG)</td>
+        <td>
+            <div class="input-group valid">
+                <input type="text" name="NetWt" id="NetWt" class="non-empty required"
+                       autocomplete="off" lay-verify="net_wt" lay-vertype="tips"
+                       onblur="layui.admin.net_wt_blur(this)" oninput="layui.admin.is_onlyNumFloat(this, 'four')">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-04 text-align-right">贸易国别（地区）</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="TradeAreaCode" id="TradeAreaCode">
+                <input type="text" name="TradeAreaName" id="TradeAreaName" class="non-empty"
+                       autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">集装箱数</td>
+        <td>
+            <div class="input-group valid">
+                <input type="text" name="ContainerCounts" id="ContainerCounts"
+                       class="non-empty disabled" disabled autocomplete="off">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">随附单证</td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="text" name="DocumentCodeString" id="DocumentCodeString"
+                       class="non-empty disabled" disabled autocomplete="off">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-04 text-align-right">入境口岸</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="EntyPortCode" id="EntyPortCode">
+                <input type="text" name="EntyPortName" id="EntyPortName"
+                       class="non-empty required" autocomplete="off" lay-verify="enty_port_name"
+                       lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">货物存放地点</td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="text" name="GoodsPlace" id="GoodsPlace" class="non-empty required"
+                       autocomplete="off" lay-verify="required" lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">启运港</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="DespPortCode" id="DespPortCode">
+                <input type="text" name="DespPortName" id="DespPortName"
+                       class="non-empty required" autocomplete="off" lay-verify="required"
+                       lay-vertype="tips">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-04 text-align-right">报关单类型</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="EntryType" id="EntryType" value="M">
+                <input type="text" name="EntryTypeName" id="EntryTypeName"
+                       class="non-empty required" autocomplete="off" value="通关无纸化"
+                       lay-verify="required" lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">业务选项</td>
+        <td colspan="5">
+            <div class="input-group valid">
+                <div class="td-checkbox">
+                    <span class="margin-right-4">空白</span>
+                    <input type="checkbox" name="PromiseItmes[]" id="PromiseItmes0" title="特殊关系确认"
+                           lay-skin="primary" value="1" onchange="layui.admin.promise_items_change(this)"
+                           data-first="0">
+                    <span class="margin-right-4">空白</span>
+                    <input type="checkbox" name="PromiseItmes[]" id="PromiseItmes1" title="价格影响确认"
+                           lay-skin="primary" value="1" onchange="layui.admin.promise_items_change(this)"
+                           data-first="0">
+                    <span class="margin-right-4">空白</span>
+                    <input type="checkbox" name="PromiseItmes[]" id="PromiseItmes2" title="支付特权使用费确认"
+                           lay-skin="primary" value="1" onchange="layui.admin.promise_items_change(this)"
+                           data-first="0">
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td-scale-04 text-align-right">备注</td>
+        <td colspan="2">
+            <div class="input-group valid">
+                                    <textarea rows="1" cols="2" name="NoteS" id="NoteS" placeholder="备注"
+                                              class="noteS-i" maxlength="300"
+                                              ondblclick="layui.admin.note_s_dbclick()"></textarea>
+                <i class="iconfont iconmore-horiz input_more" id="NoteSOpen"></i>
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">业务事项</td>
+        <td colspan="4">
+            <div class="input-group valid">
+                <div class="td-checkbox">
+                    <input type="checkbox" name="Type[]" title="担保验收" lay-skin="primary"
+                           value="1" disabled>
+                    <input type="checkbox" name="Type[]" id="Type1" title="自报自缴" lay-skin="primary"
+                           checked value="Z">
+                    <input type="checkbox" name="Type[]" title="自主报税" lay-skin="primary"
+                           value="ZB" disabled>
+                    <input type="checkbox" name="Type[]" title="税单无纸化" lay-skin="primary"
+                           value="SW" disabled>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="td-scale-04 text-align-right">
+            <div class="non-disabled-btn" id="Non-disabled-btn" isdeclistshow="0">
+                <i class="iconfont iconjiantou_xia transform_xia"></i>
+                <span>检验检疫申报信息</span>
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">标记唛码</td>
+        <td colspan="5">
+            <div class="input-group valid">
+                                    <textarea rows="1" cols="2" name="MarkNo" id="MarkNo" class="noteS-i required"
+                                              maxlength="400" lay-verify="required" lay-vertype="tips">N/M</textarea>
+                <p class="mark_no_number">(<span>3</span>字节)</p>
+                <i class="iconfont iconzoom-out-map input_more" id="MarkNoOpen"></i>
+            </div>
+        </td>
+    </tr>
+    <tr style="display: none;">
+        <td class="td-scale-04 text-align-right">检验检疫受理机关</td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="hidden" name="OrgCode" id="OrgCode">
+                <input type="text" name="OrgCodeName" id="OrgCodeName"
+                       class="non-empty required" autocomplete="off" lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">企业资质</td>
+        <td colspan="3">
+            <div class="input-group valid">
+                <input type="text" id="EntQualifTypeCode" class="non-empty percent-40"
+                       autocomplete="off" disabled>
+                <input type="text" id="EntQualifTypeName" class="non-empty line"
+                       autocomplete="off" disabled>
+                <input id="ent qualif seq" type="hidden" value="0">
+                <i class="iconfont iconkeyboardarrowleft input_more" id="enterprise up btn"></i>
+                <i class="iconfont iconkeyboardarrowright input_more" id="enterprise down btn"></i>
+                <i class="iconfont iconmore-horiz input_more" id="enterprise btn"></i>
+            </div>
+        </td>
+    </tr>
+    <tr style="display: none;">
+        <td class="td-scale-04 text-align-right">领证机关</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="VsaOrgCode" id="VsaOrgCode">
+                <input type="text" name="VsaOrgCodeName" id="VsaOrgCodeName"
+                       class="non-empty required" autocomplete="off" lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">口岸商检机关</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="InspOrgCode" id="InspOrgCode">
+                <input type="text" name="InspOrgName" id="InspOrgName"
+                       class="non-empty required" autocomplete="off" lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">启运日期</td>
+        <td>
+            <div class="input-group valid">
+                <input type="text" name="DespDate" id="DespDate" class="non-empty required"
+                       autocomplete="off" lay-vertype="tips" placeholder="年/月/日">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">B/L号</td>
+        <td>
+            <div class="input-group valid">
+                <input type="text" name="BLNo" id="BLNo" class="non-empty"
+                       autocomplete="off">
+            </div>
+        </td>
+    </tr>
+    <tr style="display: none;">
+        <td class="td-scale-04 text-align-right">目的地检验检疫机关</td>
+        <td>
+            <div class="input-group valid">
+                <input type="hidden" name="PurpOrgCode" id="PurpOrgCode">
+                <input type="text" name="PurpOrgName" id="PurpOrgName"
+                       class="non-empty required" autocomplete="off" lay-vertype="tips">
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">关联号码及理由</td>
+        <td colspan="2">
+            <div class="input-group valid">
+                <input type="text" name="CorrelationNo" id="CorrelationNo" class="non-empty"
+                       autocomplete="off" placeholder="关联号码">
+            </div>
+        </td>
+        <td colspan="2">
+            <div class="input-group valid">
+                <input type="hidden" name="CorrelationReasonFlag" id="CorrelationReasonFlag">
+                <input type="text" name="CorrelationReasonFlagName"
+                       id="CorrelationReasonFlagName" class="non-empty" autocomplete="off"
+                       placeholder="关联理由">
+            </div>
+        </td>
+        <td class="td-btn">
+            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="DecUsersBtn"
+                    type="button">
+                使用人
+            </button>
+        </td>
+    </tr>
+    <tr style="display: none;">
+        <td class="td-scale-04 text-align-right">原箱运输</td>
+        <td>
+            <div class="input-group valid">
+                <div class="td-checkbox">
+                    <input type="checkbox" name="OrigBoxFlag" title="是" lay-skin="primary" value="1">
+                </div>
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">特殊业务标识</td>
+        <td>
+            <div class="input-group valid">
+                <input type="text" id="SpecDeclFlag" class="non-empty"
+                       autocomplete="off" disabled>
+                <i class="iconfont iconmore-horiz input_more" id="SpecDeclFlagOpen"></i>
+            </div>
+        </td>
+        <td class="td-scale-04 text-align-right">所需单证</td>
+        <td colspan="3" class="td-btn">
+            <div class="input-group valid">
+                <input type="text" id="DecRequestCerts" class="non-empty"
+                       autocomplete="off" disabled>
+                <button class="layui-btn layui-btn-primary custom-create_btn_primary"
+                        id="DecRequestCertsBtn" type="button">
+                    检验检疫签证申报要素
+                </button>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<input type="hidden" id="IsWebsocket" value="1">
+<input type="hidden" id="IsType" value="order">

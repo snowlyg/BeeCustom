@@ -1,0 +1,128 @@
+<script type="text/html" id="print_save_driver_template">
+    <div class="manual_no_list">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return false}">
+            <table class="layui-table order_table_form">
+                <tbody>
+                <tr>
+                    <td class="td-scale-01 text-align-right">合同协议号</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="contr_no" id="contr_no_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">装货地</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="district_code_name" id="district_code_name_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">卸货地</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="hidden" name="i_e_port" id="i_e_port_save">
+                            <input type="text" class="non-empty" name="i_e_port_name" id="i_e_port_name_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">监管方式</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="trade_mode_name" id="trade_mode_name_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">毛重</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="gross_wet" id="gross_wet_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">净重</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="net_wt" id="net_wt_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">原产国/最终目的国</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="origin_country_name" id="origin_country_name_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">件数</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="pack_no" id="pack_no_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">提运单号</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="bill_no" id="bill_no_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">车辆海关编码</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="car_code" id="car_code_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">司机纸条码</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="voy_no" id="voy_no_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">指（启）运地</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="hidden" name="i_e_port_two" id="i_e_port_two_save">
+                            <input type="text" class="non-empty" name="i_e_port_name_two" id="i_e_port_name_two_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-scale-01 text-align-right">进（出）境地</td>
+                    <td class="td-scale-04">
+                        <div class="input-group valid">
+                            <input type="hidden" name="custom_master" id="custom_master_save">
+                            <input type="text" class="non-empty" name="custom_master_name" id="custom_master_name_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                    <td class="td-scale-01 text-align-right">集装箱号</td>
+                    <td class="td-scale-04" colspan="3">
+                        <div class="input-group valid">
+                            <input type="text" class="non-empty" name="container_ids" id="container_ids_save"
+                                   autocomplete="off">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="layui-hide" id="driver_table_save" lay-filter="driver_table_save"></table>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="print_save_driver_save"
+                        id="print_save_driver_save" type="button">
+                    保存
+                </button>
+            </div>
+        </form>
+    </div>
+</script>
