@@ -39,7 +39,7 @@ func (c *WebHookController) Get() {
 		dbHost := beego.AppConfig.String(dbType + "::db_host")
 		//数据库端口
 		dbPort := beego.AppConfig.String(dbType + "::db_port")
-		arv := []string{"-driver=mysql", fmt.Sprintf("-conn=%s:%s@tcp(%s:%s)/%s", dbUser, dbPwd, dbHost, dbPort, dbName)}
+		arv := []string{"-driver=mysql", fmt.Sprintf(`-conn="%s:%s@tcp(%s:%s)/%s"`, dbUser, dbPwd, dbHost, dbPort, dbName)}
 		enums.Cmd("cd", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", []string{"pull"})
 		enums.Cmd("bee", []string{"pack"})
