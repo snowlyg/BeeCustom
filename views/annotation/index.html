@@ -281,6 +281,17 @@
                                     <a class="gray margin_top_10 cancel_order" data-id="{{ item.Id }}">取消订单</a>
                                 @{{end}}
                                 {{# } }}
+
+
+                                @{{ if eq .IsDelete true}}
+                                    @{{ if canArray  .actions .ImpexpMarkcd "canRestore"}}
+                                        <a class="gray margin_top_10 restore_annotaion" data-id="{{ item.Id }}">还原订单</a>
+                                    @{{end}}
+                                    @{{ if canArray  .actions .ImpexpMarkcd "canForceDelete"}}
+                                        <a class="gray margin_top_10 force_delete_annotaion" data-id="{{ item.Id }}">彻底删除订单</a>
+                                    @{{end}}
+                                @{{end}}
+
                                 </div>
                             </td>
                         </tr>
