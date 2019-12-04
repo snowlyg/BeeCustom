@@ -361,6 +361,9 @@ func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 		sql += " AND deleted_at IS NULL "
 	}
 
+	utils.LogDebug(sql)
+	utils.LogDebug(params.IsDelete)
+
 	return sql
 }
 

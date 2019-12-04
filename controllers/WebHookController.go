@@ -39,7 +39,7 @@ func (c *WebHookController) Get() {
 		dbHost := beego.AppConfig.String(dbType + "::db_host")
 		// 数据库端口
 		dbPort := beego.AppConfig.String(dbType + "::db_port")
-		arv := []string{"-driver=mysql", fmt.Sprintf(`-conn="%s:%s@tcp(%s:%s)/%s"`, dbUser, dbPwd, dbHost, dbPort, dbName)}
+		arv := []string{"migrate", "-driver=mysql", fmt.Sprintf(`-conn="%s:%s@tcp(%s:%s)/%s"`, dbUser, dbPwd, dbHost, dbPort, dbName)}
 		enums.Cmd("cd", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", []string{"pull"})
 		enums.Cmd("bee", []string{"pack"})
@@ -54,7 +54,7 @@ func (c *WebHookController) Get() {
 		if !file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") && file.IsExist("/root/back/BeeCustom.tar.gz") {
 			enums.Cmd("cd", []string{"/root/back"})
 			enums.Cmd("tar", []string{"-zxvf", "BeeCustom.tar.gz", "BeeCustom"})
-			enums.Cmd("rm", []string{"BeeCustom.tar.gz"})
+			enums.Cmd("sudo ", []string{"rm", "BeeCustom.tar.gz"})
 			utils.LogDebug("tar BeeCustom.tar.gz")
 		} else {
 			utils.LogDebug("tar BeeCustom.tar.gz error")
