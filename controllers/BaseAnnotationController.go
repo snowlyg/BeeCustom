@@ -81,12 +81,16 @@ func (c *BaseAnnotationController) bRecycle(impexpMarkcd string) {
 func (c *BaseAnnotationController) bRestore(id int64) {
 	m, err := models.AnnotationOne(id, "")
 	if m != nil && id > 0 {
+		m.DeletedAt = time.Time{}
 		if err != nil {
 			c.pageError("数据无效，请刷新后重试")
 		}
 	}
 
 	c.setStatusOnly(m, "待审核", false)
+	if err = models.AnnotationUpdate(m, []string{"Status", "DeletedAt", "StatusUpdatedAt"}); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
+	}
 	annotationRecord := c.newAnnotationRecord(m, "还原删除订单")
 	if err := models.AnnotationRecordSave(annotationRecord); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "还原失败", m)
