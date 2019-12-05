@@ -219,7 +219,7 @@
             layer.load(2);
             try {
                 const item = await admin.post(`/user/change_pwd`, data.field);
-                if (item.status === 1) {
+                if (item.status) {
                     layer.close(edit_password_index)
                 }
             } catch (e) {
@@ -228,7 +228,6 @@
             layer.closeAll('loading');
         });
     });
-
 </script>
 </body>
 </html>

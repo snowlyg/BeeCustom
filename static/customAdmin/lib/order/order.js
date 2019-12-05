@@ -685,7 +685,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         success: function (res) {
                             if (show) {
-                                if (res.status === 1) {
+                                if (res.status) {
                                     layer.msg(res.msg, {
                                         offset: '15px',
                                         icon: 1,
@@ -745,7 +745,7 @@ layui.define('view', function (exports) {
                         timeout: 8000,
                         success: function (res) {
                             if (!isNotShow) {
-                                if (res.status === 1) {
+                                if (res.status) {
                                     layer.msg(res.msg, {
                                         offset: '15px',
                                         icon: 1,
@@ -805,7 +805,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status === 1) {
+                            if (res.status) {
                                 layer.msg(res.msg, {
                                     offset: '15px',
                                     icon: 1,
@@ -866,7 +866,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status === 1) {
+                            if (res.status) {
                                 layer.msg(res.msg, {
                                     offset: '15px',
                                     icon: 1,
@@ -1118,7 +1118,7 @@ layui.define('view', function (exports) {
                 layui.form.on('submit(distribute_submit)', async (data) => {
                     let url = `/annotation/distribute/${id}`
                     let result = await admin.post(url, data.field)
-                    if (result.status === 1) {
+                    if (result.status) {
                         setTimeout(() => {
                             if (clickEnum === '#order_dispatch') {
                                 admin.reloadFrame(impexpMarkcdName + '核注清单iframe')
@@ -3874,7 +3874,7 @@ layui.define('view', function (exports) {
                         const data = await admin.post(
                             `/order/${admin.add_entry.flag}/${admin.add_entry.id}/add_entry_id`,
                             form.field)
-                        if (data.status === 1) {
+                        if (data.status) {
                             setTimeout(() => {
                                 layer.closeAll()
                             }, 2000)

@@ -9,7 +9,7 @@
         form.on('submit(contacts_submit)', async (data) => {
             data.field.CompanyId = @{{.companyId}};
             const result = await admin.post(@{{ urlfor "CompanyContactController.Store" }}, data.field);
-            if (result.status === 1) {
+            if (result.status) {
                 setTimeout(() => {
                     parent.location.reload();
                     layer.closeAll();

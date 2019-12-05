@@ -7,7 +7,7 @@
         const admin = layui.admin , form = layui.form;
         form.on('submit(clearance_submit)', async (data) => {
             const clearance_new = await admin.post(@{{ urlfor "ClearanceController.Store" }}, data.field);
-            if(clearance_new.status === 1) {
+            if(clearance_new.status) {
                 const index = parent.layer.getFrameIndex(window.name);
                 setTimeout(() => {
                     admin.reloadFrame("权限管理iframe");

@@ -1,24 +1,27 @@
 <script>
-    layui.config({
-        base: '/static/customAdmin/'
-    }).extend({
-        index: 'lib/index'
-    }).use(['index', 'form', 'admin', 'layuiXtree'], async () => {
-        const form = layui.form, admin = layui.admin, layuiXtree = layui.layuiXtree;
+  layui.config({
+    base: '/static/customAdmin/',
+  }).extend({
+    index: 'lib/index',
+  }).use(['index',"layuiXtree"], async () => {
+    let { form, admin ,layuiXtree} = layui,
+      perms = await admin.get(`/role/perm_lists/0`),
+      permission = new layuiXtree({
+        elem: 'permission'
+        , form: form
+        , data: perms.obj.data
+        , isopen: false
+        , ckall: true,
+      })
 
-        const perms = await admin.get(`/role/perm_lists/0`);
-
-        const permission =  new layuiXtree({
-            elem: 'permission'
-            , form: form
-            , data: perms.obj.data
-            , isopen: false
-            , ckall: true
-        });
-
-        form.on('submit(role_submit)', async (data) => {
-            data.field.urlFors = permission.GetChecked();
-            await admin.post(@{{ urlfor "RoleController.Store" }}, data.field);
-        })
-    });
+    form.on('submit(role_submit)', async (data) => {
+      data.field.urlFors = permission.GetChecked()
+     let result = await admin.post(@{{ urlfor "RoleController.Store" }}, data.field)
+      if(result.status) {
+        setTimeout(() => {
+          admin.reloadFrame("角色管理iframe");
+        }, 150);
+      }
+    })
+  })
 </script>

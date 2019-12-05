@@ -198,7 +198,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         success: function (res) {
                             if (show) {
-                                if (res.status === 1) {
+                                if (res.status) {
                                     layer.msg(res.msg, {
                                         offset: '15px',
                                         icon: 1,
@@ -258,7 +258,7 @@ layui.define('view', function (exports) {
                         timeout: 8000,
                         success: function (res) {
                             if (!isNotShow) {
-                                if (res.status === 1) {
+                                if (res.status) {
                                     layer.msg(res.msg, {
                                         offset: '15px',
                                         icon: 1,
@@ -318,7 +318,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status === 1) {
+                            if (res.status) {
                                 layer.msg(res.msg, {
                                     offset: '15px',
                                     icon: 1,
@@ -379,7 +379,7 @@ layui.define('view', function (exports) {
                         dataType: 'JSON',
                         timeout: 8000,
                         success: function (res) {
-                            if (res.status === 1) {
+                            if (res.status) {
                                 layer.msg(res.msg, {
                                     offset: '15px',
                                     icon: 1,

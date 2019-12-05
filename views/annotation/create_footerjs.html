@@ -110,7 +110,7 @@
                 result = await admin.post('/annotation_item/store/' + @{{.m.Id}}, data)
             }
 
-            if (result.status === 1) {
+            if (result.status) {
                 await transformAnnotationItemsTable(result.obj.Annotation.Id, data)
             }
 
@@ -189,7 +189,7 @@
                     }, async (index) => {
                         if (checkData[0].Id) {
                             let result = await admin.delete('/annotation_item/delete/' + checkData[0].Id);
-                            if (result.status === 1) {
+                            if (result.status) {
                                 await transformAnnotationItemsTable(@{{.m.Id}}, '')
                             }
                         }
@@ -413,7 +413,7 @@
             data.field.ImpexpMarkcd = "@{{.ImpexpMarkcd}}";
             if (@{{ .m.Id }}) {
                 const annotation_data = await admin.patch('/annotation/update/' + @{{ .m.Id }}, data.field);
-                if (annotation_data.status === 1) {
+                if (annotation_data.status) {
                     setTimeout(() => {
                         window.location.reload()
                     }, 300)
@@ -421,7 +421,7 @@
                 }
             } else {
                 const annotation_data = await admin.post('/annotation/store/' + @{{ .ImpexpMarkcd }}, data.field);
-                if (annotation_data.status === 1) {
+                if (annotation_data.status) {
                     setTimeout(() => {
                         window.location.href = '/annotation/edit/' + annotation_data.obj.Id
                     }, 300)
@@ -471,7 +471,7 @@
         form.on('submit(annotation_save_pass)', async () => {
             layer.load(2);
             let result = await admin.get(`/annotation/audit/` + @{{.m.Id}});
-            if (result.status === 1) {
+            if (result.status) {
                 admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
                 setTimeout(() => {
                     window.location.reload()
@@ -503,7 +503,7 @@
             }
             layer.load(2);
             const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`, 'show');
-            if (result.status === 1) {
+            if (result.status) {
                 admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
                 setTimeout(() => {
                     window.location.reload()
@@ -524,7 +524,7 @@
             }
             layer.load(2);
             const result = await admin.get(`/annotation/refor_recheck/${@{{.m.Id}}}`, 'show');
-            if (result.status === 1) {
+            if (result.status) {
                 admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe');
                 setTimeout(() => {
                     window.location.reload()

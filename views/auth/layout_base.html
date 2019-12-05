@@ -41,7 +41,7 @@
 
         form.on('submit(login_submit)', async (data) => {
            const res = await admin.post(@{{ urlfor "HomeController.DoLogin"}}, data.field);
-            if (res.status === 1) {
+            if (res.status) {
                 parent.location.href = @{{ urlfor "HomeController.Index"}};
             }
         })
