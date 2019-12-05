@@ -1,1 +1,168 @@
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <!-- 头部区域 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                    <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                        <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                        <i class="layui-icon layui-icon-refresh-3"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="theme">
+                        <i class="layui-icon layui-icon-theme"></i>
+                    </a>
+                </li>
 
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;">
+                        <cite>@{{.backenduser.RealName}}</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd class="text-center"><a class="edit_password">修改密码</a></dd>
+                        <dd style="text-align: center;">
+                            <a href="@{{urlfor "HomeController.Logout" }}">退 出</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <div class="layui-logo">
+                    <img width="28" src="/static/images/index_logo.png">
+                    <span>跨易通管理系统</span>
+                </div>
+
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
+                    lay-filter="layadmin-system-side-menu">
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="个人中心"><i
+                                    class="layui-icon iconfont iconaccount"></i><cite>个人中心</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="">工作台</a></dd>
+                            <dd><a lay-href="@{{ urlfor "BackendUserController.Profile" }}">我的信息</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="清单申报"><i
+                                    class="layui-icon iconfont iconfeatured-play-list"></i><cite>清单申报</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="@{{ urlfor "AnnotationController.IIndex" }}">进口核注清单</a></dd>
+                            <dd><a lay-href="@{{ urlfor "AnnotationController.EIndex" }}">出口核注清单</a></dd>
+                            <dd><a lay-href="/annotation/recycle/I">进口清单回收站</a></dd>
+                            <dd><a lay-href="/annotation/recycle/E">出口清单回收站</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="货物申报"><i
+                                    class="layui-icon iconfont iconlocalshipping"></i><cite>货物申报</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="@{{ urlfor "OrderController.IIndex" }}">进口报关整合申报</a></dd>
+                            <dd><a lay-href="@{{ urlfor "OrderController.EIndex" }}">出口报关整合申报</a></dd>
+                            <dd><a lay-href="" id="回收站">回收站</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="基础数据"><i
+                                    class="layui-icon iconfont iconassignment"></i><cite>基础数据</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="@{{ urlfor "ClearanceController.Index" }}">通关参数</a></dd>
+                            <dd><a lay-href="@{{ urlfor "CiqController.Index" }}">商检编码管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "HsCodeController.Index" }}">商品编码管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "HandBookController.Index" }}">金关二期手/账册</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="客户管理"><i
+                                    class="layui-icon iconfont iconcontactmail"></i><cite>客户管理</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="@{{ urlfor "CompanyController.Index" }}">企业客户管理</a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item"><a href="javascript:;" lay-tips="系统管理"><i
+                                    class="layui-icon iconfont iconsettings"></i><cite>系统管理</cite><span
+                                    class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="@{{ urlfor "BackendUserController.Index" }}">账号管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "RoleController.Index" }}">角色管理</a></dd>
+                            <dd><a lay-href="@{{ urlfor "ResourceController.Index" }}">权限管理</a></dd>
+                        </dl>
+                    </li>
+                    <span class="layui-nav-bar" style="top: 364px; height: 0px; opacity: 0;"></span></ul>
+            </div>
+        </div>
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;"></a>
+                        <dl class="layui-nav-child layui-anim-fadein">
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li lay-id='@{{ urlfor "HomeController.Control" }}'
+                        lay-attr='@{{ urlfor "HomeController.Control" }}'
+                        class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe src='@{{ urlfor "HomeController.Control" }}' frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+
+    <script type="text/html" id="edit_password_template">
+        <form class="layui-form edit_password_form">
+            <div class="layui-row layui-form-item">
+                <label class="layui-form-label"><i class="red margin-right-4">*</i>密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" lay-verify="password" lay-verType="tips"
+                           placeholder="8~16个字符，区分大小写" autocomplete="off" class="layui-input"
+                           maxlength="16">
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <label class="layui-form-label"><i class="red margin-right-4">*</i>确认密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password_confirmation" lay-verify="password_confirmation"
+                           lay-verType="tips"
+                           placeholder="8~16个字符，区分大小写" autocomplete="off" class="layui-input"
+                           maxlength="16">
+                </div>
+            </div>
+            <div class="manual_no_btn">
+                <button class="layui-btn custom-create_btn" id="edit_password_save" lay-submit
+                        lay-filter="edit_password_save" type="button">
+                    提交
+                </button>
+            </div>
+        </form>
+    </script>
+</div>

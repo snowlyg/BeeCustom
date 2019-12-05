@@ -18,15 +18,16 @@ type HomeController struct {
 func (c *HomeController) Index() {
 	//判断是否登录
 	c.checkLogin()
-	c.setTpl("home/index.html", "shared/layout_base.html")
+	c.setTpl("home/index.html", "shared/layout_app.html")
+
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["footerjs"] = "home/index_footerjs.html"
 }
 
 func (c *HomeController) Control() {
 	//判断是否登录
 	c.checkLogin()
 	c.setTpl()
-	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["footerjs"] = "home/control_footerjs.html"
 }
 
 func (c *HomeController) Page404() {
