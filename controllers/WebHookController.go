@@ -39,7 +39,7 @@ func (c *WebHookController) Get() {
 
 		if !file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") && file.IsExist("/root/back/BeeCustom.tar.gz") {
 			enums.Cmd("cd", "", []string{"/root/back"})
-			enums.Cmd("tar", "", []string{"-zxvf", "/root/back/BeeCustom.tar.gz", "/root/back/BeeCustom"})
+			enums.Cmd("tar", "", []string{"-zxvf", "/root/back/BeeCustom.tar.gz", "BeeCustom"})
 			enums.Cmd("rm", "y", []string{"/root/back/BeeCustom.tar.gz"})
 			utils.LogDebug("tar BeeCustom.tar.gz")
 		} else {
