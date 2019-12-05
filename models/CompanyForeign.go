@@ -2,8 +2,10 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
+	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -29,7 +31,7 @@ type CompanyForeign struct {
 type CompanyForeignQueryParam struct {
 	BaseQueryParam
 
-	CompanyId string
+	CompanyId int64
 }
 
 func NewCompanyForeign(id int64) CompanyForeign {
@@ -47,6 +49,8 @@ func CompanyForeignPageList(params *CompanyForeignQueryParam) ([]*CompanyForeign
 	datas := make([]*CompanyForeign, 0)
 
 	query = query.Filter("company_id", params.CompanyId)
+
+	utils.LogDebug(fmt.Sprintf("%v", params))
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)

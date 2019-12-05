@@ -20,17 +20,17 @@ func (c *FileController) Prepare() {
 	c.checkLogin() //权限控制里会进行登录验证，因此这里不用再作登录验证
 }
 
-//Upload 文件上传
+//image 文件上传
 func (c *FileController) Upload() {
 	fileType := "img/" + strconv.FormatInt(c.curUser.Id, 10) + "/"
 	if fileNamePath, err := c.BaseUpload(fileType); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
 	} else {
-		c.jsonResult(enums.JRCodeFailed, "上传成功", fileNamePath)
+		c.jsonResult(enums.JRCodeFailed, "上传成功", "/"+fileNamePath)
 	}
 }
 
-//Upload 文件上传
+//pdf 文件上传
 func (c *FileController) OrderDataUpload() {
 	orderId := c.GetString(":id", "0")
 	if orderId == "0" {

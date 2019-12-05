@@ -70,7 +70,7 @@ func (c *HandBookController) Index() {
 	c.GetXSRFToken()
 }
 
-//列表数据
+//handbookgoods 列表数据
 func (c *HandBookController) GoodDataGrid() {
 	//直接获取参数 GoodDataGrid()
 	params := models.NewHandBookGoodQueryParam()
@@ -82,7 +82,7 @@ func (c *HandBookController) GoodDataGrid() {
 	c.ServeJSON()
 }
 
-//列表数据
+// 根据 handbookid 获取handbookgoods
 func (c *HandBookController) GetHandBookGoodByHandBookId() {
 
 	params := models.NewHandBookGoodQueryParam()
@@ -97,7 +97,7 @@ func (c *HandBookController) GetHandBookGoodByHandBookId() {
 	c.ServeJSON()
 }
 
-//列表数据
+//HandBook 列表数据
 func (c *HandBookController) DataGrid() {
 	//直接获取参数 GoodDataGrid()
 	params := models.NewHandBookQueryParam()
@@ -115,7 +115,7 @@ func (c *HandBookController) DataGrid() {
 	c.ServeJSON()
 }
 
-//列表数据
+// Ullage 列表数据
 func (c *HandBookController) UllageDataGrid() {
 	//直接获取参数 getDataGridData()
 	params := models.NewHandBookUllageQueryParam()

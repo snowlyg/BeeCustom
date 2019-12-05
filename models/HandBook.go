@@ -8,6 +8,7 @@ import (
 
 	"BeeCustom/utils"
 	"BeeCustom/xlsx"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -143,6 +144,12 @@ func HandBookGetRelations(v *HandBook, relations string) (*HandBook, error) {
 			return nil, err
 		}
 
+		_, err = o.LoadRelated(v.Company, "CompanyForeigns")
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+			return nil, err
+		}
+
 	}
 
 	return v, nil
@@ -162,6 +169,13 @@ func HandBookPageList(params *HandBookQueryParam) ([]*HandBook, int64) {
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
 
 	_, _ = query.All(&data)
+
+	for _, v := range data {
+		_, err := HandBookGetRelations(v, "Company")
+		if err != nil {
+			return nil, 0
+		}
+	}
 
 	return data, total
 }

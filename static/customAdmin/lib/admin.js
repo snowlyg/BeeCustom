@@ -1497,102 +1497,10 @@ layui.define('view', function (exports) {
                 }
             },
 
-            /** 监听进口报关整合申报备案号*/
-            manual_no_change(dom) {
-                setTimeout(async () => {
-                    if ($(dom).val().trim()) {
-                        const data = await admin.get(
-                            `/order/account_manual?limit=0&search=${$(dom).val()}`)
-                        if (data.length === 0) {
-                            layui.layer.msg(`备案号：${$(dom).val()} 不存在！`, {
-                                offset: '15px',
-                                icon: 2,
-                                time: 1000,
-                                id: 'Message',
-                            })
-                            $('#ContrItem').removeAttr('disabled', 'disabled')
-                            $('#TradeCode').removeAttr('disabled', 'disabled')
-                            $('#OwnerCode').removeAttr('disabled', 'disabled')
-                        } else if (data.length > 1) {
-                            $('#ManualNoOpen').click()
-                            $('#ManualNoSearch').val($(dom).val())
-                            const data_manual = await admin.get(`/order/account_manual?search=${$(dom).val()}`)
-                            layui.table.reload('manual_no_list_table', {
-                                data: data_manual,
-                            })
-                        } else {
-                            let data_detail
-                            if (data[0].IsAccount) {
-                                data_detail = await admin.get(`/account/${data[0].id}`)
-                            } else {
-                                data_detail = await admin.get(`/manual/manual/${data[0].id}`)
-                            }
-                            const flag = $(dom).data('flag')
-                            $('#ForeignCompanyName').val(data[0].ForeignTradeCompanyName)
-                            $('#ContrNo').val(data[0].ContrNo)
-                            $('#TradeCoScc').val(data[0].CompanyCreditCode)
-                            $('#TradeCode').val(data[0].CompanyNumber)
-                            $('#TradeCiqCode').val(data[0].CompanyRegistration)
-                            $('#TradeName').val(data[0].CompanyManageName)
-
-                            $('#OwnerCodeScc').val(data[0].CompanyCreditCode)
-                            $('#OwnerCode').val(data[0].CompanyNumber)
-                            $('#OwnerCiqCode').val(data[0].CompanyRegistration)
-                            $('#OwnerName').val(data[0].CompanyManageName)
-
-                            for (let item in data_detail.data) {
-                                if (item == 'supervise_mode_code') {
-                                    if (data_detail.data[item]) {
-                                        $('#TradeMode').val(data_detail.data.SuperviseModeCode)
-                                        $('#TradeModeName').val(data_detail.data.SuperviseMode)
-                                    } else {
-                                        $('#TradeMode').val('')
-                                        $('#TradeModeName').val('')
-                                    }
-                                }
-                                if (item == 'trade_mode_code') {
-                                    if (data_detail.data[item]) {
-                                        $('#TradeMode').val(data_detail.data.TradeModeCode)
-                                        $('#TradeModeName').val(data_detail.data.TradeMode)
-                                    } else {
-                                        $('#TradeMode').val('')
-                                        $('#TradeModeName').val('')
-                                    }
-                                }
-                                if (item == 'taxationxz_code') {
-                                    if (data_detail.data[item]) {
-                                        $('#CutMode').val(data_detail.data.TaxationxzCode)
-                                        $('#CutModeName').val(data_detail.data.TaxationxzName)
-                                    } else {
-                                        $('#CutMode').val('')
-                                        $('#CutModeName').val('')
-                                    }
-                                }
-                            }
-
-                            $('#ContrItem').removeAttr('disabled', 'disabled')
-                            $('#TradeCode').attr('disabled', 'disabled')
-                            $('#OwnerCode').attr('disabled', 'disabled')
-
-                            $('#DutyMode').val('3')
-                            $('#DutyModeName').val('全免')
-                            if (data[0].CompanyNumber.substring(0, 5) == '44199') {
-                                $('#DistrictCode').val('44199')
-                                $('#DistrictCodeName').val('东莞')
-                            }
-                        }
-                    } else {
-                        $('#TradeCode').removeAttr('disabled', 'disabled')
-                        $('#OwnerCode').removeAttr('disabled', 'disabled')
-                    }
-                }, 100)
-            }
-            ,
-
             //新建--清单--料件数据--成品数据
             /* 监听进出口清单备案序号*/
             putrec_seqno_change: async function (dom, flag, handBookId) {
-                let type = 0
+                let type = 0;
                 if (flag === 'I') {
                     type = 2
                 } else if (flag === 'E') {
@@ -1603,24 +1511,24 @@ layui.define('view', function (exports) {
                         HandBookId: parseInt(handBookId),
                         Type: type,
                         Serial: $(dom).val(),
-                    }
+                    };
                     let handbookgoods = await admin.post(
                         '/handbook/get_hand_book_good_by_hand_book_id',
-                        JSON.stringify(data), true)
+                        JSON.stringify(data), true);
 
                     if (handbookgoods.rows.length === 1) {
-                        let item = handbookgoods.rows[0]
-                        $('#GdsMtno').val(item.RecordNo)
-                        $('#Gdecd').val(item.HsCode)
-                        $('#GdsNm').val(item.Name)
-                        $('#GdsSpcfModelDesc').val(item.Special)
-                        $('#DclCurrcd').val(item.MoneyunitCode)
-                        $('#DclCurrcdName').val(item.Moneyunit)
-                        $('#DclUnitcd').val(item.UnitOneCode)
-                        $('#DclUnitcdName').val(item.UnitOne)
-                        $('#DclUprcAmt').val(item.Price)
-                        $('#LawfUnitcd').val(item.UnitTwoCode)
-                        $('#LawfUnitcdName').val(item.UnitTwo)
+                        let item = handbookgoods.rows[0];
+                        $('#GdsMtno').val(item.RecordNo);
+                        $('#Gdecd').val(item.HsCode);
+                        $('#GdsNm').val(item.Name);
+                        $('#GdsSpcfModelDesc').val(item.Special);
+                        $('#DclCurrcd').val(item.MoneyunitCode);
+                        $('#DclCurrcdName').val(item.Moneyunit);
+                        $('#DclUnitcd').val(item.UnitOneCode);
+                        $('#DclUnitcdName').val(item.UnitOne);
+                        $('#DclUprcAmt').val(item.Price);
+                        $('#LawfUnitcd').val(item.UnitTwoCode);
+                        $('#LawfUnitcdName').val(item.UnitTwo);
                         $('#EntryGdsSeqno').focus()
                     } else {
                         setTimeout(async () => {
@@ -1887,8 +1795,7 @@ layui.define('view', function (exports) {
                     let declPrice = admin.decToDecimal(declTotal, gQty, '4', '3', '6')
                     $('#DclUprcAmt').val(declPrice)
                 }
-            }
-            ,
+            },
 
             /**
              * 四舍六入五成双
@@ -1905,8 +1812,7 @@ layui.define('view', function (exports) {
                 let resultList = admin.decCalculation(calculationDatas, digits,
                     calculationTypes, roundingModes, '1')
                 return resultList[0]
-            }
-            ,
+            },
 
             /**
              *
@@ -2410,7 +2316,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#InvtTypeName'],
                         after: ['#InvtType'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(list_types)
                 }
 
@@ -2421,7 +2327,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#MtpckEndprdMarkcdName'],
                         after: ['#MtpckEndprdMarkcd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(finished_product)
                 }
 
@@ -2432,7 +2338,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#ListTypeName'],
                         after: ['#ListType'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(types_transfer)
                 }
                 if ($.inArray('nuclear_declaration_lis', loadArray) >= 0) {
@@ -2442,7 +2348,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DclcusFlagName'],
                         after: ['#DclcusFlag'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(nuclear_declaration_lis)
                 }
                 if ($.inArray('customs_declaration_type', loadArray) >= 0) {
@@ -2452,7 +2358,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DclcusTypecdName'],
                         after: ['#DclcusTypecd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(customs_declaration_type)
                 }
 
@@ -2463,7 +2369,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DecTypeName'],
                         after: ['#DecType'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(type_declaration_list)
                 }
 
@@ -2474,7 +2380,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#GenDecFlagName'],
                         after: ['#GenDecFlag'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(gen_dec_flag_list)
                 }
 
@@ -2485,7 +2391,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#ModfMarkcdName'],
                         after: ['#ModfMarkcd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(modf_markcd_list)
                 }
 
@@ -2501,7 +2407,7 @@ layui.define('view', function (exports) {
                             '#CustomMaster',
                             '#IEPort',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(entry_clearance)
                 }
 
@@ -2518,7 +2424,7 @@ layui.define('view', function (exports) {
                             '#ImpexpPortcd',
                             '#DclPlcCuscd',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_entry_clearance)
                 }
 
@@ -2528,7 +2434,7 @@ layui.define('view', function (exports) {
                         filter_type: 'l',
                         id: ['#TrafModeName'],
                         after: ['#TrafMode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(mode_shipping)
                 }
 
@@ -2538,7 +2444,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#TrspModecdName'],
                         after: ['#TrspModecd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_mode_shipping)
                 }
 
@@ -2552,7 +2458,7 @@ layui.define('view', function (exports) {
                         after: [
                             '#TradeMode',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(objectives_based)
                 }
 
@@ -2566,7 +2472,7 @@ layui.define('view', function (exports) {
                         after: [
                             '#SupvModecd',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_objectives_based)
                 }
 
@@ -2576,7 +2482,7 @@ layui.define('view', function (exports) {
                         filter_type: "s",
                         id: ['#CutModeName'],
                         after: ['#CutMode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(nature_exemption)
                 }
 
@@ -2596,7 +2502,7 @@ layui.define('view', function (exports) {
                             '#DestinationCountry',
                             '#OriginCountry',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(country_area)
                 }
 
@@ -2614,7 +2520,7 @@ layui.define('view', function (exports) {
                             '#DestinationNatcd',
                             '#Natcd',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_country_area)
                 }
 
@@ -2624,7 +2530,7 @@ layui.define('view', function (exports) {
                         filter_type: 'l',
                         id: ['#DistinatePortName', '#DespPortName'],
                         after: ['#DistinatePort', '#DespPortCode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(harbour)
                 }
 
@@ -2634,7 +2540,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#TransModeName'],
                         after: ['#TransMode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(terms_delivery)
                 }
 
@@ -2644,7 +2550,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#FeeMarkName', '#InsurMarkName', '#OtherMarkName'],
                         after: ['#FeeMark', '#InsurMark', '#OtherMark'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(cost_tag)
                 }
 
@@ -2664,7 +2570,7 @@ layui.define('view', function (exports) {
                             '#OtherCurr',
                             '#TradeCurr',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(currency)
                 }
 
@@ -2678,7 +2584,7 @@ layui.define('view', function (exports) {
                         after: [
                             '#DclCurrcd',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_currency)
                 }
 
@@ -2688,7 +2594,7 @@ layui.define('view', function (exports) {
                         filter_type: 'l',
                         id: ['#WrapTypeName'],
                         after: ['#WrapType'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(kind_packages)
                 }
 
@@ -2698,7 +2604,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#EntyPortName'],
                         after: ['#EntyPortCode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(domestic_ports)
                 }
 
@@ -2708,7 +2614,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#EntryTypeName'],
                         after: ['#EntryType'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(types_customs)
                 }
 
@@ -2727,7 +2633,7 @@ layui.define('view', function (exports) {
                             '#InspOrgCode',
                             '#PurpOrgCode'
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(inspection_quarantine)
                 }
 
@@ -2737,7 +2643,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#CorrelationReasonFlagName'],
                         after: ['#CorrelationReasonFlag'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(related_reasons)
                 }
 
@@ -2756,7 +2662,7 @@ layui.define('view', function (exports) {
                             '#FirstUnit',
                             '#SecondUnit',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(unit_measurement)
                 }
 
@@ -2774,7 +2680,7 @@ layui.define('view', function (exports) {
                             '#LawfUnitcd',
                             '#SecdLawfUnitcd',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_unit_measurement)
                 }
 
@@ -2784,7 +2690,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#OrigPlaceCodeName'],
                         after: ['#OrigPlaceCode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(origin_area)
                 }
 
@@ -2794,7 +2700,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DistrictCodeName'],
                         after: ['#DistrictCode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(domestic_area)
                 }
 
@@ -2804,7 +2710,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DestCodeName'],
                         after: ['#DestCode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(destination)
                 }
 
@@ -2814,7 +2720,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DutyModeName'],
                         after: ['#DutyMode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(exempting_method)
                 }
 
@@ -2824,7 +2730,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#LvyrlfModecdName'],
                         after: ['#LvyrlfModecd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_exempting_method)
                 }
 
@@ -2834,7 +2740,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#PurposeName'],
                         after: ['#Purpose'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(use)
                 }
 
@@ -2844,7 +2750,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#ContainerMdName'],
                         after: ['#ContainerMd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(type_container)
                 }
 
@@ -2854,7 +2760,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DocuCodeName'],
                         after: ['#DocuCode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(documents_attached)
                 }
 
@@ -2864,7 +2770,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#EntQualifTypeNameTem'],
                         after: ['#EntQualifTypeCodeTem'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(enterprise_product)
                 }
 
@@ -2874,7 +2780,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#CusFieName'],
                         after: ['#CusFie'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(site_code)
                 }
 
@@ -2900,18 +2806,192 @@ layui.define('view', function (exports) {
                                 })
                             }
                         },
-                        id: ['#PutrecNo'],
+                        id: ["#PutrecNo", "#ManualNo"],
                         after: ['#HandBookId', "#BizopEtpsSccd", "#BizopEtpsno", "#BizopEtpsNm", "#RvsngdEtpsSccd", "#RcvgdEtpsno", "#RcvgdEtpsNm"],
+                    })
+                }
+
+                /** 监听进口报关整合申报备案号*/
+                //     manual_no_change(dom) {
+                //         setTimeout(async () => {
+                //             if ($(dom).val().trim()) {
+                //                 const data = await admin.get(
+                //                     `/order/account_manual?limit=0&search=${$(dom).val()}`)
+                //                 if (data.length === 0) {
+                //                     layui.layer.msg(`备案号：${$(dom).val()} 不存在！`, {
+                //                         offset: '15px',
+                //                         icon: 2,
+                //                         time: 1000,
+                //                         id: 'Message',
+                //                     })
+                //                     $('#ContrItem').removeAttr('disabled', 'disabled')
+                //                     $('#TradeCode').removeAttr('disabled', 'disabled')
+                //                     $('#OwnerCode').removeAttr('disabled', 'disabled')
+                //                 } else if (data.length > 1) {
+                //                     $('#ManualNoOpen').click()
+                //                     $('#ManualNoSearch').val($(dom).val())
+                //                     const data_manual = await admin.get(`/order/account_manual?search=${$(dom).val()}`)
+                //                     layui.table.reload('manual_no_list_table', {
+                //                         data: data_manual,
+                //                     })
+                //                 } else {
+                //                     let data_detail
+                //                     if (data[0].IsAccount) {
+                //                         data_detail = await admin.get(`/account/${data[0].id}`)
+                //                     } else {
+                //                         data_detail = await admin.get(`/manual/manual/${data[0].id}`)
+                //                     }
+                //                     const flag = $(dom).data('flag')
+                //                     $('#ForeignCompanyName').val(data[0].ForeignTradeCompanyName)
+                //                     $('#ContrNo').val(data[0].ContrNo)
+                //                     $('#TradeCoScc').val(data[0].CompanyCreditCode)
+                //                     $('#TradeCode').val(data[0].CompanyNumber)
+                //                     $('#TradeCiqCode').val(data[0].CompanyRegistration)
+                //                     $('#TradeName').val(data[0].CompanyManageName)
+                //
+                //                     $('#OwnerCodeScc').val(data[0].CompanyCreditCode)
+                //                     $('#OwnerCode').val(data[0].CompanyNumber)
+                //                     $('#OwnerCiqCode').val(data[0].CompanyRegistration)
+                //                     $('#OwnerName').val(data[0].CompanyManageName)
+                //
+                //                     for (let item in data_detail.data) {
+                //                         if (item == 'supervise_mode_code') {
+                //                             if (data_detail.data[item]) {
+                //                                 $('#TradeMode').val(data_detail.data.SuperviseModeCode)
+                //                                 $('#TradeModeName').val(data_detail.data.SuperviseMode)
+                //                             } else {
+                //                                 $('#TradeMode').val('')
+                //                                 $('#TradeModeName').val('')
+                //                             }
+                //                         }
+                //                         if (item == 'trade_mode_code') {
+                //                             if (data_detail.data[item]) {
+                //                                 $('#TradeMode').val(data_detail.data.TradeModeCode)
+                //                                 $('#TradeModeName').val(data_detail.data.TradeMode)
+                //                             } else {
+                //                                 $('#TradeMode').val('')
+                //                                 $('#TradeModeName').val('')
+                //                             }
+                //                         }
+                //                         if (item == 'taxationxz_code') {
+                //                             if (data_detail.data[item]) {
+                //                                 $('#CutMode').val(data_detail.data.TaxationxzCode)
+                //                                 $('#CutModeName').val(data_detail.data.TaxationxzName)
+                //                             } else {
+                //                                 $('#CutMode').val('')
+                //                                 $('#CutModeName').val('')
+                //                             }
+                //                         }
+                //                     }
+                //
+                //                     $('#ContrItem').removeAttr('disabled', 'disabled')
+                //                     $('#TradeCode').attr('disabled', 'disabled')
+                //                     $('#OwnerCode').attr('disabled', 'disabled')
+                //
+                //                     $('#DutyMode').val('3')
+                //                     $('#DutyModeName').val('全免')
+                //                     if (data[0].CompanyNumber.substring(0, 5) == '44199') {
+                //                         $('#DistrictCode').val('44199')
+                //                         $('#DistrictCodeName').val('东莞')
+                //                     }
+                //                 }
+                //             } else {
+                //                 $('#TradeCode').removeAttr('disabled', 'disabled')
+                //                 $('#OwnerCode').removeAttr('disabled', 'disabled')
+                //             }
+                //         }, 100)
+                //     }
+                // ,
+
+                if ($.inArray('ann_two_account_manual', loadArray) >= 0) {
+                    /**自动完成--手帐册**/
+
+                    await admin.auto_fn({
+                        url: `/handbook/datagrid`,
+                        listDirection: false,
+                        filter: function (data, data_filter) {
+                            for (let item of data) {
+                                let districtCode = '', districtCodeName = '';
+                                if (item.CompanyManageCode.substring(0, 5) == '44199') {
+                                    districtCode = '44199'
+                                    districtCodeName = '东莞'
+                                }
+
+                                let foreignTradeCompanyName = "";
+                                if (item.ForeignTradeCompanyName) {
+                                    foreignTradeCompanyName = item.ForeignTradeCompanyName
+                                } else {
+                                    if (item.Company.CompanyForeigns && item.Company.CompanyForeigns.length > 0) {
+                                        item.Company.CompanyForeigns.forEach((value, index) => {
+                                            if (value.ForeignType == 1) {
+                                                foreignTradeCompanyName =  item.Company.CompanyForeigns[index].ForeignCompanyName;
+                                            }
+                                        })
+                                    }
+                                }
+                                data_filter.push({
+                                    id: [
+                                        item.Id,
+                                        foreignTradeCompanyName,
+                                        item.InContractNo,
+                                        item.CompanyManageCreditCode,
+                                        item.CompanyManageCode,
+                                        item.Company.Registration,
+                                        item.CompanyManageName,
+
+                                        item.CompanyManageCreditCode,
+                                        item.CompanyManageCode,
+                                        item.Company.Registration,
+                                        item.CompanyManageName,
+
+                                        item.TradeModeCode,
+                                        item.TradeMode,
+                                        item.TaxationxzCode,
+                                        item.TaxationxzName,
+                                        '3',
+                                        '全免',
+                                        districtCode,
+                                        districtCodeName,
+                                    ],
+                                    label: `${item.ContractNumber}-${item.CompanyClientName}`,
+                                    value: item.ContractNumber,
+                                })
+                            }
+                        },
+                        id: ["#ManualNo"],
+                        after: [
+                            '#HandBookId',
+                            "#ForeignCompanyName",
+                            "#ContrNo",
+
+                            "#TradeCoScc",
+                            "#TradeCode",
+                            "#TradeCiqCode",
+                            "#TradeName",
+
+                            "#OwnerCodeScc",
+                            "#OwnerCode",
+                            "#OwnerCiqCode",
+                            "#OwnerName",
+
+                            "#TradeMode",
+                            "#TradeModeName",
+                            "#CutMode",
+                            "#CutModeName",
+                            "#DutyMode",
+                            "#DutyModeName",
+                            "#DistrictCode",
+                            "#DistrictCodeName",
+                        ],
                     })
                 }
             },
 
-           /** 数组上移、下移*/
+            /** 数组上移、下移*/
             swapItems(arr, index1, index2) {
                 arr[index1] = arr.splice(index2, 1, arr[index1])[0];
                 return arr
-            }
-            ,
+            },
 
             /** 进口报关打印列表*/
             order_i_print_list: [
@@ -3566,83 +3646,83 @@ layui.define('view', function (exports) {
             ,
 
             /** 货物申报表体表格渲染 */
-            getOrderTable(order_pros_data) {
-                let destination_name = '原产国(地区)'
-                let origin_name = '最终目的国'
+            getOrderTable(order_pros_data,iEFlag) {
+                let destination_name = '原产国(地区)';
+                let origin_name = '最终目的国';
 
-                if (admin.cusIEFlag == 'I') {
-                    destination_name = '最终目的国'
-                    origin_name = '原产国(地区)'
+                if (iEFlag == 'I') {
+                    destination_name = '最终目的国';
+                    origin_name = '原产国(地区)';
                 }
 
                 layui.table.render({
-                    elem: '#order_pros',
+                    elem: '#OrderPros',
                     toolbar: '#order_pros_tool',
                     defaultToolbar: ['filter'],
                     colFilterRecord: 'local',
-                    primaryKey: 'g_no',
+                    primaryKey: 'GNo',
                     cols: [
                         [
                             {
                                 type: 'checkbox',
                             }, {
-                            field: 'g_no',
+                            field: 'GNo',
                             title: '序号',
                             width: 80,
                         }, {
-                            field: 'contr_item',
+                            field: 'ContrItem',
                             title: '备案序号',
                             width: 100,
                         }, {
-                            field: 'code_t_s',
+                            field: 'CodeTS',
                             title: '商品编号',
                             width: 120,
                         }, {
-                            field: 'ciq_name',
+                            field: 'CiqName',
                             title: '检验检疫名称',
                             width: 160,
                         }, {
-                            field: 'g_name',
+                            field: 'GName',
                             title: '商品名称',
                             width: 180,
                         }, {
-                            field: 'g_model',
+                            field: 'GModel',
                             title: '规格',
                             width: 200,
                         }, {
-                            field: 'g_qty_string',
+                            field: 'GQtyString',
                             title: '成交数量',
                             width: 100,
                         }, {
-                            field: 'g_unit_name',
+                            field: 'GUnitName',
                             title: '成交单位',
                             width: 100,
                         }, {
-                            field: 'decl_price_string',
+                            field: 'DeclPriceString',
                             title: '单价',
                             width: 100,
                         }, {
-                            field: 'decl_total_string',
+                            field: 'DeclTotalString',
                             title: '总价',
                             width: 120,
                         }, {
-                            field: 'trade_curr_name',
+                            field: 'TradeCurrName',
                             title: '币制',
                             width: 100,
                         }, {
-                            field: 'destination_country_name',
+                            field: 'DestinationCountryName',
                             title: destination_name,
                             width: 120,
                         }, {
-                            field: 'origin_country_name',
+                            field: 'OriginCountryName',
                             title: origin_name,
                             width: 120,
                         }, {
-                            field: 'duty_mode_name',
+                            field: 'DutyModeName',
                             title: '征免类型',
                             width: 150,
                         }, {
-                            field: 'cus_supv_dmd',
+                            field: 'CusSupvDmd',
                             title: '监管要求',
                             width: 150,
                         }],
@@ -4945,14 +5025,14 @@ layui.define('view', function (exports) {
         //admin.prevRouter[router.path[0]] = router.href; //记录上一次各菜单的路由信息
 
         //执行跳转
-        var topLayui = parent === self ? layui : top.layui
+        var topLayui = parent === self ? layui : top.layui;
         topLayui.index.openTabsPage(href, text || othis.text())
     })
 
 //点击事件
     $body.on('click', '*[layadmin-event]', function () {
         var othis = $(this),
-            attrEvent = othis.attr('layadmin-event')
+            attrEvent = othis.attr('layadmin-event');
         events[attrEvent] && events[attrEvent].call(this, othis)
     })
 
@@ -4974,30 +5054,30 @@ layui.define('view', function (exports) {
                         layero.css('margin-left', offset + 'px')
                     }
                 },
-            })
+            });
         othis.data('index', index)
     }).on('mouseleave', '*[lay-tips]', function () {
         layer.close($(this).data('index'))
-    })
+    });
 
 //窗口resize事件
     var resizeSystem = layui.data.resizeSystem = function () {
         //layer.close(events.note.index);
-        layer.closeAll('tips')
+        layer.closeAll('tips');
 
         if (!resizeSystem.lock) {
             setTimeout(function () {
-                admin.sideFlexible(admin.screen() < 2 ? '' : 'spread')
+                admin.sideFlexible(admin.screen() < 2 ? '' : 'spread');
                 delete resizeSystem.lock
             }, 100)
         }
 
         resizeSystem.lock = true
-    }
+    };
 
-    $win.on('resize', layui.data.resizeSystem)
+    $win.on('resize', layui.data.resizeSystem);
 
 //接口输出
     exports('admin', admin)
-})
+});
 
