@@ -6,18 +6,14 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function (exports) {
         , entry: 'index' //默认视图文件名
         , engine: '.html' //视图文件后缀名
         , pageTabs: true //是否开启页面选项卡功能。iframe版推荐开启
-
         , name: 'customAdmin'
         , tableName: 'customAdmin' //本地存储表名
         , MOD_NAME: 'admin' //模块事件名
-
         , debug: false //是否开启调试模式。如开启，接口异常时会抛出异常 URL 等信息
-
         //自定义请求字段
         , request: {
             tokenName: false //自动携带 token 的字段名（如：access_token）。可设置 false 不携带。
         }
-
         //自定义响应字段
         , response: {
             statusName: 'status' //数据状态的字段名称
@@ -36,7 +32,6 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function (exports) {
             'Swiper', //轮播图
             'layuiXtree', //树形
         ]
-
         //主题配置
         , theme: {
             //内置主题配色方案

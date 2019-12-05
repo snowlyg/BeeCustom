@@ -134,7 +134,7 @@ func init() {
 		beego.Router("/annotation/forceDelete/?:id", &controllers.AnnotationController{}, "Get:"+flag+"ForceDelete")
 	}
 
-	//手账册
+	// 手账册
 	beego.Router("/handbook/index", &controllers.HandBookController{}, "*:Index")
 	beego.Router("/handbook/show/?:id", &controllers.HandBookController{}, "Get:Show")
 	beego.Router("/handbook/get_hand_book_good_by_hand_book_id", &controllers.HandBookController{}, "Post:GetHandBookGoodByHandBookId")
@@ -144,14 +144,14 @@ func init() {
 	beego.Router("/handbook/ullagedatagrid", &controllers.HandBookController{}, "Post:UllageDataGrid")
 	beego.Router("/handbook/import/?:type", &controllers.HandBookController{}, "Post:Import")
 
-	//客户关联公司管理
+	// 客户关联公司管理
 	beego.Router("/company_seal/create/?:cid", &controllers.CompanySealController{}, "Get:Create")
 	beego.Router("/company_seal/store", &controllers.CompanySealController{}, "Post:Store")
 	beego.Router("/company_seal/edit/?:id", &controllers.CompanySealController{}, "Get:Edit")
 	beego.Router("/company_seal/update/?:id", &controllers.CompanySealController{}, "Patch:Update")
 	beego.Router("/company_seal/delete/?:id", &controllers.CompanySealController{}, "Delete:Delete")
 
-	//客户关联公司管理
+	// 客户关联公司管理
 	beego.Router("/company_foreign/create/?:cid", &controllers.CompanyForeignController{}, "Get:Create")
 	beego.Router("/company_foreign/store", &controllers.CompanyForeignController{}, "Post:Store")
 	beego.Router("/company_foreign/datagrid", &controllers.CompanyForeignController{}, "Post:DataGrid")
@@ -159,7 +159,7 @@ func init() {
 	beego.Router("/company_foreign/update/?:id", &controllers.CompanyForeignController{}, "Patch:Update")
 	beego.Router("/company_foreign/delete/?:id", &controllers.CompanyForeignController{}, "Delete:Delete")
 
-	//客户联系人管理
+	// 客户联系人管理
 	beego.Router("/company_contact/create/?:cid", &controllers.CompanyContactController{}, "Get:Create")
 	beego.Router("/company_contact/store", &controllers.CompanyContactController{}, "Post:Store")
 	beego.Router("/company_contact/datagrid", &controllers.CompanyContactController{}, "Post:DataGrid")
@@ -167,7 +167,7 @@ func init() {
 	beego.Router("/company_contact/update/?:id", &controllers.CompanyContactController{}, "Patch:Update")
 	beego.Router("/company_contact/delete/?:id", &controllers.CompanyContactController{}, "Delete:Delete")
 
-	//客户管理
+	// 客户管理
 	beego.Router("/company/index", &controllers.CompanyController{}, "*:Index")
 	beego.Router("/company/create/", &controllers.CompanyController{}, "Get:Create")
 	beego.Router("/company/store", &controllers.CompanyController{}, "Post:Store")
@@ -177,17 +177,17 @@ func init() {
 	beego.Router("/company/delete/?:id", &controllers.CompanyController{}, "Delete:Delete")
 	beego.Router("/company/import", &controllers.CompanyController{}, "Post:Import")
 
-	//商品编码管理
+	// 商品编码管理
 	beego.Router("/hs_code/index", &controllers.HsCodeController{}, "*:Index")
 	beego.Router("/hs_code/datagrid", &controllers.HsCodeController{}, "Post:DataGrid")
 	beego.Router("/hs_code/import", &controllers.HsCodeController{}, "Post:Import")
 
-	//商检编码管理
+	// 商检编码管理
 	beego.Router("/ciq/index", &controllers.CiqController{}, "*:Index")
 	beego.Router("/ciq/datagrid", &controllers.CiqController{}, "Post:DataGrid")
 	beego.Router("/ciq/import", &controllers.CiqController{}, "Post:Import")
 
-	//基础参数
+	// 基础参数
 	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
 	beego.Router("/clearance/get_clearance_update_time", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTime")
 	beego.Router("/clearance/last_update_time/?:type", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTimeByType")
@@ -199,11 +199,11 @@ func init() {
 	beego.Router("/clearance/delete/?:id", &controllers.ClearanceController{}, "Delete:Delete")
 	beego.Router("/clearance/import/?:type", &controllers.ClearanceController{}, "Post:Import")
 
-	//文件上传
+	// 文件上传
 	beego.Router("/file/upload", &controllers.FileController{}, "Post:Upload")
 	beego.Router("/orderfile/upload/?:id", &controllers.FileController{}, "Post:OrderDataUpload")
 
-	//后台用户路由
+	// 后台用户路由
 	beego.Router("/backenduser/index", &controllers.BackendUserController{}, "*:Index")
 	beego.Router("/backenduser/create", &controllers.BackendUserController{}, "Get:Create")
 	beego.Router("/backenduser/store", &controllers.BackendUserController{}, "Post:Store")
@@ -214,7 +214,7 @@ func init() {
 	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Delete:Delete")
 	beego.Router("/backenduser/profile", &controllers.BackendUserController{}, "Get:Profile")
 
-	//用户角色路由
+	// 用户角色路由
 	beego.Router("/role/index", &controllers.RoleController{}, "*:Index")
 	beego.Router("/role/create", &controllers.RoleController{}, "Get:Create")
 	beego.Router("/role/perm_lists/?:id", &controllers.RoleController{}, "Get:PermLists")
@@ -225,7 +225,7 @@ func init() {
 	beego.Router("/role/delete/?:id", &controllers.RoleController{}, "Delete:Delete")
 	beego.Router("/role/datalist", &controllers.RoleController{}, "Post:DataList")
 
-	//资源路由
+	// 资源路由
 	beego.Router("/resource/index", &controllers.ResourceController{}, "*:Index")
 	beego.Router("/resource/create", &controllers.ResourceController{}, "GET:Create")
 	beego.Router("/resource/store", &controllers.ResourceController{}, "POST:Store")
@@ -240,9 +240,9 @@ func init() {
 	beego.Router("/home/logout", &controllers.HomeController{}, "*:Logout")
 	beego.Router("/home/datareset", &controllers.HomeController{}, "Get:DataReset")
 
-	//复核凭证 使用超级管理员
+	// 复核凭证 使用超级管理员
 	beego.Router("/pdf/annotation_recheck_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationRecheckPdf")
-	//清单打印
+	// 清单打印
 	beego.Router("/pdf/annotation_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationPdf")
 
 	beego.Router("/home/404", &controllers.HomeController{}, "*:Page404")
@@ -253,7 +253,7 @@ func init() {
 	// WebSocket.
 	beego.Router("/ws", &controllers.WebSocketController{})
 
-	// WebSocket.
+	// 自动部署
 	beego.Router("/auto_pull", &controllers.WebHookController{}, "*:Get")
 
 }
