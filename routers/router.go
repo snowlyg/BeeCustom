@@ -129,9 +129,9 @@ func init() {
 		// 回收站
 		beego.Router("/annotation/recycle/"+flag, &controllers.AnnotationController{}, "Get:"+flag+"Recycle")
 		// 还原订单
-		beego.Router("/annotation/restore/", &controllers.AnnotationController{}, "Get:"+flag+"Restore")
+		beego.Router("/annotation/restore/?:id", &controllers.AnnotationController{}, "Get:"+flag+"Restore")
 		// 彻底删除订单
-		beego.Router("/annotation/forceDelete/", &controllers.AnnotationController{}, "Get:"+flag+"ForceDelete")
+		beego.Router("/annotation/forceDelete/?:id", &controllers.AnnotationController{}, "Get:"+flag+"ForceDelete")
 	}
 
 	//手账册

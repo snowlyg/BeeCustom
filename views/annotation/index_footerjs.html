@@ -385,6 +385,22 @@
       }
     });
 
+   /**还原订单**/
+    $(document).on('click', '.restore_annotaion', async function() {
+      const data_check = await admin.get(`/annotation/restore/${$(this).data('id')}`, 'show');
+      if (data_check.status) {
+        window.location.reload();
+      }
+    });
+
+    /**彻底删除订单**/
+    $(document).on('click', '.force_delete_annotaion', async function() {
+      const data_check = await admin.get(`/annotation/forceDelete/${$(this).data('id')}`, 'show');
+      if (data_check.status) {
+        window.location.reload();
+      }
+    });
+
     /**改单**/
     $(document).on('click', '.order_switch_bill', async function() {
       const id = $(this).data('id');
@@ -403,20 +419,6 @@
       topLayui.index.openTabsPage(href, text);
     });
 
-    /**催单**/
-    $(document).on('click', '.order_reminder', async function() {
-      const id = $(this).data('id');
-      try {
-        const data = await admin.post(`/annotation/i/${id}/press`);
-      } catch (e) {
-        return layer.msg('接口错误！', {
-          offset: '15px',
-          icon: 2,
-          time: 2000,
-          id: 'Message',
-        });
-      }
-    });
 
     /**提交到单一窗口**/
     $(document).on('click', '.order_check_success', async function() {
@@ -435,49 +437,6 @@
       }
     });
 
-    /**差错登记**/
-    let order_error_logging_index, order_error_logging_id;
-    $(document).on('click', '.order_error_log', async function() {
-      order_error_logging_id = $(this).data('id');
-      order_error_logging_index = layer.open({
-        type: 1,
-        title: '差错登记',
-        shadeClose: true,
-        area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '460px'],
-        content: $('#order_error_logging_template').html(),
-      });
-      form.render();
-    });
-
-    form.on('radio(order_error_logging_type)', function(data) {
-      if (data.value === 0) {
-        $('#order_error_logging_user_id').show();
-      } else {
-        $('#order_error_logging_user_id').hide();
-      }
-    });
-
-    /**差错登记保存**/
-    form.on('submit(order_error_logging_submit)', async (data) => {
-      try {
-        const res = await admin.post(`/annotation/i/${order_error_logging_id}/errors`, data.field);
-        if (res.status) {
-          await admin.get_data_list(
-              `/annotation/e/list?MonthTime=${MonthTime}&invt_dcl_time_start=${invt_dcl_time_start}&invt_dcl_time_end=${invt_dcl_time_end}&orderBy=id&sortedBy=desc`,
-              order_import_list);
-          setTimeout(() => {
-            layer.closeAll();
-          }, 2000);
-        }
-      } catch (e) {
-        return layer.msg('接口错误！', {
-          offset: '15px',
-          icon: 2,
-          time: 2000,
-          id: 'Message',
-        });
-      }
-    });
 
     /**申请改单**/
     let order_application_change_index, order_application_change_id;
