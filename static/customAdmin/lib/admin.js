@@ -21,16 +21,13 @@ layui.define('view', function (exports) {
         ICON_SPREAD = 'layui-icon-spread-left',
         SIDE_SHRINK = 'layadmin-side-shrink',
         SIDE_MENU = 'LAY-system-side-menu',
-
         //通用方法
         admin = {
-
             //刷新指定iframe
             reloadFrame: function (frameId) {
                 parent.document.getElementById(frameId).contentWindow.location.reload()
             },
             UPLOAD_PDF_SIZE: 10, //pdf上传大小 M
-
             /**监管方式判断备案序号数据调取**/
             e_account_manual_items_arr: [
                 '0700',
@@ -40,7 +37,6 @@ layui.define('view', function (exports) {
                 '0657',
                 '0258',
             ],
-
             i_account_manual_items_arr: [
                 '4600',
                 '4400',
@@ -176,374 +172,374 @@ layui.define('view', function (exports) {
             //进口报关整合申报提示语
             tipsJson: [
                 {
-                    'id': 'custom_master_name',
+                    'id': 'CustomMasterName',
                     'name': '申报地海关：输入4位代码或名称（如‘北京海关’应输入‘0100’或‘北京海关’）',
                 },
                 {
-                    'id': 'i_e_port_name',
+                    'id': 'IEPortName',
                     'name': '进/出境关别：输入4位代码或名称（如‘北京海关’应输入‘0100’或‘北京海关’）',
                 },
                 {
-                    'id': 'manual_no',
+                    'id': 'ManualNo',
                     'name': '备案号：请输入12位备案号',
                 },
                 {
-                    'id': 'contr_no',
+                    'id': 'ContrNo',
                     'name': '合同协议号：请输入合同的全部字头和号码',
                 },
                 {
-                    'id': 'i_e_date',
+                    'id': 'IEDate',
                     'name': '进（出）口日期：输入进（出）口日期，格式为‘年月日’，如：‘20180712’',
                 },
                 {
-                    'id': 'apl_date',
+                    'id': 'AplDate',
                     'name': '申报日期：输入申报日期，格式为‘年月日’，如：‘20180712’',
                 },
                 {
-                    'id': 'trade_co_scc',
+                    'id': 'TradeCoScc',
                     'name': '境内收发货人统一社会信用代码：请输入统一社会信用代码',
                 },
                 {
-                    'id': 'trade_code',
+                    'id': 'TradeCode',
                     'name': '境内收发货人海关编码：境内收发货人在海关备案的10位代码',
                 },
                 {
-                    'id': 'trade_name',
+                    'id': 'TradeName',
                     'name': '境内收发货人名称：输入30个字以内海关注册单位名称',
                 },
                 {
-                    'id': 'overseas_consignor_code',
+                    'id': 'OverseasConsignorCode',
                     'name': '境外收发货人：对于AEO互认国家（地区）企业的，编码填报AEO编码，特殊情况下无境外收发货人的，填报‘NO’',
                 },
                 {
-                    'id': 'overseas_consignor_ename',
+                    'id': 'OverseasConsignorEname',
                     'name': '境外收发货人名称（外文）：名称一般填报英文名称，检验检疫要求填报其他外文名称的，在英文名称后填报，以半角括号分隔，特殊情况下无境外收发货人的，填报‘NO’',
                 },
                 {
-                    'id': 'overseas_consignee_ename',
+                    'id': 'OverseasConsigneeEname',
                     'name': '境外收发货人名称（外文）：名称一般填报英文名称，检验检疫要求填报其他外文名称的，在英文名称后填报，以半角括号分隔，特殊情况下无境外收发货人的，填报‘NO’',
                 },
                 {
-                    'id': 'owner_code_scc',
+                    'id': 'OwnerCodeScc',
                     'name': '消费使用单位统一社会信用代码：请输入统一社会信用代码',
                 },
                 {
-                    'id': 'owner_code',
+                    'id': 'OwnerCode',
                     'name': '消费使用单位海关编码：消费使用单位在海关备案的10位代码',
                 },
                 {
-                    'id': 'owner_name',
+                    'id': 'OwnerName',
                     'name': '消费使用单位名称：输入30个字以内海关注册单位名称',
                 },
                 {
-                    'id': 'agent_code_scc',
+                    'id': 'AgentCodeScc',
                     'name': '申报单位统一社会信用代码：请输入统一社会信用代码',
                 },
                 {
-                    'id': 'agent_code',
+                    'id': 'AgentCode',
                     'name': '申报单位海关编码：申报单位在海关备案的10位代码',
                 },
                 {
-                    'id': 'agent_name',
+                    'id': 'AgentName',
                     'name': '申报单位名称：输入30个字以内海关注册单位名称',
                 },
                 {
-                    'id': 'traf_mode_name',
+                    'id': 'TrafModeName',
                     'name': '运输方式：输入运输代码（1位）或名称',
                 },
                 {
-                    'id': 'traf_name',
+                    'id': 'TrafName',
                     'name': '运输工具名称：请输入运输工具名称，转关运输的格式为：@+载货清单号',
                 },
                 {
-                    'id': 'voy_no',
+                    'id': 'VoyNo',
                     'name': '航次号：根据业务类型填写运输工具的航次编号，无实际进出境的货物不填',
                 },
                 {
-                    'id': 'bill_no',
+                    'id': 'BillNo',
                     'name': '提运单号：填报进出口货物提单或运单的编号',
                 },
                 {
-                    'id': 'trade_mode_name',
+                    'id': 'TradeModeName',
                     'name': '监管方式：输入贸易代码（4位，不够请在前面补0）或名称（如，‘一般贸易’应输入‘0110’或‘一般贸易’）',
                 },
                 {
-                    'id': 'cut_mode_name',
+                    'id': 'CutModeName',
                     'name': '征免性质：输入征免性质代码（3位）或名称，可以为空',
                 },
                 {
-                    'id': 'license_no',
+                    'id': 'LicenseNo',
                     'name': '许可证号：输入许可证号（许可证号格式：年-XX-顺序号，例经贸部发：00-AA-000001）',
                 },
                 {
-                    'id': 'trade_country_name',
+                    'id': 'TradeCountryName',
                     'name': '启运国/运抵国(地区）：输入启运国/运抵国代码（3位）或名称',
                 },
                 {
-                    'id': 'distinate_port_name',
+                    'id': 'DistinatePortName',
                     'name': '经停港/指运港：输入经停港/指运港代码（6位）或名称',
                 },
                 {
-                    'id': 'trans_mode_name',
+                    'id': 'TransModeName',
                     'name': '成交方式：输入成交方式代码（成交方式代码：1-CIF,2-C&F,3-FOB,4-C&I,5-市场价,6-垫仓,7-EXW）',
                 },
                 {
-                    'id': 'fee_mark_name',
+                    'id': 'FeeMarkName',
                     'name': '运费标志：输入运费标志：1-运费率；2-运费单价；3-运费总价',
                 },
                 {
-                    'id': 'fee_rate',
+                    'id': 'FeeRate',
                     'name': '运费：输入运费/率',
                 },
                 {
-                    'id': 'fee_curr_name',
+                    'id': 'FeeCurrName',
                     'name': '运费币制：输入运费币制',
                 },
                 {
-                    'id': 'insur_mark_name',
+                    'id': 'InsurMarkName',
                     'name': '保费标志：输入保费标志：1-保费率；3-保费总价',
                 },
                 {
-                    'id': 'insur_rate',
+                    'id': 'InsurRate',
                     'name': '保费：输入保费/率',
                 },
                 {
-                    'id': 'insur_curr_name',
+                    'id': 'InsurCurrName',
                     'name': '保费币制：输入保费币制',
                 },
                 {
-                    'id': 'other_mark_name',
+                    'id': 'OtherMarkName',
                     'name': '杂费标志：输入杂费标志：1-杂费率；3-杂费总价',
                 },
                 {
-                    'id': 'other_rate',
+                    'id': 'OtherRate',
                     'name': '杂费：输入杂费/率',
                 },
                 {
-                    'id': 'other_curr_name',
+                    'id': 'OtherCurrName',
                     'name': '杂费币制：输入杂费币制',
                 },
                 {
-                    'id': 'pack_no',
+                    'id': 'PackNo',
                     'name': '件数：输入件数，不得填报0，散装货物填报1',
                 },
                 {
-                    'id': 'wrap_type_name',
+                    'id': 'WrapTypeName',
                     'name': '包装种类：输入包装种类（2位）或名称',
                 },
                 {
-                    'id': 'gross_wet',
+                    'id': 'GrossWet',
                     'name': '毛重：进出口货物实际毛重，计算单位为千克，不足一千克的填报为‘1’',
                 },
                 {
-                    'id': 'net_wt',
+                    'id': 'NetWt',
                     'name': '净重：进出口货物实际净重，计算单位为千克，不足一千克的填报为‘1’',
                 },
                 {
-                    'id': 'trade_area_name',
+                    'id': 'TradeAreaName',
                     'name': '贸易国别(地区)：输入贸易国别（地区）代码（3位）或名称',
                 },
                 {
-                    'id': 'enty_port_name',
+                    'id': 'EntyPortName',
                     'name': '入境口岸/离境口岸：输入入境口岸/离境口岸代码（6位）或名称',
                 },
                 {
-                    'id': 'goods_place',
+                    'id': 'GoodsPlace',
                     'name': '货物存放地点：填报货物进境后存放的场所或地点，包括海关监管作业场所、分拨仓库、定点加工厂、隔离检疫场、企业自有仓库等',
                 },
                 {
-                    'id': 'desp_port_name',
+                    'id': 'DespPortName',
                     'name': '启运港：输入启运港代码（6位）或名称',
                 },
                 {
-                    'id': 'entry_type_name',
+                    'id': 'EntryTypeName',
                     'name': '报关单类型：请输入报关单类型',
                 },
                 {
-                    'id': 'billTypeName',
+                    'id': 'bill type name',
                     'name': '清单类型：请输入清单类型',
                 },
                 {
-                    'id': 'note_s',
+                    'id': 'NoteS',
                     'name': '备注：请输入报关单的备注信息',
                 },
                 {
-                    'id': 'mark_no',
+                    'id': 'MarkNo',
                     'name': '标记唛码：填报标记唛码中除图形以外的文字、数字，无标记唛码的填报“N/M”',
                 },
                 {
-                    'id': 'org_code_name',
+                    'id': 'OrgCodeName',
                     'name': '检验检疫受理机关：填报提交报关单和随附单据的检验检疫机关，输入代码（6位）或名称',
                 },
                 {
-                    'id': 'vsa_org_code_name',
+                    'id': 'VsaOrgCodeName',
                     'name': '领证机关：填报领取证单的检验检疫机关，输入代码（6位）或名称',
                 },
                 {
-                    'id': 'insp_org_name',
+                    'id': 'InspOrgName',
                     'name': '口岸检验检疫机关：填报对入境货物实施检验检疫的检验检疫机关，输入代码（6位）或名称',
                 },
                 {
-                    'id': 'desp_date',
+                    'id': 'DespDate',
                     'name': '启运日期：填报装载入境货物的运输工具离开启运口岸的日期',
                 },
                 {
-                    'id': 'b_l_no',
+                    'id': 'BLNo',
                     'name': 'B/L号：填报入境货物的提货单或出库单号码。当运输方式为“航空运输”时无需填写',
                 },
                 {
-                    'id': 'purp_org_name',
+                    'id': 'PurpOrgName',
                     'name': '目的地检验检疫机关：需要在目的地检验检疫机关实施检验检疫的，在本栏填写对应的检验检疫机关，输入代码（6位）或名称',
                 },
                 {
-                    'id': 'correlation_no',
+                    'id': 'CorrelationNo',
                     'name': '关联号码：录入关联号码',
                 },
                 {
-                    'id': 'correlation_reason_flag_name',
+                    'id': 'CorrelationReasonFlagName',
                     'name': '关联理由：在下拉菜单中选择关联报关单的关联理由',
                 },
                 {
-                    'id': 'orig_box_flag',
+                    'id': 'OrigBoxFlag',
                     'name': '原箱运输：申报使用集装箱运输的货物, 根据是否原集装箱原箱运输，勾选‘是’或‘否’',
                 },
                 {
-                    'id': 'rel_id',
+                    'id': 'RelId',
                     'name': '关联报关单号：输入关联报关单编号',
                 },
                 {
-                    'id': 'rel_man_no',
+                    'id': 'RelManNo',
                     'name': '关联的备案号：输入关联的备案号',
                 },
                 {
-                    'id': 'bon_no',
+                    'id': 'BonNo',
                     'name': '保税/监管场地：输入保税或监管仓号',
                 },
                 {
-                    'id': 'cus_fie',
+                    'id': 'CusFie',
                     'name': '场地代码：输入场地代码或名称',
                 },
 
                 {
-                    'id': 'g_no',
+                    'id': 'GNo',
                     'name': '序号：商品表体的序号，为连续的流水号，系统自动生成',
                 },
                 {
-                    'id': 'contr_item',
+                    'id': 'ContrItem',
                     'name': '备案序号：输入备案表中的商品序号，不允许修改',
                 },
                 {
-                    'id': 'code_t_s',
+                    'id': 'CodeTS',
                     'name': '商品编号：该项货物对应的商品编码',
                 },
                 {
-                    'id': 'g_name',
+                    'id': 'GName',
                     'name': '商品名称：输入商品名称',
                 },
                 {
-                    'id': 'g_model',
+                    'id': 'GModel',
                     'name': '规格型号：输入商品的规格型号',
                 },
                 {
-                    'id': 'g_qty',
+                    'id': 'GQty',
                     'name': '成交数量：该项商品的成交数量，与成交单位相对应，即申报数量',
                 },
                 {
-                    'id': 'g_unit_name',
+                    'id': 'GUnitName',
                     'name': '成交计量单位：该项商品的成交时的实际计量单位',
                 },
                 {
-                    'id': 'decl_price',
+                    'id': 'DeclPrice',
                     'name': '单价：该项商品的成交时的商品单位价格，即申报单价',
                 },
                 {
-                    'id': 'decl_total',
+                    'id': 'DeclTotal',
                     'name': '总价：总价=单价*成交数量',
                 },
                 {
-                    'id': 'trade_curr_name',
+                    'id': 'TradeCurrName',
                     'name': '币制：请输入币制的代码（3位）或名称',
                 },
                 {
-                    'id': 'first_qty',
+                    'id': 'FirstQty',
                     'name': '法定第一数量：该项商品的法定成交数量，与法定单位对应',
                 },
                 {
-                    'id': 'first_unit_name',
+                    'id': 'FirstUnitName',
                     'name': '法定第一计量单位：该项商品的商品编码对应的海关统计第一单位，由海关决定',
                 },
                 {
-                    'id': 'exg_version',
+                    'id': 'ExgVersion',
                     'name': '加工成品单耗版本号：所加工成品对应的版本号',
                 },
                 {
-                    'id': 'exg_no',
+                    'id': 'ExgNo',
                     'name': '货号：加工料件/成品货号，即企业内部的货物编号',
                 },
                 {
-                    'id': 'destination_country_name',
+                    'id': 'DestinationCountryName',
                     'name': '最终目的国(地区)：输入最终目的国(地区)代码（3位）或名称',
                 },
                 {
-                    'id': 'second_qty',
+                    'id': 'SecondQty',
                     'name': '法定第二数量：与第二单位对应的第二成交数量',
                 },
                 {
-                    'id': 'second_unit_name',
+                    'id': 'SecondUnitName',
                     'name': '法定第二计量单位：该项商品的商品编码对应的海关统计第二单位，由海关决定',
                 },
                 {
-                    'id': 'origin_country_name',
+                    'id': 'OriginCountryName',
                     'name': '原产国(地区)：输入原产国(地区)代码（3位）或名称',
                 },
                 {
-                    'id': 'orig_place_code_name',
+                    'id': 'OrigPlaceCodeName',
                     'name': '原产地区：输入原产地区（3位/6位）或名称',
                 },
                 {
-                    'id': 'district_code_name',
+                    'id': 'DistrictCodeName',
                     'name': '境内目的地/货源地：输入境内目的地/货源地五位代码',
                 },
                 {
-                    'id': 'dest_code_name',
+                    'id': 'DestCodeName',
                     'name': '目的地/产地代码：输入目的地/产地代码（6位）或名称',
                 },
                 {
-                    'id': 'duty_mode_name',
+                    'id': 'DutyModeName',
                     'name': '征免方式：输入征免规定，如下：1-照章；2-折半；3-全免；4-特案；5-征免性质；6-保金；7-保函；9-出口全额退税',
                 },
                 {
-                    'id': 'purpose_name',
+                    'id': 'PurposeName',
                     'name': '用途：输入用途代码（2位）或名称',
                 },
 
                 {
-                    'id': 'container_id',
+                    'id': 'ContainerId',
                     'name': '集装箱号：输入集装箱号',
                 },
                 {
-                    'id': 'container_md_name',
+                    'id': 'ContainerMdName',
                     'name': '集装箱规格：输入集装箱规格代码（2位）或名称',
                 },
                 {
-                    'id': 'lcl_flag_name',
+                    'id': 'LclFlagName',
                     'name': '拼箱标识：进出口货物装运集装箱为拼箱时，在本栏下拉菜单中选择‘是’或‘否’',
                 },
                 {
-                    'id': 'goods_no',
+                    'id': 'GoodsNo',
                     'name': '商品序号关系：集装箱商品序号关系信息填报单个集装箱对应的商品序号，半角逗号分隔',
                 },
                 {
-                    'id': 'goodsContaWt',
+                    'id': 'GoodsContaWt',
                     'name': '集装箱货重：集装箱货重录入集装箱箱体自重（千克）+装载货物重量（千克）',
                 },
 
                 {
-                    'id': 'docu_code_name',
+                    'id': 'DocuCodeName',
                     'name': '随附单证代码：输入随附单证代码',
                 },
                 {
-                    'id': 'cert_code',
+                    'id': 'CertCode',
                     'name': '随附单证编号：输入随附单证编号',
                 },
             ],

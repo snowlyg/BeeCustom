@@ -435,7 +435,7 @@
         /**附注**/
         let order_note_index;
         let extraRemark = "@{{.m.ExtraRemark}}";
-        $('body').on('click', '#OrderNote', async function () {
+        $('body').on('click', '#order_note', async function () {
             if (!@{{.m.Id}}) {
                 return layer.msg('请先保存订单！')
             }
