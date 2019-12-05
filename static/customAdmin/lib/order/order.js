@@ -22,7 +22,7 @@ layui.define('view', function (exports) {
         SIDE_SHRINK = 'layadmin-side-shrink',
         SIDE_MENU = 'LAY-system-side-menu',
         //通用方法
-        admin = {
+        order = {
             //刷新指定iframe
             reloadFrame: function (frameId) {
                 parent.document.getElementById(frameId).contentWindow.location.reload()
@@ -4383,15 +4383,18 @@ layui.define('view', function (exports) {
                         color: theme.color[index],
                     })
                 }
-            },
+            }
+            ,
 
-            //记录最近一次点击的页面标签数据
-            tabsPage: {},
+//记录最近一次点击的页面标签数据
+            tabsPage: {}
+            ,
 
-            //获取页面标签主体元素
+//获取页面标签主体元素
             tabsBody: function (index) {
                 return $(APP_BODY).find('.' + TABS_BODY).eq(index || 0)
-            },
+            }
+            ,
 
             //切换页面标签主体
             tabsBodyChange: function (index, options) {
@@ -4405,7 +4408,8 @@ layui.define('view', function (exports) {
                     url: options.url,
                     text: options.text,
                 })
-            },
+            }
+            ,
 
             //resize事件管理
             resize: function (fn) {
