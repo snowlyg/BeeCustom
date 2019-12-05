@@ -3,8 +3,8 @@
         base: '/static/customAdmin/',
     }).extend({
         index: 'lib/index',
-    }).use(['index', 'form', 'admin', 'table', 'AutoComplete'], async () => {
-        const {form, admin, table, $} = layui;
+    }).use(['index', 'form', 'admin', 'table', 'AutoComplete',"laydate"], async () => {
+        const {form, admin, table, $,laydate} = layui;
         let order_pros_data_filter = []
             , order_note_data /**附注数据**/
             , annotationItems /**清单表体数据**/
