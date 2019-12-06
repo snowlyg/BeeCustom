@@ -3554,7 +3554,7 @@ layui.define('view', function (exports) {
                 let destination_name = '原产国(地区)';
                 let origin_name = '最终目的国';
 
-                if (iEFlag == 'I') {
+                if (iEFlag === 'I') {
                     destination_name = '最终目的国';
                     origin_name = '原产国(地区)';
                 }
