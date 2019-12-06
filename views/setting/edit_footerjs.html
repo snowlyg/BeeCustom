@@ -1,0 +1,16 @@
+<script>
+  layui.config({
+    base: '/static/customAdmin/',
+  }).extend({
+    index: 'lib/index',
+  }).use(['index'], function () {
+    const admin = layui.admin, form = layui.form
+    form.on('submit(perm_submit)', async (data) => {
+      if (!`@{{ .m.Id }}`){
+        await admin.patch(`/setting/update/` + @{{ .m.Id }}, data.field)
+      }else{
+        await admin.post(@{{ urlfor "SettingController.Store" }}, data.field)
+      }
+    })
+  })
+</script>

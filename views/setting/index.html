@@ -1,0 +1,30 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body" id="perm_list_id">
+            <div class="layui-row custom-tool">
+                <div class="layui-col-md6">
+                    @{{if .canCreate}}
+                    <span class="custom-new_btn" lay-href=@{{ urlfor "SettingController.Create" }} lay-text="新建设置" id="perm_new">新建</span>
+                    @{{end }}
+                </div>
+                <div class="layui-col-md3 layui-col-md-offset3">
+                    <div class="custom-tool-right">
+                        <label class="custom-tool-right-search iconfont iconsearch"></label>
+                        <input type="text" name="perm_search" id="perm_search"
+                               placeholder="搜索设置名称" class="custom-tool-right-input layui-input">
+                    </div>
+                </div>
+            </div>
+            <table class="layui-hide" id="perm_lists" lay-filter="perm_lists"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="perm_toolbar">
+    @{{if .canEdit }}
+    <a class="custom-edit" lay-event="edit">编辑</a>
+    @{{end}}
+    @{{if .canDelete }}
+    <a class="custom-delete" lay-event="del">删除</a>
+    @{{end}}
+</script>

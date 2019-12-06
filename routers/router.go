@@ -234,6 +234,16 @@ func init() {
 	beego.Router("/resource/update/?:id", &controllers.ResourceController{}, "PATCH:Update")
 	beego.Router("/resource/delete/?:id", &controllers.ResourceController{}, "Delete:Delete")
 
+	// 系统设置
+	beego.Router("/setting", &controllers.SettingController{}, "*:Index")
+	beego.Router("/setting/treegrid", &controllers.SettingController{}, "POST:TreeGrid")
+	beego.Router("/setting/create", &controllers.SettingController{}, "GET:Create")
+	beego.Router("/setting/store", &controllers.SettingController{}, "POST:Store")
+	beego.Router("/setting/edit/?:id", &controllers.SettingController{}, "GET:Edit")
+	beego.Router("/setting/update/?:id", &controllers.SettingController{}, "PATCH:Update")
+	beego.Router("/setting/delete/?:id", &controllers.SettingController{}, "Delete:Delete")
+
+	// 登录控制
 	beego.Router("/home/control", &controllers.HomeController{}, "*:Control")
 	beego.Router("/home/login", &controllers.HomeController{}, "*:Login")
 	beego.Router("/home/dologin", &controllers.HomeController{}, "Post:DoLogin")
@@ -244,15 +254,11 @@ func init() {
 	beego.Router("/pdf/annotation_recheck_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationRecheckPdf")
 	// 清单打印
 	beego.Router("/pdf/annotation_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationPdf")
-
 	beego.Router("/home/404", &controllers.HomeController{}, "*:Page404")
 	beego.Router("/home/error/?:error", &controllers.HomeController{}, "*:Error")
-
 	beego.Router("/", &controllers.HomeController{}, "*:Index")
-
 	// WebSocket.
 	beego.Router("/ws", &controllers.WebSocketController{})
-
 	// 自动部署
 	beego.Router("/auto_pull", &controllers.WebHookController{}, "*:Get")
 

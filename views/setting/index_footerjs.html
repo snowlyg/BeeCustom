@@ -1,0 +1,83 @@
+<script>
+    layui.config({
+        base: '/static/customAdmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index'], function () {
+        const table = layui.table, admin = layui.admin, $ = layui.$;
+        table.render({
+            elem: '#perm_lists'
+            , autoSort: false
+            , skin: 'line'
+            , method: 'post'
+            , where: {
+                order: 'desc',
+                sort: 'CreatedAt'
+            }
+            , contentType: 'application/json'
+            , url: @{{ urlfor "SettingController.TreeGrid" }}
+            , request: {
+                pageName: 'offset' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            }, response: {
+                statusName: 'code',
+                statusCode: 0,
+            }
+            , parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "count": res.total,
+                    "data": res.rows
+                };
+            }
+            , cols: [[
+                {field: 'Key', title: '名称',sort: true}
+                , {field: 'Value', title: '内容', sort: true}
+                , {field: 'CreatedAt', title: '创建时间', sort: true}
+                , {title: '操作', toolbar: '#perm_toolbar', width: 150}
+            ]]
+            , page: true
+            , limit: 10
+        });
+
+        table.on('sort(perm_lists)', function (obj) {
+            table.reload('perm_lists', {
+                initSort: obj
+                , where: {
+                    orderBy: obj.field
+                    , sortedBy: obj.type
+                }
+            });
+        });
+
+        $("#perm_search").on('keydown', function (e) {
+            let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+            if (eCode === 13) {
+                table.reload('perm_lists', {
+                    where: {
+                        NameLike: $(this).val()
+                    },
+                    page: {
+                        curr: 1
+                    }
+                });
+            }
+        });
+
+        table.on('tool(perm_lists)', function (obj) {
+            const data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                    await admin.delete(`/setting/delete/${data.Id}`, obj);
+                    layer.close(index);
+                    table.reload('perm_lists');
+                });
+            } else if (obj.event === 'edit') {
+                const topLayui = parent === self ? layui : top.layui
+                    , href = `/setting/edit/${data.Id}`
+                    , text = `编辑权限：${data.Rmk}`;
+                topLayui.index.openTabsPage(href, text);
+            }
+        });
+    });
+</script>

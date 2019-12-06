@@ -32,6 +32,7 @@ func init() {
 		new(OrderUserRel),
 		new(OrderRecord),
 		new(OrderFile),
+		new(Setting),
 	)
 }
 
@@ -44,6 +45,11 @@ func TableName(name string) string {
 // BackendUserTBName 获取 BackendUser 对应的表名称
 func BackendUserTBName() string {
 	return TableName("users")
+}
+
+// SettingTBName 获取 Setting 对应的表名称
+func SettingTBName() string {
+	return TableName("settings")
 }
 
 // ResourceTBName 获取 Resource 对应的表名称

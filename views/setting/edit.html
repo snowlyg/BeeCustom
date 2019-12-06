@@ -1,0 +1,43 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form">
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>Key：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Key" lay-verify="required"
+                                   lay-verType="tips" placeholder="为设置起个好听的名字吧，字符不限" autocomplete="off" class="layui-input" value="@{{ .m.Key }}">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>Vaule：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Value" lay-verify="required" lay-verType="tips" placeholder="输入设置内容" autocomplete="off" class="layui-input"  value="@{{.m.Value }}">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label"><i class="red margin-right-4">*</i>备注：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Rmk" lay-verify="required" lay-verType="tips" placeholder="输入设置备注说明" autocomplete="off" class="layui-input"  value="@{{.m.Rmk }}">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn custom-create_btn" lay-submit lay-filter="perm_submit" type="button" id="perm_submit">
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
