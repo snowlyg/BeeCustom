@@ -3,10 +3,10 @@
     base: '/static/customAdmin/',
   }).extend({
     index: 'lib/index',
-  }).use(['index', 'table', 'admin', 'laydate', 'form', 'laytpl'], async () => {
+  }).use(['index','laydate'], async () => {
     const {$, laydate, form, layer, admin, table, laytpl} = layui;
     let person_tips_index, returns_tips_index, audit_reject_logs_tips_index,
-        order_import_list, MonthTime = '今天', annotationStatusString = '全部订单';
+        order_import_list, MonthTime = '今天', orderStatusString = '全部订单';
 
     $(function() {
       var ws = new WebSocket('ws://' + window.location.host + '/ws');
@@ -112,7 +112,7 @@
       MonthTime = data.value;
       admin.list_page = 1;
       let OrderIndexRequestData = {
-        StatusString: annotationStatusString,
+        StatusString: orderStatusString,
         List: {
           Url: `/order/datagrid/` + "@{{.IEFlag}}",
           Request: {
@@ -145,7 +145,7 @@
       let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
       if (eCode === 13) {
         let OrderIndexRequestData = {
-          StatusString: annotationStatusString,
+          StatusString: orderStatusString,
           List: {
             Url: `/order/datagrid/` + "@{{.IEFlag}}",
             Request: {
@@ -170,10 +170,10 @@
     /**状态筛选**/
     $(document).on('click', '.status_flex_list_item', async function() {
       admin.list_page = 1;
-      annotationStatusString = $(this).data('status');
+      orderStatusString = $(this).data('status');
       $(this).addClass('active').siblings().removeClass('active');
       let OrderIndexRequestData = {
-        StatusString: annotationStatusString,
+        StatusString: orderStatusString,
         List: {
           Url: `/order/datagrid/` + "@{{.IEFlag}}",
           Request: {
@@ -313,12 +313,12 @@
 
     /**订单列表**/
     let OrderIndexRequestData = {
-      StatusString: annotationStatusString,
+      StatusString: orderStatusString,
       List: {
         Url: `/order/datagrid/` + "@{{.IEFlag}}",
         Request: {
           SearchTimeString: MonthTime,
-          sort: 'invt_dcl_time',
+          sort: 'apl_date',
           order: 'desc',
         },
       },
@@ -330,7 +330,7 @@
       },
     };
 
-    order_import_list = await admin.get_data_list(OrderIndexRequestData, false);
+    order_import_list = await admin.get_data_list(OrderIndexRequestData,false);
 
     /**审核货物申报，货物申报详情，核中**/
     $(document).on('click', '.order_detail, .order_keep_auth, .order_start_auth', function() {
@@ -469,21 +469,9 @@
       }
     });
 
-    /**运输方式**/
-    try {
-      const data = await admin.post(`/clearance/datagrid`, JSON.stringify({TypeString: '运输方式代码'}), true);
-      laytpl($('#traf_mode_template').html()).render(data.rows, function(html) {
-        $('#order_traf_mode').html(html);
-      });
-
-      form.render('select');
-    } catch (e) {
-      console.log(e);
-    }
-
     form.on('select(traf_mode)', async (data) => {
       let OrderIndexRequestData = {
-        StatusString: annotationStatusString,
+        StatusString: orderStatusString,
         List: {
           Url: `/order/datagrid/` + "@{{.IEFlag}}",
           Request: {

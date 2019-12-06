@@ -3109,14 +3109,14 @@
             data.field.PromiseItmes = [];
             /**特殊关系确认**/
             if (!(data.field['PromiseItmes[0]'])) {
-                if ($("#promise_itmes0").data('first') == '1') {
+                if ($("#PromiseItmes0").data('first') == '1') {
                     data.field.PromiseItmes.push('0');
                 } else {
-                    data.field.promise_itmes.push('9');
+                    data.field.PromiseItmes.push('9');
                 }
             } else {
                 delete data.field['PromiseItmes[0]'];
-                data.field.promise_itmes.push('1');
+                data.field.PromiseItmes.push('1');
             }
 
             /**价格影响确认**/
@@ -3157,7 +3157,6 @@
             } else {
                 const result = await admin.patch(`/order/update/@{{.m.Id}}`, data.field);
                 resultStatus = result.status
-
             }
 
             if (resultStatus) {
@@ -3166,7 +3165,6 @@
                     window.location.reload()
                 }, 150)
             }
-
 
             layer.closeAll('loading');
         });

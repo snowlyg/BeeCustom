@@ -1294,77 +1294,37 @@ layui.define('view', function (exports) {
                 }
             },
 
-            //监听进出口货物申报境内收发货人海关编码
-            async trade_code_change(dom) {
-                setTimeout(() => {
-                    if (!($(dom).val().trim())) {
-                        $('#foreign_company_name').val('')
-                        $('#trade_co_scc').val('')
-                        $('#trade_ciq_code').val('')
-                        $('#trade_name').val('')
-                    } else {
-                        const company_list = layui.data('company_list').data
-                        const index = company_list.findIndex(
-                            (item) => item.value == $(dom).val())
-                        if (company_list[index].credit_code) {
-                            $('#trade_co_scc').val(company_list[index].credit_code)
-                        }
-                        if (company_list[index].registration) {
-                            $('#trade_ciq_code').val(company_list[index].registration)
-                        }
-                        if (company_list[index].name) {
-                            $('#trade_name').val(company_list[index].name)
-                        }
-                        if ($('#owner_code').val().trim() == '') {
-                            if (company_list[index].credit_code) {
-                                $('#owner_code_scc').val(company_list[index].credit_code)
-                            }
-                            if (company_list[index].registration) {
-                                $('#owner_ciq_code').val(company_list[index].registration)
-                            }
-                            if (company_list[index].name) {
-                                $('#owner_name').val(company_list[index].name)
-                            }
-                            $('#owner_code').val($(dom).val())
-                        }
-                        if (company_list[index].foreign_company_name) {
-                            $('#foreign_company_name').val(company_list[index].foreign_company_name)
-                        }
-                    }
-                }, 150)
-            },
-
             //监听进出口货物申报消费使用单位海关编码
             async owner_code_change(dom) {
                 setTimeout(() => {
                     if (!($(dom).val().trim())) {
-                        $('#owner_code_scc').val('')
-                        $('#owner_ciq_code').val('')
-                        $('#owner_name').val('')
+                        $('#OwnerCodeScc').val('')
+                        $('#OwnerCiqCode').val('')
+                        $('#OwnerName').val('')
                     } else {
                         const company_list = layui.data('company_list').data
                         const index = company_list.findIndex(
                             (item) => item.value === $(dom).val())
-                        if (company_list[index].credit_code) {
-                            $('#owner_code_scc').val(company_list[index].credit_code)
+                        if (company_list[index].CreditCode) {
+                            $('#OwnerCodeScc').val(company_list[index].CreditCode)
                         }
-                        if (company_list[index].registration) {
-                            $('#owner_ciq_code').val(company_list[index].registration)
+                        if (company_list[index].Registration) {
+                            $('#OwnerCiqCode').val(company_list[index].Registration)
                         }
-                        if (company_list[index].name) {
-                            $('#owner_name').val(company_list[index].name)
+                        if (company_list[index].Name) {
+                            $('#OwnerName').val(company_list[index].Name)
                         }
-                        if ($('#trade_code').val().trim() === '') {
-                            if (company_list[index].credit_code) {
-                                $('#trade_co_scc').val(company_list[index].credit_code)
+                        if ($('#TradeCode').val().trim() === '') {
+                            if (company_list[index].CreditCode) {
+                                $('#TradeCoScc').val(company_list[index].CreditCode)
                             }
-                            if (company_list[index].registration) {
-                                $('#trade_ciq_code').val(company_list[index].registration)
+                            if (company_list[index].Registration) {
+                                $('#TradeCiqCode').val(company_list[index].Registration)
                             }
-                            if (company_list[index].name) {
-                                $('#trade_name').val(company_list[index].name)
+                            if (company_list[index].Name) {
+                                $('#TradeName').val(company_list[index].Name)
                             }
-                            $('#trade_code').val($(dom).val())
+                            $('#TradeCode').val($(dom).val())
                         }
                     }
                 }, 150)
@@ -1372,8 +1332,7 @@ layui.define('view', function (exports) {
 
             //监听进出口清单经营单位海关编码
             async bizop_etpsno_change(dom) {
-                if ($('#rvsngd_etps_sccd').val() == '' || $('#rcvgd_etps_nm').val() ==
-                    '') {
+                if ($('#rvsngd_etps_sccd').val() == '' || $('#rcvgd_etps_nm').val() ==  '') {
                     let CompanyList = await admin.post('/company/datagrid',
                         JSON.stringify({
                             NameLike: $(dom).val(),
@@ -1394,7 +1353,6 @@ layui.define('view', function (exports) {
                             NameLike: $(dom).val(),
                         }))
                     if (CompanyList.rows.length > 0) {
-
                         $('#rvsngd_etps_sccd').val(CompanyList.rows[0].CreditCode)
                         $('#rcvgd_etps_nm').val(CompanyList.rows[0].Name)
                     }

@@ -3,7 +3,7 @@
     base: '/static/customAdmin/',
   }).extend({
     index: 'lib/index',
-  }).use(['index', 'table', 'admin', 'laydate', 'form', 'laytpl'], async () => {
+  }).use(['index', 'laydate'], async () => {
     const {$, laydate, form, layer, admin, table, laytpl} = layui;
     let person_tips_index, returns_tips_index, audit_reject_logs_tips_index, reject_logs_tips_index,
         order_import_list, MonthTime = '今天', annotationStatusString = '全部订单';
