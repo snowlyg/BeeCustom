@@ -5,14 +5,25 @@
         index: 'lib/index',
     }).use(['index', 'AutoComplete', "laydate", "upload"], async () => {
         const {form, admin, table, $, laydate, upload} = layui;
-        let order_pros_data_filter = []
-            , order_containers = [] /**集装箱**/
+        let order_containers = [] /**集装箱**/
             , ent_qualif_data = [] /**企业资质**/
             , dec_users_data = [] /**使用人**/
             , order_documents = [] /**随附单证**/
             , decListData = [] /**默认报关单数据**/
+            // 货物申报产品资质删除存储
+            , OrderQuasDeleteIds = []
+            //货物申报产品资质VIN删除存储
+            , OrderQuasVinDeleteIds = []
+            // 货物申报集装箱删除存储
+            , OrderContainersDeleteIds = []
+            // 货物申报随附单证删除存储
+            , OrderDocumentsDeleteIds = []
+            // 货物申报原产地删除存储
+            , OrderEcoRelationsDeleteIds = []
+            // 货物申报企业资质删除存储
+            , OrderEntQualifDeleteIds = []
             , order_note_data /**附注数据**/
-            , AnnotationSearcIndex;/**商品快速查询index**/
+            , declaratio_material_code /**企业承诺**/;
 
         /** 基础参数加载 */
         await admin.clearance_data_auto([
@@ -200,7 +211,6 @@
             let data = [];
             for (let item of checkStatus.data) {
                 data.push({
-
                     pack_qty: "0",
                     pack_type: item.customs_code,
                     pack_type_name: item.name
@@ -429,7 +439,7 @@
                         });
                         for (let item_apply of checkData) {
                             if (item_apply.id) {
-                                admin.order_ent_qualif_delete_ids.push(item_apply.id);
+                                OrderEntQualifDeleteIds.push(item_apply.id);
                             }
                         }
                         ent_qualif_data = sup_data;
@@ -1163,7 +1173,7 @@
                         });
                         for (let item_apply of checkData) {
                             if (item_apply.id) {
-                                admin.order_quas_delete_ids.push({
+                                OrderQuasDeleteIds.push({
                                     index: order_pros_index - 1,
                                     id: item_apply.id
                                 });
@@ -1342,7 +1352,7 @@
                         });
                         for (let item_apply of checkData) {
                             if (item_apply.id) {
-                                admin.order_quas_vin_delete_ids.push({
+                                OrderQuasVinDeleteIds.push({
                                     pros_index: order_pros_index - 1,
                                     index: dec_goods_index - 1,
                                     id: item_apply.id
@@ -2171,97 +2181,8 @@
                     break;
             }
         });
-        /**查看商品申报要素-上一条**/
 
-        /* $("body").on("click", "#declaration_last_look", async function () {
-             if (declaration_index == 0) {
-                 return layer.msg("已经是第一条了");
-             }
-             declaration_index -= 1;
-             const hs_code_data_show = await admin.get(`/hs_code/lists?limit=0&search=${admin.order_pros_data[declaration_index].code_t_s}`);
-             const declaration_data_array_show = hs_code_data_show.data[0].declaration.split(";");
-             const data_show = declaration_data_array_show.map((item, index) => {
-                 if (index < 9) {
-                     return item.substr(1)
-                 } else {
-                     return item.substr(2)
-                 }
-             });
-             layui.laytpl($("#declaration_template").html()).render(data_show, function (html) {
-                 $('#declaration_list_reload').html(html)
-             });
-             $(".manual_no_btn_next").show();
-             $(".order_table_form_show input").each(function () {
-                 if (!declaration_edit) {
-                     $(this).attr("disabled", "disabled");
-                 }
-                 $(this).val("");
-             });
-             $("#selectCodeTs").val(admin.order_pros_data[declaration_index].g_name);
-             $("#good_information").val(`${admin.order_pros_data[declaration_index].g_no}-${admin.order_pros_data[declaration_index].contr_item ? admin.order_pros_data[declaration_index].contr_item : '一般贸易'}-${admin.order_pros_data[declaration_index].g_name}`);
-             let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`);
-             let data_filter_show = [];
-             for (let item of brand_type_show) {
-                 data_filter_show.push({
-                     id: item.customs_code,
-                     label: `${item.customs_code}-${item.name}`,
-                     value: `${item.name}`
-                 })
-             }
-             admin.brand_type_data = data_filter_show;
-             $("#val0Name").AutoComplete({
-                 'data': data_filter_show,
-                 'width': 280,
-                 'itemHeight': 20,
-                 'listStyle': 'custom',
-                 'listDirection': 'down',
-                 'createItemHandler': function (index, data) {
-                     return `<p class="auto_list_p">${data.label}</p>`
-                 },
-                 'afterSelectedHandler': function (data) {
-                     $("#val0").val(data.id);
-                 }
-             });
 
-             let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
-             let data_filter_benefits_show = [];
-             for (let item of export_benefits_show) {
-                 data_filter_benefits_show.push({
-                     id: item.customs_code,
-                     label: `${item.customs_code}-${item.name}`,
-                     value: `${item.name}`
-                 })
-             }
-             admin.export_benefits_data = data_filter_benefits_show;
-             $("#val1Name").AutoComplete({
-                 'data': data_filter_benefits_show,
-                 'width': 280,
-                 'itemHeight': 20,
-                 'listStyle': 'custom',
-                 'listDirection': 'down',
-                 'createItemHandler': function (index, data) {
-                     return `<p class="auto_list_p">${data.label}</p>`
-                 },
-                 'afterSelectedHandler': function (data) {
-                     $("#val1").val(data.id);
-                 }
-             });
-             $("#elements").val(admin.order_pros_data[declaration_index].g_model);
-             const arrAnge_show = admin.order_pros_data[declaration_index].g_model.split("|");
-             arrAnge_show.forEach((value, index) => {
-                 $(`#val${index}`).val(value)
-             });
-             admin.brand_type_data.forEach((value, index) => {
-                 if (value.id == $("#val0").val()) {
-                     $("#val0Name").val(value.value)
-                 }
-             });
-             admin.export_benefits_data.forEach((value, index) => {
-                 if (value.id == $("#val1").val()) {
-                     $("#val1Name").val(value.value)
-                 }
-             });
-         });*/
         async function last_dec(type) {
             if (declaration_index == 0) {
                 return layer.msg("已经是第一条了");
@@ -3124,43 +3045,43 @@
             }
 
 
-            if (is_pros) {
-                if (!(data.field.NetWt)) {
-                    return layer.msg("存在表体商品且是千克，必填净重！");
-                }
-                let total = 0;
-                for (let item of admin.order_pros_data) {
-                    if (item.g_unit == '035') {
-                        total += parseFloat(item.g_qty) * 100000;
-                    } else if (item.first_unit == '035') {
-                        total += parseFloat(item.first_qty) * 100000;
-                    } else if (item.second_unit == '035') {
-                        total += parseFloat(item.second_qty) * 100000;
-                    }
-                }
-
-                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
-                    if (!no_weight_save) {
-                        layer.open({
-                            title: '商品总重量与净重不符'
-                            , content: '商品总重量与净重不符！是否要保存'
-                            , btn: ['是', '否']
-                            , yes: function (index) {
-                                no_weight_save = true;
-                                layer.close(index);
-                                $('#order_save').click();
-                            }
-                            , btn2: function () {
-                                layer.msg('请重新修改净重。');
-                                $('#NetWt').focus();
-                            }
-                        });
-                        if (!no_weight_save) {
-                            return false;
-                        }
-                    }
-                }
-            }
+            // if (is_pros) {
+            //     if (!(data.field.NetWt)) {
+            //         return layer.msg("存在表体商品且是千克，必填净重！");
+            //     }
+            //     let total = 0;
+            //     for (let item of admin.order_pros_data) {
+            //         if (item.g_unit == '035') {
+            //             total += parseFloat(item.g_qty) * 100000;
+            //         } else if (item.first_unit == '035') {
+            //             total += parseFloat(item.first_qty) * 100000;
+            //         } else if (item.second_unit == '035') {
+            //             total += parseFloat(item.second_qty) * 100000;
+            //         }
+            //     }
+            //
+            //     if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
+            //         if (!no_weight_save) {
+            //             layer.open({
+            //                 title: '商品总重量与净重不符'
+            //                 , content: '商品总重量与净重不符！是否要保存'
+            //                 , btn: ['是', '否']
+            //                 , yes: function (index) {
+            //                     no_weight_save = true;
+            //                     layer.close(index);
+            //                     $('#order_save').click();
+            //                 }
+            //                 , btn2: function () {
+            //                     layer.msg('请重新修改净重。');
+            //                     $('#NetWt').focus();
+            //                 }
+            //             });
+            //             if (!no_weight_save) {
+            //                 return false;
+            //             }
+            //         }
+            //     }
+            // }
 
             layer.load(2);
 
@@ -3173,11 +3094,12 @@
             }
 
             /**企业资质数据**/
-            for (let item of admin.OrderEntQualifDeleteIds) {
+            for (let item of OrderEntQualifDeleteIds) {
                 ent_qualif_data.push({
                     id: item
                 })
             }
+
             /**使用人数据**/
             data.field.DecUsers = dec_users_data;
             /**特殊业务标识数据**/
@@ -3611,7 +3533,7 @@
             if (admin.order_pros_data.length === 0) {
                 return layer.msg("请先输入表体商品");
             }
-            if (data.field.net_wt) {
+            if (data.field.NetWt) {
                 if (admin.order_pros_data.length === 0) {
                     return layer.msg("存在净重，必须填写表体商品！");
                 }
@@ -3628,7 +3550,7 @@
                 is_pros = 0;
             }
             if (is_pros) {
-                if (!(data.field.net_wt)) {
+                if (!(data.field.NetWt)) {
                     return layer.msg("存在表体商品且是千克，必填净重！");
                 }
                 let total = 0;
@@ -3641,7 +3563,7 @@
                         total += parseFloat(item.second_qty) * 100000;
                     }
                 }
-                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.net_wt.toString())) {
+                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
                     if (!no_weight_save) {
                         layer.open({
                             title: '商品总重量与净重不符'
@@ -3654,7 +3576,7 @@
                             }
                             , btn2: function () {
                                 layer.msg('请重新修改净重。');
-                                $('#net_wt').focus();
+                                $('#NetWt').focus();
                             }
                         });
                         if (!no_weight_save) {
@@ -3671,7 +3593,7 @@
                 data.field.dec_other_packs = JSON.parse(data.field.dec_other_packs);
             }
             /**企业资质数据**/
-            for (let item of admin.order_ent_qualif_delete_ids) {
+            for (let item of OrderEntQualifDeleteIds) {
                 ent_qualif_data.push({
                     id: item
                 })
@@ -3682,12 +3604,12 @@
             /**特殊业务标识数据**/
             data.field.spec_decl_flag = spec_decl_flag;
             /**表体商品数据**/
-            for (let item of admin.order_quas_vin_delete_ids) {
+            for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
                     id: item.id
                 })
             }
-            for (let item of admin.order_quas_delete_ids) {
+            for (let item of OrderQuasDeleteIds) {
                 admin.order_pros_data[item.index].quas.push({
                     id: item.id
                 })
@@ -4297,7 +4219,7 @@
                 layer.closeAll('loading');
                 return layer.msg('该订单已经提交复核');
             }
-            if (data.field.net_wt) {
+            if (data.field.NetWt) {
                 if (admin.order_pros_data.length === 0) {
                     return layer.msg("存在净重，必须填写表体商品！");
                 }
@@ -4314,7 +4236,7 @@
                 is_pros = 0;
             }
             if (is_pros) {
-                if (!(data.field.net_wt)) {
+                if (!(data.field.NetWt)) {
                     return layer.msg("存在表体商品且是千克，必填净重！");
                 }
                 let total = 0;
@@ -4327,7 +4249,7 @@
                         total += parseFloat(item.second_qty) * 100000;
                     }
                 }
-                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.net_wt.toString())) {
+                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
                     if (!no_weight_save) {
                         layer.open({
                             title: '商品总重量与净重不符'
@@ -4340,7 +4262,7 @@
                             }
                             , btn2: function () {
                                 layer.msg('请重新修改净重。');
-                                $('#net_wt').focus();
+                                $('#NetWt').focus();
                             }
                         });
                         if (!no_weight_save) {
@@ -4357,7 +4279,7 @@
                 data.field.dec_other_packs = JSON.parse(data.field.dec_other_packs);
             }
             /**企业资质数据**/
-            for (let item of admin.order_ent_qualif_delete_ids) {
+            for (let item of OrderEntQualifDeleteIds) {
                 ent_qualif_data.push({
                     id: item
                 })
@@ -4368,12 +4290,12 @@
             /**特殊业务标识数据**/
             data.field.spec_decl_flag = spec_decl_flag;
             /**表体商品数据**/
-            for (let item of admin.order_quas_vin_delete_ids) {
+            for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
                     id: item.id
                 })
             }
-            for (let item of admin.order_quas_delete_ids) {
+            for (let item of OrderQuasDeleteIds) {
                 admin.order_pros_data[item.index].quas.push({
                     id: item.id
                 })
@@ -4510,7 +4432,7 @@
             if (admin.order_pros_data.length === 0) {
                 return layer.msg("请先输入表体商品");
             }
-            if (data.field.net_wt) {
+            if (data.field.NetWt) {
                 if (admin.order_pros_data.length === 0) {
                     return layer.msg("存在净重，必须填写表体商品！");
                 }
@@ -4527,7 +4449,7 @@
                 is_pros = 0;
             }
             if (is_pros) {
-                if (!(data.field.net_wt)) {
+                if (!(data.field.NetWt)) {
                     return layer.msg("存在表体商品且是千克，必填净重！");
                 }
                 let total = 0;
@@ -4540,7 +4462,7 @@
                         total += parseFloat(item.second_qty) * 100000;
                     }
                 }
-                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.net_wt.toString())) {
+                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
                     if (!no_weight_save) {
                         layer.open({
                             title: '商品总重量与净重不符'
@@ -4553,7 +4475,7 @@
                             }
                             , btn2: function () {
                                 layer.msg('请重新修改净重。');
-                                $('#net_wt').focus();
+                                $('#NetWt').focus();
                             }
                         });
                         if (!no_weight_save) {
@@ -4570,7 +4492,7 @@
                 data.field.dec_other_packs = JSON.parse(data.field.dec_other_packs);
             }
             /**企业资质数据**/
-            for (let item of admin.order_ent_qualif_delete_ids) {
+            for (let item of OrderEntQualifDeleteIds) {
                 ent_qualif_data.push({
                     id: item
                 })
@@ -4581,12 +4503,12 @@
             /**特殊业务标识数据**/
             data.field.spec_decl_flag = spec_decl_flag;
             /**表体商品数据**/
-            for (let item of admin.order_quas_vin_delete_ids) {
+            for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
                     id: item.id
                 })
             }
-            for (let item of admin.order_quas_delete_ids) {
+            for (let item of OrderQuasDeleteIds) {
                 admin.order_pros_data[item.index].quas.push({
                     id: item.id
                 })
@@ -4683,7 +4605,7 @@
             net_wt(value, item) {
                 if (!(value.trim())) {
                     return "请填写净重";
-                } else if (parseFloat(value.trim()) > parseFloat($("#gross_wet").val().trim())) {
+                } else if (parseFloat(value.trim()) > parseFloat($("#GrossWet").val().trim())) {
                     return "净重大于毛重，请确认后重新填写!";
                 }
             },

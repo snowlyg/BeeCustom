@@ -1000,23 +1000,6 @@ layui.define('view', function (exports) {
                 })
             },
 
-            //核注清单商品删除存储
-            annotation_items_delete_ids: [],
-            //货物申报商品删除存储
-            order_pros_delete_ids: [],
-            //货物申报产品资质删除存储
-            order_quas_delete_ids: [],
-            //货物申报产品资质VIN删除存储
-            order_quas_vin_delete_ids: [],
-            //货物申报集装箱删除存储
-            order_containers_delete_ids: [],
-            //货物申报随附单证删除存储
-            order_documents_delete_ids: [],
-            //货物申报原产地删除存储
-            order_eco_relations_delete_ids: [],
-            //货物申报企业资质删除存储
-            order_ent_qualif_delete_ids: [],
-
             //商品库
             dec_users_commodity_index: '',
             dec_users_commodity_click() {
