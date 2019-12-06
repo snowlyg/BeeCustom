@@ -1,68 +1,74 @@
 <div class="custom-order_form">
-    <div class="custom-order_form_annotation">
-        <div class="custom-order_form_top">
-            <button class="layui-btn custom-create_btn" id="order_save_reload" lay-submit lay-filter="order_save_reload" type="button">
-                <i class="iconfont icon-save"></i>保存并发送到单一窗口
-            </button>
-            <button type="button" id="order_save_reload_submit" lay-submit lay-filter="order_save_reload_submit" style="display: none;"></button>
-            <button class="layui-btn custom-create_btn" id="order_save" type="button" lay-submit lay-filter="order_save">
-                <i class="iconfont icon-save"></i>保存
-            </button>
-            <button class="layui-btn custom-create_btn" id="order_i_import" type="button">
-                <i class="iconfont icon-input"></i>导入
-            </button>
-            @{{if .m.Id }}
-                @{{if eq  .m.StatusString  "待审核"  "审核中" }}
-                    @{{ if canArray  .actions .m.IEFlag  "canAudit"}}
-                    <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
-                        <i class="iconfont iconcheckcircle"></i>审核通过
+    <div class="custom-order_form_content">
+        <div class="content_left">
+            <form class="layui-form layui-form-relative" id="order_i_form"
+                  onkeydown="if(event.keyCode==13){return false}">
+                <div class="custom-order_form_top">
+                    <button class="layui-btn custom-create_btn" id="order_save_reload" lay-submit
+                            lay-filter="order_save_reload" type="button">
+                        <i class="iconfont icon-save"></i>保存并发送到单一窗口
                     </button>
-                    @{{ end }}
+                    <button type="button" id="order_save_reload_submit" lay-submit lay-filter="order_save_reload_submit"
+                            style="display: none;"></button>
+                    <button class="layui-btn custom-create_btn" id="order_save" type="button" lay-submit
+                            lay-filter="order_save">
+                        <i class="iconfont icon-save"></i>保存
+                    </button>
+                    <button class="layui-btn custom-create_btn" id="order_i_import" type="button">
+                        <i class="iconfont icon-input"></i>导入
+                    </button>
+                    @{{if .m.Id }}
+                @{{if eq  .m.StatusString  "待审核"  "审核中" }}
+                @{{ if canArray  .actions .m.IEFlag  "canAudit"}}
+                <button class="layui-btn custom-create_btn" id="order_save_pass" type="button">
+                    <i class="iconfont iconcheckcircle"></i>审核通过
+                </button>
+                @{{ end }}
                 @{{ end }}
 
-            @{{if eq .m.StatusString  "审核通过" }}
+                @{{if eq .m.StatusString  "审核通过" }}
                 @{{ if canArray  .actions .m.IEFlag "canDistribute"}}
                 <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                     <i class="iconfont iconfolder-shared"></i>派单
                 </button>
                 @{{ end }}
-            @{{ else if eq .m.StatusString  "待制单" }}
+                @{{ else if eq .m.StatusString  "待制单" }}
                 @{{ if canArray  .actions .m.IEFlag "canDistribute"}}
                 <button class="layui-btn custom-create_btn" id="order_dispatch" type="button">
                     <i class="iconfont iconfolder-shared"></i>重新派单
                 </button>
                 @{{ end }}
-            @{{ else if eq .m.StatusString  "制单中" }}
+                @{{ else if eq .m.StatusString  "制单中" }}
                 @{{ if canArray  .actions .m.IEFlag "canForRecheck"}}
                 <button class="layui-btn custom-create_btn" id="annotaiton_for_recheck" type="button" lay-submit
                         lay-filter="order_application_review">
                     <i class="iconfont iconaddcircle"></i><span>申请复核</span>
                 </button>
                 @{{ end }}
-        @{{ else if eq .m.StatusString "复核不通过"}}
+                @{{ else if eq .m.StatusString "复核不通过"}}
                 @{{ if canArray  .actions .m.IEFlag "canReForRecheck"}}
                 <button class="layui-btn custom-create_btn" id="annotaiton_refor_recheck" type="button" lay-submit
                         lay-filter="order_application_review">
                     <i class="iconfont iconaddcircle"></i><span>重新申请复核</span>
                 </button>
                 @{{ end }}
-            @{{ end }}
-            @{{ if canArray  .actions .m.IEFlag "canPrint"}}
-            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print" type="button"><i
-                        class="iconfont iconprint"></i>打印
-            </button>
-            @{{ end }}
-            @{{ if canArray  .actions .m.IEFlag "canRemark"}}
-            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note" type="button">
-                <i class="iconfont icontab"></i>附注
-                <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
-            </button>
-            @{{ end }}
-            <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="@{{ .m.Id }}"
-                    onclick="layui.admin.annotation_jilu_click(this)" type="button">
-                <i class="iconfont iconassignment1"></i>办理记录
-            </button>
-            @{{if eq .m.StatusString  "已完成"  }}
+                @{{ end }}
+                @{{ if canArray  .actions .m.IEFlag "canPrint"}}
+                <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_print" type="button"><i
+                            class="iconfont iconprint"></i>打印
+                </button>
+                @{{ end }}
+                @{{ if canArray  .actions .m.IEFlag "canRemark"}}
+                <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note" type="button">
+                    <i class="iconfont icontab"></i>附注
+                    <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
+                </button>
+                @{{ end }}
+                <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="@{{ .m.Id }}"
+                        onclick="layui.admin.annotation_jilu_click(this)" type="button">
+                    <i class="iconfont iconassignment1"></i>办理记录
+                </button>
+                @{{if eq .m.StatusString  "已完成"  }}
                 @{{if .m.annotation_change_logs }}
                 <div class="order_edit_bill_string">
                     <p class="order_edit_bill_string_p">
@@ -71,15 +77,15 @@
                     </p>
                 </div>
                 @{{end }}
-            @{{ end }}
+                @{{ end }}
 
-        @{{ end }}
-        </div>
+                @{{ end }}
+                </div>
 
-        <div id="order_fail">
-        @{{  if  .m.Id }}
-        @{{  if eq .m.StatusString  "审核不通过" "复核不通过" }}
-            @{{range .m.AnnotationRecords}}
+                <div id="order_fail">
+                @{{  if  .m.Id }}
+                @{{  if eq .m.StatusString  "审核不通过" "复核不通过" }}
+                @{{range .m.AnnotationRecords}}
                 @{{ if eq .Status  "审核不通过" "复核不通过" }}
                 <div class="order_fail_string">
                     <p class="order_fail_string_p">
@@ -92,36 +98,38 @@
                     </p>
                 </div>
                 @{{ end }}
-            @{{ end }}
-        @{{ end }}
-        @{{ end }}
+                @{{ end }}
+                @{{ end }}
+                @{{ end }}
+                </div>
+
+                @{{/*        <script type="text/html" id="order_edit_bill_template">*/}}
+                @{{/*            {{# if(d.order_status_string == '已完成'){ }}*/}}
+                @{{/*            {{# if(d.order_change_logs.length > 0){ }}*/}}
+                @{{/*            <div class="order_edit_bill_string">*/}}
+                @{{/*                <p class="order_edit_bill_string_p">*/}}
+                @{{/*                    <i class="iconfont icon-edit"></i>*/}}
+                @{{/*                    <span>@{{ d.order_change_logs[d.order_change_logs.length-1].content }}</span>*/}}
+                @{{/*                </p>*/}}
+                @{{/*            </div>*/}}
+                @{{/*            {{# } }}*/}}
+                @{{/*            {{# } }}*/}}
+                @{{/*        </script>*/}}
+                @{{/*        <div id="order_edit_bill"></div>*/}}
+
+                @{{template "order/create/gauge.html" .}}
+                @{{template "order/create/order_tip.html" .}}
+            </form>
+            @{{template "order/create/order_pros.html" .}}
         </div>
 
-@{{/*        <script type="text/html" id="order_edit_bill_template">*/}}
-@{{/*            {{# if(d.order_status_string == '已完成'){ }}*/}}
-@{{/*            {{# if(d.order_change_logs.length > 0){ }}*/}}
-@{{/*            <div class="order_edit_bill_string">*/}}
-@{{/*                <p class="order_edit_bill_string_p">*/}}
-@{{/*                    <i class="iconfont icon-edit"></i>*/}}
-@{{/*                    <span>@{{ d.order_change_logs[d.order_change_logs.length-1].content }}</span>*/}}
-@{{/*                </p>*/}}
-@{{/*            </div>*/}}
-@{{/*            {{# } }}*/}}
-@{{/*            {{# } }}*/}}
-@{{/*        </script>*/}}
-@{{/*        <div id="order_edit_bill"></div>*/}}
-
-        @{{template "order/create/gauge.html" .}}
-        @{{template "order/create/order_tip.html" .}}
-        </form>
-        @{{template "order/create/order_pros.html" .}}
-    </div>
-    <div class="content_right">
-        @{{template "order/create/order_containers.html" .}}
-        @{{template "order/create/order_documents.html" .}}
-    </div>
-    <div class="head-item">
-        <p id="tipsMessagetext">申报地海关：输入4位代码或名称（如‘北京海关’应输入‘0100’或‘北京海关’）</p>
+        <div class="content_right">
+            @{{template "order/create/order_containers.html" .}}
+            @{{template "order/create/order_documents.html" .}}
+        </div>
+        <div class="head-item">
+            <p id="tipsMessagetext">申报地海关：输入4位代码或名称（如‘北京海关’应输入‘0100’或‘北京海关’）</p>
+        </div>
     </div>
 </div>
 

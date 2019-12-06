@@ -3,41 +3,44 @@
         base: '/static/customAdmin/',
     }).extend({
         index: 'lib/index',
-    }).use(['index', 'form', 'admin', 'table', 'AutoComplete',"laydate"], async () => {
-        const {form, admin, table, $,laydate} = layui;
+    }).use(['index', 'AutoComplete', "laydate", "upload"], async () => {
+        const {form, admin, table, $, laydate, upload} = layui;
         let order_pros_data_filter = []
-            , order_note_data /**附注数据**/
-            , annotationItems /**清单表体数据**/
+            , order_containers = [] /**集装箱**/
+            , ent_qualif_data = [] /**企业资质**/
+            , dec_users_data = [] /**使用人**/
+            , order_documents = [] /**随附单证**/
             , decListData = [] /**默认报关单数据**/
+            , order_note_data /**附注数据**/
             , AnnotationSearcIndex;/**商品快速查询index**/
 
-            /** 基础参数加载 */
-            await admin.clearance_data_auto([
-                'entry_clearance',
-                'mode_shipping',
-                'objectives_based',
-                'nature_exemption',
-                'country_area',
-                'harbour',
-                'terms_delivery',
-                'cost_tag',
-                'currency',
-                'kind_packages',
-                'domestic_ports',
-                'inspection_quarantine',
-                'related_reasons',
-                'unit_measurement',
-                'origin_area',
-                'domestic_area',
-                'destination',
-                'exempting_method',
-                'use',
-                'type_container',
-                'documents_attached',
-                'enterprise_product',
-                'site_code',
-                'ann_two_account_manual',
-            ]);
+        /** 基础参数加载 */
+        await admin.clearance_data_auto([
+            'entry_clearance',
+            'mode_shipping',
+            'objectives_based',
+            'nature_exemption',
+            'country_area',
+            'harbour',
+            'terms_delivery',
+            'cost_tag',
+            'currency',
+            'kind_packages',
+            'domestic_ports',
+            'inspection_quarantine',
+            'related_reasons',
+            'unit_measurement',
+            'origin_area',
+            'domestic_area',
+            'destination',
+            'exempting_method',
+            'use',
+            'type_container',
+            'documents_attached',
+            'enterprise_product',
+            'site_code',
+            'ann_two_account_manual',
+        ]);
 
         /**根据屏幕等比例缩小**/
         admin.sideFlexible_window();
@@ -50,7 +53,7 @@
         $("#AplDate").val(admin.getCurrDate());
         admin.transModeControl("@{{.IEFlag}}");
         /**产品**/
-        admin.getOrderTable([],@{{.IEFlag}});
+        admin.getOrderTable([], @{{.IEFlag}});
         /**光标进入全选**/
         $('body').on('focus', 'input,textarea', function (e) {
             $(this).select();
@@ -76,8 +79,8 @@
             });
         });
 
-          /**选择提运单号**/
-        $('body').on('click', '#bill_no_open', async function () {
+        /**选择提运单号**/
+        $('body').on('click', '#BillNoOpen', async function () {
             layer.open({
                 type: 1,
                 title: '选择提运单号',
@@ -95,12 +98,12 @@
                     countName: 'total'
                 }
                 , cols: [[
-                    { type: 'radio' }
-                    , { field: 'code', title: '车辆海关编号' }
-                    , { field: 'number', title: '车牌号' }
-                    , { field: 'driver', title: '司机姓名' }
-                    , { field: 'phone', title: '司机电话' }
-                    , { field: 'password', title: '进场密码' }
+                    {type: 'radio'}
+                    , {field: 'code', title: '车辆海关编号'}
+                    , {field: 'number', title: '车牌号'}
+                    , {field: 'driver', title: '司机姓名'}
+                    , {field: 'phone', title: '司机电话'}
+                    , {field: 'password', title: '进场密码'}
                 ]]
                 , limit: 10
                 , page: true
@@ -127,7 +130,8 @@
             });
         });
         /**选择其他包装**/
-        $('body').on('click', '#packageInfoBtn', async function () {
+        $('body').on('click', '#PackageInfoBtn', async function () {
+            console.log("编辑其他包装信息")
             layer.open({
                 type: 1,
                 title: '编辑其他包装信息',
@@ -148,6 +152,7 @@
                     $(document).off('keydown', this.enterEsc);
                 }
             });
+
             const data = await admin.get(`/clearance/no_paginate?type=包装种类代码`);
             data.forEach(function (item, index) {
                 item.index = index
@@ -158,10 +163,10 @@
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { type: 'numbers', title: '序号' }
-                    , { field: 'customs_code', title: '包装材料种类代码' }
-                    , { field: 'name', title: '包装材料种类名称' }
+                    {type: 'checkbox'}
+                    , {type: 'numbers', title: '序号'}
+                    , {field: 'customs_code', title: '包装材料种类代码'}
+                    , {field: 'name', title: '包装材料种类名称'}
 
                 ]]
                 , data: data
@@ -171,8 +176,8 @@
             $(`.layui-table-view[lay-id='other_packs_list_table'] .layui-table-body tr input`).each(function (index, el) {
                 el.checked = false;
             });
-            if ($("#dec_other_packs").val() && $("#dec_other_packs").val() != 'null') {
-                const dec_other_packs_data = JSON.parse($("#dec_other_packs").val());
+            if ($("#DecOtherPacks").val() && $("#DecOtherPacks").val() != 'null') {
+                const dec_other_packs_data = JSON.parse($("#DecOtherPacks").val());
                 for (let dec_item of dec_other_packs_data) {
                     for (let data_item of data) {
 
@@ -206,7 +211,7 @@
             layer.closeAll();
         });
         /**填写备注**/
-        $('body').on('click', '#note_s_open', async function () {
+        $('body').on('click', '#NoteSOpen', async function () {
             layer.open({
                 type: 1,
                 title: '备注',
@@ -244,7 +249,7 @@
             $(".mark_no_number span").text($(this).val().length)
         });
         /**填写标记唛码**/
-        $('body').on('click', '#mark_no_open', async function () {
+        $('body').on('click', '#MarkNoOpen', async function () {
             layer.open({
                 type: 1,
                 title: '标记唛码',
@@ -331,7 +336,7 @@
         });
         /**编辑企业资质信息**/
         let ent_qualif_index = null;
-        $('body').on('click', '#enterpriseBtn', async function () {
+        $('body').on('click', '#EnterpriseBtn', async function () {
             layer.open({
                 type: 1,
                 title: '编辑企业资质信息',
@@ -350,23 +355,23 @@
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { field: 'index', title: '序号' }
-                    , { field: 'ent_qualif_type_code', title: '企业资质类别代码' }
-                    , { field: 'ent_qualif_type_name', title: '企业资质类别名称' }
-                    , { field: 'ent_qualif_no', title: '企业资质编号' }
+                    {type: 'checkbox'}
+                    , {field: 'index', title: '序号'}
+                    , {field: 'ent_qualif_type_code', title: '企业资质类别代码'}
+                    , {field: 'ent_qualif_type_name', title: '企业资质类别名称'}
+                    , {field: 'ent_qualif_no', title: '企业资质编号'}
                 ]]
                 , data: ent_qualif_data
                 , limit: ent_qualif_data.length
                 , height: 350
             });
             /**自动完成--企业资质类别**/
-            auto_fn({
-                data: admin.all_complete_data.enterprise_product,
-                listDirection: false,
-                id: ['#ent_qualif_type_name_tem'],
-                after: ['#ent_qualif_type_code_tem']
-            });
+            // auto_fn({
+            //     data: admin.all_complete_data.enterprise_product,
+            //     listDirection: false,
+            //     id: ['#ent_qualif_type_name_tem'],
+            //     after: ['#ent_qualif_type_code_tem']
+            // });
         });
         /**编辑企业资质信息--点击行反填数据**/
         table.on('row(ent_qualif_table)', function (obj) {
@@ -416,7 +421,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let sup_data = ent_qualif_data.filter(item => {
                             return checkData.every(item2 => {
                                 return item.index != item2.index;
@@ -460,8 +465,8 @@
             }
         });
         /**编辑企业资质信息--左移**/
-        $("#enterpriseUpBtn").click(function () {
-            let entQualifSeq = $("#entQualifSeq").val();
+        $("#EnterpriseUpBtn").click(function () {
+            let entQualifSeq = $("#EntQualifSeq").val();
             if (!entQualifSeq) {
                 entQualifSeq = 0;
             }
@@ -469,7 +474,7 @@
                 if (parseInt(entQualifSeq) < 1) {
                     layer.msg('此为第一条记录');
                 } else {
-                    $("input[id='entQualifSeq']").val(parseInt(entQualifSeq) - 1);
+                    $("input[id='EntQualifSeq']").val(parseInt(entQualifSeq) - 1);
                     $("input[id='ent_qualif_type_code']").val(ent_qualif_data[parseInt(entQualifSeq) - 1].ent_qualif_type_code);
                     $("input[id='ent_qualif_type_name']").val(ent_qualif_data[parseInt(entQualifSeq) - 1].ent_qualif_type_name);
                 }
@@ -478,14 +483,14 @@
             }
         });
         /**编辑企业资质信息--右移**/
-        $("#enterpriseDownBtn").click(function () {
-            let entQualifSeq = $("#entQualifSeq").val();
+        $("#EnterpriseDownBtn").click(function () {
+            let entQualifSeq = $("#EntQualifSeq").val();
             if (!entQualifSeq) {
                 entQualifSeq = 0;
             }
             if (ent_qualif_data.length > 0) {
                 if (parseInt(entQualifSeq) < ent_qualif_data.length - 1) {
-                    $("input[id='entQualifSeq']").val(parseInt(entQualifSeq) + 1);
+                    $("input[id='EntQualifSeq']").val(parseInt(entQualifSeq) + 1);
                     $("input[id='ent_qualif_type_code']").val(ent_qualif_data[parseInt(entQualifSeq) + 1].ent_qualif_type_code);
                     $("input[id='ent_qualif_type_name']").val(ent_qualif_data[parseInt(entQualifSeq) + 1].ent_qualif_type_name);
                 } else {
@@ -503,10 +508,10 @@
                 declaratio_material_code = 0
             }
         });
-        laydate.render({ elem: '#desp_date', theme: '#1E9FFF', fixed: true });
+        laydate.render({elem: '#DespDate', theme: '#1E9FFF', fixed: true});
         /**编辑使用人信息**/
         let dec_users_index = null;
-        $('body').on('click', '#dec_users_btn', async function () {
+        $('body').on('click', '#DecUsersBtn', async function () {
             layer.open({
                 type: 1,
                 title: '编辑使用人信息',
@@ -521,10 +526,10 @@
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { field: 'index', title: '序号' }
-                    , { field: 'use_org_person_code', title: '使用单位联系人' }
-                    , { field: 'use_org_person_tel', title: '使用单位联系电话' }
+                    {type: 'checkbox'}
+                    , {field: 'index', title: '序号'}
+                    , {field: 'use_org_person_code', title: '使用单位联系人'}
+                    , {field: 'use_org_person_tel', title: '使用单位联系电话'}
                 ]]
                 , data: dec_users_data
                 , limit: dec_users_data.length
@@ -574,7 +579,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         dec_users_index = null;
                         let sup_data = dec_users_data.filter(item => {
                             return checkData.every(item2 => {
@@ -598,14 +603,14 @@
             }
         });
         /**编辑使用人信息--按enter保存**/
-        $("body").on("keyup", "#use_org_person_tel", function (event) {
+        $("body").on("keyup", "#UseOrgPersonTel", function (event) {
             if (event.keyCode == 13) {
                 $("#dec_users_submit_tem").click();
                 $("#use_org_person_code").focus();
             }
         });
         /**特殊业务标识**/
-        $("body").on("click", "#spec_decl_flag_open", function () {
+        $("body").on("click", "#SpecDeclFlagOpen", function () {
             layer.open({
                 type: 1,
                 title: '特殊业务标识',
@@ -668,13 +673,13 @@
             });
         });
         /**enter关联理由打开特殊业务标识**/
-        $("body").on("keyup", "#correlation_reason_flag_name", function (event) {
+        $("body").on("keyup", "#CorrelationReasonFlagName", function (event) {
             if (event.keyCode == 13) {
                 $("#spec_decl_flag_open").click();
             }
         });
         /**检验检疫签证申报要素**/
-        $('body').on('click', '#dec_request_certs_btn', async function () {
+        $('body').on('click', '#DecRequestCertsBtn', async function () {
             layer.open({
                 type: 1,
                 title: '检验检疫签证申报要素',
@@ -682,17 +687,19 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['1110px', '630px'],
                 content: $('#dec_request_certs_template').html()
             });
-            let queryDocRep = []
-                , check_data = [];
+            let queryDocRep = [], check_data = [];
             const data = await admin.get(`/clearance/no_paginate?type=商检签证申报要素`);
-            for (let item of data) {
-                queryDocRep.push({
-                    app_cert_code: item.customs_code,
-                    appl_ori: 1,
-                    appl_copy_quan: 2,
-                    app_cert_name: item.name
-                })
+            if (data) {
+                for (let item of data) {
+                    queryDocRep.push({
+                        app_cert_code: item.customs_code,
+                        appl_ori: 1,
+                        appl_copy_quan: 2,
+                        app_cert_name: item.name
+                    })
+                }
             }
+
             if (dec_request_certs_data.checkData) {
                 check_data = dec_request_certs_data.checkData.map(function (item) {
                     return item.app_cert_code
@@ -708,24 +715,25 @@
                     default: check_data
                 }
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { type: 'numbers', title: '序号', width: 120 }
-                    , { field: 'app_cert_code', title: '证书代码', width: 240 }
-                    , { field: 'app_cert_name', title: '证书名称', width: 300 }
-                    , { field: 'appl_ori', title: '正本数量', width: 240 }
-                    , { field: 'appl_copy_quan', title: '副本数量', width: 240 }
+                    {type: 'checkbox'}
+                    , {type: 'numbers', title: '序号', width: 120}
+                    , {field: 'app_cert_code', title: '证书代码', width: 240}
+                    , {field: 'app_cert_name', title: '证书名称', width: 300}
+                    , {field: 'appl_ori', title: '正本数量', width: 240}
+                    , {field: 'appl_copy_quan', title: '副本数量', width: 240}
                 ]]
                 , data: queryDocRep
                 , limit: queryDocRep.length
                 , height: 350
             });
-            laydate.render({ elem: '#cmpl_dschrg_dt', theme: '#1E9FFF', fixed: true });
+            laydate.render({elem: '#cmpl_dschrg_dt', theme: '#1E9FFF', fixed: true});
             $("#domestic_consignee_ename").val(dec_request_certs_data.domestic_consignee_ename);
             $("#overseas_consignor_cname").val(dec_request_certs_data.overseas_consignor_cname);
             $("#overseas_consignor_addr").val(dec_request_certs_data.overseas_consignor_addr);
             $("#cmpl_dschrg_dt").val(dec_request_certs_data.cmpl_dschrg_dt);
             $("#decl_goods_enames").val(dec_request_certs_data.decl_goods_enames);
         });
+
         /**保存检验检疫签证申报要素**/
         form.on('submit(dec_request_certs_submit)', function (data) {
             let checkData = table.checkStatus('dec_request_certs_table').data;
@@ -741,7 +749,7 @@
 
 
         /**选择备案序号**/
-        $('body').on('click', '#contr_item_open', async function () {
+        $('body').on('click', '#ContrItemOpen', async function () {
             if (!$("#manual_no").val()) {
                 layer.msg("请先填写备案号");
                 $("#manual_no").focus();
@@ -786,17 +794,17 @@
                     default: [filter_data[0] ? filter_data[0].serial : 0]
                 }
                 , cols: [[
-                    { type: 'radio' }
-                    , { field: 'serial', title: '备案序号', width: 120 }
-                    , { field: 'hs_code', title: '商品编码', width: 160 }
-                    , { field: 'name', title: '商品名称', width: 260 }
-                    , { field: 'special', title: '规格型号', width: 130 }
-                    , { field: 'unit_one', title: '申报单位', width: 130 }
-                    , { field: 'unit_two', title: '法定单位', width: 130 }
-                    , { field: 'price', title: '单价', width: 90 }
-                    , { field: 'moneyunit', title: '币制名称', width: 110 }
-                    , { field: 'taxationlx', title: '征免性质', width: 110 }
-                    , { field: 'manuplace', title: '产销国', width: 90 }
+                    {type: 'radio'}
+                    , {field: 'serial', title: '备案序号', width: 120}
+                    , {field: 'hs_code', title: '商品编码', width: 160}
+                    , {field: 'name', title: '商品名称', width: 260}
+                    , {field: 'special', title: '规格型号', width: 130}
+                    , {field: 'unit_one', title: '申报单位', width: 130}
+                    , {field: 'unit_two', title: '法定单位', width: 130}
+                    , {field: 'price', title: '单价', width: 90}
+                    , {field: 'moneyunit', title: '币制名称', width: 110}
+                    , {field: 'taxationlx', title: '征免性质', width: 110}
+                    , {field: 'manuplace', title: '产销国', width: 90}
                 ]]
                 , data: filter_data
                 , limit: 10
@@ -917,11 +925,13 @@
         $("body").on("click", "#declaration_last_look", async function () {
             last_dec('look');
         });
-        function submit_btn(){
-            $('#declaration_last').attr('lay-submit','');
-            $('#declaration_next').attr('lay-submit','');
+
+        function submit_btn() {
+            $('#declaration_last').attr('lay-submit', '');
+            $('#declaration_next').attr('lay-submit', '');
             form.render();
         }
+
         function declaration_save_btn(data) {
             if (declaration_index != null && declaration_edit) {
                 admin.order_pros_data[declaration_index].g_model = data.field.elements;
@@ -936,6 +946,7 @@
                 layer.closeAll()
             }
         }
+
         /**选择检验检疫名称**/
         $('body').on('click', '#ciq_name_open', async function () {
             if (!$("#code_t_s").val()) {
@@ -974,11 +985,11 @@
                     default: [data.data[0].id]
                 }
                 , cols: [[
-                    { type: 'radio' }
-                    , { field: 'hs', title: 'HS代码', width: 150 }
-                    , { field: 'name', title: '名称', width: 255 }
-                    , { field: 'ciq_code', title: 'CIQ代码', width: 120 }
-                    , { field: 'ciq_name', title: 'CIQ代码中文名称' }
+                    {type: 'radio'}
+                    , {field: 'hs', title: 'HS代码', width: 150}
+                    , {field: 'name', title: '名称', width: 255}
+                    , {field: 'ciq_code', title: 'CIQ代码', width: 120}
+                    , {field: 'ciq_name', title: 'CIQ代码中文名称'}
                 ]]
                 , data: data.data
                 , limit: data.data.length
@@ -1007,8 +1018,8 @@
                 content: $('#goods_spec_list').html()
             });
             $("#stuff").focus();
-            laydate.render({ elem: '#prod_valid_dt', theme: '#1E9FFF', fixed: true });
-            laydate.render({ elem: '#produce_date', theme: '#1E9FFF', fixed: true });
+            laydate.render({elem: '#prod_valid_dt', theme: '#1E9FFF', fixed: true});
+            laydate.render({elem: '#produce_date', theme: '#1E9FFF', fixed: true});
             if (goods_spec_data) {
                 for (let item in goods_spec_data) {
                     $(`#${item}`).val(goods_spec_data[item])
@@ -1052,14 +1063,14 @@
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { field: 'goods_no', title: '序号', width: 80 }
-                    , { field: 'lic_type_code', title: '许可证类别代码', width: 150 }
-                    , { field: 'lic_type_name', title: '证书类别名称', width: 150 }
-                    , { field: 'licence_no', title: '许可证编码', width: 130 }
-                    , { field: 'lic_wrtof_detail_no', title: '核销货物序号', width: 150 }
-                    , { field: 'lic_wrtof_qty', title: '核销数量', width: 110 }
-                    , { field: 'lic_wrtof_qty_unit_name', title: '核销数量单位', width: 140 }
+                    {type: 'checkbox'}
+                    , {field: 'goods_no', title: '序号', width: 80}
+                    , {field: 'lic_type_code', title: '许可证类别代码', width: 150}
+                    , {field: 'lic_type_name', title: '证书类别名称', width: 150}
+                    , {field: 'licence_no', title: '许可证编码', width: 130}
+                    , {field: 'lic_wrtof_detail_no', title: '核销货物序号', width: 150}
+                    , {field: 'lic_wrtof_qty', title: '核销数量', width: 110}
+                    , {field: 'lic_wrtof_qty_unit_name', title: '核销数量单位', width: 140}
                 ]]
                 , data: quas
                 , limit: quas.length
@@ -1067,19 +1078,19 @@
             });
             $("#lic_type_name").focus();
             /**自动完成--许可证类别**/
-            auto_fn({
-                data: admin.all_complete_data.enterprise_product,
-                listDirection: false,
-                id: ['#lic_type_name'],
-                after: ['#lic_type_code']
-            });
+            // auto_fn({
+            //     data: admin.all_complete_data.enterprise_product,
+            //     listDirection: false,
+            //     id: ['#lic_type_name'],
+            //     after: ['#lic_type_code']
+            // });
             /**自动完成--核销数量单位**/
-            auto_fn({
-                data: admin.all_complete_data.unit_measurement,
-                listDirection: false,
-                id: ['#lic_wrtof_qty_unit_name'],
-                after: ['#lic_wrtof_qty_unit']
-            });
+            // auto_fn({
+            //     data: admin.all_complete_data.unit_measurement,
+            //     listDirection: false,
+            //     id: ['#lic_wrtof_qty_unit_name'],
+            //     after: ['#lic_wrtof_qty_unit']
+            // });
         });
         /**编辑产品许可证/审批/备案信息--点击行反填数据**/
         table.on('row(dec_goods_table)', function (obj) {
@@ -1143,7 +1154,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         dec_goods_index = null;
                         let sup_data = quas.filter(item => {
                             return checkData.every(item2 => {
@@ -1219,25 +1230,25 @@
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { field: 'vin_no', title: 'VIN序号', width: 100 }
-                    , { field: 'bill_lad_date', title: '提/运单日期', width: 140 }
-                    , { field: 'quality_qgp', title: '质量保质期', width: 130 }
-                    , { field: 'motor_no', title: '发动机号或电机号', width: 200 }
-                    , { field: 'vin_code', title: '车辆识别代码(VIN)', width: 200 }
-                    , { field: 'chassis_no', title: '底盘(车架)号', width: 200 }
-                    , { field: 'invoice_no', title: '发票号', width: 130 }
-                    , { field: 'invoice_num', title: '发票所列数量', width: 150 }
-                    , { field: 'prod_cnnm', title: '品名(中文名称)', width: 220 }
-                    , { field: 'prod_ennm', title: '品名(英文名称)', width: 220 }
-                    , { field: 'model_en', title: '型号(英文名称)', width: 220 }
-                    , { field: 'price_per_unit', title: '单价', width: 120 }
+                    {type: 'checkbox'}
+                    , {field: 'vin_no', title: 'VIN序号', width: 100}
+                    , {field: 'bill_lad_date', title: '提/运单日期', width: 140}
+                    , {field: 'quality_qgp', title: '质量保质期', width: 130}
+                    , {field: 'motor_no', title: '发动机号或电机号', width: 200}
+                    , {field: 'vin_code', title: '车辆识别代码(VIN)', width: 200}
+                    , {field: 'chassis_no', title: '底盘(车架)号', width: 200}
+                    , {field: 'invoice_no', title: '发票号', width: 130}
+                    , {field: 'invoice_num', title: '发票所列数量', width: 150}
+                    , {field: 'prod_cnnm', title: '品名(中文名称)', width: 220}
+                    , {field: 'prod_ennm', title: '品名(英文名称)', width: 220}
+                    , {field: 'model_en', title: '型号(英文名称)', width: 220}
+                    , {field: 'price_per_unit', title: '单价', width: 120}
                 ]]
                 , data: dec_goods_vin_data
                 , limit: dec_goods_vin_data.length
                 , height: 350
             });
-            laydate.render({ elem: '#bill_lad_date', theme: '#1E9FFF', fixed: true });
+            laydate.render({elem: '#bill_lad_date', theme: '#1E9FFF', fixed: true});
             $("#licTypeCodeVinName").val(quas[dec_goods_index - 1].lic_type_name);
             $("#licenceNo").val(quas[dec_goods_index - 1].licence_no);
             $("#vin_no").focus();
@@ -1322,7 +1333,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         dec_goods_vin_index = null;
                         let sup_data = quas[dec_goods_index - 1].order_pro_qua_vins.filter(item => {
                             return checkData.every(item2 => {
@@ -1449,19 +1460,19 @@
                 content: $('#dang_list').html()
             });
             /**自动完成--非危险化学品**/
-            auto_fn({
-                data: admin.chemicals_data,
-                listDirection: false,
-                id: ['#no_dang_flag_name'],
-                after: ['#no_dang_flag']
-            });
+            // auto_fn({
+            //     data: admin.chemicals_data,
+            //     listDirection: false,
+            //     id: ['#no_dang_flag_name'],
+            //     after: ['#no_dang_flag']
+            // });
             /**自动完成--危包类别**/
-            auto_fn({
-                data: admin.category_data,
-                listDirection: false,
-                id: ['#dang_pack_type_name'],
-                after: ['#dang_pack_type']
-            });
+            // auto_fn({
+            //     data: admin.category_data,
+            //     listDirection: false,
+            //     id: ['#dang_pack_type_name'],
+            //     after: ['#dang_pack_type']
+            // });
             $("#no_dang_flag_name").focus();
             if (dang_data) {
                 for (let item in dang_data) {
@@ -1504,9 +1515,9 @@
             });
             let url;
             if ($("#ManualNo").val()) {
-                url = `/order/history_good_g_model?search=manual_no:${$("#ManualNo").val()};trade_code:${$("#TradeCode").val()};code_t_s:${$("#code_t_s").val()};IEFlag:`+"@{{.IEFlag}}"
+                url = `/order/history_good_g_model?search=manual_no:${$("#ManualNo").val()};trade_code:${$("#TradeCode").val()};code_t_s:${$("#code_t_s").val()};IEFlag:` + "@{{.IEFlag}}"
             } else {
-                url = `/order/history_good_g_model?search=trade_code:${$("#TradeCode").val()};code_t_s:${$("#CodeTS").val()};IEFlag:`+"@{{.IEFlag}}"
+                url = `/order/history_good_g_model?search=trade_code:${$("#TradeCode").val()};code_t_s:${$("#CodeTS").val()};IEFlag:` + "@{{.IEFlag}}"
             }
             admin.elements_his_data = await admin.get(url);
             table.render({
@@ -1515,13 +1526,13 @@
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
                 , cols: [[
-                    { type: 'radio' }
+                    {type: 'radio'}
                     , {
                         field: 'apl_date', title: '申报日期', width: 160, templet: function (data) {
                             return data.order.apl_date
                         }
                     }
-                    , { field: 'g_model', title: '申报要素' }
+                    , {field: 'g_model', title: '申报要素'}
                 ]]
                 , data: admin.elements_his_data
                 , limit: 10
@@ -1764,7 +1775,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let sup_data = admin.order_pros_data.filter(item => {
                             return checkData.every(item2 => {
                                 return item.g_no != item2.g_no;
@@ -2127,40 +2138,41 @@
                         content: $('#batch_edit_list').html()
                     });
                     $("#trade_curr_name_batch").focus();
-                    laydate.render({ elem: '#prod_valid_dt_batch', theme: '#1E9FFF', fixed: true });
-                    laydate.render({ elem: '#produce_date_batch', theme: '#1E9FFF', fixed: true });
+                    laydate.render({elem: '#prod_valid_dt_batch', theme: '#1E9FFF', fixed: true});
+                    laydate.render({elem: '#produce_date_batch', theme: '#1E9FFF', fixed: true});
                     /**自动完成--批量修改--币制**/
-                    auto_fn({
-                        data: admin.all_complete_data.currency,
-                        listDirection: false,
-                        id: ['#trade_curr_name_batch'],
-                        after: ['#trade_curr_batch']
-                    });
+                    // auto_fn({
+                    //     data: admin.all_complete_data.currency,
+                    //     listDirection: false,
+                    //     id: ['#trade_curr_name_batch'],
+                    //     after: ['#trade_curr_batch']
+                    // });
                     /**自动完成--批量修改--原产国（地区）**/
-                    auto_fn({
-                        data: admin.all_complete_data.country_area,
-                        listDirection: false,
-                        id: ['#destination_country_name_batch'],
-                        after: ['#destination_country_batch']
-                    });
+                    // auto_fn({
+                    //     data: admin.all_complete_data.country_area,
+                    //     listDirection: false,
+                    //     id: ['#destination_country_name_batch'],
+                    //     after: ['#destination_country_batch']
+                    // });
                     /**自动完成--批量修改--境内目的地代码**/
-                    auto_fn({
-                        data: admin.all_complete_data.domestic_area,
-                        listDirection: false,
-                        id: ['#district_code_name_batch'],
-                        after: ['#district_code_batch']
-                    });
+                    // auto_fn({
+                    //     data: admin.all_complete_data.domestic_area,
+                    //     listDirection: false,
+                    //     id: ['#district_code_name_batch'],
+                    //     after: ['#district_code_batch']
+                    // });
                     /**自动完成--征免方式**/
-                    auto_fn({
-                        data: admin.all_complete_data.exempting_method,
-                        listDirection: false,
-                        id: ['#duty_mode_name_batch'],
-                        after: ['#duty_mode_batch']
-                    });
+                    // auto_fn({
+                    //     data: admin.all_complete_data.exempting_method,
+                    //     listDirection: false,
+                    //     id: ['#duty_mode_name_batch'],
+                    //     after: ['#duty_mode_batch']
+                    // });
                     break;
             }
         });
         /**查看商品申报要素-上一条**/
+
         /* $("body").on("click", "#declaration_last_look", async function () {
              if (declaration_index == 0) {
                  return layer.msg("已经是第一条了");
@@ -2268,9 +2280,9 @@
                 $('#declaration_list_reload').html(html)
             });
 
-            if(type == 'look'){
-                $('#declaration_next').attr('id','declaration_next_look');
-                $('#declaration_last').attr('id','declaration_last_look');
+            if (type == 'look') {
+                $('#declaration_next').attr('id', 'declaration_next_look');
+                $('#declaration_last').attr('id', 'declaration_last_look');
             }
             submit_btn();
             form.render();
@@ -2349,7 +2361,9 @@
                 }
             });
         }
+
         /**查看商品申报要素-下一条**/
+
         /*$("body").on("click", "#declaration_next_look", async function () {
             if ((declaration_index + 1) == admin.order_pros_data.length) {
                 return layer.msg("已经是最后一条了");
@@ -2457,9 +2471,9 @@
                 $('#declaration_list_reload').html(html)
             });
 
-            if(type == 'look'){
-                $('#declaration_next').attr('id','declaration_next_look');
-                $('#declaration_last').attr('id','declaration_last_look');
+            if (type == 'look') {
+                $('#declaration_next').attr('id', 'declaration_next_look');
+                $('#declaration_last').attr('id', 'declaration_last_look');
             }
             submit_btn();
             form.render();
@@ -2537,6 +2551,7 @@
                 }
             });
         }
+
         /**批量修改--货物属性**/
         $("body").on("click", "#goods_attr_open_batch", async function () {
             const data = await admin.get(`/clearance/no_paginate?type=货物属性代码`);
@@ -2659,22 +2674,22 @@
             , defaultToolbar: ['filter']
             , colFilterRecord: 'local'
             , cols: [[
-                { type: 'checkbox' }
-                , { field: 'container_id', title: '集装箱号', width: 120 }
-                , { field: 'container_md_name', title: '集装箱规格', width: 150 }
-                , { field: 'lcl_flag_name', title: '拼箱标识', width: 120 }
+                {type: 'checkbox'}
+                , {field: 'container_id', title: '集装箱号', width: 120}
+                , {field: 'container_md_name', title: '集装箱规格', width: 150}
+                , {field: 'lcl_flag_name', title: '拼箱标识', width: 120}
             ]]
             , data: order_containers
             , limit: order_containers.length
             , height: 200
         });
         /**自动完成--集装箱规格**/
-        auto_fn({
-            data: admin.chemicals_data,
-            listDirection: false,
-            id: ['#lcl_flag_name'],
-            after: ['#lcl_flag']
-        });
+        // auto_fn({
+        //     data: admin.chemicals_data,
+        //     listDirection: false,
+        //     id: ['#lcl_flag_name'],
+        //     after: ['#lcl_flag']
+        // });
         /**集装箱--商品序号默认全选**/
         $("body").on("keyup", "#container_id", function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
@@ -2745,7 +2760,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let sup_data = order_containers.filter(item => {
                             return checkData.every(item2 => {
                                 return item.index != item2.index;
@@ -2814,10 +2829,10 @@
                     default: check_data
                 }
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { field: 'g_no', title: '序号', width: 100 }
-                    , { field: 'code_t_s', title: '商品编号' }
-                    , { field: 'g_name', title: '商品名称' }
+                    {type: 'checkbox'}
+                    , {field: 'g_no', title: '序号', width: 100}
+                    , {field: 'code_t_s', title: '商品编号'}
+                    , {field: 'g_name', title: '商品名称'}
                 ]]
                 , data: admin.order_pros_data
                 , limit: admin.order_pros_data.length
@@ -2840,9 +2855,9 @@
             , defaultToolbar: ['filter']
             , colFilterRecord: 'local'
             , cols: [[
-                { type: 'checkbox' }
-                , { field: 'docu_code', title: '单证代码', width: 120 }
-                , { field: 'cert_code', title: '单证编号' }
+                {type: 'checkbox'}
+                , {field: 'docu_code', title: '单证代码', width: 120}
+                , {field: 'cert_code', title: '单证编号'}
             ]]
             , data: order_documents
             , limit: order_documents.length
@@ -2899,7 +2914,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let sup_data = order_documents.filter(item => {
                             return checkData.every(item2 => {
                                 return item.index != item2.index;
@@ -2960,9 +2975,9 @@
                         , defaultToolbar: ['filter']
                         , colFilterRecord: 'local'
                         , cols: [[
-                            { type: 'checkbox' }
-                            , { field: 'dec_g_no', title: '报关单商品序号' }
-                            , { field: 'eco_g_no', title: '对应随附单证商品序号' }
+                            {type: 'checkbox'}
+                            , {field: 'dec_g_no', title: '报关单商品序号'}
+                            , {field: 'eco_g_no', title: '对应随附单证商品序号'}
                         ]]
                         , data: order_documents[order_documents_index - 1].eco_relations
                         , limit: order_documents[order_documents_index - 1].eco_relations.length
@@ -2972,6 +2987,7 @@
                     break;
             }
         });
+
         /**随附单证--按enter保存**/
         $("body").on("keyup", "#cert_code", function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
@@ -2988,6 +3004,7 @@
                 }
             }
         });
+
         /**随附单证--按enter判断不能有重复的随附单证代码**/
         $("body").on("keyup", "#docu_code_name", function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
@@ -3007,6 +3024,7 @@
                 }
             }
         });
+
         /**原产地对应关系录入--点击行反填数据**/
         table.on('row(order_document_eco_relations_table)', function (obj) {
             $("#dec_g_no").val(obj.data.dec_g_no);
@@ -3014,6 +3032,7 @@
             order_document_eco_relations_index = obj.data.index;
             $("#dec_g_no").focus();
         });
+
         /**原产地对应关系录入--保存**/
         form.on('submit(order_document_eco_relations_submit)', async (data) => {
             delete data.field.layTableCheckbox;
@@ -3036,6 +3055,7 @@
             $("#dec_g_no").focus();
             order_document_eco_relations_index = null;
         });
+
         /**原产地对应关系录入--删除**/
         table.on('toolbar(order_document_eco_relations_table)', function (obj) {
             let checkStatus = table.checkStatus(obj.config.id);
@@ -3051,7 +3071,7 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let sup_data = order_documents[order_documents_index - 1].eco_relations.filter(item => {
                             return checkData.every(item2 => {
                                 return item.index != item2.index;
@@ -3091,263 +3111,21 @@
             }
         });
 
-        /**新建出口报关保存刷新后反填数据**/
-        async function order_i_edit_back_filling(order_i_edit_data) {
-            $("#order_i_form input, #order_i_form textarea").each(function () {
-                for (let item in order_i_edit_data) {
-                    if ($(this).attr("name") == item) {
-                        if (item == 'dec_other_packs') {
-                            $(this).val(JSON.stringify(order_i_edit_data[item]))
-                        } else if (item == 'i_e_date') {
-                            if (order_i_edit_data[item]) {
-                                $(this).val(order_i_edit_data[item]);
-                            }
-                        } else {
-                            if (item == 'apl_date') {
-                                if (order_i_edit_data[item]) {
-                                    const time = admin.getyyyymmdd(order_i_edit_data[item]);
-                                    $(this).val(time);
-                                }
-                            } else if (item == 'gross_wet') {
-                                $(this).val(order_i_edit_data['gross_wet_string']);
-                            } else if (item == 'net_wt') {
-                                $(this).val(order_i_edit_data['net_wt_string']);
-                            } else {
-                                $(this).val(order_i_edit_data[item])
-                            }
-                        }
-                    }
-                }
-            });
-            $("#customMasterName").val(order_i_edit_data.order_status_string);
-            $("#client_seq_no").val(order_i_edit_data.client_seq_no);
-            $("#entry_id").val(order_i_edit_data.entry_id);
-            if (order_i_edit_data.promise_itmes) {
-                $(`input[name='promise_itmes[]']`).each(function (index, element) {
-                    for (let item in order_i_edit_data.promise_itmes) {
-                        if (index == item) {
-                            if (order_i_edit_data.promise_itmes[item] == '1') {
-                                $(this).next('div').click();
-                            } else if (order_i_edit_data.promise_itmes[item] == '0') {
-                                $(this).data('first', 1);
-                                $(this).prev("span").text("否")
-                            }
-                        }
-                    }
-                });
-            }
-            if (!(order_i_edit_data.type)) {
-                $(`input[name='type[]']`).each(function (index, element) {
-                    if (index == 1) {
-                        $(this).next('div').click();
-                    }
-                });
-            }
-            await order_i_add_back_filling(order_i_edit_data);
-        }
-
-        /**新建出口报关保存反填数据**/
-        async function order_i_add_back_filling(order_i_edit_data) {
-            if (parent.layui.admin.get_iframe_index()) {
-                parent.layui.admin.get_iframe_index().find("span").append(order_i_edit_data.client_seq_no);
-            }
-            if (order_i_edit_data.quas) {
-                if (order_i_edit_data.quas.length > 0) {
-                    ent_qualif_data = order_i_edit_data.quas;
-                    ent_qualif_data.forEach((value, index) => {
-                        value.index = index + 1
-                    });
-                    $("#ent_qualif_type_code").val(order_i_edit_data.quas[0].ent_qualif_type_code);
-                    $("#ent_qualif_type_name").val(order_i_edit_data.quas[0].ent_qualif_type_name);
-                    if (order_i_edit_data.declaratio_material_code == "101040") {
-                        declaratio_material_code = 1
-                    } else {
-                        declaratio_material_code = 0
-                    }
-                }
-            }
-            if (order_i_edit_data.orig_box_flag == '0') {
-                $("input[name='orig_box_flag']").next('div').click()
-            }
-            if (order_i_edit_data.is_other) {
-                if (!($("input[name='is_other']").prop("checked"))) {
-                    $("input[name='is_other']").next('div').click()
-                }
-            }
-            if (order_i_edit_data.spec_decl_flag_array) {
-                if (order_i_edit_data.spec_decl_flag_array.length > 0) {
-                    spec_decl_flag = order_i_edit_data.spec_decl_flag_array;
-                    let spec_decl_flag_name_data = [];
-                    admin.spec_decl_flag_data.forEach((value, index) => {
-                        if (spec_decl_flag[index] == '1') {
-                            spec_decl_flag_name_data.push(value)
-                        }
-                    });
-                    $("#spec_decl_flag").val(spec_decl_flag_name_data.join(","));
-                }
-            }
-            if (order_i_edit_data.dec_request_certs) {
-                if (order_i_edit_data.dec_request_certs.length > 0) {
-                    const data = order_i_edit_data.dec_request_certs.map(item => item.app_cert_name);
-                    $("#dec_request_certs").val(data.join(","));
-                    dec_request_certs_data.checkData = order_i_edit_data.dec_request_certs;
-                }
-            }
-            dec_request_certs_data.domestic_consignee_ename = order_i_edit_data.domestic_consignee_ename;
-            dec_request_certs_data.overseas_consignor_cname = order_i_edit_data.overseas_consignor_cname;
-            dec_request_certs_data.overseas_consignor_addr = order_i_edit_data.overseas_consignor_addr;
-            dec_request_certs_data.cmpl_dschrg_dt = order_i_edit_data.cmpl_dschrg_dt;
-            if (order_i_edit_data.dec_users) {
-                dec_users_data = order_i_edit_data.dec_users;
-                dec_users_data.forEach((value, index) => {
-                    value.index = index + 1
-                });
-            }
-            if (order_i_edit_data.pros) {
-                order_i_edit_data.pros.sort(admin.compare('g_no'));
-                let goods_attr_filter = await admin.get(`/clearance/no_paginate?type=货物属性代码`);
-                for (let item of order_i_edit_data.pros) {
-                    item.goods_spec_data = {
-                        stuff: item.stuff,
-                        prod_valid_dt: item.prod_valid_dt,
-                        prod_qgp: item.prod_qgp,
-                        eng_man_ent_cnm: item.eng_man_ent_cnm,
-                        goods_spec: item.goods_spec,
-                        goods_model: item.goods_model,
-                        goods_brand: item.goods_brand,
-                        produce_date: item.produce_date,
-                        prod_batch_no: item.prod_batch_no
-                    };
-                    let goods_attr_data_item = [];
-                    if (item.goods_attr_array) {
-                        item.goods_attr_array.forEach(function (item_attr) {
-                            goods_attr_filter.forEach(function (item_filter) {
-                                if (item_filter.customs_code == item_attr) {
-                                    goods_attr_data_item.push({
-                                        code: item_attr,
-                                        name: item_filter.name
-                                    })
-                                }
-                            })
-                        });
-                    }
-                    item.goods_attr_data = goods_attr_data_item;
-                    item.quas.forEach(function (item_quas) {
-                        if (item_quas.order_pro_qua_vins) {
-                            item_quas.order_pro_qua_vins.forEach((value, index) => {
-                                value.index = index + 1
-                            });
-                        }
-                    });
-                    let no_dang_flag_name;
-                    for (let item_chemicals of admin.chemicals_data) {
-                        if (item_chemicals.id == item.no_dang_flag) {
-                            no_dang_flag_name = item_chemicals.value
-                        }
-                    }
-                    let dang_pack_type_name;
-                    for (let item_category of admin.category_data) {
-                        if (item_category.id == item.dang_pack_type) {
-                            dang_pack_type_name = item_category.value
-                        }
-                    }
-                    item.dang_data = {
-                        no_dang_flag: item.no_dang_flag,
-                        no_dang_flag_name: no_dang_flag_name,
-                        un_code: item.un_code,
-                        dang_name: item.dang_name,
-                        dang_pack_type: item.dang_pack_type,
-                        dang_pack_type_name: dang_pack_type_name,
-                        dang_pack_spec: item.dang_pack_spec
-                    }
-                }
-                admin.order_pros_data = order_i_edit_data.pros;
-                $("#g_no").val(order_i_edit_data.pros.length + 1);
-                table.reload('order_pros', {
-                    data: admin.order_pros_data,
-                    limit: admin.order_pros_data.length
-                });
-            }
-            if (order_i_edit_data.containers) {
-                order_containers = order_i_edit_data.containers;
-                order_containers.forEach((value, index) => {
-                    value.index = index + 1;
-                    let lcl_flag_name;
-                    for (let item_chemicals of admin.chemicals_data) {
-                        if (item_chemicals.id == value.lcl_flag) {
-                            lcl_flag_name = item_chemicals.value
-                        }
-                    }
-                    value.lcl_flag_name = lcl_flag_name;
-                });
-                table.reload('order_containers_table', {
-                    data: order_containers,
-                    limit: order_containers.length
-                });
-            }
-            if (order_i_edit_data.documents) {
-                order_documents = order_i_edit_data.documents;
-                order_documents.forEach((value, index) => {
-                    value.index = index + 1;
-                    if (value.eco_relations) {
-                        value.eco_relations.forEach((value2, index2) => {
-                            value2.index = index2 + 1;
-                        })
-                    }
-                });
-                table.reload('order_documents_table', {
-                    data: order_documents,
-                    limit: order_documents.length
-                });
-            }
-            order_note_data = order_i_edit_data.remark;
-            if (order_note_data) {
-                $("#order_note_dot").show()
-            } else {
-                $("#order_note_dot").hide()
-            }
-            /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
-            admin.is_total_number(order_i_edit_data.pros);
-
-            admin.order_pros_delete_ids = [];
-            admin.order_quas_delete_ids = [];
-            admin.order_quas_vin_delete_ids = [];
-            admin.order_containers_delete_ids = [];
-            admin.order_documents_delete_ids = [];
-            admin.order_eco_relations_delete_ids = [];
-            admin.order_ent_qualif_delete_ids = [];
-        };
-        /**出口报关整合申报保存**/
+        /**报关整合申报保存**/
         form.on('submit(order_save)', async (data) => {
-            if (admin.order_pros_data.length === 0) {
-                return layer.msg("请先输入表体商品");
-            }
-            if (data.field.net_wt) {
-                if (admin.order_pros_data.length === 0) {
-                    return layer.msg("存在净重，必须填写表体商品！");
-                }
-            }
-            if (!data.field.trade_country || !data.field.trade_country_name) {
-                $('#trade_country_name').focus();
+            if (!data.field.TradeCountry || !data.field.TradeCountryName) {
+                $('#TradeCountryName').focus();
                 return layer.msg("请填写运抵国(地区)");
             }
-            if (!data.field.i_e_port || !data.field.i_e_port_name) {
-                $('#trade_country_name').focus();
+
+            if (!data.field.IEPort || !data.field.IEPortName) {
+                $('#TradeCountryName').focus();
                 return layer.msg("请填写出境关别");
             }
-            let is_pros = 1;
-            if (admin.order_pros_data.length > 0) {
-                for (let item of admin.order_pros_data) {
-                    if ((item.g_unit ? item.g_unit != '035' : 1) && (item.first_unit ? item.first_unit != '035' : 1) && (item.second_unit ? item.second_unit != '035' : 1)) {
-                        is_pros = 0;
-                        break;
-                    }
-                }
-            } else {
-                is_pros = 0;
-            }
+
+
             if (is_pros) {
-                if (!(data.field.net_wt)) {
+                if (!(data.field.NetWt)) {
                     return layer.msg("存在表体商品且是千克，必填净重！");
                 }
                 let total = 0;
@@ -3360,7 +3138,8 @@
                         total += parseFloat(item.second_qty) * 100000;
                     }
                 }
-                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.net_wt.toString())) {
+
+                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
                     if (!no_weight_save) {
                         layer.open({
                             title: '商品总重量与净重不符'
@@ -3373,7 +3152,7 @@
                             }
                             , btn2: function () {
                                 layer.msg('请重新修改净重。');
-                                $('#net_wt').focus();
+                                $('#NetWt').focus();
                             }
                         });
                         if (!no_weight_save) {
@@ -3382,118 +3161,96 @@
                     }
                 }
             }
+
             layer.load(2);
+
             /**企业承诺**/
-            data.field.declaratio_material_code = declaratio_material_code;
+            data.field.DeclaratioMaterialCode = declaratio_material_code;
+
             /**其他包装**/
-            if (data.field.dec_other_packs) {
-                data.field.dec_other_packs = JSON.parse(data.field.dec_other_packs);
+            if (data.field.DecOtherPacks) {
+                data.field.DecOtherPacks = JSON.parse(data.field.DecOtherPacks);
             }
+
             /**企业资质数据**/
-            for (let item of admin.order_ent_qualif_delete_ids) {
+            for (let item of admin.OrderEntQualifDeleteIds) {
                 ent_qualif_data.push({
                     id: item
                 })
             }
-            data.field.quas = ent_qualif_data;
             /**使用人数据**/
-            data.field.dec_users = dec_users_data;
+            data.field.DecUsers = dec_users_data;
             /**特殊业务标识数据**/
-            data.field.spec_decl_flag = spec_decl_flag;
-            /**表体商品数据**/
-            for (let item of admin.order_quas_vin_delete_ids) {
-                admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
-                    id: item.id
-                })
-            }
-            for (let item of admin.order_quas_delete_ids) {
-                admin.order_pros_data[item.index].quas.push({
-                    id: item.id
-                })
-            }
-            for (let item of admin.order_pros_delete_ids) {
-                admin.order_pros_data.push({
-                    id: item
-                })
-            }
-            data.field.pros = admin.order_pros_data;
-            /**检验检疫申报要素数据**/
-            data.field.dec_request_certs = dec_request_certs_data.checkData || [];
-            data.field.domestic_consignee_ename = dec_request_certs_data.domestic_consignee_ename;
-            data.field.overseas_consignor_cname = dec_request_certs_data.overseas_consignor_cname;
-            data.field.overseas_consignor_addr = dec_request_certs_data.overseas_consignor_addr;
-            data.field.cmpl_dschrg_dt = dec_request_certs_data.cmpl_dschrg_dt;
-            /**集装箱数据**/
-            for (let item of admin.order_containers_delete_ids) {
-                order_containers.push({
-                    id: item
-                })
-            }
-            data.field.containers = order_containers;
-            /**随附单证数据**/
-            for (let item of admin.order_documents_delete_ids) {
-                order_documents.push({
-                    id: item
-                })
-            }
-            data.field.documents = order_documents;
+            data.field.SpecDeclFlag = SpecDeclFlag;
             /**业务选项**/
-            data.field.promise_itmes = [];
+            data.field.PromiseItmes = [];
             /**特殊关系确认**/
-            if (!(data.field['promise_itmes[0]'])) {
+            if (!(data.field['PromiseItmes[0]'])) {
                 if ($("#promise_itmes0").data('first') == '1') {
-                    data.field.promise_itmes.push('0');
+                    data.field.PromiseItmes.push('0');
                 } else {
                     data.field.promise_itmes.push('9');
                 }
             } else {
-                delete data.field['promise_itmes[0]'];
+                delete data.field['PromiseItmes[0]'];
                 data.field.promise_itmes.push('1');
-            }
-            /**价格影响确认**/
-            if (!(data.field['promise_itmes[1]'])) {
-                if ($("#promise_itmes1").data('first') == '1') {
-                    data.field.promise_itmes.push('0');
-                } else {
-                    data.field.promise_itmes.push('9');
-                }
-            } else {
-                delete data.field['promise_itmes[1]'];
-                data.field.promise_itmes.push('1');
-            }
-            /**支付特权使用费确认**/
-            if (!(data.field['promise_itmes[2]'])) {
-                if ($("#promise_itmes2").data('first') == '1') {
-                    data.field.promise_itmes.push('0');
-                } else {
-                    data.field.promise_itmes.push('9');
-                }
-            } else {
-                delete data.field['promise_itmes[2]'];
-                data.field.promise_itmes.push('1');
-            }
-            /**异地报关**/
-            if ($("#is_other").prop("checked")) {
-                data.field.is_other = 1;
-            } else {
-                data.field.is_other = 0;
             }
 
-            data.field.id = order_id;
-            data.field.order_status = order_i_edit_data.order_status_string;
-            const order_save_data = await admin.patch(`/order/e/${order_id}`, data.field);
-            if (order_save_data.status) {
-                await order_i_add_back_filling(order_save_data.data);
-                order_i_edit_data = order_save_data.data;
-                save_btn = true;
-                /*save_order();*/
-                /*location.reload();*/
+            /**价格影响确认**/
+            if (!(data.field['PromiseItmes[1]'])) {
+                if ($("#PromiseItmes1").data('first') == '1') {
+                    data.field.PromiseItmes.push('0');
+                } else {
+                    data.field.PromiseItmes.push('9');
+                }
+            } else {
+                delete data.field['PromiseItmes[1]'];
+                data.field.PromiseItmes.push('1');
             }
+
+            /**支付特权使用费确认**/
+            if (!(data.field['PromiseItmes[2]'])) {
+                if ($("#PromiseItmes2").data('first') == '1') {
+                    data.field.PromiseItmes.push('0');
+                } else {
+                    data.field.PromiseItmes.push('9');
+                }
+            } else {
+                delete data.field['PromiseItmes[2]'];
+                data.field.PromiseItmes.push('1');
+            }
+
+            /**异地报关**/
+            if ($("#IsOther").prop("checked")) {
+                data.field.IsOther = 1;
+            } else {
+                data.field.IsOther = 0;
+            }
+
+            let resultStatus = false;
+            if ("@{{.m.Id}}") {
+                const result = await admin.post(`/order/store/@{{.IEFlag}}`, data.field);
+                resultStatus = result.status
+            } else {
+                const result = await admin.patch(`/order/update/@{{.m.Id}}`, data.field);
+                resultStatus = result.status
+
+            }
+
+            if (resultStatus) {
+                setTimeout(() => {
+                    admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+                    window.location.reload()
+                }, 150)
+            }
+
+
             layer.closeAll('loading');
         });
+
         /**打印**/
         $("body").on("click", "#order_print", async function () {
-            if (!order_id) {
+            if (!"@{{.m.Id}}") {
                 return layer.msg("请先保存订单！")
             }
             layer.open({
@@ -3504,7 +3261,7 @@
                 content: $('#print_lists_template').html()
             });
             layer.load(2);
-            await admin.getPdf(order_id,'e',admin.order_e_print_list);
+            await admin.getPdf(@{{.m.Id}}, 'e', admin.order_e_print_list);
             table.render({
                 elem: '#print_lists'
                 , data: admin.order_e_print_list
@@ -3518,7 +3275,7 @@
                             }
                         }
                     }
-                    , { title: '操作', toolbar: '#print_toolbar', width: 280 }
+                    , {title: '操作', toolbar: '#print_toolbar', width: 280}
                 ]]
                 , limit: admin.order_e_print_list.length
             });
@@ -3532,16 +3289,16 @@
             switch (obj.event) {
                 case 'preview':
                     console.log(obj);
-                    order.print_preview(obj,order_id,order_i_edit_data,'e');
+                    order.print_preview(obj, @{{.m.Id}}, order_i_edit_data, 'e');
                     break;
                 case 'download':
-                    order.print_download(obj,order_id,order_i_edit_data,'e');
+                    order.print_download(obj, @{{.m.Id}}, order_i_edit_data, 'e');
                     break;
                 case 'enclosure_save':
-                    order.print_enclosure_save(obj,order_id,order_i_edit_data,'e',admin.order_e_print_list);
+                    order.print_enclosure_save(obj, @{{.m.Id}}, order_i_edit_data, 'e', admin.order_e_print_list);
                     break;
                 case 'reload_save':
-                    order.print_reload_save(obj,order_id,order_i_edit_data,'e',admin.order_e_print_list);
+                    order.print_reload_save(obj, @{{.m.Id}}, order_i_edit_data, 'e', admin.order_e_print_list);
                     break;
                 case 'null_download':
                     layer.msg('请先保存附件');
@@ -3550,31 +3307,31 @@
         });
         /**打印前修改-合同-预览**/
         form.on("submit(print_edit_contract_save)", async (data) => {
-            order.print_edit_contract_save(data,order_id,'e');
+            order.print_edit_contract_save(data, @{{.m.Id}}, 'e');
         });
         /**打印前修改-发票-预览**/
         form.on("submit(print_edit_invoice_save)", async (data) => {
-            order.print_edit_invoice_save(data,order_id,'e');
+            order.print_edit_invoice_save(data, @{{.m.Id}}, 'e');
         });
         /**打印前修改-司机纸-预览**/
         form.on("submit(print_edit_driver_save)", async (data) => {
-            order.print_edit_driver_save(data,order_id,'e');
+            order.print_edit_driver_save(data, @{{.m.Id}}, 'e');
         });
         /**保存前修改-合同-保存**/
         form.on("submit(print_save_contract_save)", async (data) => {
-            order.print_save_contract_save(data,order_id,'e',admin.order_e_print_list);
+            order.print_save_contract_save(data, @{{.m.Id}}, 'e', admin.order_e_print_list);
         });
         /**保存前修改-发票-保存**/
         form.on("submit(print_save_invoice_save)", async (data) => {
-            order.print_save_invoice_save(data,order_id,'e',admin.order_e_print_list);
+            order.print_save_invoice_save(data, @{{.m.Id}}, 'e', admin.order_e_print_list);
         });
         /**保存前修改-司机纸-保存**/
         form.on("submit(print_save_driver_save)", async (data) => {
-            order.print_save_driver_save(data,order_id,'e',admin.order_e_print_list);
+            order.print_save_driver_save(data, @{{.m.Id}}, 'e', admin.order_e_print_list);
         });
         /**附注**/
         $("body").on("click", "#order_note", async function () {
-            if (!order_id) {
+            if (!"@{{.m.Id}}") {
                 return layer.msg("请先保存订单！")
             }
             order_note_index = layer.open({
@@ -3596,14 +3353,13 @@
         /**附注保存**/
         form.on('submit(remark_note_submit)', async (data) => {
             order_note_data = data.field.remark;
-            await admin.post(`/order/e/${order_id}/remark`, data.field);
+            await admin.post(`/order/e/@{{.m.Id}}/remark`, data.field);
             layer.close(order_note_index);
         });
         /**新建保存后刷新提取数据**/
         if ($("#order_i_edit_data").val()) {
             layer.load(2);
             order_i_edit_data = JSON.parse($("#order_i_edit_data").val());
-            order_id = order_i_edit_data.id;
             await order_i_edit_back_filling(order_i_edit_data);
             if ($("#manual_no").val().trim()) {
                 const data = await admin.get(`/order/account_manual_once?name=${$("#manual_no").val()}`);
@@ -3661,18 +3417,26 @@
         /**导入**/
         const upload_order_i = upload.render({
             elem: '#order_i_import'
-            , url: '/order/e/import'
-            , accept: 'file'
-            , acceptMime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-excel.sheet.macroEnabled.12'
-            , exts: 'xlsx|xls|xlsm'
-            , field: 'order_file'
-            , data: {
-                order_id: order_id
+            ,
+            url: '/order/e/import'
+            ,
+            accept: 'file'
+            ,
+            acceptMime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-excel.sheet.macroEnabled.12'
+            ,
+            exts: 'xlsx|xls|xlsm'
+            ,
+            field: 'order_file'
+            ,
+            data: {
+                OrderId: @{{.m.Id}}
             }
-            , before: function (obj) {
+            ,
+            before: function (obj) {
                 layer.load(2);
             }
-            , done: async function (res) {
+            ,
+            done: async function (res) {
                 if (res.status) {
                     layer.msg(res.msg, {
                         offset: '15px'
@@ -3719,86 +3483,86 @@
                     $("#order_dispatch").data("user", order_i_edit_data.company.user_id);
                 }
             }
-            , error: function () {
+            ,
+            error: function () {
                 layer.closeAll('loading');
             }
         });
 
         /** 复制订单数据 **/
-        $('body').on('click','#order_copy_data',function(){
+        $('body').on('click', '#order_copy_data', function () {
             layer.open({
                 type: 1,
-                title:'复制订单数据',
+                title: '复制订单数据',
                 area: ['500px', '200px'],
                 fixed: false,
                 content: $('#check_order_template'),
-                btn:['确定','取消'],
-                yes: function(){
+                btn: ['确定', '取消'],
+                yes: function () {
                     get_copy_data();
-                  },
-                btn2: function(){
+                },
+                btn2: function () {
                     layer.closeAll();
-                  }
+                }
             });
-            async function get_copy_data(){
-                let copy_all_data = await admin.post(`/order/e/copy_order_data/`,{client_seq_no:$('#copy_order_id').val()});
 
-                if(copy_all_data.status){
+            async function get_copy_data() {
+                let copy_all_data = await admin.post(`/order/e/copy_order_data/`, {client_seq_no: $('#copy_order_id').val()});
+
+                if (copy_all_data.status) {
                     setTimeout(async () => {
                         layer.closeAll();
                         layer.load(2);
 
-                        let reset_order_pro =[];
+                        let reset_order_pro = [];
                         for (let item_apply of order_i_edit_data.pros) {
-                             if (item_apply.id) {
-                                 reset_order_pro.push(item_apply.id);
-                             }
-                         }
+                            if (item_apply.id) {
+                                reset_order_pro.push(item_apply.id);
+                            }
+                        }
 
-                         let reset_order_containers =[];
+                        let reset_order_containers = [];
                         for (let item_apply of order_i_edit_data.containers) {
                             if (item_apply.id) {
                                 reset_order_containers.push(item_apply.id);
                             }
                         }
 
-                         order_status = order_i_edit_data.order_status_string;
-                         order_id = order_i_edit_data.id;
-                         order_i_edit_data = copy_all_data.data;
+                        order_status = order_i_edit_data.order_status_string;
+                        order_i_edit_data = copy_all_data.data;
+                        order_i_edit_data.client_seq_no = $('#client_seq_no').val();
+                        order_i_edit_data.foreign_company_name = $('#foreign_company_name').val();
+                        order_i_edit_data.manual_no = $('#manual_no').val();
+                        order_i_edit_data.contr_no = $('#contr_no').val();
+                        order_i_edit_data.i_e_date = $('#i_e_date').val();
+                        order_i_edit_data.apl_date = $('#apl_date').val();
+                        order_i_edit_data.trade_co_scc = $('#trade_co_scc').val();
+                        order_i_edit_data.trade_code = $('#trade_code').val();
+                        order_i_edit_data.trade_name = $('#trade_name').val();
+                        order_i_edit_data.owner_code_scc = $('#owner_code_scc').val();
+                        order_i_edit_data.owner_code = $('#owner_code').val();
+                        order_i_edit_data.owner_name = $('#owner_name').val();
+                        order_i_edit_data.agent_code_scc = $('#agent_code_scc').val();
+                        order_i_edit_data.agent_code = $('#agent_code').val();
+                        order_i_edit_data.decl_ciq_code = $('#decl_ciq_code').val();
+                        order_i_edit_data.agent_name = $('#agent_name').val();
+                        order_i_edit_data.order_status_string = order_status;
 
-                         order_i_edit_data.client_seq_no=$('#client_seq_no').val();
-                         order_i_edit_data.foreign_company_name=$('#foreign_company_name').val();
-                         order_i_edit_data.manual_no=$('#manual_no').val();
-                         order_i_edit_data.contr_no=$('#contr_no').val();
-                         order_i_edit_data.i_e_date=$('#i_e_date').val();
-                         order_i_edit_data.apl_date=$('#apl_date').val();
-                         order_i_edit_data.trade_co_scc=$('#trade_co_scc').val();
-                         order_i_edit_data.trade_code=$('#trade_code').val();
-                         order_i_edit_data.trade_name=$('#trade_name').val();
-                         order_i_edit_data.owner_code_scc=$('#owner_code_scc').val();
-                         order_i_edit_data.owner_code=$('#owner_code').val();
-                         order_i_edit_data.owner_name=$('#owner_name').val();
-                         order_i_edit_data.agent_code_scc=$('#agent_code_scc').val();
-                         order_i_edit_data.agent_code=$('#agent_code').val();
-                         order_i_edit_data.decl_ciq_code=$('#decl_ciq_code').val();
-                         order_i_edit_data.agent_name=$('#agent_name').val();
-                         order_i_edit_data.order_status_string=order_status;
+                        await order_i_edit_back_filling(order_i_edit_data);
+                        order_i_edit_data.id = @{{.m.Id}};
 
-                         await order_i_edit_back_filling(order_i_edit_data);
-                         order_i_edit_data.id=order_id;
-
-                         for (let k=0; k<order_i_edit_data.pros.length;k++) {
-                             if (order_i_edit_data.pros[k].order_id) {
-                                 order_i_edit_data.pros[k].order_id='';
-                             }
-                             order_i_edit_data.pros[k].id='';
-                         }
-
-                         for (let k=0; k<order_i_edit_data.containers.length;k++) {
-                            if (order_i_edit_data.containers[k].order_id) {
-                                order_i_edit_data.containers[k].order_id='';
+                        for (let k = 0; k < order_i_edit_data.pros.length; k++) {
+                            if (order_i_edit_data.pros[k].@{{.m.Id}}) {
+                                order_i_edit_data.pros[k].@{{.m.Id}}= '';
                             }
-                            order_i_edit_data.containers[k].id='';
+                            order_i_edit_data.pros[k].id = '';
+                        }
+
+                        for (let k = 0; k < order_i_edit_data.containers.length; k++) {
+                            if (order_i_edit_data.containers[k].@{{.m.Id}}) {
+                                order_i_edit_data.containers[k].@{{.m.Id}}= '';
+                            }
+                            order_i_edit_data.containers[k].id = '';
                         }
 
 
@@ -3832,12 +3596,12 @@
                             $("#order_dispatch").data("user", order_i_edit_data.company.user_id);
                         }
 
-                        admin.order_pros_delete_ids=reset_order_pro;
-                        admin.order_containers_delete_ids=reset_order_containers;
+                        admin.order_pros_delete_ids = reset_order_pro;
+                        admin.order_containers_delete_ids = reset_order_containers;
 
 
-                            }, 1000);
-                        }
+                    }, 1000);
+                }
             }
         })
 
@@ -3997,22 +3761,22 @@
             }
 
             data.field.order_status = '审核通过';
-            if (!order_id) {
+            if (!"@{{.m.Id}}") {
                 const order_save_data = await admin.post(`/order/e/`, data.field);
+
                 if (order_save_data.status) {
-                    order_id = order_save_data.data.id;
                     const url = document.URL;
-                    history.pushState(null, null, `${url}/${order_id}`);
+                    history.pushState(null, null, `${url}/@{{.m.Id}}`);
                     await order_i_add_back_filling(order_save_data.data);
                 }
             } else {
-                const data_pass = await admin.get(`/order/e/${order_id}/audit_pass`, 'show');
+                const data_pass = await admin.get(`/order/e/@{{.m.Id}}/audit_pass`, 'show');
             }
             layer.closeAll('loading');
         });
         /**附件**/
         $("body").on("click", "#order_enclosure", function () {
-            if (!order_id) {
+            if (!"@{{.m.Id}}") {
                 return layer.msg("请先保存订单！")
             }
             layer.open({
@@ -4025,17 +3789,17 @@
             table.render({
                 elem: '#order_enclosure_lists'
                 , skin: 'line'
-                , url: `/order/e/${order_id}/pdf/lists?sortedBy=desc&orderBy=created_at`
+                , url: `/order/e/@{{.m.Id}}/pdf/lists?sortedBy=desc&orderBy=created_at`
                 , response: {
                     countName: 'total'
                 }
                 , cols: [[
-                    { field: 'edoc_code_name', title: '类型', width: 150 }
-                    , { field: 'edoc_cop_id', title: '文件名称' }
-                    , { field: 'creator', title: '操作人', width: 120 }
-                    , { field: 'version', title: '版本号', width: 120 }
-                    , { field: 'created_at', title: '上传时间' }
-                    , { title: '操作', toolbar: '#order_enclosure_toolbar', width: 280 }
+                    {field: 'edoc_code_name', title: '类型', width: 150}
+                    , {field: 'edoc_cop_id', title: '文件名称'}
+                    , {field: 'creator', title: '操作人', width: 120}
+                    , {field: 'version', title: '版本号', width: 120}
+                    , {field: 'created_at', title: '上传时间'}
+                    , {title: '操作', toolbar: '#order_enclosure_toolbar', width: 280}
                 ]]
                 , page: true
                 , limit: 10
@@ -4064,7 +3828,7 @@
                 , url: '/image/pdf/upload'
                 , accept: 'file'
                 , data: {
-                    order_id: order_id
+                    OrderId: @{{.m.Id}}
                 }
                 , size: 1024 * admin.UPLOAD_PDF_SIZE
                 , multiple: true
@@ -4182,7 +3946,7 @@
                     edoc_cop_id: order_enclosure_data[0].edoc_cop_id,
                     edoc_cop_url: order_enclosure_data[0].edoc_cop_url
                 }];
-                const res = await admin.post(`/order/e/${order_id}/pdf/create`, {
+                const res = await admin.post(`/order/e/${@{{.m.Id}}}/pdf/create`, {
                     data: form_data
                 });
                 if (res.status) {
@@ -4200,7 +3964,7 @@
                     value.edoc_code = edoc_code;
                     value.edoc_code_name = edoc_code_name;
                 });
-                const res = await admin.post(`/order/e/${order_id}/pdf/create`, {
+                const res = await admin.post(`/order/e/@{{.m.Id}}/pdf/create`, {
                     data: order_enclosure_data
                 });
                 if (res.status) {
@@ -4243,7 +4007,7 @@
                         , url: '/image/pdf/upload'
                         , accept: 'file'
                         , data: {
-                            order_id: order_id
+                            OrderId: order_id
                         }
                         , size: 1024 * admin.UPLOAD_PDF_SIZE
                         , multiple: true
@@ -4364,7 +4128,7 @@
                     form.render('select');
                     break;
                 case 'delete':
-                    layer.confirm('真的删除么', { title: '提示' }, async (index) => {
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         const data = await admin.delete(`/order/e/pdf/${obj.data.id}`);
                         layer.close(index);
                         if (data.status) {
@@ -4373,7 +4137,7 @@
                     });
                     break;
                 case 'recreate':
-                    const recreate = await admin.get(`/order/e/${order_id}/pdf/${obj.data.id}/create/recheck_pdf`);
+                    const recreate = await admin.get(`/order/e/${@{{.m.Id}}}/pdf/${obj.data.id}/create/recheck_pdf`);
                     layer.msg(recreate.msg);
                     if (recreate.status) {
                         table.reload('order_enclosure_lists');
@@ -4408,11 +4172,11 @@
         });
         /**办理记录**/
         $("body").on("click", "#order_take", async function () {
-            if (!order_id) {
+            if (!"@{{.m.Id}}") {
                 return layer.msg("请先保存订单！")
             }
             layer.load(2);
-            const data_order = await admin.get(`/order/e/${order_id}/order_logs`);
+            const data_order = await admin.get(`/order/e/@{{.m.Id}}/order_logs`);
             layer.closeAll('loading');
             const data = {
                 data_order: data_order
@@ -4440,14 +4204,14 @@
             table.render({
                 elem: '#order_init_lists'
                 , skin: 'line'
-                , url: `/template/lists?sortedBy=desc&orderBy=created_at&i_e_flag=`+"@{{.IEFlag}}"
+                , url: `/template/lists?sortedBy=desc&orderBy=created_at&i_e_flag=` + "@{{.IEFlag}}"
                 , response: {
                     countName: 'total'
                 }
                 , cols: [[
-                    { type: 'radio' }
-                    , { field: 'name', title: '模版名称', width: 150 }
-                    , { field: 'trade_name', title: '境内收发货人' }
+                    {type: 'radio'}
+                    , {field: 'name', title: '模版名称', width: 150}
+                    , {field: 'trade_name', title: '境内收发货人'}
                     , {
                         field: 'creator', title: '企业信用代码', width: 120, templet(d) {
                             return d.company ? d.company.credit_code : ''
@@ -4458,7 +4222,7 @@
                             return d.company ? d.company.name : ''
                         }
                     }
-                    , { field: 'creator', title: '创建人' }
+                    , {field: 'creator', title: '创建人'}
                 ]]
                 , page: true
                 , limit: 5
@@ -4512,14 +4276,14 @@
         });
         /**生成公路舱单**/
         $("body").on("click", "#order_create_bill", async function () {
-            if (!order_id) {
+            if (!"@{{.m.Id}}") {
                 return layer.msg("请先保存订单！")
             }
             if ($("#traf_mode").val() != 4) {
                 return layer.msg("请选择公路运输！")
             }
             layer.load(2);
-            const data_order = await admin.get(`/order/e/${order_id}/order_logs`);
+            const data_order = await admin.get(`/order/e/@{{.m.Id}}/order_logs`);
         });
         /**申请复核**/
         form.on('submit(order_application_review)', async (data) => {
@@ -4682,15 +4446,16 @@
                 data.field.is_other = 0;
             }
 
-            data.field.id = order_id;
+            data.field.id = @{{.m.Id}};
             data.field.order_status = '待复核';
-            const order_save_data = await admin.patch(`/order/e/${order_id}`, data.field);
+            const order_save_data = await admin.patch(`/order/e/@{{.m.Id}}`, data.field);
             if (order_save_data.status) {
                 await order_i_add_back_filling(order_save_data.data);
                 order_i_edit_data = order_save_data.data;
             }
             layer.closeAll('loading');
         });
+
         /**提交到单一窗口-选择附件**/
         $("body").on("click", "#order_save_reload", async function () {
             try {
@@ -4705,15 +4470,15 @@
                     elem: '#order_enclosure_check_lists'
                     , skin: 'line'
                     , height: 450
-                    , url: `/order/e/${order_id}/pdf/lists?sortedBy=desc&orderBy=created_at&is_eco_relations=1`
+                    , url: `/order/e/${@{{.m.Id}}}/pdf/lists?sortedBy=desc&orderBy=created_at&is_eco_relations=1`
                     , response: {
                         countName: 'total'
                     }
                     , cols: [[
-                        { type: 'checkbox' }
-                        , { field: 'edoc_code_name', title: '类型', width: 150 }
-                        , { field: 'edoc_cop_id', title: '文件名称' }
-                        , { title: '操作', toolbar: '#order_enclosure_check_toolbar', width: 180 }
+                        {type: 'checkbox'}
+                        , {field: 'edoc_code_name', title: '类型', width: 150}
+                        , {field: 'edoc_cop_id', title: '文件名称'}
+                        , {title: '操作', toolbar: '#order_enclosure_check_toolbar', width: 180}
                     ]]
                     , page: true
                     , limit: 10
@@ -4894,7 +4659,7 @@
                 data.field.is_other = 0;
             }
 
-            data.field.id = order_id;
+            data.field.id = @{{.m.Id}};
             data.field.order_status = '单一处理中';
             const data_table = table.checkStatus('order_enclosure_check_lists').data;
             const edoc_codes = data_table.map((item) => item.edoc_code);
@@ -4956,7 +4721,7 @@
                     }
                 }
                 if (i_e_port == '5304') {
-                    if (!(enty_port_code == '470101' || enty_port_code == '470102' ||  enty_port_code == '471801')) {
+                    if (!(enty_port_code == '470101' || enty_port_code == '470102' || enty_port_code == '471801')) {
                         return "入/出境口岸必须为470101或者471801或者470102"
                     }
                 }
@@ -4992,40 +4757,35 @@
             }
         });
 
-  /** 一般贸易禁止输入备案序号 **/
-  $(check_manual_no());
-  $('#manual_no').bind('input propertychange', function() {
-      check_manual_no();
-  });
+        /** 一般贸易禁止输入备案序号 **/
+        $(check_manual_no());
+        $('#manual_no').bind('input propertychange', function () {
+            check_manual_no();
+        });
 
-  function check_manual_no() {
-      if (!$("#manual_no").val()) {
-          $('#contr_item').attr('disabled', 'disabled');
-          $('#contr_item').val('');
-          form.render();
-          return
-      }
-  };
+        function check_manual_no() {
+            if (!$("#manual_no").val()) {
+                $('#contr_item').attr('disabled', 'disabled');
+                $('#contr_item').val('');
+                form.render();
+                return
+            }
+        };
+
         function save_order() {
-            if(save_btn){
-                /*$('#order_save').css('display','inline-block');
-                $('#order_application_review').css('display','none');*/
+            if (save_btn) {
                 return true;
-            }else{
-                /*$('#order_save').css('display','none');
-                $('#order_application_review').css('display','inline-block');*/
+            } else {
                 layer.msg('请先保存数据');
                 return false;
             }
         };
 
 
-
-
         /** ===================================================== */
 
         /**清单产品/报关草稿列表**/
-        annotationItems = await admin.post('/annotation_item/datagrid', JSON.stringify({
+        let annotationItems = await admin.post('/annotation_item/datagrid', JSON.stringify({
             AnnotationId: parseInt(
                 @{{.m.Id}}),
         }), true);
@@ -5413,7 +5173,7 @@
         let order_note_index;
         let extraRemark = "@{{.m.ExtraRemark}}";
         $('body').on('click', '#order_note', async function () {
-            if (!@{{.m.Id}}) {
+            if (!"@{{.m.Id}}") {
                 return layer.msg('请先保存订单！')
             }
             order_note_index = layer.open({
@@ -5459,7 +5219,7 @@
 
         /**打印**/
         $('body').on('click', '#order_print', async function () {
-            if (!@{{.m.Id}}) {
+            if (!"@{{.m.Id}}") {
                 return layer.msg('请先保存订单！')
             }
 

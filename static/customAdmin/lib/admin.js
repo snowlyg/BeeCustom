@@ -4107,7 +4107,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-//监听进出口货物申报业务选项
+            //监听进出口货物申报业务选项
             promise_items_change(dom) {
                 const first = $(dom).data('first')
                 if (first == 0) {
@@ -4121,7 +4121,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-//获取cookie
+            //获取cookie
             getCookie(name) {
                 let arr, reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
                 if (arr = document.cookie.match(reg)) {
@@ -4196,32 +4196,8 @@ layui.define('view', function (exports) {
                 </div>`,
                 })
                 $('#docNo').focus()
-            }
-            ,
-//同步关务通--填写平台单证号-保存
-            sync_annotation_to_order_save(dom) {
-                layui.form.on('submit(sync_annotation_to_order_save)',
-                    async (data) => {
-                        try {
-                            const res = admin.post(
-                                `/order/${$(dom).data('flag')}/sync_annotation_to_order`,
-                                data.field)
-                            if (res.status) {
-                                setTimeout(() => {
-                                    layer.closeAll()
-                                }, 2000)
-                            }
-                        } catch (error) {
-                            return layer.msg('接口错误！', {
-                                offset: '15px',
-                                icon: 2,
-                                time: 2000,
-                                id: 'Message',
-                            })
-                        }
-                    })
-            }
-            ,
+            },
+
 
 //屏幕类型
             screen: function () {

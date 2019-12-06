@@ -1,5 +1,6 @@
 <div class="order_table_form_check_is_other">
-    异地报关 <input type="checkbox" name="IsOther" id="IsOther" title="异地报关" lay-skin="primary" value="1" onchange="layui.admin.is_other_change(this)">
+    <input type="checkbox" name="IsOther" id="IsOther" title="异地报关" lay-skin="primary" value="1"
+           onchange="layui.admin.is_other_change(this)">
 </div>
 <table class="layui-table order_table_form">
     <tbody>
@@ -121,15 +122,28 @@
         <td class="td-scale-01 text-align-right">境外收发货人</td>
         <td colspan="4">
             <div class="input-group valid">
-                <input type="text" class="non-empty" name="OverseasConsignorCode"
-                       id="OverseasConsignorCode" autocomplete="off" placeholder="境外收货人代码">
+                @{{if eq .IEFlag "I"}}
+            <input type="text" class="non-empty" name="OverseasConsignorCode" id="OverseasConsignorCode"
+                   autocomplete="off" placeholder="境外收货人代码">
+            @{{else if eq .IEFlag "E"}}
+            <input type="text" class="non-empty" name="OverseasConsigneeCode" id="OverseasConsigneeCode"
+                   autocomplete="off" placeholder="境外收货人代码">
+            @{{else }}
+            进出口标注丢失
+            @{{end }}
             </div>
         </td>
         <td colspan="3">
             <div class="input-group valid">
-                <input type="text" class="non-empty required" name="OverseasConsignorEname"
-                       id="OverseasConsignorEname" lay-verify="required" lay-vertype="tips"
-                       autocomplete="off" placeholder="企业名称（外文）">
+                @{{if eq .IEFlag "I"}}
+            <input type="text" class="non-empty required" name="OverseasConsignorEname" id="OverseasConsignorEname"
+                   lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="企业名称（外文）">
+            @{{else if eq .IEFlag "E"}}
+            <input type="text" class="non-empty required" name="OverseasConsigneeEname" id="OverseasConsigneeEname"
+                   lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="企业名称（外文）">
+            @{{else }}
+            进出口标注丢失
+            @{{end }}
             </div>
         </td>
     </tr>
@@ -335,7 +349,7 @@
         <td class="td-btn">
             <input type="hidden" id="DecOtherPacks" name="DecOtherPacks">
             <button class="layui-btn layui-btn-primary custom-create_btn_primary"
-                    id="package info btn" type="button">
+                    id="PackageInfoBtn" type="button">
                 其他包装
             </button>
         </td>
@@ -465,7 +479,7 @@
     </tr>
     <tr>
         <td colspan="2" class="td-scale-04 text-align-right">
-            <div class="non-disabled-btn" id="Non-disabled-btn" isdeclistshow="0">
+            <div class="non-disabled-btn" id="non-disabled-btn" isdeclistshow="0">
                 <i class="iconfont iconjiantou_xia transform_xia"></i>
                 <span>检验检疫申报信息</span>
             </div>
@@ -497,9 +511,9 @@
                 <input type="text" id="EntQualifTypeName" class="non-empty line"
                        autocomplete="off" disabled>
                 <input id="ent qualif seq" type="hidden" value="0">
-                <i class="iconfont iconkeyboardarrowleft input_more" id="enterprise up btn"></i>
-                <i class="iconfont iconkeyboardarrowright input_more" id="enterprise down btn"></i>
-                <i class="iconfont iconmore-horiz input_more" id="enterprise btn"></i>
+                <i class="iconfont iconkeyboardarrowleft input_more" id="EnterpriseUpBtn"></i>
+                <i class="iconfont iconkeyboardarrowright input_more" id="EnterpriseDownBtn"></i>
+                <i class="iconfont iconmore-horiz input_more" id="EnterpriseBtn"></i>
             </div>
         </td>
     </tr>

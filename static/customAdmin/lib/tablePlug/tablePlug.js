@@ -330,31 +330,6 @@ layui.define(['table'], function (exports) {
     };
   }
 
-  /* 2.5.4已经换成一个会动的加载图标了，所以这个逻辑可以去掉 目前它的位置是在body表格中间的还可以接受暂时不处理 */
-  // 修改原始table的loading的逻辑
-  // var loading = table.Class.prototype.loading;
-  // table.Class.prototype.loading = function (hide) {
-  //   var that = this;
-  //   loading.call(that, hide);
-  //   if (!hide && that.layInit) {
-  //     that.layInit.remove();
-  //     // 添加一个动画
-  //     that.layInit.addClass('layui-anim layui-anim-rotate layui-anim-loop');
-  //     if (!that.layMain.height()) {
-  //       // 如果当前没有内容，添加一个空的div让它有显示的地方
-  //       that.layBox.append($('<div class="' + LOADING + '" style="height: 56px;"></div>'));
-  //     }
-  //     var offsetHeight = 0;
-  //     if (that.layMain.height() - that.layMain.prop('clientHeight') > 0) {
-  //       // 如果出现滚动条，要减去滚动条的宽度
-  //       offsetHeight = that.getScrollWidth();
-  //     }
-  //     var thHeightTemp = that.elem.hasClass('vertical') ? 0 : that.layHeader.height();
-  //     that.layInit.height(that.layBox.height() - thHeightTemp - offsetHeight).css('marginTop', thHeightTemp + 'px');
-  //     that.layBox.append(that.layInit);
-  //   }
-  // };
-
   // 目前新增了一个errorView处理异常或者没有数据的时候的显示问题，对应的initTable中的一些逻辑是否还有必要待定 todo
   // 初始化表格的内容
   table.Class.prototype.initTable = function () {
