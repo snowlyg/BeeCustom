@@ -6,7 +6,7 @@
     }).use(['index', 'AutoComplete', "laydate", "upload"], async () => {
         const {form, admin, table, $, laydate, upload} = layui;
         let order_containers = [] /**集装箱**/
-            , ent_qualif_data = [] /**企业资质**/
+            , EntQualifData = [] /**企业资质**/
             , dec_users_data = [] /**使用人**/
             , order_documents = [] /**随附单证**/
             , decListData = [] /**默认报关单数据**/
@@ -91,59 +91,8 @@
             });
         });
 
-        /**选择提运单号**/
-        $('body').on('click', '#BillNoOpen', async function () {
-            layer.open({
-                type: 1,
-                title: '选择提运单号',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '730px'],
-                content: $('#bill_no_list').html()
-            });
-            table.render({
-                elem: '#bill_no_list_table'
-                , toolbar: true
-                , defaultToolbar: ['filter']
-                , colFilterRecord: 'local'
-                , url: `/car/lists?sortedBy=desc&orderBy=created_at`
-                , response: {
-                    countName: 'total'
-                }
-                , cols: [[
-                    {type: 'radio'}
-                    , {field: 'code', title: '车辆海关编号'}
-                    , {field: 'number', title: '车牌号'}
-                    , {field: 'driver', title: '司机姓名'}
-                    , {field: 'phone', title: '司机电话'}
-                    , {field: 'password', title: '进场密码'}
-                ]]
-                , limit: 10
-                , page: true
-                , height: 550
-            });
-        });
-        /**保存提运单号**/
-        $('body').on('click', '#bill_no_save', function () {
-            const checkStatus = table.checkStatus('bill_no_list_table');
-            if (checkStatus.data.length == 0) {
-                layer.msg("请选择提运单号");
-                return
-            }
-            $("#bill_no").val("").focus().val(checkStatus.data[0].code);
-            layer.closeAll();
-        });
-        /**提运单号列表搜索**/
-        $("body").on('input', '#bill_no_search', async function () {
-            const text = $(this).val();
-            table.reload('bill_no_list_table', {
-                where: {
-                    search: text
-                }
-            });
-        });
         /**选择其他包装**/
         $('body').on('click', '#PackageInfoBtn', async function () {
-            console.log("编辑其他包装信息")
             layer.open({
                 type: 1,
                 title: '编辑其他包装信息',
@@ -165,7 +114,7 @@
                 }
             });
 
-            const data = await admin.get(`/clearance/no_paginate?type=包装种类代码`);
+            const data = layui.data("orderClearance").data[2];
             data.forEach(function (item, index) {
                 item.index = index
             });
@@ -174,13 +123,14 @@
                 , toolbar: true
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
-                , cols: [[
+                , cols: [
+                  [
                     {type: 'checkbox'}
                     , {type: 'numbers', title: '序号'}
-                    , {field: 'customs_code', title: '包装材料种类代码'}
-                    , {field: 'name', title: '包装材料种类名称'}
-
-                ]]
+                    , {field: 'CustomsCode', title: '包装材料种类代码'}
+                    , {field: 'Name', title: '包装材料种类名称'}
+                ]
+              ]
                 , data: data
                 , limit: data.length
                 , height: 550
@@ -192,9 +142,7 @@
                 const dec_other_packs_data = JSON.parse($("#DecOtherPacks").val());
                 for (let dec_item of dec_other_packs_data) {
                     for (let data_item of data) {
-
-                        if (dec_item.pack_type == data_item.customs_code) {
-
+                        if (dec_item.pack_type == data_item.CustomsCode) {
                             $(`.layui-table-view[lay-id='other_packs_list_table'] .layui-table-body tr[data-index=${data_item.index}] .layui-form-checkbox`).click();
                         }
                     }
@@ -202,25 +150,23 @@
             }
             form.render('checkbox');
         });
+
         /**保存其他包装**/
         $('body').on('click', '#other_packs_save', function () {
             const checkStatus = table.checkStatus('other_packs_list_table');
-            /*if (checkStatus.data.length == 0) {
-                layer.msg("请选择包装");
-                return
-            }*/
             let data = [];
             for (let item of checkStatus.data) {
                 data.push({
                     pack_qty: "0",
-                    pack_type: item.customs_code,
-                    pack_type_name: item.name
+                    pack_type: item.CustomsCode,
+                    pack_type_name: item.Name
 
                 })
             }
-            $("#dec_other_packs").val(JSON.stringify(data));
+            $("#DecOtherPacks").val(JSON.stringify(data));
             layer.closeAll();
         });
+
         /**填写备注**/
         $('body').on('click', '#NoteSOpen', async function () {
             layer.open({
@@ -308,6 +254,7 @@
                 }
             }
         });
+
         /**收缩切换**/
         $("#non-disabled-btn").click(function () {
             let iTag = $(this).find('i');
@@ -345,6 +292,7 @@
                 $("#purpose_name").removeAttr("lay-verify");
             }
         });
+
         /**编辑企业资质信息**/
         let ent_qualif_index = null;
         $('body').on('click', '#EnterpriseBtn', async function () {
@@ -355,7 +303,7 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '530px'],
                 content: $('#ent_qualif_template').html()
             });
-            $("#ent_qualif_type_name_tem").focus();
+            $("#EntQualifTypeNameTem").focus();
             form.render('checkbox');
             if (declaratio_material_code == 0 || declaratio_material_code == "") {
                 $("#declaratio_material_code").next('div').click();
@@ -368,72 +316,69 @@
                 , cols: [[
                     {type: 'checkbox'}
                     , {field: 'index', title: '序号'}
-                    , {field: 'ent_qualif_type_code', title: '企业资质类别代码'}
-                    , {field: 'ent_qualif_type_name', title: '企业资质类别名称'}
-                    , {field: 'ent_qualif_no', title: '企业资质编号'}
+                    , {field: 'EntQualifTypeCode', title: '企业资质类别代码'}
+                    , {field: 'EntQualifTypeName', title: '企业资质类别名称'}
+                    , {field: 'EntQualifNo', title: '企业资质编号'}
                 ]]
-                , data: ent_qualif_data
-                , limit: ent_qualif_data.length
+                , data: EntQualifData
+                , limit: EntQualifData.length
                 , height: 350
             });
-            /**自动完成--企业资质类别**/
-            // auto_fn({
-            //     data: admin.all_complete_data.enterprise_product,
-            //     listDirection: false,
-            //     id: ['#ent_qualif_type_name_tem'],
-            //     after: ['#ent_qualif_type_code_tem']
-            // });
+
         });
+
         /**编辑企业资质信息--点击行反填数据**/
         table.on('row(ent_qualif_table)', function (obj) {
-            $("#ent_qualif_type_code_tem").val(obj.data.ent_qualif_type_code);
-            $("#ent_qualif_type_name_tem").val(obj.data.ent_qualif_type_name);
-            $("#ent_qualif_no_tem").val(obj.data.ent_qualif_no);
+            $("#EntQualifTypeCodeTem").val(obj.data.EntQualifTypeCode);
+            $("#EntQualifTypeNameTem").val(obj.data.EntQualifTypeName);
+            $("#EntQualifNoTem").val(obj.data.EntQualifNo);
             ent_qualif_index = obj.data.index;
         });
+
         /**编辑企业资质信息--保存**/
         form.on('submit(ent_qualif_submit)', async (data) => {
             delete data.field.layTableCheckbox;
             if (ent_qualif_index) {
                 for (let item in data.field) {
-                    ent_qualif_data[ent_qualif_index - 1][item] = data.field[item]
+                    EntQualifData[ent_qualif_index - 1][item] = data.field[item]
                 }
             } else {
-                ent_qualif_data.push(data.field);
+                EntQualifData.push(data.field);
             }
-            ent_qualif_data.forEach((value, index) => {
+            EntQualifData.forEach((value, index) => {
                 value.index = index + 1
             });
             table.reload('ent_qualif_table', {
-                data: ent_qualif_data,
-                limit: ent_qualif_data.length
+                data: EntQualifData,
+                limit: EntQualifData.length
             });
-            $("#ent_qualif_type_code_tem").val("");
-            $("#ent_qualif_type_name_tem").val("");
-            $("#ent_qualif_no_tem").val("");
-            $("#ent_qualif_type_code").val(ent_qualif_data[0].ent_qualif_type_code);
-            $("#ent_qualif_type_name").val(ent_qualif_data[0].ent_qualif_type_name);
-            $("#ent_qualif_type_name_tem").focus();
+            $("#EntQualifTypeCodeTem").val("");
+            $("#EntQualifTypeNameTem").val("");
+            $("#EntQualifNoTem").val("");
+            $("#EntQualifTypeCode").val(EntQualifData[0].EntQualifTypeCode);
+            $("#EntQualifTypeName").val(EntQualifData[0].EntQualifTypeName);
+            $("#EntQualifTypeNameTem").focus();
             ent_qualif_index = null;
         });
+
         /**编辑企业资质信息--删除**/
         table.on('toolbar(ent_qualif_table)', function (obj) {
             let checkStatus = table.checkStatus(obj.config.id);
             let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
-                    $("#ent_qualif_type_code_tem").val("");
-                    $("#ent_qualif_type_name_tem").val("");
-                    $("#ent_qualif_no_tem").val("");
+                    $("#EntQualifTypeCodeTem").val("");
+                    $("#EntQualifTypeNameTem").val("");
+                    $("#EntQualifNoTem").val("");
                     ent_qualif_index = null;
-                    $("#ent_qualif_type_name_tem").focus();
+                    $("#EntQualifTypeNameTem").focus();
                     break;
                 case 'delete':
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                        let sup_data = ent_qualif_data.filter(item => {
+                        let sup_data = EntQualifData.filter(item => {
                             return checkData.every(item2 => {
                                 return item.index != item2.index;
                             })
@@ -443,67 +388,70 @@
                                 OrderEntQualifDeleteIds.push(item_apply.id);
                             }
                         }
-                        ent_qualif_data = sup_data;
-                        ent_qualif_data.forEach((value, index) => {
+                        EntQualifData = sup_data;
+                        EntQualifData.forEach((value, index) => {
                             value.index = index + 1
                         });
                         table.reload('ent_qualif_table', {
-                            data: ent_qualif_data,
-                            limit: ent_qualif_data.length
+                            data: EntQualifData,
+                            limit: EntQualifData.length
                         });
-                        if (ent_qualif_data.length === 0) {
-                            $("#ent_qualif_type_code").val("");
-                            $("#ent_qualif_type_name").val("");
+                        if (EntQualifData.length === 0) {
+                            $("#EntQualifTypeCode").val("");
+                            $("#EntQualifTypeName").val("");
                         } else {
-                            $("#ent_qualif_type_code").val(ent_qualif_data[0].ent_qualif_type_code);
-                            $("#ent_qualif_type_name").val(ent_qualif_data[0].ent_qualif_type_name);
+                            $("#EntQualifTypeCode").val(EntQualifData[0].EntQualifTypeCode);
+                            $("#EntQualifTypeName").val(EntQualifData[0].EntQualifTypeName);
                         }
-                        $("#ent_qualif_type_code_tem").val("");
-                        $("#ent_qualif_type_name_tem").val("");
+                        $("#EntQualifTypeCodeTem").val("");
+                        $("#EntQualifTypeNameTem").val("");
                         $("#ent_qualif_no_tem").val("");
                         ent_qualif_index = null;
-                        $("#ent_qualif_type_name_tem").focus();
+                        $("#EntQualifTypeNameTem").focus();
                         layer.close(index);
                     });
                     break;
             }
         });
+
         /**编辑企业资质信息--按enter保存**/
         $("body").on("keyup", "#ent_qualif_no_tem", function (event) {
             if (event.keyCode == 13) {
                 $("#ent_qualif_submit").click();
-                $("#ent_qualif_type_name_tem").focus();
+                $("#EntQualifTypeNameTem").focus();
             }
         });
+
         /**编辑企业资质信息--左移**/
         $("#EnterpriseUpBtn").click(function () {
             let entQualifSeq = $("#EntQualifSeq").val();
             if (!entQualifSeq) {
                 entQualifSeq = 0;
             }
-            if (ent_qualif_data.length > 0) {
+            if (EntQualifData.length > 0) {
                 if (parseInt(entQualifSeq) < 1) {
                     layer.msg('此为第一条记录');
                 } else {
                     $("input[id='EntQualifSeq']").val(parseInt(entQualifSeq) - 1);
-                    $("input[id='ent_qualif_type_code']").val(ent_qualif_data[parseInt(entQualifSeq) - 1].ent_qualif_type_code);
-                    $("input[id='ent_qualif_type_name']").val(ent_qualif_data[parseInt(entQualifSeq) - 1].ent_qualif_type_name);
+                    $("input[id='ent_qualif_type_code']").val(EntQualifData[parseInt(entQualifSeq) - 1].ent_qualif_type_code);
+                    $("input[id='ent_qualif_type_name']").val(EntQualifData[parseInt(entQualifSeq) - 1].ent_qualif_type_name);
                 }
             } else {
                 layer.msg('没有可查看的数据');
             }
         });
+
         /**编辑企业资质信息--右移**/
         $("#EnterpriseDownBtn").click(function () {
             let entQualifSeq = $("#EntQualifSeq").val();
             if (!entQualifSeq) {
                 entQualifSeq = 0;
             }
-            if (ent_qualif_data.length > 0) {
-                if (parseInt(entQualifSeq) < ent_qualif_data.length - 1) {
+            if (EntQualifData.length > 0) {
+                if (parseInt(entQualifSeq) < EntQualifData.length - 1) {
                     $("input[id='EntQualifSeq']").val(parseInt(entQualifSeq) + 1);
-                    $("input[id='ent_qualif_type_code']").val(ent_qualif_data[parseInt(entQualifSeq) + 1].ent_qualif_type_code);
-                    $("input[id='ent_qualif_type_name']").val(ent_qualif_data[parseInt(entQualifSeq) + 1].ent_qualif_type_name);
+                    $("input[id='EntQualifTypeCode']").val(EntQualifData[parseInt(entQualifSeq) + 1].EntQualifTypeCode);
+                    $("input[id='EntQualifTypeName']").val(EntQualifData[parseInt(entQualifSeq) + 1].EntQualifTypeName);
                 } else {
                     layer.msg('此为最后一条记录');
                 }
@@ -511,6 +459,7 @@
                 layer.msg('没有可查看的数据');
             }
         });
+
         /**监听企业承诺**/
         form.on('checkbox(declaratio_material_code)', function (data) {
             if ($(data.elem).is(':checked')) {
@@ -3096,7 +3045,7 @@
 
             /**企业资质数据**/
             for (let item of OrderEntQualifDeleteIds) {
-                ent_qualif_data.push({
+                EntQualifData.push({
                     id: item
                 })
             }
@@ -3593,11 +3542,11 @@
             }
             /**企业资质数据**/
             for (let item of OrderEntQualifDeleteIds) {
-                ent_qualif_data.push({
+                EntQualifData.push({
                     id: item
                 })
             }
-            data.field.quas = ent_qualif_data;
+            data.field.quas = EntQualifData;
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
             /**特殊业务标识数据**/
@@ -4279,11 +4228,11 @@
             }
             /**企业资质数据**/
             for (let item of OrderEntQualifDeleteIds) {
-                ent_qualif_data.push({
+                EntQualifData.push({
                     id: item
                 })
             }
-            data.field.quas = ent_qualif_data;
+            data.field.quas = EntQualifData;
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
             /**特殊业务标识数据**/
@@ -4492,11 +4441,11 @@
             }
             /**企业资质数据**/
             for (let item of OrderEntQualifDeleteIds) {
-                ent_qualif_data.push({
+                EntQualifData.push({
                     id: item
                 })
             }
-            data.field.quas = ent_qualif_data;
+            data.field.quas = EntQualifData;
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
             /**特殊业务标识数据**/

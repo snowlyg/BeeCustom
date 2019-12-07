@@ -978,8 +978,7 @@ layui.define('view', function (exports) {
       async auto_fn (type) {
         let data_filter = []
         if (type.url) {
-          let requestData = JSON.stringify(
-            { Limit: 5000, TypeString: type.clearanceType })
+          let requestData = JSON.stringify({ Limit: 5000, TypeString: type.clearanceType })
           let data = await admin.post(type.url, requestData, true)
           type.filter(data.rows, data_filter)
         } else if(type.data) {
@@ -4190,18 +4189,6 @@ layui.define('view', function (exports) {
             addClass('required').
             removeAttr('disabled')
         }
-      }
-      ,
-
-//货物申报添加提运单号
-      bill_no_create () {
-        layer.open({
-          type: 2,
-          title: '提运单号',
-          shadeClose: true,
-          area: admin.screen() < 2 ? ['80%', '300px'] : ['880px', '700px'],
-          content: `/car/create`,
-        })
       }
       ,
 
