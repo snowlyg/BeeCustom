@@ -10,6 +10,7 @@
             , annotationItems /**清单表体数据**/
             , decListData = [] /**默认报关单数据**/
             , AnnotationSearcIndex;
+
         /**商品快速查询index**/
         await admin.clearance_data_auto([
             'list_types',
@@ -30,6 +31,7 @@
             'ann_currency',
             'ann_unit_measurement',
         ]);
+
         //禁用表体 tab 点击
         if (!@{{.m.Id}}) {
             let $annotationItemTab = $('#annotation_item_tab');

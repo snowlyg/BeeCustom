@@ -45,6 +45,20 @@ func SettingOne(id int64) (*Setting, error) {
 	return &m, nil
 }
 
+// GetSettingByKey 获取单条
+func GetSettingByKey(key string) (*Setting, error) {
+	o := orm.NewOrm()
+	m := NewSetting(0)
+
+	query := o.QueryTable(SettingTBName())
+	err := query.Filter("Key", key).One(&m)
+	if err != nil {
+		return nil, err
+	}
+
+	return &m, nil
+}
+
 // SettingTreeGrid 获取treegrid顺序的列表
 func SettingTreeGrid(params *SettingQueryParam) ([]*Setting, int64) {
 	o := orm.NewOrm()

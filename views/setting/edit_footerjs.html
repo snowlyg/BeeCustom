@@ -6,10 +6,16 @@
   }).use(['index'], function () {
     const admin = layui.admin, form = layui.form
     form.on('submit(perm_submit)', async (data) => {
-      if (!`@{{ .m.Id }}`){
-        await admin.patch(`/setting/update/` + @{{ .m.Id }}, data.field)
+      let resultStatus = false;
+      if (`@{{ .m.Id }}`){
+        let result = await admin.patch(`/setting/update/` + @{{ .m.Id }}, data.field)
+        resultStatus=result.status
       }else{
-        await admin.post(@{{ urlfor "SettingController.Store" }}, data.field)
+        let result = await admin.post(@{{ urlfor "SettingController.Store" }}, data.field)
+        resultStatus=result.status
+      }
+      if (resultStatus){
+            admin.reloadFrame("系统设置iframe");
       }
     })
   })

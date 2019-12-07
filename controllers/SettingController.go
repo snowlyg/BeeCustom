@@ -76,6 +76,21 @@ func (c *SettingController) TreeGrid() {
 	c.ServeJSON()
 }
 
+// GetOne 获取系统设置
+func (c *SettingController) GetOne() {
+	key := c.GetString(":key", "")
+	if len(key) > 0 {
+		m, err := models.GetSettingByKey(key)
+		if err != nil {
+			utils.LogDebug(fmt.Sprintf("数据无效出错：%v", err))
+			c.pageError("数据无效，请刷新后重试")
+		}
+		c.Data["json"] = m.Value
+	}
+
+	c.ServeJSON()
+}
+
 // Edit 资源编辑页面
 func (c *SettingController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)

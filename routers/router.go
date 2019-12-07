@@ -238,6 +238,7 @@ func init() {
 	beego.Router("/setting", &controllers.SettingController{}, "*:Index")
 	beego.Router("/setting/treegrid", &controllers.SettingController{}, "POST:TreeGrid")
 	beego.Router("/setting/create", &controllers.SettingController{}, "GET:Create")
+	beego.Router("/setting/getOne/?:key", &controllers.SettingController{}, "GET:GetOne")
 	beego.Router("/setting/store", &controllers.SettingController{}, "POST:Store")
 	beego.Router("/setting/edit/?:id", &controllers.SettingController{}, "GET:Edit")
 	beego.Router("/setting/update/?:id", &controllers.SettingController{}, "PATCH:Update")
