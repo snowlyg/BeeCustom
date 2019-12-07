@@ -6,17 +6,8 @@
   }).use(['index'], async () => {
     const {$, form, layer, admin} = layui;
 
-    //设置基础参数版本
-    let clearanceVersionData = layui.data("clearanceVersion")
-    console.log(clearanceVersionData)
-    console.log( $.isEmptyObject(clearanceVersionData))
-    if(!clearanceVersionData || $.isEmptyObject(clearanceVersionData)){
-      let clearanceVersion = await admin.get("/setting/getOne/ClearanceVersion")
-      layui.data("clearanceVersion",{
-        key:"version",
-        value:clearanceVersion
-      })
-    }
+    //基础参数版本
+    await admin.getClearanceVersionData()
 
     let edit_password_index;
     $("body").on("click", ".edit_password", function () {

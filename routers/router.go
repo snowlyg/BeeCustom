@@ -7,16 +7,16 @@ import (
 
 func init() {
 
-	//客户联系人
+	// 客户联系人
 	beego.Router("/annotation_company_admin_user/?:id", &controllers.AnnotationController{}, "Get:CompanyAdminUser")
-	//清单附件列表
+	// 清单附件列表
 	beego.Router("/annotation_file/datagrid", &controllers.AnnotationFileController{}, "Post:DataGrid")
-	//清单回执列表
+	// 清单回执列表
 	beego.Router("/annotation_return/datagrid", &controllers.AnnotationReturnController{}, "Post:DataGrid")
-	//清单办理记录管理
+	// 清单办理记录管理
 	beego.Router("/annotation_record/datagrid", &controllers.AnnotationRecordController{}, "Post:DataGrid")
 
-	//清单表体管理
+	// 清单表体管理
 	beego.Router("/annotation_item/datagrid", &controllers.AnnotationItemController{}, "Post:DataGrid")
 	beego.Router("/annotation_item/store/?:aid", &controllers.AnnotationItemController{}, "Post:Store")
 	beego.Router("/annotation_item/update/?:id", &controllers.AnnotationItemController{}, "Patch:Update")
@@ -189,6 +189,9 @@ func init() {
 
 	// 基础参数
 	beego.Router("/clearance/index", &controllers.ClearanceController{}, "*:Index")
+	beego.Router("/clearance/commonClearance", &controllers.ClearanceController{}, "Get:CommonClearance")
+	beego.Router("/clearance/orderClearance", &controllers.ClearanceController{}, "Get:OrderClearance")
+	beego.Router("/clearance/annotationClearance", &controllers.ClearanceController{}, "Get:AnnotationClearance")
 	beego.Router("/clearance/get_clearance_update_time", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTime")
 	beego.Router("/clearance/last_update_time/?:type", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTimeByType")
 	beego.Router("/clearance/create/?:type", &controllers.ClearanceController{}, "Get:Create")

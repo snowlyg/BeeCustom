@@ -45,9 +45,9 @@ type Clearance struct {
 type ClearanceQueryParam struct {
 	BaseQueryParam
 
-	Type       string //模糊查询
-	TypeString string //模糊查询
-	NameLike   string //模糊查询
+	Type       string // 模糊查询
+	TypeString string // 模糊查询
+	NameLike   string // 模糊查询
 }
 
 // ClearanceImportParam 用于查询的类
@@ -62,7 +62,7 @@ func NewClearance(id int64) Clearance {
 	return Clearance{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
-//查询参数
+// 查询参数
 func NewClearanceQueryParam() ClearanceQueryParam {
 	return ClearanceQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
@@ -106,6 +106,16 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	return datas, total
 }
 
+// ClearancePageListInTypes
+func ClearancePageListInTypes(clearanceTypes []int8) []*Clearance {
+	datas := make([]*Clearance, 0)
+	query := orm.NewOrm().QueryTable(ClearanceTBName())
+	query = query.Filter("type__in", clearanceTypes)
+	_, _ = query.All(&datas)
+
+	return datas
+}
+
 // GetClearancesByTypes 获取分页数据
 func GetClearancesByTypes(clearanceType string, isOld bool) []orm.ParamsList {
 	var lists []orm.ParamsList
@@ -143,7 +153,7 @@ func ClearanceOne(id int64) (*Clearance, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
+// Save 添加、编辑页面 保存
 func ClearanceSave(m *Clearance) (*Clearance, error) {
 	o := orm.NewOrm()
 	if m.Id == 0 {
@@ -159,7 +169,7 @@ func ClearanceSave(m *Clearance) (*Clearance, error) {
 	return m, nil
 }
 
-//删除
+// 删除
 func ClearanceDelete(id int64) (num int64, err error) {
 	m := NewClearance(id)
 	if num, err := BaseDelete(&m); err != nil {
@@ -169,7 +179,7 @@ func ClearanceDelete(id int64) (num int64, err error) {
 	}
 }
 
-//删除
+// 删除
 func ClearanceDeleteAll(clearanceType int8) (num int64, err error) {
 	if num, err := BaseDeleteAll(clearanceType); err != nil {
 		return num, err
@@ -178,7 +188,7 @@ func ClearanceDeleteAll(clearanceType int8) (num int64, err error) {
 	}
 }
 
-//批量插入
+// 批量插入
 func InsertClearanceMulti(datas []*Clearance) (num int64, err error) {
 	return BaseInsertMulti(datas)
 }

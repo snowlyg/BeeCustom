@@ -21,9 +21,9 @@ type ClearanceController struct {
 }
 
 func (c *ClearanceController) Prepare() {
-	//先执行
+	// 先执行
 	c.BaseController.Prepare()
-	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
+	// 如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
 	perms := []string{
 		"Index",
 		"Create",
@@ -33,9 +33,9 @@ func (c *ClearanceController) Prepare() {
 	}
 	c.checkAuthor(perms)
 
-	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
-	//权限控制里会进行登录验证，因此这里不用再作登录验证
-	//c.checkLogin()
+	// 如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
+	// 权限控制里会进行登录验证，因此这里不用再作登录验证
+	// c.checkLogin()
 
 }
 
@@ -47,34 +47,33 @@ func (c *ClearanceController) Index() {
 	}
 	c.Data["type"] = clearanceType
 
-	//页面模板设置
+	// 页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "clearance/index_footerjs.html"
 
-	//页面里按钮权限控制
+	// 页面里按钮权限控制
 	c.getActionData("", "Edit", "Delete", "Create", "Import")
 
 	c.GetXSRFToken()
 }
 
-//列表数据
+// 列表数据
 func (c *ClearanceController) DataGrid() {
-	//直接获取参数 getDataGridData()
+	// 直接获取参数 getDataGridData()
 	params := models.NewClearanceQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
-	//获取数据列表和总数
+	// 获取数据列表和总数
 	data, total := models.ClearancePageList(&params)
 	c.ResponseList(data, total)
 	c.ServeJSON()
 }
 
-//通关参数更新时间
+// 通关参数更新时间
 func (c *ClearanceController) GetClearanceUpdateTime() {
-
 	lastUpdateTime := c.getLastUpdteTime()
-	//定义返回的数据结构
+	// 定义返回的数据结构
 	result := make(map[string]interface{})
 	result["total"] = 0
 	result["rows"] = lastUpdateTime
@@ -84,7 +83,7 @@ func (c *ClearanceController) GetClearanceUpdateTime() {
 	c.ServeJSON()
 }
 
-//通关参数更新时间
+// 通关参数更新时间
 func (c *ClearanceController) GetClearanceUpdateTimeByType() {
 	clearanceType, _ := c.GetInt8(":type")
 	format := "超过一个月未更新"
@@ -95,7 +94,7 @@ func (c *ClearanceController) GetClearanceUpdateTimeByType() {
 		}
 	}
 
-	//定义返回的数据结构
+	// 定义返回的数据结构
 	result := make(map[string]interface{})
 	result["data"] = format
 	c.Data["json"] = result
@@ -103,7 +102,7 @@ func (c *ClearanceController) GetClearanceUpdateTimeByType() {
 	c.ServeJSON()
 }
 
-// Create 添加 新建 页面
+//  Create 添加 新建 页面
 func (c *ClearanceController) Create() {
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -112,10 +111,10 @@ func (c *ClearanceController) Create() {
 	c.GetXSRFToken()
 }
 
-// Store 添加 新建 页面
+//  Store 添加 新建 页面
 func (c *ClearanceController) Store() {
 	m := models.NewClearance(0)
-	//获取form里的值
+	// 获取form里的值
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
@@ -130,7 +129,7 @@ func (c *ClearanceController) Store() {
 	}
 }
 
-// Edit 添加 编辑 页面
+//  Edit 添加 编辑 页面
 func (c *ClearanceController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
 	m, err := models.ClearanceOne(Id)
@@ -148,12 +147,62 @@ func (c *ClearanceController) Edit() {
 	c.GetXSRFToken()
 }
 
-// Update 添加 编辑 页面
+//  commonClearance
+func (c *ClearanceController) CommonClearance() {
+
+	arg := []int8{1, 3, 4, 5, 9, 19, 23}
+	data := models.ClearancePageListInTypes(arg)
+
+	jsonData := c.transforClearance(data, arg)
+	c.Data["json"] = jsonData
+	c.ServeJSON()
+}
+
+// 格式基础参数
+func (c *ClearanceController) transforClearance(data []*models.Clearance, arg []int8) map[int8][]map[string]string {
+	jsonData := map[int8][]map[string]string{}
+	for _, i := range arg {
+		var clearances []map[string]string
+		for _, v := range data {
+			if i == v.Type {
+				clearance := map[string]string{}
+				clearance["Name"] = v.Name
+				clearance["CustomsCode"] = v.CustomsCode
+				clearance["OldCustomName"] = v.OldCustomName
+				clearance["OldCustomCode"] = v.OldCustomCode
+				clearances = append(clearances, clearance)
+			}
+			jsonData[i] = clearances
+		}
+	}
+
+	return jsonData
+}
+
+//  annotationClearance
+func (c *ClearanceController) AnnotationClearance() {
+	arg := []int8{33, 34, 35, 36, 37, 38, 39, 40, 41}
+	data := models.ClearancePageListInTypes(arg)
+	jsonData := c.transforClearance(data, arg)
+	c.Data["json"] = jsonData
+	c.ServeJSON()
+}
+
+//  orderClearance
+func (c *ClearanceController) OrderClearance() {
+	arg := []int8{2, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32}
+	data := models.ClearancePageListInTypes(arg)
+	jsonData := c.transforClearance(data, arg)
+	c.Data["json"] = jsonData
+	c.ServeJSON()
+}
+
+//  Update 添加 编辑 页面
 func (c *ClearanceController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
 	m := models.NewClearance(Id)
 
-	//获取form里的值
+	// 获取form里的值
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
@@ -168,7 +217,7 @@ func (c *ClearanceController) Update() {
 	}
 }
 
-//删除
+// 删除
 func (c *ClearanceController) Delete() {
 	id, _ := c.GetInt64(":id")
 	m, _ := models.ClearanceOne(id)
@@ -180,7 +229,7 @@ func (c *ClearanceController) Delete() {
 	}
 }
 
-//导入
+// 导入
 func (c *ClearanceController) Import() {
 
 	clearanceType, err := c.GetInt8(":type", -1)
@@ -188,7 +237,7 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "参数错误", nil)
 	}
 
-	_, err = models.ClearanceDeleteAll(clearanceType) //清空对应基础参数
+	_, err = models.ClearanceDeleteAll(clearanceType) // 清空对应基础参数
 	if err != nil || clearanceType == -1 {
 		c.jsonResult(enums.JRCodeFailed, "清空数据报错", nil)
 	}
@@ -222,7 +271,7 @@ func (c *ClearanceController) Import() {
 
 }
 
-//导入基础参数 xlsx 文件内容
+// 导入基础参数 xlsx 文件内容
 func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportParam) {
 
 	rXmlTitles, err := xlsx.GetExcelTitles("", "clearance_excel_tile")
@@ -235,19 +284,19 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	//提取 excel 数据
+	// 提取 excel 数据
 	var Info []map[string]string
 	for roI, row := range rows {
 		if roI > 0 {
 			info := make(map[string]string)
-			//将数组  转成对应的 map
+			// 将数组  转成对应的 map
 			inObj := models.NewClearance(0)
 			for i := 0; i < reflect.ValueOf(inObj).NumField(); i++ {
 				obj := reflect.TypeOf(inObj).Field(i)
 				for _, iw := range rXmlTitles {
 					if iw == obj.Name {
 						rI := xlsx.ObjIsExists(rXmlTitles, iw)
-						// 模板字段数量定义
+						//  模板字段数量定义
 						if rI != -1 && rI <= len(row) {
 							info[obj.Name] = row[rI]
 						} else {
@@ -262,8 +311,8 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 
 	}
 
-	//转换 excel 数据
-	//忽略标题行
+	// 转换 excel 数据
+	// 忽略标题行
 	for i := 0; i < len(Info); i++ {
 		inObj := models.NewClearance(0)
 		inObj.Type = cIP.ClearanceType
@@ -273,20 +322,20 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 
 }
 
-//获取最后更新时间
+// 获取最后更新时间
 func (c *ClearanceController) getLastUpdteTime() []*models.ClearanceUpdateTime {
 
-	//直接获取参数 getDataGridData()
+	// 直接获取参数 getDataGridData()
 	params := models.NewClearanceUpdateTimeQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
-	//获取数据列表和总数
+	// 获取数据列表和总数
 	data, _ := models.ClearanceUpdateTimePageList(&params)
 
 	return data
 }
 
-//设置最后更新时间
+// 设置最后更新时间
 func (c *ClearanceController) setLastUpdteTime(cType int8) {
 
 	oldLastUpdateTime, err := models.GetLastUpdteTimeByClearanceType(cType)
