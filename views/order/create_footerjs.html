@@ -22,6 +22,7 @@
             , OrderEcoRelationsDeleteIds = []
             // 货物申报企业资质删除存储
             , OrderEntQualifDeleteIds = []
+            , SpecDeclFlag = []
             , DecRequestCertsData = []
             , order_note_data /**附注数据**/
             , save_btn=false
@@ -608,9 +609,9 @@
                     $(document).off('keydown', this.enterEsc);
                 }
             });
-            if (spec_decl_flag.length > 0) {
+            if (SpecDeclFlag.length > 0) {
                 $(".tableDiv_spec_td").each(function (index, element) {
-                    if (spec_decl_flag[index] == '1') {
+                    if (SpecDeclFlag[index] == '1') {
                         $(this).addClass("bgcolor");
                     }
                 })
@@ -624,7 +625,7 @@
             } else {
                 $(this).addClass("bgcolor");
             }
-            let data = $("#spec_decl_flag").val().split(",");
+            let data = $("#SpecDeclFlag").val().split(",");
             if (data.includes($(this).attr("name"))) {
                 data.splice(data.indexOf($(this).attr("name")), 1)
             } else {
@@ -636,13 +637,12 @@
                 });
                 data = spec_data;
             }
-            $("#spec_decl_flag").val(data.join(","));
-            spec_decl_flag = [];
+            $("#SpecDeclFlag").val(data.join(","));
             $(".tableDiv_spec_td").each(function () {
                 if ($(this).hasClass("bgcolor")) {
-                    spec_decl_flag.push(1)
+                    SpecDeclFlag.push(1)
                 } else {
-                    spec_decl_flag.push(0)
+                    SpecDeclFlag.push(0)
                 }
             });
         });
@@ -3068,7 +3068,7 @@
             // /**使用人数据**/
             // data.field.DecUsers = dec_users_data;
             // /**特殊业务标识数据**/
-            // data.field.SpecDeclFlag = spec_decl_flag;
+            // data.field.SpecDeclFlag = SpecDeclFlag;
             // /**业务选项**/
             // data.field.PromiseItmes = [];
             // /**特殊关系确认**/
@@ -3566,7 +3566,7 @@
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
             /**特殊业务标识数据**/
-            data.field.spec_decl_flag = spec_decl_flag;
+            data.field.SpecDeclFlag = SpecDeclFlag;
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
@@ -4252,7 +4252,7 @@
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
             /**特殊业务标识数据**/
-            data.field.spec_decl_flag = spec_decl_flag;
+            data.field.SpecDeclFlag = SpecDeclFlag;
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
@@ -4465,7 +4465,7 @@
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
             /**特殊业务标识数据**/
-            data.field.spec_decl_flag = spec_decl_flag;
+            data.field.SpecDeclFlag = SpecDeclFlag;
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
