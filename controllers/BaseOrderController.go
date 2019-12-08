@@ -93,6 +93,15 @@ func (c *BaseOrderController) bStore(iEFlag string) {
 		utils.LogDebug(fmt.Sprintf("ParseForm:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "获取数据出错", m)
 	}
+
+	aplDateString := c.GetString("AplDate")
+	aplDate, err := time.Parse(enums.BaseDateFormat, aplDateString)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "时间格式出错", nil)
+	}
+	m.AplDate = aplDate
+	m.ContactSignDate = aplDate.AddDate(0, -1, 0)
+
 	company, err := models.CompanyByManageCode(m.TradeCode)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取客户出错", nil)
@@ -102,8 +111,6 @@ func (c *BaseOrderController) bStore(iEFlag string) {
 	}
 
 	m.Company = company
-	m.AplDate = time.Now()
-	m.ContactSignDate = time.Now().AddDate(0, -1, 0)
 	m.ClientSeqNo = c.getClientSeqNo(iEFlag, m.CustomMaster)
 
 	c.validRequestData(m)

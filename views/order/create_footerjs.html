@@ -3033,7 +3033,7 @@
             //     }
             // }
 
-            layer.load(2);
+            // layer.load(2);
 
             /**企业承诺**/
             data.field.DeclaratioMaterialCode = declaratio_material_code;
@@ -3044,53 +3044,53 @@
             }
 
             /**企业资质数据**/
-            for (let item of OrderEntQualifDeleteIds) {
-                EntQualifData.push({
-                    id: item
-                })
-            }
+            // for (let item of OrderEntQualifDeleteIds) {
+            //     EntQualifData.push({
+            //         id: item
+            //     })
+            // }
 
-            /**使用人数据**/
-            data.field.DecUsers = dec_users_data;
-            /**特殊业务标识数据**/
-            data.field.SpecDeclFlag = SpecDeclFlag;
-            /**业务选项**/
-            data.field.PromiseItmes = [];
-            /**特殊关系确认**/
-            if (!(data.field['PromiseItmes[0]'])) {
-                if ($("#PromiseItmes0").data('first') == '1') {
-                    data.field.PromiseItmes.push('0');
-                } else {
-                    data.field.PromiseItmes.push('9');
-                }
-            } else {
-                delete data.field['PromiseItmes[0]'];
-                data.field.PromiseItmes.push('1');
-            }
-
-            /**价格影响确认**/
-            if (!(data.field['PromiseItmes[1]'])) {
-                if ($("#PromiseItmes1").data('first') == '1') {
-                    data.field.PromiseItmes.push('0');
-                } else {
-                    data.field.PromiseItmes.push('9');
-                }
-            } else {
-                delete data.field['PromiseItmes[1]'];
-                data.field.PromiseItmes.push('1');
-            }
-
-            /**支付特权使用费确认**/
-            if (!(data.field['PromiseItmes[2]'])) {
-                if ($("#PromiseItmes2").data('first') == '1') {
-                    data.field.PromiseItmes.push('0');
-                } else {
-                    data.field.PromiseItmes.push('9');
-                }
-            } else {
-                delete data.field['PromiseItmes[2]'];
-                data.field.PromiseItmes.push('1');
-            }
+            // /**使用人数据**/
+            // data.field.DecUsers = dec_users_data;
+            // /**特殊业务标识数据**/
+            // data.field.SpecDeclFlag = spec_decl_flag;
+            // /**业务选项**/
+            // data.field.PromiseItmes = [];
+            // /**特殊关系确认**/
+            // if (!(data.field['PromiseItmes[0]'])) {
+            //     if ($("#PromiseItmes0").data('first') == '1') {
+            //         data.field.PromiseItmes.push('0');
+            //     } else {
+            //         data.field.PromiseItmes.push('9');
+            //     }
+            // } else {
+            //     delete data.field['PromiseItmes[0]'];
+            //     data.field.PromiseItmes.push('1');
+            // }
+            //
+            // /**价格影响确认**/
+            // if (!(data.field['PromiseItmes[1]'])) {
+            //     if ($("#PromiseItmes1").data('first') == '1') {
+            //         data.field.PromiseItmes.push('0');
+            //     } else {
+            //         data.field.PromiseItmes.push('9');
+            //     }
+            // } else {
+            //     delete data.field['PromiseItmes[1]'];
+            //     data.field.PromiseItmes.push('1');
+            // }
+            //
+            // /**支付特权使用费确认**/
+            // if (!(data.field['PromiseItmes[2]'])) {
+            //     if ($("#PromiseItmes2").data('first') == '1') {
+            //         data.field.PromiseItmes.push('0');
+            //     } else {
+            //         data.field.PromiseItmes.push('9');
+            //     }
+            // } else {
+            //     delete data.field['PromiseItmes[2]'];
+            //     data.field.PromiseItmes.push('1');
+            // }
 
             /**异地报关**/
             if ($("#IsOther").prop("checked")) {
@@ -3099,22 +3099,23 @@
                 data.field.IsOther = 0;
             }
 
-            let resultStatus = false;
-            if ("@{{.m.Id}}") {
-                const result = await admin.post(`/order/store/@{{.IEFlag}}`, data.field);
-                resultStatus = result.status
+            if (!"@{{.m.Id}}") {
+                const result = await admin.post(`/order/store/`+"@{{.IEFlag}}", data.field);
+              if (result.status) {
+                setTimeout(() => {
+                  admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+                  window.location.href = "/order/edit/"+result.obj.Id
+                }, 150)
+              }
             } else {
                 const result = await admin.patch(`/order/update/@{{.m.Id}}`, data.field);
-                resultStatus = result.status
-            }
-
-            if (resultStatus) {
+              if (result.status) {
                 setTimeout(() => {
-                    admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
-                    window.location.reload()
+                  admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+                  window.location.reload()
                 }, 150)
+              }
             }
-
             layer.closeAll('loading');
         });
 

@@ -159,10 +159,10 @@ type Order struct {
 	IsSync                    int8      `orm:"column(is_sync)" description:"是否同步关务通"`
 	RecheckErrorInputIds      string    `orm:"column(recheck_error_input_ids);type(text);null" description:"复核input id"`
 	ItemRecheckErrorInputIds  string    `orm:"column(item_recheck_error_input_ids);type(text);null" description:"复核input id"`
-	StatusUpdatedAt           time.Time `orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
-	AplDate                   time.Time `orm:"column(apl_date);type(datetime);null" description:"申报日期 （表单不需填写）"`
-	ContactSignDate           time.Time `orm:"column(contact_sign_date);type(datetime);null" description:"合同签约日期（进出口日期前一个月）"`
-	DeletedAt                 time.Time `orm:"column(deleted_at);type(timestamp);null"`
+	StatusUpdatedAt           time.Time `form:"-" orm:"column(status_updated_at);type(datetime)" description:"状态更新时间"`
+	AplDate                   time.Time `form:"-" orm:"column(apl_date);type(datetime);null" description:"申报日期 （表单不需填写）"`
+	ContactSignDate           time.Time `form:"-" orm:"column(contact_sign_date);type(datetime);null" description:"合同签约日期（进出口日期前一个月）"`
+	DeletedAt                 time.Time `form:"-" orm:"column(deleted_at);type(timestamp);null"`
 
 	BackendUsers []*BackendUser `orm:"rel(m2m);rel_through(BeeCustom/models.OrderUserRel)"` // 设置一对多的反向关系
 	Company      *Company       `orm:"column(company_id);rel(fk)"`
@@ -171,8 +171,8 @@ type Order struct {
 
 	HandBookId int64 `orm:"column(hand_book_id)" form:"HandBookId"`
 
-	//OrderItems   []*OrderItem   `orm:"reverse(many)"` // 设置一对多关系
-	//OrderRecords []*OrderRecord `orm:"reverse(many)"` // 设置一对多关系
+	// OrderItems   []*OrderItem   `orm:"reverse(many)"` // 设置一对多关系
+	// OrderRecords []*OrderRecord `orm:"reverse(many)"` // 设置一对多关系
 
 }
 
@@ -415,9 +415,9 @@ func GetOrderCommonListSql(sql string, params *OrderQueryParam) string {
 		sql += " AND client_seq_no LIKE '%" + params.ClientSeqNoLike + "%'"
 		sql += " OR bond_invt_no LIKE '%" + params.ClientSeqNoLike + "%'"
 	}
-	//if len(params.TrspModecd) > 0 {
+	// if len(params.TrspModecd) > 0 {
 	//	sql += " AND trsp_modecd = '" + params.TrspModecd + "'"
-	//}
+	// }
 
 	return sql
 }
@@ -431,11 +431,11 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	if err != nil {
 		return nil
 	}
-	//转换表头复核标记
+	// 转换表头复核标记
 	recheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.RecheckErrorInputIds, `id":"`, "", -1), `[{"`, "", -1), `"}]`, "", -1)
 	recheckErrorInputIdsSlice := strings.Split(recheckErrorInputIds, `"},{"`)
 
-	//转换表体复核标记
+	// 转换表体复核标记
 	itemRecheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.ItemRecheckErrorInputIds, `index":`, "", -1), `[{"`, "", -1), `"]}]`, "", -1)
 	itemRecheckErrorInputIdsSlice := strings.Split(itemRecheckErrorInputIds, `"]},{"`)
 	var itemRecheckErrorInputIdsSlices []map[int][]string
@@ -453,12 +453,12 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 
 	orderItem["Id"] = strconv.FormatInt(v.Id, 10)
 	orderItem["StatusString"] = aStatus
-	//orderItem["PutrecNo"] = v.PutrecNo
-	//orderItem["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(v.ImpexpMarkcd)
+	// orderItem["PutrecNo"] = v.PutrecNo
+	// orderItem["ImpexpMarkcdName"] = enums.GetImpexpMarkcdCNName(v.ImpexpMarkcd)
 	orderItem["RecheckErrorInputIds"] = recheckErrorInputIdsSlice
 	orderItem["ItemRecheckErrorInputIds"] = itemRecheckErrorInputIdsSlices
 	orderItem["HandBookId"] = strconv.FormatInt(v.HandBookId, 10)
-	//orderItem["InputTime"] = enums.GetDateTimeString(&v.InputTime, enums.BaseDateFormat)
+	// orderItem["InputTime"] = enums.GetDateTimeString(&v.InputTime, enums.BaseDateFormat)
 
 	return orderItem
 }
