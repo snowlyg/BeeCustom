@@ -22,6 +22,7 @@
             , OrderEcoRelationsDeleteIds = []
             // 货物申报企业资质删除存储
             , OrderEntQualifDeleteIds = []
+            , DecRequestCertsData = []
             , order_note_data /**附注数据**/
             , save_btn=false
             , declaratio_material_code /**企业承诺**/;
@@ -540,9 +541,9 @@
             let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
-                    $("#use_org_person_code").val("");
-                    $("#use_org_person_tel").val("");
-                    $("#use_org_person_code").focus();
+                    $("#UseOrgPersonCode").val("");
+                    $("#UseOrgPersonTel").val("");
+                    $("#UseOrgPersonCode").focus();
                     dec_users_index = null;
                     break;
                 case 'delete':
@@ -564,21 +565,23 @@
                             data: dec_users_data,
                             limit: dec_users_data.length
                         });
-                        $("#use_org_person_code").val("");
-                        $("#use_org_person_tel").val("");
-                        $("#use_org_person_code").focus();
+                        $("#UseOrgPersonCode").val("");
+                        $("#UseOrgPersonTel").val("");
+                        $("#UseOrgPersonCode").focus();
                         layer.close(index);
                     });
                     break;
             }
         });
+
         /**编辑使用人信息--按enter保存**/
         $("body").on("keyup", "#UseOrgPersonTel", function (event) {
             if (event.keyCode == 13) {
-                $("#dec_users_submit_tem").click();
-                $("#use_org_person_code").focus();
+                $("#DecUsersSubmitTem").click();
+                $("#UseOrgPersonCode").focus();
             }
         });
+
         /**特殊业务标识**/
         $("body").on("click", "#SpecDeclFlagOpen", function () {
             layer.open({
@@ -613,6 +616,7 @@
                 })
             }
         });
+
         /**特殊业务标识选择**/
         $("body").on("click", ".tableDiv_spec_td", function () {
             if ($(this).hasClass("bgcolor")) {
@@ -648,6 +652,7 @@
                 $("#spec_decl_flag_open").click();
             }
         });
+
         /**检验检疫签证申报要素**/
         $('body').on('click', '#DecRequestCertsBtn', async function () {
             layer.open({
@@ -658,21 +663,21 @@
                 content: $('#dec_request_certs_template').html()
             });
             let queryDocRep = [], check_data = [];
-            const data = await admin.get(`/clearance/no_paginate?type=商检签证申报要素`);
+            const data = layui.data("orderClearance").data[29];
             if (data) {
                 for (let item of data) {
                     queryDocRep.push({
-                        app_cert_code: item.customs_code,
-                        appl_ori: 1,
-                        appl_copy_quan: 2,
-                        app_cert_name: item.name
+                        AppCertCode: item.CustomsCode,
+                        ApplOri: 1,
+                        ApplCopyQuan: 2,
+                        AppCertName: item.Name
                     })
                 }
             }
 
-            if (dec_request_certs_data.checkData) {
-                check_data = dec_request_certs_data.checkData.map(function (item) {
-                    return item.app_cert_code
+            if (DecRequestCertsData.checkData) {
+                check_data = DecRequestCertsData.checkData.map(function (item) {
+                    return item.AppCertCode
                 });
             }
             table.render({
@@ -687,33 +692,33 @@
                 , cols: [[
                     {type: 'checkbox'}
                     , {type: 'numbers', title: '序号', width: 120}
-                    , {field: 'app_cert_code', title: '证书代码', width: 240}
-                    , {field: 'app_cert_name', title: '证书名称', width: 300}
-                    , {field: 'appl_ori', title: '正本数量', width: 240}
-                    , {field: 'appl_copy_quan', title: '副本数量', width: 240}
+                    , {field: 'AppCertCode', title: '证书代码', width: 240}
+                    , {field: 'AppCertName', title: '证书名称', width: 300}
+                    , {field: 'ApplOri', title: '正本数量', width: 240}
+                    , {field: 'ApplCopyQuan', title: '副本数量', width: 240}
                 ]]
                 , data: queryDocRep
                 , limit: queryDocRep.length
                 , height: 350
             });
-            laydate.render({elem: '#cmpl_dschrg_dt', theme: '#1E9FFF', fixed: true});
-            $("#domestic_consignee_ename").val(dec_request_certs_data.domestic_consignee_ename);
-            $("#overseas_consignor_cname").val(dec_request_certs_data.overseas_consignor_cname);
-            $("#overseas_consignor_addr").val(dec_request_certs_data.overseas_consignor_addr);
-            $("#cmpl_dschrg_dt").val(dec_request_certs_data.cmpl_dschrg_dt);
-            $("#decl_goods_enames").val(dec_request_certs_data.decl_goods_enames);
+            laydate.render({elem: '#CmplDschrgDt', theme: '#1E9FFF', fixed: true});
+            $("#DomesticConsigneeEname").val(DecRequestCertsData.domestic_consignee_ename);
+            $("#OverseasConsignorCname").val(DecRequestCertsData.overseas_consignor_cname);
+            $("#OverseasConsignorAddr").val(DecRequestCertsData.overseas_consignor_addr);
+            $("#CmplDschrgDt").val(DecRequestCertsData.CmplDschrgDt);
+            $("#DeclGoodsEnames").val(DecRequestCertsData.decl_goods_enames);
         });
 
         /**保存检验检疫签证申报要素**/
         form.on('submit(dec_request_certs_submit)', function (data) {
             let checkData = table.checkStatus('dec_request_certs_table').data;
-            dec_request_certs_data = data.field;
-            dec_request_certs_data.checkData = checkData;
+            DecRequestCertsData = data.field;
+            DecRequestCertsData.checkData = checkData;
             let arr = [];
-            for (let item of dec_request_certs_data.checkData) {
+            for (let item of DecRequestCertsData.checkData) {
                 arr.push(item.app_cert_name)
             }
-            $("#dec_request_certs").val(arr.join(","));
+            $("#DecRequestCerts").val(arr.join(","));
             layer.closeAll()
         });
 
@@ -3580,11 +3585,11 @@
             }
             data.field.pros = admin.order_pros_data;
             /**检验检疫申报要素数据**/
-            data.field.dec_request_certs = dec_request_certs_data.checkData || [];
-            data.field.domestic_consignee_ename = dec_request_certs_data.domestic_consignee_ename;
-            data.field.overseas_consignor_cname = dec_request_certs_data.overseas_consignor_cname;
-            data.field.overseas_consignor_addr = dec_request_certs_data.overseas_consignor_addr;
-            data.field.cmpl_dschrg_dt = dec_request_certs_data.cmpl_dschrg_dt;
+            data.field.dec_request_certs = DecRequestCertsData.checkData || [];
+            data.field.domestic_consignee_ename = DecRequestCertsData.domestic_consignee_ename;
+            data.field.overseas_consignor_cname = DecRequestCertsData.overseas_consignor_cname;
+            data.field.overseas_consignor_addr = DecRequestCertsData.overseas_consignor_addr;
+            data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt;
             /**集装箱数据**/
             for (let item of admin.order_containers_delete_ids) {
                 order_containers.push({
@@ -4266,11 +4271,11 @@
             }
             data.field.pros = admin.order_pros_data;
             /**检验检疫申报要素数据**/
-            data.field.dec_request_certs = dec_request_certs_data.checkData || [];
-            data.field.domestic_consignee_ename = dec_request_certs_data.domestic_consignee_ename;
-            data.field.overseas_consignor_cname = dec_request_certs_data.overseas_consignor_cname;
-            data.field.overseas_consignor_addr = dec_request_certs_data.overseas_consignor_addr;
-            data.field.cmpl_dschrg_dt = dec_request_certs_data.cmpl_dschrg_dt;
+            data.field.dec_request_certs = DecRequestCertsData.checkData || [];
+            data.field.domestic_consignee_ename = DecRequestCertsData.domestic_consignee_ename;
+            data.field.overseas_consignor_cname = DecRequestCertsData.overseas_consignor_cname;
+            data.field.overseas_consignor_addr = DecRequestCertsData.overseas_consignor_addr;
+            data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt;
             /**集装箱数据**/
             for (let item of admin.order_containers_delete_ids) {
                 order_containers.push({
@@ -4479,11 +4484,11 @@
             }
             data.field.pros = admin.order_pros_data;
             /**检验检疫申报要素数据**/
-            data.field.dec_request_certs = dec_request_certs_data.checkData || [];
-            data.field.domestic_consignee_ename = dec_request_certs_data.domestic_consignee_ename;
-            data.field.overseas_consignor_cname = dec_request_certs_data.overseas_consignor_cname;
-            data.field.overseas_consignor_addr = dec_request_certs_data.overseas_consignor_addr;
-            data.field.cmpl_dschrg_dt = dec_request_certs_data.cmpl_dschrg_dt;
+            data.field.dec_request_certs = DecRequestCertsData.checkData || [];
+            data.field.domestic_consignee_ename = DecRequestCertsData.domestic_consignee_ename;
+            data.field.overseas_consignor_cname = DecRequestCertsData.overseas_consignor_cname;
+            data.field.overseas_consignor_addr = DecRequestCertsData.overseas_consignor_addr;
+            data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt;
             /**集装箱数据**/
             for (let item of admin.order_containers_delete_ids) {
                 order_containers.push({
