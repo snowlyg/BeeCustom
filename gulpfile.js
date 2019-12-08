@@ -1,4 +1,4 @@
-var {task, watch, src, dest, series,parallel } = require('gulp'),
+var {task, watch, src, dest, series } = require('gulp'),
     minifycss = require('gulp-minify-css'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
@@ -102,20 +102,9 @@ task('view', async function () {
     return src('customAdmin/lib/view.js')
         .pipe(babel())
         .pipe(jshint())
-        .pipe(jshint.reporter('default'))
+        // .pipe(jshint.reporter('default'))
         .pipe(uglify())
         .pipe(dest('static/customAdmin/lib'))
-        .pipe(notify({message: 'Scripts task complete'}));
-});
-
-//echarts 代码校验、合并和压缩
-task('echarts', async function () {
-    return src('customAdmin/lib/extend/echarts.js')
-        .pipe(babel())
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'))
-        .pipe(uglify())
-        .pipe(dest('static/customAdmin/lib/extend'))
         .pipe(notify({message: 'Scripts task complete'}));
 });
 
@@ -222,20 +211,19 @@ task('watch', function () {
 
 task('default', series(
   // 'clean',
-  'config',
-  'login',
-  'reset',
-  'treetablejs',
+  // 'config',
+  // 'login',
+  // 'reset',
+  // 'treetablejs',
   // 'treetablecss',
-  'admin',
-  'AutoComplete',
-  'index',
-  'view',
-  'echarts',
-  'echartsTheme',
-  'tablePlugjs',
+  // 'admin',
+  // 'AutoComplete',
+  // 'index',
+  // 'view',
+  // 'echartsTheme',
+  // 'tablePlugjs',
   // 'optimizeSelectOptioncss',
-  'optimizeSelectOptionjs',
+  // 'optimizeSelectOptionjs',
   // 'tablePlugcss',
-  'layuiXtree',
+  // 'layuiXtree',
 ));
