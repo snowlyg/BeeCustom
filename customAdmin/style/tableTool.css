@@ -1,0 +1,257 @@
+.layui-tool-span {
+    font-size: 13px;
+    color: rgba(102, 102, 102, 1);
+    font-family: "Microsoft YaHei";
+}
+
+.layui-tool-input {
+    border-color: rgb(240, 240, 240);
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 0px;
+    border-width: 1px;
+    border-style: solid;
+    text-align: center;
+    line-height: 20px;
+    font-weight: normal;
+    font-style: normal;
+    opacity: 1;
+    height: 36px;
+}
+.clear{
+    height: 0px;
+    clear: both;
+    overflow: hidden;
+}
+.layui-hidden{
+    display: none;
+}
+.lay_show{
+    width: 100%;
+}
+.lay_show .kuang{
+    margin: 10px 20px;
+}
+.layui-tool-input-search{
+    display: block;
+    height: 45px;
+    line-height: 45px;
+}
+.layui-float-right{
+    float: right;
+}
+.layui-tool-input-search .layui-float-right{
+    display: none;
+}
+
+.layui-tool-time {
+    /*width: 203px;*/
+    /*height: 36px;*/
+    /*left: 80px;*/
+    /*top: 0px;*/
+    /*z-index: 6;*/
+}
+.layui-float-right{
+    float: right;
+    padding-left: 10px;
+}
+
+.layui-tool-type {
+    display: inline-block;
+    width: 120px;
+    text-align: left;
+}
+
+.layui-tool-company {
+    display: inline-block;
+    width: 240px;
+    text-align: left;
+}
+
+.layui-tool-number {
+    display: inline-block;
+    width: 240px;
+    text-align: left;
+}
+
+.custom-report-search {
+
+}
+
+.line-38 {
+    line-height: 38px;
+}
+.float-left{
+    float: left;
+}
+
+.margin-right-20 {
+    margin-right: 20px;
+}
+
+.custom-report-search {
+    color: #ffffff;
+    background-color: #1989fa;
+    border-radius: 4px;
+    font-size: 14px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.layui-tool-status {
+    width: 80px;
+    display: inline-block;
+}
+
+.layui-tool-supervise-mode {
+    width: 100px;
+    display: inline-block;
+}
+
+.layui-tool-relativeId {
+    width: 100px;
+    display: inline-block;
+}
+
+.layui-tool-company-name {
+    width: 100px;
+    display: inline-block;
+}
+.layui_report_time{
+    width: 310px;
+    height: 38px;
+
+    border-width: 1px;
+    border-style: solid;
+    background-color: #fff;
+    border-radius: 2px;
+    border-color: #e6e6e6;
+}
+.layui_report_time .layui-icon{
+    font-size: 20px;
+    float: left;
+    position: relative;
+    left: 5px;
+    top: 8px;
+    color: #ccc;
+}
+.report_time_input{
+    border: none;
+    width: 130px;
+    height: 36px;
+    margin-left: 10px;
+    text-align: center;
+    background: none;
+}
+.report_to_time{
+    display: inline-block;
+}
+.layui-tab-report .layui-tab-title .layui-this{
+    background: none!important;
+}
+.layui-tab-report .layui-tab-title .layui-this:before{
+    height: 0px;
+}
+
+/*列表样式格式化*/
+.layui_article_table .layui-card-body .layui-form {
+    border: none;
+}
+
+.layui_article_table .layui-table th {
+    border: none !important;
+}
+
+.layui_article_table .layui-table td,
+.layui_article_table .layui-table th,
+.layui_article_table .layui-table-col-set,
+.layui_article_table .layui-table-fixed-r,
+.layui_article_table .layui-table-grid-down,
+.layui_article_table .layui-table-header,
+.layui_article_table .layui-table-page,
+.layui_article_table .layui-table-tips-main,
+.layui_article_table .layui-table-tool,
+.layui_article_table .layui-table-total,
+.layui_article_table .layui-table-view,
+.layui_article_table .layui-table[lay-skin=line],
+.layui_article_table .layui-table[lay-skin=row]
+{
+    border: none;
+}
+
+.layui_article_table .layui-table tbody tr {
+    border-bottom: 1px solid rgb(245, 245, 245);
+}
+
+/*列表样式格式化 END*/
+
+
+/*信息中心*/
+.message_table .layui-table-cell{
+    line-height: 36px;
+}
+.message_table tr div{
+    cursor: pointer;
+}
+
+
+/*金关二期手册、账册*/
+.piece_table{
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    margin-bottom: 15px;
+}
+.piece_table_div{
+    padding-bottom: 20px;
+}
+.piece_table_div .layui-table-view{
+    height: 458px!important;
+}
+.piece_table_title{
+    height: 60px;
+    line-height: 60px;
+    margin-top: 10px;
+}
+.piece_table_title span{
+    color: #1B87FF;
+    font-size: 14px;
+}
+.piece_table_title span i {
+    margin-right: 10px;
+}
+.piece_search{
+    width: 250px;
+    line-height: 40px;
+}
+.piece_search i{
+    float: left;
+    display: inline-block;
+    height: 36px;
+    border-radius:  4px 0 0 4px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #e6e6e6;
+    background-color: #fff;
+    border-right: none;
+    padding-left: 10px;
+}
+.piece_search:hover i{
+   border-color: #D2D2D2!important;
+}
+.piece_search input{
+    float: left;
+    width: 220px;
+    border-radius: 0px 4px 4px 0px;
+    border-left: none;
+}
+
+
+
+
+
