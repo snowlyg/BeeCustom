@@ -647,7 +647,6 @@ layui.define('view', function (exports) {
               // }
             }
           } else
-
           // Ctrl+enter 在textaera中换行
           if (e.ctrlKey && eCode == 13 &&
             this.localName == 'textarea') {
@@ -2743,18 +2742,6 @@ layui.define('view', function (exports) {
             after: ['#DocuCode'],
           }
           await admin.base_clearance_data_auto(documents_attached)
-        }
-
-        if ($.inArray('enterprise_product', loadArray) >= 0) {
-          let enterprise_product = {
-            dataType: 'orderClearance',
-            type: 13,
-            name: '企业产品许可类别代码',
-            filter_type: 's',
-            id: ['#EntQualifTypeNameTem'],
-            after: ['#EntQualifTypeCodeTem'],
-          }
-          await admin.base_clearance_data_auto(enterprise_product)
         }
 
         if ($.inArray('site_code', loadArray) >= 0) {

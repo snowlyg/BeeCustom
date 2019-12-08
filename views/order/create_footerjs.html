@@ -65,7 +65,7 @@
         $("#AplDate").val(admin.getCurrDate());
         admin.transModeControl("@{{.IEFlag}}");
         /**产品**/
-        admin.getOrderTable([], @{{.IEFlag}});
+        admin.getOrderTable([], "@{{.IEFlag}}");
         /**光标进入全选**/
         $('body').on('focus', 'input,textarea', function (e) {
             $(this).select();
@@ -309,7 +309,7 @@
                 $("#declaratio_material_code").next('div').click();
             }
             table.render({
-                elem: '#ent_qualif_table'
+                elem: '#EntQualifTable'
                 , toolbar: '#ent_qualif_tool'
                 , defaultToolbar: ['filter']
                 , colFilterRecord: 'local'
@@ -325,10 +325,19 @@
                 , height: 350
             });
 
+            let enterprise_product = {
+              dataType: 'orderClearance',
+              type: 13,
+              name: '企业产品许可类别代码',
+              filter_type: 's',
+              id: ['#EntQualifTypeNameTem'],
+              after: ['#EntQualifTypeCodeTem'],
+            }
+            await admin.base_clearance_data_auto(enterprise_product)
         });
 
         /**编辑企业资质信息--点击行反填数据**/
-        table.on('row(ent_qualif_table)', function (obj) {
+        table.on('row(EntQualifTable)', function (obj) {
             $("#EntQualifTypeCodeTem").val(obj.data.EntQualifTypeCode);
             $("#EntQualifTypeNameTem").val(obj.data.EntQualifTypeName);
             $("#EntQualifNoTem").val(obj.data.EntQualifNo);
@@ -348,7 +357,7 @@
             EntQualifData.forEach((value, index) => {
                 value.index = index + 1
             });
-            table.reload('ent_qualif_table', {
+            table.reload('EntQualifTable', {
                 data: EntQualifData,
                 limit: EntQualifData.length
             });
@@ -362,7 +371,7 @@
         });
 
         /**编辑企业资质信息--删除**/
-        table.on('toolbar(ent_qualif_table)', function (obj) {
+        table.on('toolbar(EntQualifTable)', function (obj) {
             let checkStatus = table.checkStatus(obj.config.id);
             let checkData = checkStatus.data;
             switch (obj.event) {
@@ -392,7 +401,7 @@
                         EntQualifData.forEach((value, index) => {
                             value.index = index + 1
                         });
-                        table.reload('ent_qualif_table', {
+                        table.reload('EntQualifTable', {
                             data: EntQualifData,
                             limit: EntQualifData.length
                         });
@@ -405,7 +414,7 @@
                         }
                         $("#EntQualifTypeCodeTem").val("");
                         $("#EntQualifTypeNameTem").val("");
-                        $("#ent_qualif_no_tem").val("");
+                        $("#EntQualifNoTem").val("");
                         ent_qualif_index = null;
                         $("#EntQualifTypeNameTem").focus();
                         layer.close(index);
@@ -415,9 +424,9 @@
         });
 
         /**编辑企业资质信息--按enter保存**/
-        $("body").on("keyup", "#ent_qualif_no_tem", function (event) {
+        $("body").on("keyup", "#EntQualifNoTem", function (event) {
             if (event.keyCode == 13) {
-                $("#ent_qualif_submit").click();
+                $("#EntQualifSubmit").click();
                 $("#EntQualifTypeNameTem").focus();
             }
         });
@@ -433,8 +442,8 @@
                     layer.msg('此为第一条记录');
                 } else {
                     $("input[id='EntQualifSeq']").val(parseInt(entQualifSeq) - 1);
-                    $("input[id='ent_qualif_type_code']").val(EntQualifData[parseInt(entQualifSeq) - 1].ent_qualif_type_code);
-                    $("input[id='ent_qualif_type_name']").val(EntQualifData[parseInt(entQualifSeq) - 1].ent_qualif_type_name);
+                    $("input[id='EntQualifTypeCode']").val(EntQualifData[parseInt(entQualifSeq) - 1].EntQualifTypeCode);
+                    $("input[id='EntQualifTypeName']").val(EntQualifData[parseInt(entQualifSeq) - 1].EntQualifTypeName);
                 }
             } else {
                 layer.msg('没有可查看的数据');
@@ -461,13 +470,14 @@
         });
 
         /**监听企业承诺**/
-        form.on('checkbox(declaratio_material_code)', function (data) {
+        form.on('checkbox(DeclaratioMaterialCode)', function (data) {
             if ($(data.elem).is(':checked')) {
                 declaratio_material_code = 1
             } else {
                 declaratio_material_code = 0
             }
         });
+
         laydate.render({elem: '#DespDate', theme: '#1E9FFF', fixed: true});
         /**编辑使用人信息**/
         let dec_users_index = null;
