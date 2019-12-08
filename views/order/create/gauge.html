@@ -290,14 +290,20 @@
             </div>
         </td>
         @{{end}}
-
         <td class="td-scale-04 text-align-right">成交方式</td>
         <td class="percent-13">
             <div class="input-group valid">
+                @{{if eq .IEFlag "I"}}
                 <input type="hidden" name="TransMode" id="TransMode" value="1">
                 <input type="text" name="TransModeName" id="TransModeName"
                        class="non-empty" autocomplete="off" value="CIF"
                        lay-vertype="tips">
+            @{{else if eq .IEFlag "E"}}
+            <input type="hidden" name="TransMode" id="TransMode" value="3">
+            <input type="text" name="TransModeName" id="TransModeName"
+                   class="non-empty" autocomplete="off" value="FOB"
+                   lay-vertype="tips">
+                @{{end}}
             </div>
         </td>
     </tr>
@@ -425,7 +431,7 @@
         <td colspan="3">
             <div class="input-group valid">
                 <input type="text" name="GoodsPlace" id="GoodsPlace" class="non-empty"
-                       autocomplete="off" lay-vertype="tips">
+                       autocomplete="off" lay-vertype="tips" @{{if eq .IEFlag "I"}}value="本厂"@{{end}}>
             </div>
         </td>
         <td class="td-scale-04 text-align-right">启运港</td>
@@ -608,15 +614,17 @@
                        placeholder="关联理由">
             </div>
         </td>
+        @{{if eq .IEFlag "I"}}
         <td class="td-btn">
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="DecUsersBtn"
                     type="button">
                 使用人
             </button>
         </td>
+        @{{end}}
     </tr>
     <tr style="display: none;">
-        @{{if eq .IEFlag "E"}}
+        @{{if eq .IEFlag "I"}}
         <td class="td-scale-04 text-align-right">原箱运输</td>
         <td>
             <div class="input-group valid">
