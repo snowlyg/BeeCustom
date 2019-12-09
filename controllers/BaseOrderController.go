@@ -80,7 +80,6 @@ func (c *BaseOrderController) bStatusCount(ieflag string) {
 
 // Create 添加 新建 页面
 func (c *BaseOrderController) bCreate(ieflag string) {
-	c.Data["IEFlag"] = ieflag
 	c.Data["canStore"] = c.getCanStore(nil, ieflag)
 	c.getResponses(ieflag)
 }
@@ -170,7 +169,6 @@ func (c *BaseOrderController) bEdit(id int64) {
 	backendUsers := models.GetCreateBackendUsers("OrderController.Make")
 	c.Data["BackendUsers"] = backendUsers
 	c.Data["m"] = models.TransformOrder(id, "OrderItems")
-	c.Data["IEFlag"] = m.IEFlag
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)
@@ -214,6 +212,7 @@ func (c *BaseOrderController) getResponses(ieflag string) {
 	// 页面里按钮权限控制
 	c.getActionData(ieflag, "Audit", "Distribute", "ForRecheck", "Print", "Remark", "ReForRecheck")
 	c.Data["IEFlagName"] = enums.GetImpexpMarkcdCNName(ieflag)
+	c.Data["IEFlag"] = ieflag
 	c.setTpl("order/change_create_edit_show.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "order/create_footerjs.html"

@@ -225,3 +225,21 @@ func Cmd(action, input string, arg []string) {
 		utils.LogDebug(fmt.Sprintf("cmd:%v:%v--%v --%v", err, action, arg, stderr.String()))
 	}
 }
+
+//if 0 to ""
+func IsFloatZore(f float64) string {
+	floatString := strconv.FormatFloat(f, 'f', 0, 64)
+	if floatString == "0" {
+		return ""
+	}
+	return floatString
+}
+
+//if 0 to ""
+func IsIZore(i int) string {
+	if strconv.Itoa(i) == "0" {
+		return ""
+	}
+
+	return strconv.Itoa(i)
+}

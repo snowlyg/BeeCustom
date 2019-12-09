@@ -418,7 +418,6 @@ func GetOrderCommonListSql(sql string, params *OrderQueryParam) string {
 
 // TransformOrder 格式化列表数据
 func TransformOrder(id int64, relation string) map[string]interface{} {
-
 	v, _ := OrderOne(id, relation)
 	orderItem := make(map[string]interface{})
 	aStatus, err := enums.GetSectionWithInt(v.Status, "order_status")
@@ -457,7 +456,7 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	orderItem["PreEntryId"] = v.PreEntryId                                                           //"pre_entry_id);size(20);null" description:"预录入编号（表单不需填写）"`
 	orderItem["EntryId"] = v.EntryId                                                                 //"entry_id);size(20);null" description:"海关编号/报关单号 （表单不需填写）"`
 	orderItem["DocumentCodeString"] = v.DocumentCodeString                                           //"document_code_string);size(255);null" description:"随附单证 （表单不需填写）"`
-	orderItem["ContainerCounts"] = v.ContainerCounts                                                 //container_counts);null" description:"集装箱数 （表单不需填写）"`
+	orderItem["ContainerCounts"] = enums.IsIZore(v.ContainerCounts)                                  //container_counts);null" description:"集装箱数 （表单不需填写）"`
 	orderItem["ForeignCompanyName"] = v.ForeignCompanyName                                           //"foreign_company_name);size(100);null" description:"外商公司名称"`
 	orderItem["Remark"] = v.Remark                                                                   //"remark);size(1000);null" description:"唛头及备注"`
 	orderItem["CustomMaster"] = v.CustomMaster                                                       //"custom_master);size(4);null" description:"申报地海关"`
@@ -507,22 +506,22 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	orderItem["FeeMarkName"] = v.FeeMarkName                                                         //"fee_mark_name);size(50);null" description:"运费标记名称"`
 	orderItem["FeeCurr"] = v.FeeCurr                                                                 //"fee_curr);size(3);null" description:"运费币制"`
 	orderItem["FeeCurrName"] = v.FeeCurrName                                                         //"fee_curr_name);size(50);null" description:"运费币制名称"`
-	orderItem["FeeRate"] = v.FeeRate                                                                 //fee_rate);null;digits(12);decimals(4)" description:"运费／率"`
+	orderItem["FeeRate"] = enums.IsFloatZore(v.FeeRate)                                              //fee_rate);null;digits(12);decimals(4)" description:"运费／率"`
 	orderItem["InsurMark"] = v.InsurMark                                                             //"insur_mark);size(1);null" description:"保险费标记"`
 	orderItem["InsurMarkName"] = v.InsurMarkName                                                     //"insur_mark_name);size(50);null" description:"保险费标记名称"`
 	orderItem["InsurCurr"] = v.InsurCurr                                                             //"insur_curr);size(3);null" description:"保险费币制"`
 	orderItem["InsurCurrName"] = v.InsurCurrName                                                     //"insur_curr_name);size(50);null" description:"保险费币制名称"`
-	orderItem["InsurRate"] = v.InsurCurrName                                                         //insur_rate);null;digits(12);decimals(4)" description:"保险费／率"`
-	orderItem["OtherMark"] = v.InsurCurrName                                                         //"other_mark);size(1);null" description:"杂费标志"`
-	orderItem["OtherMarkName"] = v.InsurCurrName                                                     //"other_mark_name);size(50);null" description:"杂费标志名称"`
+	orderItem["InsurRate"] = enums.IsFloatZore(v.InsurRate)                                          //insur_rate);null;digits(12);decimals(4)" description:"保险费／率"`
+	orderItem["OtherMark"] = v.OtherMark                                                             //"other_mark);size(1);null" description:"杂费标志"`
+	orderItem["OtherMarkName"] = v.OtherMarkName                                                     //"other_mark_name);size(50);null" description:"杂费标志名称"`
 	orderItem["OtherCurr"] = v.OtherCurr                                                             //"other_curr);size(3);null" description:"杂费币制"`
 	orderItem["OtherCurrName"] = v.OtherCurrName                                                     //"other_curr_name);size(50);null" description:"杂费币制名称"`
-	orderItem["OtherRate"] = v.OtherRate                                                             //`orm:"column(other_rate);null;digits(12);decimals(4)" description:"杂费／率"`
-	orderItem["PackNo"] = v.PackNo                                                                   //pack_no);null" description:"件数"`
+	orderItem["OtherRate"] = enums.IsFloatZore(v.OtherRate)                                          //`orm:"column(other_rate);null;digits(12);decimals(4)" description:"杂费／率"`
+	orderItem["PackNo"] = enums.IsIZore(v.PackNo)                                                    //pack_no);null" description:"件数"`
 	orderItem["WrapType"] = v.WrapType                                                               //"wrap_type);size(2);null" description:"包装种类"`
 	orderItem["WrapTypeName"] = v.WrapTypeName                                                       //"wrap_type_name);size(50);null" description:"包装种类名称"`
-	orderItem["GrossWet"] = v.GrossWet                                                               //gross_wet);null;digits(17);decimals(5)" description:"毛重（KG）"`
-	orderItem["NetWt"] = v.NetWt                                                                     //net_wt);null;digits(17);decimals(5)" description:"净重（KG）"`
+	orderItem["GrossWet"] = enums.IsFloatZore(v.GrossWet)                                            //gross_wet);null;digits(17);decimals(5)" description:"毛重（KG）"`
+	orderItem["NetWt"] = enums.IsFloatZore(v.NetWt)                                                  //net_wt);null;digits(17);decimals(5)" description:"净重（KG）"`
 	orderItem["TradeAreaCode"] = v.TradeAreaCode                                                     //"trade_area_code);size(3);null" description:"贸易国（地区）"`
 	orderItem["TradeAreaName"] = v.TradeAreaName                                                     //"trade_area_name);size(50);null" description:"贸易国（地区）名称"`
 	orderItem["EntyPortCode"] = v.EntyPortCode                                                       //"enty_port_code);size(6);null" description:"入境口岸/离境口岸"`
