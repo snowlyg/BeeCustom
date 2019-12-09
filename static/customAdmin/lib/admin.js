@@ -532,7 +532,7 @@ layui.define('view', function (exports) {
       //进口时，成交方式是CIF/出口成交方式是FOB，则不允许录入运费和保费；
       //进口成交方式是C&I/出口成交方式是C&F，则允许录入运费，而不允许录入保费；
       //进口成交方式是C&F/出口成交方式是C&I，则不允许录入运费，而允许录入保费；否则，运费和保费都允许录入
-      transModeControl: function (cusIEFlag) {
+      transModeControl: function (cusIEFlag,isCreate) {
         const transMode = $('#TransMode').val()
         if (('I' == cusIEFlag && transMode == '1') ||
           ('E' == cusIEFlag && transMode == '3')) {
@@ -543,10 +543,8 @@ layui.define('view', function (exports) {
           $('#FeeCurr').val('')
           $('#FeeMarkName').attr('disabled', 'disabled')
           $('#FeeMarkName').removeAttr('lay-verify')
-
           $('#FeeCurrName').attr('disabled', 'disabled')
           $('#FeeRate').attr('disabled', 'disabled')
-
           $('#InsurMark').val('')
           $('#InsurMarkName').val('')
           $('#InsurRate').val('')
@@ -564,10 +562,8 @@ layui.define('view', function (exports) {
           $('#FeeCurr').val('')
           $('#FeeMarkName').attr('disabled', 'disabled')
           $('#FeeMarkName').removeAttr('lay-verify')
-
           $('#FeeCurrName').attr('disabled', 'disabled')
           $('#FeeRate').attr('disabled', 'disabled')
-
           $('#InsurMarkName').removeAttr('disabled', 'disabled')
           $('#InsurRate').removeAttr('disabled', 'disabled')
           if ($('#InsurMark').val() != '1') {
@@ -583,23 +579,23 @@ layui.define('view', function (exports) {
           $('#InsurMarkName').attr('disabled', 'disabled')
           $('#InsurCurrName').attr('disabled', 'disabled')
           $('#InsurRate').attr('disabled', 'disabled')
-
           $('#FeeMarkName').removeAttr('disabled', 'disabled')
-          $('#FeeMarkName').attr('lay-verify', 'required')
-
+          if(!isCreate){
+            $('#FeeMarkName').attr('lay-verify', 'required')
+          }
           if ($('#FeeMark').val() != '1') {
             $('#FeeCurrName').removeAttr('disabled', 'disabled')
           }
           $('#FeeRate').removeAttr('disabled', 'disabled')
         } else {
           $('#FeeMarkName').removeAttr('disabled', 'disabled')
-          $('#FeeMarkName').attr('lay-verify', 'required')
-
+          if(!isCreate){
+            $('#FeeMarkName').attr('lay-verify', 'required')
+          }
           $('#FeeRate').removeAttr('disabled', 'disabled')
           if ($('#FeeMark').val() != '1') {
             $('#FeeCurrName').removeAttr('disabled', 'disabled')
           }
-
           $('#InsurMarkName').removeAttr('disabled', 'disabled')
           $('#InsurRate').removeAttr('disabled', 'disabled')
           if ($('#InsurMark').val() != '1') {

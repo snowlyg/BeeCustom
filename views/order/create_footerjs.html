@@ -67,7 +67,7 @@
         $("#CustomMasterName").val("").focus().val(first_name);
         $("#IEDate").val(admin.getCurrDate());
         $("#AplDate").val(admin.getCurrDate());
-        admin.transModeControl(ieflag);
+        admin.transModeControl(ieflag,isCreate());
         /**产品**/
         admin.getOrderTable([], ieflag);
         /**光标进入全选**/
@@ -90,11 +90,6 @@
                 $(`#${item}`).val(orderData[item]);
             }
         }
-        // 填验证
-        if (!isCreate()){
-
-        }
-
         /**table点击行选中**/
         admin.table_radio_click();
         /**table左右拖动**/
