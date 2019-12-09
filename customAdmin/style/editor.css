@@ -1,0 +1,52 @@
+.editor{
+    width: 100%;
+    /*min-height: 600px;*/
+    margin-bottom: 40px;
+}
+
+.edui-notadd .edui-editor-toolbarboxouter{
+    border-bottom: none!important;
+    background: none!important;
+}
+.edui-notadd .edui-editor{
+    border: none!important;
+}
+#edui1_elementpath{
+    display: none;
+}
+#edui1_wordcount{
+    text-align: left;
+}
+.layui-card-body .article_create_submit{
+    position: relative;
+    box-shadow: none;
+    width: auto;
+}
+/*.article_upload_description{*/
+    /*border-width: 0px;*/
+    /*position: relative;*/
+    /*top: 15px;*/
+    /*width: 400px;*/
+    /*height: 44px;*/
+    /*font-family: 'PingFangSC-Regular', 'PingFang SC';*/
+    /*font-weight: 400;*/
+    /*font-style: normal;*/
+    /*font-size: 13px;*/
+    /*color: #999999;*/
+    /*line-height: 22px;*/
+/*}*/
+/*.layui-upload-drag{*/
+    /*padding: 0px!important;*/
+    /*border-color: rgb(114,158,208);;*/
+    /*border-radius: 10px;*/
+/*}*/
+/*.custom-company-foreign_upload{*/
+    /*padding: 5px 0!important;*/
+    /*color: #666666;*/
+/*}*/
+/*.layui-upload-drag .layui-icon{*/
+    /*display: block;*/
+    /*margin: 5px 0;*/
+    /*font-size: 40px;*/
+    /*color: rgb(114,158,208);*/
+/*}*/
