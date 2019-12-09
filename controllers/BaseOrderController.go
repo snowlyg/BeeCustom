@@ -170,6 +170,7 @@ func (c *BaseOrderController) bEdit(id int64) {
 	backendUsers := models.GetCreateBackendUsers("OrderController.Make")
 	c.Data["BackendUsers"] = backendUsers
 	c.Data["m"] = models.TransformOrder(id, "OrderItems")
+	c.Data["IEFlag"] = m.IEFlag
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)

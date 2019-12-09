@@ -32,6 +32,7 @@ func init() {
 		new(OrderUserRel),
 		new(OrderRecord),
 		new(OrderFile),
+		new(OrderItem),
 		new(Setting),
 	)
 }
@@ -165,4 +166,9 @@ func OrderRecordTBName() string {
 // OrderFileTBName 获取 OrderFileTBName 对应的表名称
 func OrderFileTBName() string {
 	return TableName("order_files")
+}
+
+// OrderItemTBName 获取 OrderItemTBName 对应的表名称
+func OrderItemTBName() string {
+	return TableName("order_items")
 }

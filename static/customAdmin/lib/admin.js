@@ -1242,27 +1242,27 @@ layui.define('view', function (exports) {
       //货物申报进出境关别反填
       i_e_port_name_blur (dom) {
         setTimeout(() => {
-          const i_e_port = $('#i_e_port').val()
+          const i_e_port = $('#IEPort').val()
           if (i_e_port == '5301' || i_e_port == '5320' || i_e_port ==
             '5303' || i_e_port == '5345') {
-            $('#traf_mode').val('4')
-            $('#traf_mode_name').val('公路运输')
-            $('#trade_country').val('HKG')
-            $('#trade_country_name').val('中国香港')
-            $('#distinate_port').val('HKG003')
-            $('#distinate_port_name').val('香港（中国香港）')
+            $('#TrafMode').val('4')
+            $('#TrafModeName').val('公路运输')
+            $('#TradeCountry').val('HKG')
+            $('#TradeCountryName').val('中国香港')
+            $('#DistinatePort').val('HKG003')
+            $('#DistinatePortName').val('香港（中国香港）')
           }
           if (i_e_port == '5301') {
-            $('#enty_port_code').val('470201')
-            $('#enty_port_name').val('皇岗')
+            $('#EntyPortCode').val('470201')
+            $('#EntyPortName').val('皇岗')
           }
           if (i_e_port == '5320') {
-            $('#enty_port_code').val('470401')
-            $('#enty_port_name').val('文锦渡')
+            $('#EntyPortCode').val('470401')
+            $('#EntyPortName').val('文锦渡')
           }
           if (i_e_port == '5303') {
-            $('#enty_port_code').val('470501')
-            $('#enty_port_name').val('沙头角')
+            $('#EntyPortCode').val('470501')
+            $('#EntyPortName').val('沙头角')
           }
         }, 100)
       },

@@ -9,15 +9,13 @@
         <td class="td-scale-02" colspan="3">
             <div class="input-group valid">
                 <input type="hidden" name="CustomMaster" id="CustomMaster" value="5207">
-                <input type="text" class="non-empty required" name="CustomMasterName"
-                       id="CustomMasterName" autocomplete="off" value="凤岗海关" lay-verify="required"
-                       lay-vertype="tips">
+                <input type="text" class="non-empty required" name="CustomMasterName" id="CustomMasterName" autocomplete="off" value="凤岗海关" lay-verify="required" lay-vertype="tips">
             </div>
         </td>
         <td class="td-scale-01 text-align-right">申报状态</td>
         <td class="td-scale-02" colspan="3">
             <div class="input-group valid">
-                <input type="text" class="non-empty disabled" disabled id="CustomMasterName"
+                <input type="text" class="non-empty disabled" disabled id="StatusString"
                        autocomplete="off">
             </div>
         </td>
@@ -51,7 +49,7 @@
             <div class="input-group valid">
                 <input type="hidden" name="IEPort" id="IEPort">
                 <input type="text" class="non-empty required" name="IEPortName"
-                       id="IEPortName" lay-verify="i_e_port_name" lay-vertype="tips"
+                       id="IEPortName" lay-verify="IEPortName" lay-vertype="tips"
                        autocomplete="off" onblur="layui.admin.i_e_port_name_blur(this)">
             </div>
         </td>
@@ -122,27 +120,23 @@
         <td class="td-scale-01 text-align-right">境外收发货人</td>
         <td colspan="4">
             <div class="input-group valid">
-                @{{if eq .IEFlag "I"}}
+                @{{if eq "I" .IEFlag .m.IEFlag}}
             <input type="text" class="non-empty" name="OverseasConsignorCode" id="OverseasConsignorCode"
                    autocomplete="off" placeholder="境外收货人代码">
-            @{{else if eq .IEFlag "E"}}
+            @{{else if eq "E" .IEFlag  .m.IEFlag}}
             <input type="text" class="non-empty" name="OverseasConsigneeCode" id="OverseasConsigneeCode"
                    autocomplete="off" placeholder="境外收货人代码">
-            @{{else }}
-            进出口标注丢失
             @{{end }}
             </div>
         </td>
         <td colspan="3">
             <div class="input-group valid">
-                @{{if eq .IEFlag "I"}}
+                @{{if eq "I" .IEFlag .m.IEFlag}}
             <input type="text" class="non-empty required" name="OverseasConsignorEname" id="OverseasConsignorEname"
                    lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="企业名称（外文）">
-            @{{else if eq .IEFlag "E"}}
+            @{{else if eq "E" .IEFlag  .m.IEFlag }}
             <input type="text" class="non-empty required" name="OverseasConsigneeEname" id="OverseasConsigneeEname"
                    lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="企业名称（外文）">
-            @{{else }}
-            进出口标注丢失
             @{{end }}
             </div>
         </td>
@@ -210,7 +204,7 @@
                 <input type="hidden" name="TrafMode" id="TrafMode">
                 <input type="text" name="TrafModeName" id="TrafModeName"
                        class="non-empty"
-                       lay-verify="traf_mode_name" lay-vertype="tips" autocomplete="off">
+                       lay-verify="TrafModeName" lay-vertype="tips" autocomplete="off">
             </div>
         </td>
         <td class="td-scale-01 text-align-right">运输工具名称</td>
@@ -255,13 +249,13 @@
                        autocomplete="off">
             </div>
         </td>
-        @{{if eq .IEFlag "I"}}
+        @{{if eq "I" .IEFlag .m.IEFlag}}
         <td class="td-scale-04 text-align-right">启运国(地区)</td>
         <td class="percent-13">
             <div class="input-group valid">
                 <input type="hidden" name="TradeCountry" id="TradeCountry">
                 <input type="text" name="TradeCountryName" id="TradeCountryName"
-                       lay-verify="trade_country_name" lay-vertype="tips" class="non-empty"
+                       lay-verify="TradeCountryName" lay-vertype="tips" class="non-empty"
                        autocomplete="off">
             </div>
         </td>
@@ -271,34 +265,34 @@
                 <input type="hidden" name="DistinatePort" id="DistinatePort">
                 <input type="text" name="DistinatePortName" id="DistinatePortName"
                        class="non-empty" autocomplete="off"
-                       lay-verify="distinate_port_name" lay-vertype="tips">
+                       lay-verify="DistinatePortName" lay-vertype="tips">
             </div>
         </td>
-        @{{else if eq .IEFlag "E"}}
+        @{{else if eq "E" .IEFlag .m.IEFlag}}
         <td class="td-scale-04 text-align-right">运抵国(地区)</td>
         <td class="percent-13">
             <div class="input-group valid">
-                <input type="hidden" name="trade_country" id="trade_country">
-                <input type="text" name="trade_country_name" id="trade_country_name" class="non-empty" autocomplete="off" lay-verify="trade_country_name" lay-vertype="tips">
+                <input type="hidden" name="TradeCountry" id="TradeCountry">
+                <input type="text" name="TradeCountryName" id="TradeCountryName" class="non-empty" autocomplete="off" lay-verify="TradeCountryName" lay-vertype="tips">
             </div>
         </td>
         <td class="td-scale-04 text-align-right">指运港</td>
         <td class="percent-13">
             <div class="input-group valid">
-                <input type="hidden" name="distinate_port" id="distinate_port">
-                <input type="text" name="distinate_port_name" id="distinate_port_name" class="non-empty" autocomplete="off" lay-verify="distinate_port_name" lay-vertype="tips">
+                <input type="hidden" name="DistinatePort" id="DistinatePort">
+                <input type="text" name="DistinatePortName" id="DistinatePortName" class="non-empty" autocomplete="off" lay-verify="DistinatePortName" lay-vertype="tips">
             </div>
         </td>
         @{{end}}
         <td class="td-scale-04 text-align-right">成交方式</td>
         <td class="percent-13">
             <div class="input-group valid">
-                @{{if eq .IEFlag "I"}}
+                @{{if eq "I" .IEFlag .m.IEFlag}}
                 <input type="hidden" name="TransMode" id="TransMode" value="1">
                 <input type="text" name="TransModeName" id="TransModeName"
                        class="non-empty" autocomplete="off" value="CIF"
                        lay-vertype="tips">
-            @{{else if eq .IEFlag "E"}}
+            @{{else if eq "E" .IEFlag .m.IEFlag}}
             <input type="hidden" name="TransMode" id="TransMode" value="3">
             <input type="text" name="TransModeName" id="TransModeName"
                    class="non-empty" autocomplete="off" value="FOB"
@@ -417,21 +411,20 @@
         </td>
     </tr>
     <tr>
-        @{{if eq .IEFlag "I"}}
+        @{{if eq "I" .IEFlag .m.IEFlag}}
         <td class="td-scale-04 text-align-right">入境口岸</td>
         <td>
             <div class="input-group valid">
                 <input type="hidden" name="EntyPortCode" id="EntyPortCode">
                 <input type="text" name="EntyPortName" id="EntyPortName"
-                       class="non-empty" autocomplete="off" lay-verify="enty_port_name"
-                       lay-vertype="tips">
+                       class="non-empty" autocomplete="off" lay-verify="enty_port_name" lay-vertype="tips">
             </div>
         </td>
         <td class="td-scale-04 text-align-right">货物存放地点</td>
         <td colspan="3">
             <div class="input-group valid">
                 <input type="text" name="GoodsPlace" id="GoodsPlace" class="non-empty"
-                       autocomplete="off" lay-vertype="tips" @{{if eq .IEFlag "I"}}value="本厂"@{{end}}>
+                       autocomplete="off" lay-vertype="tips" @{{if eq "I" .IEFlag .m.IEFlag}}value="本厂"@{{end}}>
             </div>
         </td>
         <td class="td-scale-04 text-align-right">启运港</td>
@@ -443,7 +436,7 @@
                        lay-vertype="tips">
             </div>
         </td>
-    @{{else if eq .IEFlag "E"}}
+    @{{else if eq "E" .IEFlag .m.IEFlag }}
     <td class="td-scale-04 text-align-right">货物存放地点</td>
     <td colspan="3">
         <div class="input-group valid">
@@ -558,7 +551,7 @@
     </tr>
     <tr style="display: none;">
         <td class="td-scale-04 text-align-right">领证机关</td>
-        <td @{{if eq .IEFlag "E"}}colspan="3"@{{end}}>
+        <td @{{if eq "E" .IEFlag .m.IEFlag}}colspan="3"@{{end}}>
             <div class="input-group valid">
                 <input type="hidden" name="VsaOrgCode" id="VsaOrgCode">
                 <input type="text" name="VsaOrgCodeName" id="VsaOrgCodeName"
@@ -566,14 +559,14 @@
             </div>
         </td>
         <td class="td-scale-04 text-align-right">口岸商检机关</td>
-        <td @{{if eq .IEFlag "E"}}colspan="3"@{{end}}>
+        <td @{{if eq "E" .IEFlag .m.IEFlag}}colspan="3"@{{end}}>
             <div class="input-group valid">
                 <input type="hidden" name="InspOrgCode" id="InspOrgCode">
                 <input type="text" name="InspOrgName" id="InspOrgName"
                        class="non-empty required" autocomplete="off" lay-vertype="tips">
             </div>
         </td>
-        @{{if eq .IEFlag "I"}}
+        @{{if eq "I" .IEFlag .m.IEFlag}}
         <td class="td-scale-04 text-align-right">启运日期</td>
         <td>
             <div class="input-group valid">
@@ -614,7 +607,7 @@
                        placeholder="关联理由">
             </div>
         </td>
-        @{{if eq .IEFlag "I"}}
+        @{{if eq "I" .IEFlag .m.IEFlag}}
         <td class="td-btn">
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="DecUsersBtn"
                     type="button">
@@ -624,7 +617,7 @@
         @{{end}}
     </tr>
     <tr style="display: none;">
-        @{{if eq .IEFlag "I"}}
+        @{{if eq "I" .IEFlag .m.IEFlag}}
         <td class="td-scale-04 text-align-right">原箱运输</td>
         <td>
             <div class="input-group valid">
@@ -635,7 +628,7 @@
         </td>
         @{{end}}
         <td class="td-scale-04 text-align-right">特殊业务标识</td>
-        <td @{{if eq .IEFlag "E"}}colspan="3"@{{end}}>
+        <td @{{if eq "E" .IEFlag .m.IEFlag}}colspan="3"@{{end}}>
             <div class="input-group valid">
                 <input type="text" id="SpecDeclFlag" class="non-empty"
                        autocomplete="off" disabled>

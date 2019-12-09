@@ -4,16 +4,17 @@
   }).extend({
     index: 'lib/index',
   }).use(['index', 'form', 'admin', 'table', 'AutoComplete'], async () => {
-    const { form, admin, table, $ } = layui
-    let order_pros_data_filter = []
+    const { form, admin, table, $ } = layui;
+    let annotation_item_data_filter = []
+        , annotation_id = @{{.m.Id}}
+        , impexpMarkcd = @{{.m.ImpexpMarkcd }} ? @{{.m.ImpexpMarkcd }} : @{{.ImpexpMarkcd }}
       , order_note_data /**附注数据**/
       , annotationItems /**清单表体数据**/
       , decListData = [] /**默认报关单数据**/
-      , AnnotationSearcIndex
+      , AnnotationSearcIndex;
 
     //基础参数版本
-    await admin.getClearanceData()
-
+    await admin.getClearanceData();
     /**商品快速查询index**/
     await admin.clearance_data_auto([
       'list_types',
@@ -33,47 +34,47 @@
       'ann_country_area',//9
       'ann_currency',//19
       'ann_unit_measurement',//23
-    ])
+    ]);
 
     //禁用表体 tab 点击
-    if (!@{{.m.Id}}) {
-      let $annotationItemTab = $('#annotation_item_tab')
+    if (!annotation_id) {
+      let $annotationItemTab = $('#annotation_item_tab');
       $annotationItemTab.click(function (event) {
         return false
       })
     }
     /**根据屏幕等比例缩小**/
-    admin.sideFlexible_window()
+    admin.sideFlexible_window();
     /**回车键光标跳转**/
-    admin.keydown_input_textarea()
+    admin.keydown_input_textarea();
     /**首次进入自动聚焦 and 初始数据赋值**/
-    const first_name = $('#InvtTypeName').val()
-    $('#InvtTypeName').val('').focus().val(first_name)
-    $('#InputTime').val(admin.getCurrDate())
-    $('#InvtDclTime').val(admin.getCurrDate())
+    const first_name = $('#InvtTypeName').val();
+    $('#InvtTypeName').val('').focus().val(first_name);
+    $('#InputTime').val(admin.getCurrDate());
+    $('#InvtDclTime').val(admin.getCurrDate());
 
     /**清单产品/报关草稿列表**/
     annotationItems = await admin.post('/annotation_item/datagrid', JSON.stringify({
       AnnotationId: parseInt(
-        @{{.m.Id}}),
+        annotation_id),
     }), true)
-    admin.getAnnotationTable(annotationItems, [])
+    admin.getAnnotationTable(annotationItems, []);
     /**光标进入全选**/
     $('body').on('focus', 'input,textarea', function (e) {
-      $(this).select()
-      let tipText = ''
+      $(this).select();
+      let tipText = '';
       for (let item of admin.tipsJson) {
         if (item.id === this.id) {
-          tipText = item.name
+          tipText = item.name;
           break
         }
       }
       $('#tipsMessagetext').text(tipText)
-    })
+    });
     /**table点击行选中**/
-    admin.table_radio_click()
+    admin.table_radio_click();
     /**table左右拖动**/
-    admin.table_mousedown()
+    admin.table_mousedown();
     /**备注回车保存商品**/
     $('body').on('keyup', '#BodyRmk', function (event) {
       const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
@@ -109,10 +110,10 @@
       /*保存表体*/
       let result
       if (data.Id) {
-        data.AnnotationId = "@{{.m.Id}}"
+        data.AnnotationId = "annotation_id"
         result = await admin.patch('/annotation_item/update/' + data.Id, data)
       } else {
-        result = await admin.post('/annotation_item/store/' + @{{.m.Id}}, data)
+        result = await admin.post('/annotation_item/store/' + annotation_id, data)
       }
 
       if (result.status) {
@@ -169,7 +170,7 @@
 
     /**批量修改表体*/
     layui.form.on('submit(batch_edit_save)', async (data) => {
-      let result = await admin.patch('/annotation_item_update/' + @{{.m.Id}}, data.field)
+      let result = await admin.patch('/annotation_item_update/' + annotation_id, data.field)
       if (result.status) {
         setTimeout(function () {
           window.location.reload()
@@ -195,7 +196,7 @@
             if (checkData[0].Id) {
               let result = await admin.delete('/annotation_item/delete/' + checkData[0].Id)
               if (result.status) {
-                await transformAnnotationItemsTable(@{{.m.Id}}, '')
+                await transformAnnotationItemsTable(annotation_id, '')
               }
             }
             layer.close(index)
@@ -211,7 +212,7 @@
             return layer.msg('只能选择一条数据复制')
           }
 
-          if (admin.DecListCountCheck(checkData[0], admin.decListData) === false) {
+          if (annotationItems.rows.length == 50) {
             layer.open({
               title: '提示',
               content: '本保税清单对应的报关单表体已经50条(不可超过50条)，请确认后重新录入！',
@@ -226,8 +227,7 @@
           }
 
           await annotation_item_data(checkData[0])
-          $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${annotationItems.total - 1}]`).
-            click()
+          $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${annotationItems.total - 1}]`).click();
 
           break
         case 'batch_edit':
@@ -235,7 +235,7 @@
             return layer.msg('没有数据！')
           }
 
-          layui.laytpl($('#batch_edit_list').html()).render("@{{.m.ImpexpMarkcd }}", function (html) {
+          layui.laytpl($('#batch_edit_list').html()).render(impexpMarkcd, function (html) {
             layer.open({
               type: 1,
               title: '商品批量修改',
@@ -286,9 +286,9 @@
             shadeClose: true,
             area: admin.screen() < 2 ? ['80%', '300px'] : ['950px', '540px'],
             content: $('#annotation_search_template').html(),
-          })
+          });
 
-          $('#gds_mtno_filter').focus()
+          $('#gds_mtno_filter').focus();
 
           table.render({
             elem: '#annotation_search_table',
@@ -340,8 +340,8 @@
                 width: 140,
               }],
             ],
-            data: order_pros_data_filter,
-            limit: order_pros_data_filter.length,
+            data: annotation_item_data_filter,
+            limit: annotation_item_data_filter.length,
             height: 370,
           })
           break
@@ -360,7 +360,7 @@
         return layer.msg('查询条件不能为空')
       }
 
-      let data_search = get_ann_goods_materials_data("@{{.m.ImpexpMarkcd }}")
+      let data_search = get_ann_goods_materials_data(impexpMarkcd);
       const condition = {
         RecordNo: data.field.gds_mtno_filter,
         HsCode: data.field.gdecd_filter,
@@ -374,10 +374,10 @@
           })
         })
       }
-      order_pros_data_filter = data_filter(condition, data_search)
+      annotation_item_data_filter = data_filter(condition, data_search);
       table.reload('annotation_search_table', {
-        data: order_pros_data_filter,
-        limit: order_pros_data_filter.length,
+        data: annotation_item_data_filter,
+        limit: annotation_item_data_filter.length,
       })
     })
 
@@ -437,12 +437,12 @@
       layer.closeAll('loading')
     })
     /**派单**/
-    admin.distribute('#order_dispatch', @{{.m.Id}}, "@{{.ImpexpMarkcdName}}")
+    admin.distribute('#order_dispatch', annotation_id, "@{{.ImpexpMarkcdName}}")
     /**附注**/
     let order_note_index
     let extraRemark = "@{{.m.ExtraRemark}}"
     $('body').on('click', '#order_note', async function () {
-      if (!@{{.m.Id}}) {
+      if (!annotation_id) {
         return layer.msg('请先保存订单！')
       }
       order_note_index = layer.open({
@@ -466,7 +466,7 @@
     /**附注保存**/
     form.on('submit(remark_note_submit)', async (data) => {
       order_note_data = data.field.ExtraRemark
-      await admin.post(`/annotation/extra_remark/${@{{.m.Id}}}`, data.field)
+      await admin.post(`/annotation/extra_remark/${annotation_id}`, data.field)
       layer.close(order_note_index)
     })
     /**审核通过**/
@@ -476,7 +476,7 @@
 
     form.on('submit(annotation_save_pass)', async () => {
       layer.load(2)
-      let result = await admin.get(`/annotation/audit/` + @{{.m.Id}})
+      let result = await admin.get(`/annotation/audit/` + annotation_id)
       if (result.status) {
         admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe')
         setTimeout(() => {
@@ -488,11 +488,11 @@
 
     /**打印**/
     $('body').on('click', '#order_print', async function () {
-      if (!@{{.m.Id}}) {
+      if (!annotation_id) {
         return layer.msg('请先保存订单！')
       }
 
-      let url = await admin.get(`/annotation/print/${@{{.m.Id}}}`)
+      let url = await admin.get(`/annotation/print/${annotation_id}`)
       if (url) {
         window.open(url, '打印清单')
       }
@@ -508,7 +508,7 @@
         return layer.msg('请先输入表体商品')
       }
       layer.load(2)
-      const result = await admin.get(`/annotation/for_recheck/${@{{.m.Id}}}`, 'show')
+      const result = await admin.get(`/annotation/for_recheck/${annotation_id}`, 'show')
       if (result.status) {
         admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe')
         setTimeout(() => {
@@ -529,7 +529,7 @@
         return layer.msg('请先输入表体商品')
       }
       layer.load(2)
-      const result = await admin.get(`/annotation/refor_recheck/${@{{.m.Id}}}`, 'show')
+      const result = await admin.get(`/annotation/refor_recheck/${annotation_id}`, 'show')
       if (result.status) {
         admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '核注清单iframe')
         setTimeout(() => {
