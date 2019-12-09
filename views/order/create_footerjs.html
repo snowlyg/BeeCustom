@@ -90,6 +90,10 @@
                 $(`#${item}`).val(orderData[item]);
             }
         }
+        // 填验证
+        if (!isCreate()){
+
+        }
 
         /**table点击行选中**/
         admin.table_radio_click();
@@ -4459,7 +4463,6 @@
             } else {
                 data.field.is_other = 0;
             }
-
             data.field.id = order_id;
             data.field.order_status = '单一处理中';
             const data_table = table.checkStatus('order_enclosure_check_lists').data;
