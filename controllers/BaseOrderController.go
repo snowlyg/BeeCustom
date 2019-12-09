@@ -778,19 +778,38 @@ func (c *BaseOrderController) TransformOrderList(ms []*models.Order) []*map[stri
 				}
 			}
 		}
+
+		// 集装箱ids
+		containerIds := ""
+		if len(v.OrderContainers) > 0 {
+			for _, oc := range v.OrderContainers {
+				containerIds += oc.ContainerId + ","
+			}
+		}
+
+		// 清单编号
+		annotationBondInvtNo := ""
+		annotationId := 0
+		if v.Annotation != nil {
+			annotationBondInvtNo = v.Annotation.BondInvtNo
+			annotationId = int(v.Annotation.Id)
+		}
 		orderItem["Id"] = strconv.FormatInt(v.Id, 10)
 		orderItem["StatusString"] = aStatus
-		//orderItem["PutrecNo"] = v.PutrecNo
-		//orderItem["ImpexpPortcd"] = v.ImpexpPortcd
-		//orderItem["ImpexpPortcdName"] = v.ImpexpPortcdName
-		//orderItem["BondInvtNo"] = v.BondInvtNo
-		//orderItem["EntryNo"] = v.EntryNo
-		//orderItem["SupvModecdName"] = v.SupvModecdName
-		//orderItem["TrspModecdName"] = v.TrspModecdName
-		//orderItem["InvtDclTime"] = v.InvtDclTime.Format(enums.BaseDateTimeFormat)
+		orderItem["ManualNo"] = v.ManualNo
+		orderItem["ContrNo"] = v.ContrNo
+		orderItem["IEPortName"] = v.IEPortName
+		orderItem["IEPort"] = v.IEPort
+		orderItem["EntryId"] = v.EntryId
+		orderItem["AnnotationBondInvtNo"] = annotationBondInvtNo
+		orderItem["AnnotationId"] = annotationId
 		orderItem["ClientSeqNo"] = v.ClientSeqNo
+		orderItem["BillNo"] = v.BillNo
+		orderItem["ContainerId"] = containerIds // 集装箱ids
 		orderItem["CompanyName"] = v.Company.Name
 		orderItem["DeclareName"] = orderCreatorName
+		orderItem["AplDate"] = v.AplDate.Format(enums.BaseDateTimeFormat)
+		orderItem["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
 		orderList = append(orderList, &orderItem)
 	}
 	return orderList

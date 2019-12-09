@@ -98,7 +98,7 @@
                                 <div class="tr-th-flex">
                                     <div class="tr-th-flex-left">
                                         <b>{{ item.CreatedAt || "" }}</b>
-                                        <span class="left-margin">订单号：{{ item.EtpsInnerInvtNo || "" }}</span>
+                                        <span class="left-margin">订单号：{{ item.ClientSeqNo || "" }}</span>
                                         <span class="left-margin">制单人：{{ item.DeclareName || "--" }}</span>
                                         {{# if(item.StatusString == "待复核" || item.StatusString ==
                                         "复核中" || item.StatusString == "复核通过" || item.StatusString ==
@@ -129,43 +129,42 @@
                             <td>
                                 <div class="tr-bd-one">
                                     <div class="tr-bd-one-img">
-                                        <img width="100" src="/static/images/annotation_import_i.png">
+                                        <img width="100" src="/static/images/order_import.png">
                                     </div>
                                     <div class="tr-bd-one-txt">
                                         <p>
-                                            <span style="color:#999999;">手/账册号：</span>
-                                            <span style="color:#101010;">{{ item.PutrecNo || "" }}</span>
+                                            <span style="color:#999999;">合同备案号/协议号：</span>
+                                            <span style="color:#101010;">{{ item.ManualNo || '无' }} /{{ item.ContrNo || '无' }}</span>
                                         </p>
                                         <p>
                                             <span style="color:#999999;">进境关别/代码：</span>
-                                            {{# const impexp_portcd_name = item.ImpexpPortcdName ? `${item.ImpexpPortcdName}/` : "无"; }}
-                                            <span style="color:#101010;">{{ impexp_portcd_name }}{{ item.ImpexpPortcd || "" }}</span>
+                                            {{# const IEPortName = item.IEPortName ? `${item.IEPortName}/` : '无'; }}
+                                            <span style="color:#101010;">{{ IEPortName }}{{ item.IEPort || '' }}</span>
                                         </p>
                                         <p>
-                                            <span style="color:#999999;">货物编码/关联报关单号：</span>
-                                            <span style="color:#101010;">{{ item.BondInvtNo || "无" }}</span>/
-                                            {{# if(item.EntryNo !== ""){ }}
-                                            <span style="color:#101010;" lay-href="/order/i/{{ item.OrderId }}/show"
-                                                  lay-text="订单详情{{ item.EntryNo }}">{{ item.EntryNo }}</span>
-                                            {{# }else{ }}
-                                            <span style="color:#101010;">无</span>
-                                            {{# } }}
+                                            <span style="color:#999999;">报关单号/清单号：</span>
+                                            <span style="color:#101010;">{{ item.EntryId || '无' }}</span>/
+                                            {{# if(item.AnnotationBondInvtNo){ }}
+                                            <span style="color:#101010;" lay-href="/order/i/{ item.AnnotationId }}/show" lay-text="清单详情{{ item.AnnotationBondInvtNo }}">{{ item.AnnotationBondInvtNo }}</span>
+                                        {{# }else{ }}
+                                        <span style="color:#101010;">无</span>
+                                        {{# } }}
                                         </p>
                                     </div>
                                 </div>
                             </td>
                             <td rowspan="1">
-                                <p class="center">{{ item.InvtDclTime || "" }}</p>
+                                <p class="center">{{ item.AplDate || '' }}</p>
                             </td>
-                            <td rowspan="1" class="tr-bd-person_list">
+                            <td rowspan="1">
                                 <div class="tr-bd-one-txt">
                                     <p>
-                                        <span style="color:#999999;">监管方式：</span>
-                                        <span style="color:#101010;">{{ item.SupvModecdName || "无" }}</span>
+                                        <span style="color:#999999;">提运单号：</span>
+                                        <span style="color:#101010;">{{ item.BillNo || '无' }}</span>
                                     </p>
                                     <p>
-                                        <span style="color:#999999;">运输方式：</span>
-                                        <span style="color:#101010;">{{ item.TrspModecdName || "无" }}</span>
+                                        <span style="color:#999999;" class="container_tit">集装箱号：</span>
+                                        <span style="color:#101010;" class="container_all">{{ item.ContainerId || '无' }}</span>
                                     </p>
                                 </div>
                             </td>
