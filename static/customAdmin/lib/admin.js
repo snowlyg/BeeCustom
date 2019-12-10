@@ -2580,7 +2580,8 @@ layui.define('view', function (exports) {
               '#OrgCodeName',
               '#VsaOrgCodeName',
               '#InspOrgName',
-              '#purp_org_name'],
+              '#PurpOrgName'
+            ],
             after: [
               '#OrgCode',
               '#VsaOrgCode',

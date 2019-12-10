@@ -115,6 +115,12 @@
                         });
                     }
                 }
+                // 原箱运输 反填
+                if (item == "OrigBoxFlag" && orderData[item] == 1) {
+                    $(`input[name='OrigBoxFlag']`).each(function (index, element) {
+                         $(this).next('div').click();
+                    });
+                }
             }
         }
         /**table点击行选中**/
@@ -308,20 +314,20 @@
                 $(this).attr("isDecListShow", "1");
                 iTag.removeClass("transform_xia");
                 $(this).parent().parent().nextAll().show();
-                $("#org_code_name").attr("lay-verify", "required");
-                $("#vsa_org_code_name").attr("lay-verify", "required");
-                $("#desp_date").attr("lay-verify", "required");
-                $("#insp_org_name").attr("lay-verify", "required");
-                $("#purp_org_name").attr("lay-verify", "required");
+                $("#OrgCodeName").attr("lay-verify", "required");
+                $("#VsaOrgCodeName").attr("lay-verify", "required");
+                $("#DespDate").attr("lay-verify", "required");
+                $("#InspOrgName").attr("lay-verify", "required");
+                $("#PurpOrgName").attr("lay-verify", "required");
             } else {
                 $(this).attr("isDecListShow", "0");
                 iTag.addClass("transform_xia");
                 $(this).parent().parent().nextAll().hide();
-                $("#org_code_name").removeAttr("lay-verify");
-                $("#vsa_org_code_name").removeAttr("lay-verify");
-                $("#desp_date").removeAttr("lay-verify");
-                $("#insp_org_name").removeAttr("lay-verify");
-                $("#purp_org_name").removeAttr("lay-verify");
+                $("#OrgCodeName").removeAttr("lay-verify");
+                $("#VsaOrgCodeName").removeAttr("lay-verify");
+                $("#DespDate").removeAttr("lay-verify");
+                $("#InspOrgName").removeAttr("lay-verify");
+                $("#PurpOrgName").removeAttr("lay-verify");
             }
         });
         $("#decListShow").click(function () {
@@ -330,12 +336,12 @@
                 $(this).attr("isDecListShow", "1");
                 iTag.removeClass("transform_xia");
                 $(this).parent().parent().nextAll().show();
-                $("#purpose_name").attr("lay-verify", "required");
+                $("#PurposeName").attr("lay-verify", "required");
             } else {
                 $(this).attr("isDecListShow", "0");
                 iTag.addClass("transform_xia");
                 $(this).parent().parent().nextAll().hide();
-                $("#purpose_name").removeAttr("lay-verify");
+                $("#PurposeName").removeAttr("lay-verify");
             }
         });
 
@@ -524,7 +530,7 @@
             }
         });
 
-        laydate.render({elem: '#DespDate', theme: '#1E9FFF', fixed: true});
+        laydate.render({elem: '#DespDate', theme: '#1E9FFF', fixed: true,format: 'yyyyMMdd'});
         /**编辑使用人信息**/
         let dec_users_index = null;
         $('body').on('click', '#DecUsersBtn', async function () {
