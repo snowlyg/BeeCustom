@@ -9,7 +9,7 @@
       , order_id = parseInt(@{{.m.Id}})
       , ieflag = "@{{.m.IEFlag}}" ? "@{{.m.IEFlag}}" : "@{{.IEFlag}}"
       , EntQualifData = [] /**企业资质**/
-      , DecUsersData = [] /**使用人**/
+      , DecUsersData = @{{.m.DecUsers}} ? JSON.parse(@{{.m.DecUsers}}) : [] /**使用人**/
       , order_documents = [] /**随附单证**/
       , decListData = [] /**默认报关单数据**/
       // 货物申报产品资质删除存储
@@ -24,8 +24,8 @@
       , OrderEcoRelationsDeleteIds = []
       // 货物申报企业资质删除存储
       , OrderEntQualifDeleteIds = []
-      , SpecDeclFlag = []
-      , DecRequestCertsData = []
+      , SpecDeclFlag =  @{{.m.SpecDeclFlag}} ? JSON.parse(@{{.m.SpecDeclFlag}}) : [] //
+      , DecRequestCertsData = @{{.m.DecRequestCerts}} ? JSON.parse(@{{.m.DecRequestCerts}}) : []
       , order_note_data /**附注数据**/
       , save_btn = false
       , DeclaratioMaterialCode /**企业承诺**/
@@ -121,7 +121,6 @@
           }
         } else if (item == 'SpecDeclFlag' && orderData[item]) { // 特殊业务标识 反填
           let SpecDeclFlagNameData = []
-          SpecDeclFlag = JSON.parse(orderData[item])
           admin.SpecDeclFlagData.forEach((value, index) => {
             if (SpecDeclFlag[index] == '1') {
               SpecDeclFlagNameData.push(value)
@@ -129,18 +128,16 @@
           })
           $('#SpecDeclFlag').val(SpecDeclFlagNameData.join(','))
         } else if (item == 'DecRequestCerts' && orderData[item]) { // 所需单证 反填
-          let decRequestCerts = JSON.parse(orderData[item])
-          if (decRequestCerts.checkData){
-            const data = decRequestCerts.checkData.map(item => item.AppCertName)
+          if (DecRequestCertsData.checkData){
+            const data = DecRequestCertsData.checkData.map(item => item.AppCertName)
             $('#DecRequestCerts').val(data.join(','))
           }
-          DecRequestCertsData.checkData =decRequestCerts.checkData
-          DecRequestCertsData.DomesticConsigneeEname =decRequestCerts.DomesticConsigneeEname
-          DecRequestCertsData.OverseasConsignorCname =decRequestCerts.OverseasConsignorCname
-          DecRequestCertsData.OverseasConsignorAddr =decRequestCerts.OverseasConsignorAddr
-          DecRequestCertsData.CmplDschrgDt =decRequestCerts.CmplDschrgDt
+          DecRequestCertsData.checkData =DecRequestCertsData.checkData
+          DecRequestCertsData.DomesticConsigneeEname =DecRequestCertsData.DomesticConsigneeEname
+          DecRequestCertsData.OverseasConsignorCname =DecRequestCertsData.OverseasConsignorCname
+          DecRequestCertsData.OverseasConsignorAddr =DecRequestCertsData.OverseasConsignorAddr
+          DecRequestCertsData.CmplDschrgDt =DecRequestCertsData.CmplDschrgDt
         } else if (item == 'DecUsers' && orderData[item]) { // 使用人 反填
-          DecUsersData = JSON.parse(orderData[item])
           DecUsersData.forEach((value, index) => {
             value.index = index + 1
           })
@@ -3136,25 +3133,25 @@
         }
 
         if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
-          if (!no_weight_save) {
-            layer.open({
-              title: '商品总重量与净重不符'
-              , content: '商品总重量与净重不符！是否要保存'
-              , btn: ['是', '否']
-              , yes: function (index) {
-                no_weight_save = true
-                layer.close(index)
-                $('#order_save').click()
-              }
-              , btn2: function () {
-                layer.msg('请重新修改净重。')
-                $('#NetWt').focus()
-              },
-            })
-            if (!no_weight_save) {
-              return false
-            }
-          }
+          // if (!no_weight_save) {
+          //   layer.open({
+          //     title: '商品总重量与净重不符'
+          //     , content: '商品总重量与净重不符！是否要保存'
+          //     , btn: ['是', '否']
+          //     , yes: function (index) {
+          //       no_weight_save = true
+          //       layer.close(index)
+          //       $('#order_save').click()
+          //     }
+          //     , btn2: function () {
+          //       layer.msg('请重新修改净重。')
+          //       $('#NetWt').focus()
+          //     },
+          //   })
+          //   if (!no_weight_save) {
+          //     return false
+          //   }
+          // }
         }
       }
 
@@ -3162,12 +3159,6 @@
 
       /**企业承诺**/
       data.field.DeclaratioMaterialCode = DeclaratioMaterialCode
-      /**企业资质数据**/
-      for (let item of OrderEntQualifDeleteIds) {
-        EntQualifData.push({
-          id: item,
-        })
-      }
       /**检验检疫签证申报要素**/
       data.field.DecRequestCerts = JSON.stringify(EntQualifData)
       /**检验检疫签证申报要素**/
