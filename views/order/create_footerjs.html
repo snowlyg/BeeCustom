@@ -24,7 +24,7 @@
             , OrderEcoRelationsDeleteIds = []
             // 货物申报企业资质删除存储
             , OrderEntQualifDeleteIds = []
-            , SpecDeclFlag = []
+            , SpecDeclFlag = [0,0,0,0,0,0,0]
             , DecRequestCertsData = []
             , order_note_data /**附注数据**/
             , save_btn = false
@@ -107,7 +107,7 @@
                 }
                 // 业务事项 自报自缴 反填
                 if (item == "Type" && !orderData[item]) {
-                    if(!orderData[item] || orderData[item] != "Z"){
+                    if (!orderData[item] || orderData[item] != "Z") {
                         $(`input[name='Type[]']`).each(function (index, element) {
                             if (index == 1) {
                                 $(this).next('div').click();
@@ -118,7 +118,7 @@
                 // 原箱运输 反填
                 if (item == "OrigBoxFlag" && orderData[item] == 1) {
                     $(`input[name='OrigBoxFlag']`).each(function (index, element) {
-                         $(this).next('div').click();
+                        $(this).next('div').click();
                     });
                 }
             }
@@ -187,8 +187,6 @@
 
             if ($("#DecOtherPacks").val() && $("#DecOtherPacks").val() != 'null') {
                 const dec_other_packs_data = JSON.parse($("#DecOtherPacks").val());
-                console.log($("#DecOtherPacks").val());
-                console.log(dec_other_packs_data);
                 for (let dec_item of dec_other_packs_data) {
                     for (let data_item of data) {
                         if (dec_item.PackType == data_item.CustomsCode) {
@@ -307,7 +305,7 @@
             }
         });
 
-        /**收缩切换**/
+        /**检验检疫申报信息 收缩切换**/
         $("#non-disabled-btn").click(function () {
             let iTag = $(this).find('i');
             if (iTag.hasClass("transform_xia")) {
@@ -530,7 +528,7 @@
             }
         });
 
-        laydate.render({elem: '#DespDate', theme: '#1E9FFF', fixed: true,format: 'yyyyMMdd'});
+        laydate.render({elem: '#DespDate', theme: '#1E9FFF', fixed: true, format: 'yyyyMMdd'});
         /**编辑使用人信息**/
         let dec_users_index = null;
         $('body').on('click', '#DecUsersBtn', async function () {
@@ -651,10 +649,10 @@
                     $(document).on('keydown', this.enterEsc);
                 },
                 end: function () {
-                    if ($("#contr_item").is(":disabled")) {
-                        $("#code_t_s").focus()
+                    if ($("#ContrItem").is(":disabled")) {
+                        $("#CodeTS").focus()
                     } else {
-                        $("#contr_item").focus()
+                        $("#ContrItem").focus()
                     }
                     $(document).off('keydown', this.enterEsc);
                 }
@@ -696,10 +694,11 @@
                 }
             });
         });
+
         /**enter关联理由打开特殊业务标识**/
         $("body").on("keyup", "#CorrelationReasonFlagName", function (event) {
             if (event.keyCode == 13) {
-                $("#spec_decl_flag_open").click();
+                $("#SpecDeclFlagOpen").click();
             }
         });
 
@@ -3101,7 +3100,7 @@
             /**使用人数据**/
             data.field.DecUsers = dec_users_data;
             /**特殊业务标识数据**/
-            data.field.SpecDeclFlag = SpecDeclFlag;
+            data.field.SpecDeclFlag = JSON.stringify(SpecDeclFlag);
             /**业务选项**/
             let promiseItmes = [];
             /**特殊关系确认**/
@@ -3141,6 +3140,10 @@
             data.field.PromiseItmes = JSON.stringify(promiseItmes);
             // 业务事项
             data.field.Type = data.field['Type[1]'];
+            // 原箱运输
+            if (!(data.field['OrigBoxFlag'])) {
+                data.field.OrigBoxFlag = 0;
+            }
             /**异地报关**/
             if ($("#IsOther").prop("checked")) {
                 data.field.IsOther = 1;
@@ -3205,7 +3208,6 @@
         table.on('tool(print_lists)', async function (obj) {
             switch (obj.event) {
                 case 'preview':
-                    console.log(obj);
                     order.print_preview(obj, order_id, order_i_edit_data, 'e');
                     break;
                 case 'download':
@@ -3597,8 +3599,6 @@
             data.field.quas = EntQualifData;
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
-            /**特殊业务标识数据**/
-            data.field.SpecDeclFlag = SpecDeclFlag;
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
@@ -4191,8 +4191,6 @@
             data.field.quas = EntQualifData;
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
-            /**特殊业务标识数据**/
-            data.field.SpecDeclFlag = SpecDeclFlag;
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
@@ -4409,8 +4407,6 @@
             data.field.quas = EntQualifData;
             /**使用人数据**/
             data.field.dec_users = dec_users_data;
-            /**特殊业务标识数据**/
-            data.field.SpecDeclFlag = SpecDeclFlag;
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
                 admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
