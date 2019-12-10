@@ -9,7 +9,7 @@
       , order_id = parseInt(@{{.m.Id}})
       , ieflag = "@{{.m.IEFlag}}" ? "@{{.m.IEFlag}}" : "@{{.IEFlag}}"
       , EntQualifData = [] /**企业资质**/
-      , dec_users_data = [] /**使用人**/
+      , DecUsersData = [] /**使用人**/
       , order_documents = [] /**随附单证**/
       , decListData = [] /**默认报关单数据**/
       // 货物申报产品资质删除存储
@@ -28,7 +28,7 @@
       , DecRequestCertsData = []
       , order_note_data /**附注数据**/
       , save_btn = false
-      , declaratio_material_code /**企业承诺**/
+      , DeclaratioMaterialCode /**企业承诺**/
 
     /** 基础参数加载 */
     await admin.clearance_data_auto([
@@ -115,15 +115,35 @@
           $(`input[name='OrigBoxFlag']`).each(function (index, element) {
             $(this).next('div').click()
           })
+        } else if (item == 'IsOther' && orderData[item]) { // 异地报关 反填
+          if (!($("input[name='IsOther']").prop("checked"))) {
+            $("input[name='IsOther']").next('div').click()
+          }
         } else if (item == 'SpecDeclFlag' && orderData[item]) { // 特殊业务标识 反填
-          let SpecDeclFlagNameData = [];
-          SpecDeclFlag = JSON.parse(orderData[item]);
+          let SpecDeclFlagNameData = []
+          SpecDeclFlag = JSON.parse(orderData[item])
           admin.SpecDeclFlagData.forEach((value, index) => {
             if (SpecDeclFlag[index] == '1') {
               SpecDeclFlagNameData.push(value)
             }
           })
           $('#SpecDeclFlag').val(SpecDeclFlagNameData.join(','))
+        } else if (item == 'DecRequestCerts' && orderData[item]) { // 所需单证 反填
+          let decRequestCerts = JSON.parse(orderData[item])
+          if (decRequestCerts.checkData){
+            const data = decRequestCerts.checkData.map(item => item.AppCertName)
+            $('#DecRequestCerts').val(data.join(','))
+          }
+          DecRequestCertsData.checkData =decRequestCerts.checkData
+          DecRequestCertsData.DomesticConsigneeEname =decRequestCerts.DomesticConsigneeEname
+          DecRequestCertsData.OverseasConsignorCname =decRequestCerts.OverseasConsignorCname
+          DecRequestCertsData.OverseasConsignorAddr =decRequestCerts.OverseasConsignorAddr
+          DecRequestCertsData.CmplDschrgDt =decRequestCerts.CmplDschrgDt
+        } else if (item == 'DecUsers' && orderData[item]) { // 使用人 反填
+          DecUsersData = JSON.parse(orderData[item])
+          DecUsersData.forEach((value, index) => {
+            value.index = index + 1
+          })
         } else {
           $(`#${item}`).val(orderData[item])
         }
@@ -362,8 +382,8 @@
       })
       $('#EntQualifTypeNameTem').focus()
       form.render('checkbox')
-      if (declaratio_material_code == 0 || declaratio_material_code == '') {
-        $('#declaratio_material_code').next('div').click()
+      if (DeclaratioMaterialCode == 0 || DeclaratioMaterialCode == '') {
+        $('#DeclaratioMaterialCode').next('div').click()
       }
       table.render({
         elem: '#EntQualifTable'
@@ -530,13 +550,15 @@
     /**监听企业承诺**/
     form.on('checkbox(DeclaratioMaterialCode)', function (data) {
       if ($(data.elem).is(':checked')) {
-        declaratio_material_code = 1
+        DeclaratioMaterialCode = 1
       } else {
-        declaratio_material_code = 0
+        DeclaratioMaterialCode = 0
       }
     })
 
+    // 启运日期
     laydate.render({ elem: '#DespDate', theme: '#1E9FFF', fixed: true, format: 'yyyyMMdd' })
+
     /**编辑使用人信息**/
     let dec_users_index = null
     $('body').on('click', '#DecUsersBtn', async function () {
@@ -547,7 +569,7 @@
         area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '530px'],
         content: $('#dec_users_template').html(),
       })
-      $('#use_org_person_code').focus()
+      $('#UseOrgPersonCode').focus()
       table.render({
         elem: '#dec_users_table'
         , toolbar: '#dec_users_tool'
@@ -557,18 +579,18 @@
           [
             { type: 'checkbox' }
             , { field: 'index', title: '序号' }
-            , { field: 'use_org_person_code', title: '使用单位联系人' }
-            , { field: 'use_org_person_tel', title: '使用单位联系电话' },
+            , { field: 'UseOrgPersonCode', title: '使用单位联系人' }
+            , { field: 'UseOrgPersonTel', title: '使用单位联系电话' },
           ]]
-        , data: dec_users_data
-        , limit: dec_users_data.length
+        , data: DecUsersData
+        , limit: DecUsersData.length
         , height: 350,
       })
     })
     /**编辑使用人信息--点击行反填数据**/
     table.on('row(dec_users_table)', function (obj) {
-      $('#use_org_person_code').val(obj.data.use_org_person_code)
-      $('#use_org_person_tel').val(obj.data.use_org_person_tel)
+      $('#UseOrgPersonCode').val(obj.data.UseOrgPersonCode)
+      $('#UseOrgPersonTel').val(obj.data.UseOrgPersonTel)
       dec_users_index = obj.data.index
     })
     /**编辑使用人信息--保存**/
@@ -576,21 +598,21 @@
       delete data.field.layTableCheckbox
       if (dec_users_index) {
         for (let item in data.field) {
-          dec_users_data[dec_users_index - 1][item] = data.field[item]
+          DecUsersData[dec_users_index - 1][item] = data.field[item]
         }
       } else {
-        dec_users_data.push(data.field)
+        DecUsersData.push(data.field)
       }
-      dec_users_data.forEach((value, index) => {
+      DecUsersData.forEach((value, index) => {
         value.index = index + 1
       })
       table.reload('dec_users_table', {
-        data: dec_users_data,
-        limit: dec_users_data.length,
+        data: DecUsersData,
+        limit: DecUsersData.length,
       })
-      $('#use_org_person_code').val('')
-      $('#use_org_person_tel').val('')
-      $('#use_org_person_code').focus()
+      $('#UseOrgPersonCode').val('')
+      $('#UseOrgPersonTel').val('')
+      $('#UseOrgPersonCode').focus()
       dec_users_index = null
     })
     /**编辑使用人信息--删除**/
@@ -610,18 +632,18 @@
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
             dec_users_index = null
-            let sup_data = dec_users_data.filter(item => {
+            let sup_data = DecUsersData.filter(item => {
               return checkData.every(item2 => {
                 return item.index != item2.index
               })
             })
-            dec_users_data = sup_data
-            dec_users_data.forEach((value, index) => {
+            DecUsersData = sup_data
+            DecUsersData.forEach((value, index) => {
               value.index = index + 1
             })
             table.reload('dec_users_table', {
-              data: dec_users_data,
-              limit: dec_users_data.length,
+              data: DecUsersData,
+              limit: DecUsersData.length,
             })
             $('#UseOrgPersonCode').val('')
             $('#UseOrgPersonTel').val('')
@@ -677,32 +699,32 @@
 
     /**特殊业务标识选择**/
     $('body').on('click', '.tableDiv_spec_td', function () {
-      if ($(this).hasClass("bgcolor")) {
-        $(this).removeClass("bgcolor")
+      if ($(this).hasClass('bgcolor')) {
+        $(this).removeClass('bgcolor')
       } else {
-        $(this).addClass("bgcolor");
+        $(this).addClass('bgcolor')
       }
-      let data = $("#SpecDeclFlag").val().split(",");
-      if (data.includes($(this).attr("name"))) {
-        data.splice(data.indexOf($(this).attr("name")), 1)
+      let data = $('#SpecDeclFlag').val().split(',')
+      if (data.includes($(this).attr('name'))) {
+        data.splice(data.indexOf($(this).attr('name')), 1)
       } else {
-        let spec_data = [];
-        $(".tableDiv_spec_td").each(function () {
-          if ($(this).hasClass("bgcolor")) {
-            spec_data.push($(this).attr("name"))
+        let spec_data = []
+        $('.tableDiv_spec_td').each(function () {
+          if ($(this).hasClass('bgcolor')) {
+            spec_data.push($(this).attr('name'))
           }
-        });
-        data = spec_data;
+        })
+        data = spec_data
       }
-      $("#SpecDeclFlag").val(data.join(","));
-      SpecDeclFlag = [];
-      $(".tableDiv_spec_td").each(function () {
-        if ($(this).hasClass("bgcolor")) {
+      $('#SpecDeclFlag').val(data.join(','))
+      SpecDeclFlag = []
+      $('.tableDiv_spec_td').each(function () {
+        if ($(this).hasClass('bgcolor')) {
           SpecDeclFlag.push(1)
         } else {
           SpecDeclFlag.push(0)
         }
-      });
+      })
     })
 
     /**enter关联理由打开特殊业务标识**/
@@ -739,12 +761,13 @@
           return item.AppCertCode
         })
       }
+
       table.render({
         elem: '#dec_request_certs_table'
         , toolbar: true
         , defaultToolbar: ['filter']
         , colFilterRecord: 'local'
-        , primaryKey: 'app_cert_code'
+        , primaryKey: 'AppCertCode'
         , checkStatus: {
           default: check_data,
         }
@@ -761,12 +784,14 @@
         , limit: queryDocRep.length
         , height: 350,
       })
-      laydate.render({ elem: '#CmplDschrgDt', theme: '#1E9FFF', fixed: true })
-      $('#DomesticConsigneeEname').val(DecRequestCertsData.domestic_consignee_ename)
-      $('#OverseasConsignorCname').val(DecRequestCertsData.overseas_consignor_cname)
-      $('#OverseasConsignorAddr').val(DecRequestCertsData.overseas_consignor_addr)
+
+      laydate.render({ elem: '#CmplDschrgDt', theme: '#1E9FFF', fixed: true })//卸毕日期
+
+      $('#DomesticConsigneeEname').val(DecRequestCertsData.DomesticConsigneeEname)
+      $('#OverseasConsignorCname').val(DecRequestCertsData.OverseasConsignorCname)
+      $('#OverseasConsignorAddr').val(DecRequestCertsData.OverseasConsignorAddr)
       $('#CmplDschrgDt').val(DecRequestCertsData.CmplDschrgDt)
-      $('#DeclGoodsEnames').val(DecRequestCertsData.decl_goods_enames)
+      $('#DeclGoodsEnames').val(DecRequestCertsData.DeclGoodsEnames)
     })
 
     /**保存检验检疫签证申报要素**/
@@ -776,7 +801,7 @@
       DecRequestCertsData.checkData = checkData
       let arr = []
       for (let item of DecRequestCertsData.checkData) {
-        arr.push(item.app_cert_name)
+        arr.push(item.AppCertName)
       }
       $('#DecRequestCerts').val(arr.join(','))
       layer.closeAll()
@@ -3136,15 +3161,19 @@
       // layer.load(2);
 
       /**企业承诺**/
-      data.field.DeclaratioMaterialCode = declaratio_material_code
+      data.field.DeclaratioMaterialCode = DeclaratioMaterialCode
       /**企业资质数据**/
       for (let item of OrderEntQualifDeleteIds) {
         EntQualifData.push({
           id: item,
         })
       }
+      /**检验检疫签证申报要素**/
+      data.field.DecRequestCerts = JSON.stringify(EntQualifData)
+      /**检验检疫签证申报要素**/
+      data.field.DecRequestCerts = JSON.stringify(DecRequestCertsData)
       /**使用人数据**/
-      data.field.DecUsers = dec_users_data
+      data.field.DecUsers = JSON.stringify(DecUsersData)
       /**特殊业务标识数据**/
       data.field.SpecDeclFlag = JSON.stringify(SpecDeclFlag)
       /**业务选项**/
@@ -3635,7 +3664,7 @@
       }
       layer.load(2)
       /**企业承诺**/
-      data.field.declaratio_material_code = declaratio_material_code
+      data.field.DeclaratioMaterialCode = DeclaratioMaterialCode
       /**其他包装**/
       if (data.field.dec_other_packs) {
         data.field.dec_other_packs = JSON.parse(data.field.dec_other_packs)
@@ -3648,7 +3677,7 @@
       }
       data.field.quas = EntQualifData
       /**使用人数据**/
-      data.field.dec_users = dec_users_data
+      data.field.DecUsers = DecUsersData
       /**表体商品数据**/
       for (let item of OrderQuasVinDeleteIds) {
         admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
@@ -4257,7 +4286,7 @@
       }
       layer.load(2)
       /**企业承诺**/
-      data.field.declaratio_material_code = declaratio_material_code
+      data.field.DeclaratioMaterialCode = DeclaratioMaterialCode
       /**其他包装**/
       if (data.field.dec_other_packs) {
         data.field.dec_other_packs = JSON.parse(data.field.dec_other_packs)
@@ -4270,7 +4299,7 @@
       }
       data.field.quas = EntQualifData
       /**使用人数据**/
-      data.field.dec_users = dec_users_data
+      data.field.dec_users = DecUsersData
       /**表体商品数据**/
       for (let item of OrderQuasVinDeleteIds) {
         admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
@@ -4289,10 +4318,10 @@
       }
       data.field.pros = admin.order_pros_data
       /**检验检疫申报要素数据**/
-      data.field.dec_request_certs = DecRequestCertsData.checkData || []
-      data.field.domestic_consignee_ename = DecRequestCertsData.domestic_consignee_ename
-      data.field.overseas_consignor_cname = DecRequestCertsData.overseas_consignor_cname
-      data.field.overseas_consignor_addr = DecRequestCertsData.overseas_consignor_addr
+      data.field.DecRequestCerts = DecRequestCertsData.checkData || []
+      data.field.DomesticConsigneeEname = DecRequestCertsData.DomesticConsigneeEname
+      data.field.OverseasConsignorCname = DecRequestCertsData.OverseasConsignorCname
+      data.field.OverseasConsignorAddr = DecRequestCertsData.overseasConsignorAddr
       data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt
       /**集装箱数据**/
       for (let item of admin.order_containers_delete_ids) {
@@ -4475,7 +4504,7 @@
       }
       layer.load(2)
       /**企业承诺**/
-      data.field.declaratio_material_code = declaratio_material_code
+      data.field.DeclaratioMaterialCode = DeclaratioMaterialCode
       /**其他包装**/
       if (data.field.dec_other_packs) {
         data.field.dec_other_packs = JSON.parse(data.field.dec_other_packs)
@@ -4488,7 +4517,7 @@
       }
       data.field.quas = EntQualifData
       /**使用人数据**/
-      data.field.dec_users = dec_users_data
+      data.field.dec_users = DecUsersData
       /**表体商品数据**/
       for (let item of OrderQuasVinDeleteIds) {
         admin.order_pros_data[item.pros_index].quas[item.index].order_pro_qua_vins.push({
@@ -4508,9 +4537,9 @@
       data.field.pros = admin.order_pros_data
       /**检验检疫申报要素数据**/
       data.field.dec_request_certs = DecRequestCertsData.checkData || []
-      data.field.domestic_consignee_ename = DecRequestCertsData.domestic_consignee_ename
-      data.field.overseas_consignor_cname = DecRequestCertsData.overseas_consignor_cname
-      data.field.overseas_consignor_addr = DecRequestCertsData.overseas_consignor_addr
+      data.field.DomesticConsigneeEname = DecRequestCertsData.DomesticConsigneeEname
+      data.field.OverseasConsignorCname = DecRequestCertsData.OverseasConsignorCname
+      data.field.OverseasConsignorAddr = DecRequestCertsData.OverseasConsignorAddr
       data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt
       /**集装箱数据**/
       for (let item of admin.order_containers_delete_ids) {
