@@ -2967,8 +2967,7 @@ layui.define('view', function (exports) {
         }],
 
       //特殊业务标识反填比对数据
-      spec_decl_flag_data:
-        ['国际赛事', '特殊进出军工物资', '国际援助物资', '国际会议', '直通放行', '外交礼遇', '转关'],
+      SpecDeclFlagData: ['国际赛事', '特殊进出军工物资', '国际援助物资', '国际会议', '直通放行', '外交礼遇', '转关'],
 
       //获取附件数据赋值打印
       async getPdf (order_id, i_e_flag, print_list) {
