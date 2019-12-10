@@ -67,7 +67,7 @@
         $("#CustomMasterName").val("").focus().val(first_name);
         $("#IEDate").val(admin.getCurrDate());
         $("#AplDate").val(admin.getCurrDate());
-        admin.transModeControl(ieflag,isCreate());
+        admin.transModeControl(ieflag, isCreate());
         /**产品**/
         admin.getOrderTable([], ieflag);
         /**光标进入全选**/
@@ -85,9 +85,36 @@
 
         // 数据反填
         if (order_id) {
-          let  orderData = @{{.m}}
+            let orderData = @{{.m}}
             for (let item in orderData) {
                 $(`#${item}`).val(orderData[item]);
+
+                // 业务选项 反填
+                if (item == "PromiseItmes" && orderData[item]) {
+                    let promiseItmes = JSON.parse(orderData[item]);
+                    $(`input[name='PromiseItmes[]']`).each(function (index, element) {
+                        for (let pItem in promiseItmes) {
+                            if (index == pItem) {
+                                if (promiseItmes[pItem] == '1') {
+                                    $(this).next('div').click();
+                                } else if (promiseItmes[pItem] == '0') {
+                                    $(this).data('first', 1);
+                                    $(this).prev("span").text("否")
+                                }
+                            }
+                        }
+                    });
+                }
+                // 业务事项 自报自缴 反填
+                if (item == "Type" && !orderData[item]) {
+                    if(!orderData[item] || orderData[item] != "Z"){
+                        $(`input[name='Type[]']`).each(function (index, element) {
+                            if (index == 1) {
+                                $(this).next('div').click();
+                            }
+                        });
+                    }
+                }
             }
         }
         /**table点击行选中**/
@@ -121,7 +148,7 @@
                     $(document).on('keydown', this.enterEsc);
                 },
                 end: function () {
-                    $("#gross_wet").focus();
+                    $("#GrossWet").focus();
                     $(document).off('keydown', this.enterEsc);
                 }
             });
@@ -147,14 +174,18 @@
                 , limit: data.length
                 , height: 550
             });
+
             $(`.layui-table-view[lay-id='other_packs_list_table'] .layui-table-body tr input`).each(function (index, el) {
                 el.checked = false;
             });
+
             if ($("#DecOtherPacks").val() && $("#DecOtherPacks").val() != 'null') {
                 const dec_other_packs_data = JSON.parse($("#DecOtherPacks").val());
+                console.log($("#DecOtherPacks").val());
+                console.log(dec_other_packs_data);
                 for (let dec_item of dec_other_packs_data) {
                     for (let data_item of data) {
-                        if (dec_item.pack_type == data_item.CustomsCode) {
+                        if (dec_item.PackType == data_item.CustomsCode) {
                             $(`.layui-table-view[lay-id='other_packs_list_table'] .layui-table-body tr[data-index=${data_item.index}] .layui-form-checkbox`).click();
                         }
                     }
@@ -169,10 +200,9 @@
             let data = [];
             for (let item of checkStatus.data) {
                 data.push({
-                    pack_qty: "0",
-                    pack_type: item.CustomsCode,
-                    pack_type_name: item.Name
-
+                    PackQty: "0",
+                    PackType: item.CustomsCode,
+                    PackTypeName: item.Name
                 })
             }
             $("#DecOtherPacks").val(JSON.stringify(data));
@@ -198,23 +228,24 @@
                 },
                 end: function () {
                     $(document).off('keydown', this.enterEsc);
-                    let value = $("#note_s").val();
-                    $("#note_s").val("").focus().val(value);
+                    let value = $("#NoteS").val();
+                    $("#NoteS").val("").focus().val(value);
                 }
             });
             $("#note_s_fu").focus();
-            $("#note_s_fu").val($("#note_s").val());
+            $("#note_s_fu").val($("#NoteS").val());
         });
         $("body").on("input", "#note_s_fu", function () {
             $(".note_s_fu_number").text($(this).val().length)
         });
         /**保存备注**/
         $('body').on('click', '#note_s_save', function () {
-            $("#note_s").val($("#note_s_fu").val());
+            $("#NoteS").val($("#note_s_fu").val());
             layer.closeAll();
         });
+
         /**标记唛码**/
-        $("body").on("input", "#mark_no", function () {
+        $("body").on("input", "#MarkNo", function () {
             $(".mark_no_number span").text($(this).val().length)
         });
         /**填写标记唛码**/
@@ -236,32 +267,35 @@
                 },
                 end: function () {
                     $(document).off('keydown', this.enterEsc);
-                    let value = $("#mark_no").val();
-                    $("#mark_no").val("").focus().val(value);
+                    let value = $("#MarkNo").val();
+                    $("#MarkNo").val("").focus().val(value);
                 }
             });
             $("#mark_no_fu").focus();
-            $("#mark_no_fu").val($("#mark_no").val());
-            $(".mark_no_fu_number").text($("#mark_no").val().length);
+            $("#mark_no_fu").val($("#MarkNo").val());
+            $(".mark_no_fu_number").text($("#MarkNo").val().length);
         });
+
         $("body").on("input", "#mark_no_fu", function () {
             $(".mark_no_fu_number").text($(this).val().length)
         });
+
         /**保存标记唛码**/
         $('body').on('click', '#mark_no_save', function () {
-            $("#mark_no").val($("#mark_no_fu").val());
+            $("#MarkNo").val($("#mark_no_fu").val());
             $(".mark_no_number span").text($("#mark_no_fu").val().length);
             layer.closeAll();
         });
+
         /**标记唛码回车跳转商品焦点**/
         $("body").on("keyup", "#mark_no", function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
             if (event.shiftKey != 1 && eCode == 13) {
                 if ($("#non-disabled-btn").attr("isdeclistshow") == 0) {
-                    if ($("#contr_item").is(":disabled")) {
-                        $("#code_t_s").focus()
+                    if ($("#ContrItem").is(":disabled")) {
+                        $("#CodeTS").focus()
                     } else {
-                        $("#contr_item").focus()
+                        $("#ContrItem").focus()
                     }
                 }
             }
@@ -3010,103 +3044,97 @@
         /**报关整合申报保存**/
         form.on('submit(order_save)', async (data) => {
 
-            // if (is_pros) {
-            //     if (!(data.field.NetWt)) {
-            //         return layer.msg("存在表体商品且是千克，必填净重！");
-            //     }
-            //     let total = 0;
-            //     for (let item of admin.order_pros_data) {
-            //         if (item.g_unit == '035') {
-            //             total += parseFloat(item.g_qty) * 100000;
-            //         } else if (item.first_unit == '035') {
-            //             total += parseFloat(item.first_qty) * 100000;
-            //         } else if (item.second_unit == '035') {
-            //             total += parseFloat(item.second_qty) * 100000;
-            //         }
-            //     }
-            //
-            //     if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
-            //         if (!no_weight_save) {
-            //             layer.open({
-            //                 title: '商品总重量与净重不符'
-            //                 , content: '商品总重量与净重不符！是否要保存'
-            //                 , btn: ['是', '否']
-            //                 , yes: function (index) {
-            //                     no_weight_save = true;
-            //                     layer.close(index);
-            //                     $('#order_save').click();
-            //                 }
-            //                 , btn2: function () {
-            //                     layer.msg('请重新修改净重。');
-            //                     $('#NetWt').focus();
-            //                 }
-            //             });
-            //             if (!no_weight_save) {
-            //                 return false;
-            //             }
-            //         }
-            //     }
-            // }
+            if (@{{.m.OrderItems}}) {
+                if (!(data.field.NetWt)) {
+                    return layer.msg("存在表体商品且是千克，必填净重！");
+                }
+                let total = 0;
+                for (let item of admin.order_pros_data) {
+                    if (item.g_unit == '035') {
+                        total += parseFloat(item.g_qty) * 100000;
+                    } else if (item.first_unit == '035') {
+                        total += parseFloat(item.first_qty) * 100000;
+                    } else if (item.second_unit == '035') {
+                        total += parseFloat(item.second_qty) * 100000;
+                    }
+                }
+
+                if (admin.cutZero((total / 100000).toString()) != admin.cutZero(data.field.NetWt.toString())) {
+                    if (!no_weight_save) {
+                        layer.open({
+                            title: '商品总重量与净重不符'
+                            , content: '商品总重量与净重不符！是否要保存'
+                            , btn: ['是', '否']
+                            , yes: function (index) {
+                                no_weight_save = true;
+                                layer.close(index);
+                                $('#order_save').click();
+                            }
+                            , btn2: function () {
+                                layer.msg('请重新修改净重。');
+                                $('#NetWt').focus();
+                            }
+                        });
+                        if (!no_weight_save) {
+                            return false;
+                        }
+                    }
+                }
+            }
 
             // layer.load(2);
 
             /**企业承诺**/
             data.field.DeclaratioMaterialCode = declaratio_material_code;
-
-            /**其他包装**/
-            if (data.field.DecOtherPacks) {
-                data.field.DecOtherPacks = JSON.parse(data.field.DecOtherPacks);
+            /**企业资质数据**/
+            for (let item of OrderEntQualifDeleteIds) {
+                EntQualifData.push({
+                    id: item
+                })
+            }
+            /**使用人数据**/
+            data.field.DecUsers = dec_users_data;
+            /**特殊业务标识数据**/
+            data.field.SpecDeclFlag = SpecDeclFlag;
+            /**业务选项**/
+            let promiseItmes = [];
+            /**特殊关系确认**/
+            if (!(data.field['PromiseItmes[0]'])) {
+                if ($("#PromiseItmes0").data('first') == '1') {
+                    promiseItmes.push('0');
+                } else {
+                    promiseItmes.push('9');
+                }
+            } else {
+                delete data.field['PromiseItmes[0]'];
+                promiseItmes.push('1');
             }
 
-            /**企业资质数据**/
-            // for (let item of OrderEntQualifDeleteIds) {
-            //     EntQualifData.push({
-            //         id: item
-            //     })
-            // }
-
-            // /**使用人数据**/
-            // data.field.DecUsers = dec_users_data;
-            // /**特殊业务标识数据**/
-            // data.field.SpecDeclFlag = SpecDeclFlag;
-            // /**业务选项**/
-            // data.field.PromiseItmes = [];
-            // /**特殊关系确认**/
-            // if (!(data.field['PromiseItmes[0]'])) {
-            //     if ($("#PromiseItmes0").data('first') == '1') {
-            //         data.field.PromiseItmes.push('0');
-            //     } else {
-            //         data.field.PromiseItmes.push('9');
-            //     }
-            // } else {
-            //     delete data.field['PromiseItmes[0]'];
-            //     data.field.PromiseItmes.push('1');
-            // }
-            //
-            // /**价格影响确认**/
-            // if (!(data.field['PromiseItmes[1]'])) {
-            //     if ($("#PromiseItmes1").data('first') == '1') {
-            //         data.field.PromiseItmes.push('0');
-            //     } else {
-            //         data.field.PromiseItmes.push('9');
-            //     }
-            // } else {
-            //     delete data.field['PromiseItmes[1]'];
-            //     data.field.PromiseItmes.push('1');
-            // }
-            //
-            // /**支付特权使用费确认**/
-            // if (!(data.field['PromiseItmes[2]'])) {
-            //     if ($("#PromiseItmes2").data('first') == '1') {
-            //         data.field.PromiseItmes.push('0');
-            //     } else {
-            //         data.field.PromiseItmes.push('9');
-            //     }
-            // } else {
-            //     delete data.field['PromiseItmes[2]'];
-            //     data.field.PromiseItmes.push('1');
-            // }
-
+            /**价格影响确认**/
+            if (!(data.field['PromiseItmes[1]'])) {
+                if ($("#PromiseItmes1").data('first') == '1') {
+                    promiseItmes.push('0');
+                } else {
+                    promiseItmes.push('9');
+                }
+            } else {
+                delete data.field['PromiseItmes[1]'];
+                promiseItmes.push('1');
+            }
+            /**支付特权使用费确认**/
+            if (!(data.field['PromiseItmes[2]'])) {
+                if ($("#PromiseItmes2").data('first') == '1') {
+                    promiseItmes.push('0');
+                } else {
+                    promiseItmes.push('9');
+                }
+            } else {
+                delete data.field['PromiseItmes[2]'];
+                promiseItmes.push('1');
+            }
+            data.field.PromiseItmes = JSON.stringify(promiseItmes);
+            // 业务事项
+            data.field.Type = data.field['Type[1]'];
             /**异地报关**/
             if ($("#IsOther").prop("checked")) {
                 data.field.IsOther = 1;
@@ -3118,7 +3146,7 @@
                 const result = await admin.post(`/order/store/` + ieflag, data.field);
                 if (result.status) {
                     setTimeout(() => {
-                        admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+                        admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe');
                         window.location.href = "/order/edit/" + result.obj.Id
                     }, 150)
                 }
@@ -3126,7 +3154,7 @@
                 const result = await admin.patch(`/order/update/${order_id}`, data.field);
                 if (result.status) {
                     setTimeout(() => {
-                        admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+                        admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe');
                         window.location.reload()
                     }, 150)
                 }
@@ -3167,10 +3195,7 @@
             });
         });
         /**打印按钮操作**/
-        let print_edit_index
-            , file_type_id
-            , orientation_save
-            , save_pdf_id;
+        let print_edit_index, file_type_id, orientation_save, save_pdf_id;
         table.on('tool(print_lists)', async function (obj) {
             switch (obj.event) {
                 case 'preview':

@@ -99,6 +99,7 @@ func (c *BaseOrderController) bStore(iEFlag string) {
 		c.jsonResult(enums.JRCodeFailed, "时间格式出错", nil)
 	}
 	m.AplDate = aplDate
+	m.IEFlag = iEFlag
 	m.ContactSignDate = aplDate.AddDate(0, -1, 0)
 
 	company, err := models.CompanyByManageCode(m.TradeCode)
@@ -111,6 +112,8 @@ func (c *BaseOrderController) bStore(iEFlag string) {
 
 	m.Company = company
 	m.ClientSeqNo = c.getClientSeqNo(iEFlag, m.CustomMaster)
+	decOtherPacks := c.GetStrings("DecOtherPacks")
+	m.DecOtherPacks = strings.Join(decOtherPacks, ",")
 
 	c.validRequestData(m)
 	if err := models.OrderUpdateOrSave(&m); err != nil {
@@ -142,7 +145,7 @@ func (c *BaseOrderController) bCopy(id int64) {
 		m.AplDate = time.Now()
 		m.ClientSeqNo = c.getClientSeqNo(m.IEFlag, m.CustomMaster)
 		m.SeqNo = ""
-		//m.BondInvtNo = ""
+		m.EntryId = ""
 	}
 	if err := models.OrderUpdateOrSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
@@ -419,7 +422,6 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 			c.jsonResult(enums.JRCodeFailed, "添加失败", err)
 		}
 	}
-
 	c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 }
 
@@ -518,7 +520,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		signature.Object.Package.EnvelopInfo.ReceiverId = receiverId
 		signature.Object.Package.EnvelopInfo.MessageId = m.ClientSeqNo
 		signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
-
 		signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" // 0:暂存，1:申报
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.String("AgentCode")
