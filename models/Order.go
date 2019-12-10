@@ -139,6 +139,7 @@ type Order struct {
 	DecRequestCerts           string    `orm:"column(dec_request_certs);type(text);null" description:"报关单申请单证信息 （检验检疫申报要素） array [[app_cert_code:代码,app_cert_name:代码,appl_ori:正本数量 appl_copy_quan ：副本数量]]"`
 	DecOtherPacks             string    `orm:"column(dec_other_packs);type(text);null" description:"报关单其他包装信息 array [[pack_qty=>包装件数(默认0,留空),pack_type=>包装材料种类]]"`
 	SpecDeclFlag              string    `orm:"column(spec_decl_flag);type(text);null" description:"特殊业务标识 （用 ， 号分割的字符串）  0:未勾选；1:勾选]"`
+	EntQualifTypes            string    `orm:"column(ent_qualif_types);type(text);null" description:"企业资质"`
 	DeclaratioMaterialCode    string    `orm:"column(declaratio_material_code);size(10);null" description:"企业承诺信息 (证明/声明材料代码) :进口填写101040，出口填写102053"`
 	RelId                     string    `orm:"column(rel_id);size(18);null" description:"关联报关单"`
 	RelManNo                  string    `orm:"column(rel_man_no);size(12);null" description:"关联备案"`
@@ -551,6 +552,7 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	orderItem["CorrelationReasonFlag"] = v.CorrelationReasonFlag                                     // "correlation_reason_flag);size(2);null" description:"关联理由"`
 	orderItem["CorrelationReasonFlagName"] = v.CorrelationReasonFlagName                             // "correlation_reason_flag_name);size(50);null" description:"关联理由名称"`
 	orderItem["DecUsers"] = v.DecUsers                                                               // "dec_users);null" description:"使用单位联系人 array [[use_org_person_code:使用单位联系人,use_org_person_tel:使用单位联系电话]]"`
+	orderItem["EntQualifTypes"] = v.EntQualifTypes                                                   // "dec_request_certs);null" description:"报关单申请单证信息 （检验检疫申报要素） array [[app_cert_code:代码,app_cert_name:代码,appl_ori:正本数量 appl_copy_quan ：副本数量]]"`
 	orderItem["DecRequestCerts"] = v.DecRequestCerts                                                 // "dec_request_certs);null" description:"报关单申请单证信息 （检验检疫申报要素） array [[app_cert_code:代码,app_cert_name:代码,appl_ori:正本数量 appl_copy_quan ：副本数量]]"`
 	orderItem["DecOtherPacks"] = v.DecOtherPacks                                                     // "dec_other_packs);null" description:"报关单其他包装信息 array [[pack_qty=>包装件数(默认0,留空),pack_type=>包装材料种类]]"`
 	orderItem["SpecDeclFlag"] = v.SpecDeclFlag                                                       // "spec_decl_flag);size(100);null" description:"特殊业务标识 （用 ， 号分割的字符串）  0:未勾选；1:勾选]"`
