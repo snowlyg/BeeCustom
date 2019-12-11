@@ -54,8 +54,7 @@ layui.define('view', function (exports) {
         let commonClearanceData = layui.data('commonClearance')
         let orderClearanceData = layui.data('orderClearance')
         let annotationClearanceData = layui.data('annotationClearance')
-        let clearanceVersion = await admin.get(
-          '/setting/getOne/ClearanceVersion')
+        let clearanceVersion = await admin.get('/setting/getOne/ClearanceVersion')
         if (
           admin.layuiDataIsEmpty(commonClearanceData) ||
           admin.layuiDataIsEmpty(orderClearanceData) ||
@@ -2554,7 +2553,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#EntyPortName'],
             after: ['#EntyPortCode'],
-          }
+          };
           await admin.base_clearance_data_auto(domestic_ports)
         }
 
@@ -2566,7 +2565,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#EntryTypeName'],
             after: ['#EntryType'],
-          }
+          };
           await admin.base_clearance_data_auto(types_customs)
         }
 

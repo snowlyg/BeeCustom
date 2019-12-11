@@ -246,6 +246,7 @@ func OrderPageList(params *OrderQueryParam) ([]*Order, int64, error) {
 	// 总数量
 	total, err := o.Raw(sql).QueryRows(&orders)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf("QueryRows%v", err))
 		return nil, 0, err
 	}
 
@@ -410,7 +411,7 @@ func GetOrderCommonListSql(sql string, params *OrderQueryParam) string {
 	sql += " AND i_e_flag = '" + params.IEFlag + "'"
 	if len(params.ClientSeqNoLike) > 0 {
 		sql += " AND client_seq_no LIKE '%" + params.ClientSeqNoLike + "%'"
-		sql += " OR bond_invt_no LIKE '%" + params.ClientSeqNoLike + "%'"
+		sql += " OR entry_id LIKE '%" + params.ClientSeqNoLike + "%'"
 	}
 
 	return sql

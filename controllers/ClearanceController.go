@@ -181,7 +181,7 @@ func (c *ClearanceController) transforClearance(data []*models.Clearance, arg []
 
 //  annotationClearance
 func (c *ClearanceController) AnnotationClearance() {
-	arg := []int8{33, 34, 35, 36, 37, 38, 39, 40, 41}
+	arg := []int8{33, 34, 35, 36, 37, 38, 40, 41}
 	data := models.ClearancePageListInTypes(arg)
 	jsonData := c.transforClearance(data, arg)
 	c.Data["json"] = jsonData
@@ -190,7 +190,7 @@ func (c *ClearanceController) AnnotationClearance() {
 
 //  orderClearance
 func (c *ClearanceController) OrderClearance() {
-	arg := []int8{2, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32}
+	arg := []int8{2, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 39}
 	data := models.ClearancePageListInTypes(arg)
 	jsonData := c.transforClearance(data, arg)
 	c.Data["json"] = jsonData

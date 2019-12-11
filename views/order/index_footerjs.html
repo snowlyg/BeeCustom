@@ -117,7 +117,7 @@
           Url: `/order/datagrid/` + "@{{.IEFlag}}",
           Request: {
             SearchTimeString: MonthTime,
-            sort: 'invt_dcl_time',
+            sort: 'apl_date',
             order: 'desc',
           },
         },
@@ -151,7 +151,7 @@
             Request: {
               EtpsInnerInvtNoLike: $(this).val(),
               SearchTimeString: MonthTime,
-              sort: 'invt_dcl_time',
+              sort: 'apl_date',
               order: 'desc',
             },
           },
@@ -178,7 +178,7 @@
           Url: `/order/datagrid/` + "@{{.IEFlag}}",
           Request: {
             SearchTimeString: MonthTime,
-            sort: 'invt_dcl_time',
+            sort: 'apl_date',
             order: 'desc',
           },
         },
@@ -306,7 +306,7 @@
 
     /**时间**/
     laydate.render({
-      elem: '#invt_dcl_time',
+      elem: '#apl_date',
       range: true,
       theme: '#1E9FFF',
     });
@@ -477,7 +477,7 @@
           Request: {
             TrafMode: data.value ? data.value : '',
             SearchTimeString: MonthTime,
-            sort: 'invt_dcl_time',
+            sort: 'apl_date',
             order: 'desc',
           },
         },

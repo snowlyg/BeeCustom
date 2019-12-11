@@ -303,10 +303,6 @@ func (c *BaseOrderController) bUpdate(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "ParseForm", m)
 	}
 
-	if m != nil {
-		m.AplDate = time.Now()
-	}
-
 	c.validRequestData(m)
 	if err := models.OrderUpdateOrSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)

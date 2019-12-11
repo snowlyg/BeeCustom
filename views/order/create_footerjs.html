@@ -54,21 +54,19 @@
       'documents_attached',
       'enterprise_product',
       'site_code',
+      'types_customs',
       'ann_two_account_manual',
-    ])
-
+    ]);
+    // 基础参数版本
+    await admin.getClearanceData();
     /**根据屏幕等比例缩小**/
-    admin.sideFlexible_window()
+    admin.sideFlexible_window();
     /**回车键光标跳转**/
-    admin.keydown_input_textarea()
+    admin.keydown_input_textarea();
     /**首次进入自动聚焦 and 初始数据赋值**/
-    const first_name = $('#CustomMasterName').val()
-    $('#CustomMasterName').val('').focus().val(first_name)
-    $('#IEDate').val(admin.getCurrDate())
-    $('#AplDate').val(admin.getCurrDate())
-    admin.transModeControl(ieflag, isCreate())
+    admin.transModeControl(ieflag, isCreate());
     /**产品**/
-    admin.getOrderTable([], ieflag)
+    admin.getOrderTable([], ieflag);
     /**光标进入全选**/
     $('body').on('focus', 'input,textarea', function (e) {
       $(this).select()
@@ -88,7 +86,7 @@
       for (let item in orderData) {
         // 业务选项 反填
         if (item == 'PromiseItmes' && orderData[item]) {
-          let promiseItmes = JSON.parse(orderData[item])
+          let promiseItmes = JSON.parse(orderData[item]);
           $(`input[name='PromiseItmes[]']`).each(function (index, element) {
             for (let pItem in promiseItmes) {
               if (index == pItem) {
@@ -136,21 +134,47 @@
           DecRequestCertsData.OverseasConsignorAddr =DecRequestCertsData.OverseasConsignorAddr
           DecRequestCertsData.CmplDschrgDt =DecRequestCertsData.CmplDschrgDt
         } else if (item == 'EntQualifTypes' && orderData[item]) { // 企业资质 反填
-          EntQualifData.forEach((value, index) => {
-            value.index = index + 1
-          });
-          $("#EntQualifTypeCode").val(EntQualifData[0].EntQualifTypeCode);
-          $("#EntQualifTypeName").val(EntQualifData[0].EntQualifTypeName);
+            if(EntQualifData.length >0){
+                EntQualifData.forEach((value, index) => {
+                    value.index = index + 1
+                });
+                $("#EntQualifTypeCode").val(EntQualifData[0].EntQualifTypeCode);
+                $("#EntQualifTypeName").val(EntQualifData[0].EntQualifTypeName);
+            }
+
         } else if (item == 'DeclaratioMaterialCode' && orderData[item]) { // 企业承诺 反填
           // 企业承诺
-          if (DeclaratioMaterialCode) {
-            console.log(DeclaratioMaterialCode);
+          if (DeclaratioMaterialCode == "") {
             $('#DeclaratioMaterialCode').next('div').click()
           }
         } else if (item == 'DecUsers' && orderData[item]) { // 使用人 反填
           DecUsersData.forEach((value, index) => {
             value.index = index + 1
           })
+        } else if (item == 'IEDate') { // 进出口日期 反填
+            if(orderData[item]){
+                $(`#${item}`).val(orderData[item])
+            }else{
+                $(`#${item}`).val(admin.getCurrDate())
+            }
+        } else if (item == 'AplDate') { // 申报日期 反填
+            if(orderData[item]){
+                $(`#${item}`).val(orderData[item])
+            }else{
+                $(`#${item}`).val(admin.getCurrDate())
+            }
+        } else if (item == 'CustomMaster') { // 申报日期 反填
+            if(orderData[item]){
+                $(`#${item}`).val(orderData[item])
+            }else{
+                $(`#${item}`).val(5207)
+            }
+        } else if (item == 'CustomMasterName') { // 申报日期 反填
+            if(orderData[item]){
+                $(`#${item}`).val(orderData[item])
+            }else{
+                $(`#${item}`).val("凤岗海关")
+            }
         } else {
           $(`#${item}`).val(orderData[item])
         }
@@ -561,13 +585,13 @@
           DeclaratioMaterialCode ="102053";
         }
       }
-    })
+    });
 
     // 启运日期
-    laydate.render({ elem: '#DespDate', theme: '#1E9FFF', fixed: true, format: 'yyyyMMdd' })
+    laydate.render({ elem: '#DespDate', theme: '#1E9FFF', fixed: true, format: 'yyyyMMdd' });
 
     /**编辑使用人信息**/
-    let dec_users_index = null
+    let dec_users_index = null;
     $('body').on('click', '#DecUsersBtn', async function () {
       layer.open({
         type: 1,
@@ -576,7 +600,7 @@
         area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '530px'],
         content: $('#dec_users_template').html(),
       })
-      $('#UseOrgPersonCode').focus()
+      $('#UseOrgPersonCode').focus();
       table.render({
         elem: '#dec_users_table'
         , toolbar: '#dec_users_tool'
@@ -3168,17 +3192,17 @@
       // layer.load(2);
 
       /**企业承诺**/
-      data.field.DeclaratioMaterialCode = DeclaratioMaterialCode
+      data.field.DeclaratioMaterialCode = DeclaratioMaterialCode;
       /**企业资质**/
-      data.field.EntQualifTypes = JSON.stringify(EntQualifData)
+      data.field.EntQualifTypes = JSON.stringify(EntQualifData);
       /**检验检疫签证申报要素**/
-      data.field.DecRequestCerts = JSON.stringify(DecRequestCertsData)
+      data.field.DecRequestCerts = JSON.stringify(DecRequestCertsData);
       /**使用人数据**/
-      data.field.DecUsers = JSON.stringify(DecUsersData)
+      data.field.DecUsers = JSON.stringify(DecUsersData);
       /**特殊业务标识数据**/
-      data.field.SpecDeclFlag = JSON.stringify(SpecDeclFlag)
+      data.field.SpecDeclFlag = JSON.stringify(SpecDeclFlag);
       /**业务选项**/
-      let promiseItmes = []
+      let promiseItmes = [];
       /**特殊关系确认**/
       if (!(data.field['PromiseItmes[0]'])) {
         if ($('#PromiseItmes0').data('first') == '1') {
@@ -3187,7 +3211,7 @@
           promiseItmes.push('9')
         }
       } else {
-        delete data.field['PromiseItmes[0]']
+        delete data.field['PromiseItmes[0]'];
         promiseItmes.push('1')
       }
 
@@ -3199,7 +3223,7 @@
           promiseItmes.push('9')
         }
       } else {
-        delete data.field['PromiseItmes[1]']
+        delete data.field['PromiseItmes[1]'];
         promiseItmes.push('1')
       }
       /**支付特权使用费确认**/
@@ -3210,12 +3234,12 @@
           promiseItmes.push('9')
         }
       } else {
-        delete data.field['PromiseItmes[2]']
+        delete data.field['PromiseItmes[2]'];
         promiseItmes.push('1')
       }
-      data.field.PromiseItmes = JSON.stringify(promiseItmes)
+      data.field.PromiseItmes = JSON.stringify(promiseItmes);
       // 业务事项
-      data.field.Type = data.field['Type[1]']
+      data.field.Type = data.field['Type[1]'];
       // 原箱运输
       if (!(data.field['OrigBoxFlag'])) {
         data.field.OrigBoxFlag = 0
@@ -3228,24 +3252,24 @@
       }
 
       if (!order_id) {
-        const result = await admin.post(`/order/store/` + ieflag, data.field)
+        const result = await admin.post(`/order/store/` + ieflag, data.field);
         if (result.status) {
           setTimeout(() => {
-            admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+            admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe');
             window.location.href = '/order/edit/' + result.obj.Id
           }, 150)
         }
       } else {
-        const result = await admin.patch(`/order/update/${order_id}`, data.field)
+        const result = await admin.patch(`/order/update/${order_id}`, data.field);
         if (result.status) {
           setTimeout(() => {
-            admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+            admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe');
             window.location.reload()
           }, 150)
         }
       }
       layer.closeAll('loading')
-    })
+    });
 
     /**打印**/
     $('body').on('click', '#order_print', async function () {
