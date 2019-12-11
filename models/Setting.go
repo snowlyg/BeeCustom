@@ -66,6 +66,8 @@ func GetSettingRValueByKey(key string) (map[string]string, error) {
 		iv := strings.Split(v, ":")
 		if len(iv) > 1 && len(iv[0]) > 0 && len(iv[1]) > 0 {
 			rValue[iv[0]] = iv[1]
+		} else {
+			rValue["0"] = v
 		}
 	}
 

@@ -104,7 +104,6 @@ redis_password = ""
 #过期时间
 cache_expire = 10
 
-include "clearance.conf"
 include "import.conf"
 include "handbook.conf"
 include "annotation.conf"

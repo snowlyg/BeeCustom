@@ -89,7 +89,14 @@ func (c *SettingController) GetOne() {
 			utils.LogDebug(fmt.Sprintf("数据无效出错：%v", err))
 			c.pageError("数据无效，请刷新后重试")
 		}
-		c.Data["json"] = rvalue
+
+		//单个设置
+		if len(rvalue) == 1 {
+			c.Data["json"] = rvalue["0"]
+		} else {
+			c.Data["json"] = rvalue
+		}
+
 	}
 
 	c.ServeJSON()
