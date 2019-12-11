@@ -15,6 +15,7 @@ func (u *Ciq) TableName() string {
 type CiqQueryParam struct {
 	BaseQueryParam
 
+	Hs       string //模糊查询
 	NameLike string //模糊查询
 }
 
