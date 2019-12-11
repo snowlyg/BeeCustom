@@ -76,8 +76,6 @@ func (c *OrderDocumentController) saveOrUpdate(m *models.OrderDocument, aId int6
 func (c *OrderDocumentController) Delete() {
 	idsString := c.GetString("Ids")
 	Ids := strings.Split(idsString, ",")
-	utils.LogDebug(idsString)
-	utils.LogDebug(Ids)
 	for _, i := range Ids {
 		id, err := strconv.ParseInt(i, 10, 64)
 		if err != nil {

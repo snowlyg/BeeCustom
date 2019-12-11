@@ -2774,7 +2774,11 @@
         /**随附单证--点击行反填数据**/
         table.on('row(order_documents_table)', function (obj) {
             for (let item in obj.data) {
+                if (item == "Id") {
+                    $(`#OrderDocumentId`).val(obj.data[item])
+                } else {
                 $(`#${item}`).val(obj.data[item])
+                }
             }
             order_documents_index = obj.data.index;
             $('#DocuCodeName').focus()

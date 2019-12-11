@@ -171,6 +171,7 @@ type Order struct {
 	HandBookId      int64             `orm:"column(hand_book_id)" form:"HandBookId"`
 	OrderItems      []*OrderItem      `orm:"reverse(many)"` // 设置一对多关系
 	OrderContainers []*OrderContainer `orm:"reverse(many)"` // 设置一对多关系
+	OrderDocuments  []*OrderDocument  `orm:"reverse(many)"` // 设置一对多关系
 	OrderRecords    []*OrderRecord    `orm:"reverse(many)"` // 设置一对多关系
 
 }
@@ -576,6 +577,7 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	orderItem["IsSync"] = v.IsSync
 
 	orderItem["OrderContainers"] = v.OrderContainers
+	orderItem["OrderDocuments"] = v.OrderDocuments
 
 	orderItem["ContactSignDate"] = enums.GetDateTimeString(&v.ContactSignDate, enums.BaseDateFormat) // contact_sign_date);type(datetime);null" description:"合同签约日期（进出口日期前一个月）"`
 	orderItem["AplDate"] = enums.GetDateTimeString(&v.AplDate, enums.BaseDateFormat)

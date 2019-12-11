@@ -76,8 +76,6 @@ func (c *OrderContainerController) saveOrUpdate(m *models.OrderContainer, aId in
 func (c *OrderContainerController) Delete() {
 	idsString := c.GetString("Ids")
 	Ids := strings.Split(idsString, ",")
-	utils.LogDebug(idsString)
-	utils.LogDebug(Ids)
 	for _, i := range Ids {
 		id, err := strconv.ParseInt(i, 10, 64)
 		if err != nil {
