@@ -2728,6 +2728,18 @@ layui.define('view', function (exports) {
           await admin.base_clearance_data_auto(type_container)
         }
 
+        if ($.inArray('lcl_flag', loadArray) >= 0) {
+          let lcl_flag = {
+            dataType: 'orderClearance',
+            type: 42,
+            name: '拼箱规格',
+            filter_type: 's',
+            id: ['#LclFlagName'],
+            after: ['#LclFlag'],
+          }
+          await admin.base_clearance_data_auto(lcl_flag)
+        }
+
         if ($.inArray('documents_attached', loadArray) >= 0) {
           let documents_attached = {
             dataType: 'orderClearance',

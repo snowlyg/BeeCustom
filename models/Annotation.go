@@ -363,7 +363,7 @@ func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 	return sql
 }
 
-// TransformAnnotation 格式化列表数据
+// TransformAnnotation 格式化数据
 func TransformAnnotation(id int64, relation string) map[string]interface{} {
 
 	v, _ := AnnotationOne(id, relation)

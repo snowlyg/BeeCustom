@@ -3,10 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/utils"
+	"golang.org/x/net/html"
 )
 
 type SettingController struct {
@@ -72,7 +74,9 @@ func (c *SettingController) TreeGrid() {
 
 	// 获取数据列表和总数
 	data, total := models.SettingTreeGrid(&params)
-	c.ResponseList(data, total)
+	dataLists := c.TransformSettingList(data)
+
+	c.ResponseList(dataLists, total)
 	c.ServeJSON()
 }
 
@@ -80,12 +84,12 @@ func (c *SettingController) TreeGrid() {
 func (c *SettingController) GetOne() {
 	key := c.GetString(":key", "")
 	if len(key) > 0 {
-		m, err := models.GetSettingByKey(key)
+		rvalue, err := models.GetSettingRValueByKey(key)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("数据无效出错：%v", err))
 			c.pageError("数据无效，请刷新后重试")
 		}
-		c.Data["json"] = m.Value
+		c.Data["json"] = rvalue
 	}
 
 	c.ServeJSON()
@@ -94,15 +98,7 @@ func (c *SettingController) GetOne() {
 // Edit 资源编辑页面
 func (c *SettingController) Edit() {
 	Id, _ := c.GetInt64(":id", 0)
-	if Id > 0 {
-		m, err := models.SettingOne(Id)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("数据无效出错：%v", err))
-			c.pageError("数据无效，请刷新后重试")
-		}
-		c.Data["m"] = m
-	}
-
+	c.Data["m"], _ = models.SettingOne(Id)
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "setting/edit_footerjs.html"
@@ -118,9 +114,7 @@ func (c *SettingController) Update() {
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
-
 	c.validRequestData(m)
-
 	if _, err := models.SettingSave(&m); err == nil {
 		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
 	} else {
@@ -140,4 +134,23 @@ func (c *SettingController) Delete() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", 0)
 	}
+}
+
+// TransformSettingList 格式化列表数据
+func (c *SettingController) TransformSettingList(ms []*models.Setting) []*map[string]interface{} {
+	var dataLists []*map[string]interface{}
+	for _, v := range ms {
+		value := html.UnescapeString(v.Value)
+		valueEnd := value[:len(value)-1]
+		if len(value) > 30 {
+			valueEnd = value[:30] + "..."
+		}
+		dataList := make(map[string]interface{})
+		dataList["Id"] = strconv.FormatInt(v.Id, 10)
+		dataList["Key"] = v.Key
+		dataList["Value"] = valueEnd
+		dataList["Rmk"] = v.Rmk
+		dataLists = append(dataLists, &dataList)
+	}
+	return dataLists
 }

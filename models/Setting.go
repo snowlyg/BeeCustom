@@ -1,9 +1,11 @@
 package models
 
 import (
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego/orm"
+	"golang.org/x/net/html"
 )
 
 // SettingQueryParam 用于搜索的类
@@ -19,9 +21,10 @@ func (a *Setting) TableName() string {
 // Setting
 type Setting struct {
 	BaseModel
-	Key   string `orm:"size(128)"`
-	Value string `orm:"type(text)"`
-	Rmk   string `orm:"size(128)"`
+	Key    string `orm:"size(128)"`
+	Value  string `orm:"type(text)"`
+	RValue string `orm:"type(text)"`
+	Rmk    string `orm:"size(128)"`
 }
 
 func NewSetting(id int64) Setting {
@@ -42,11 +45,13 @@ func SettingOne(id int64) (*Setting, error) {
 		return nil, err
 	}
 
+	m.Value = html.UnescapeString(m.Value)
+
 	return &m, nil
 }
 
-// GetSettingByKey 获取单条
-func GetSettingByKey(key string) (*Setting, error) {
+// GetSettingRValueByKey 获取单条
+func GetSettingRValueByKey(key string) (map[string]string, error) {
 	o := orm.NewOrm()
 	m := NewSetting(0)
 
@@ -56,7 +61,15 @@ func GetSettingByKey(key string) (*Setting, error) {
 		return nil, err
 	}
 
-	return &m, nil
+	rValue := map[string]string{}
+	for _, v := range strings.Split(m.RValue, ",") {
+		iv := strings.Split(v, ":")
+		if len(iv) > 1 && len(iv[0]) > 0 && len(iv[1]) > 0 {
+			rValue[iv[0]] = iv[1]
+		}
+	}
+
+	return rValue, nil
 }
 
 // SettingTreeGrid 获取treegrid顺序的列表
@@ -75,7 +88,9 @@ func SettingTreeGrid(params *SettingQueryParam) ([]*Setting, int64) {
 // Save 添加、编辑页面 保存
 func SettingSave(m *Setting) (*Setting, error) {
 	o := orm.NewOrm()
-
+	//html.EscapeString(m.Value)
+	//html.UnescapeString(content)
+	m.Value = html.EscapeString(m.Value)
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			return nil, err

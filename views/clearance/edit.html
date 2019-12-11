@@ -7,8 +7,9 @@
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>参数类型：</label>
                         <div class="layui-input-block">
                             @{{ range $i,$v := .type }}
-                                @{{ if eq $.m.Type $i }}
-                                    <input type="text" name="CustomsCode"lay-verify="required" lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input" value="@{{ $v }}">
+                                @{{ if eq $.cType $i }}
+                                    <input type="hidden" name="Type"lay-verify="required" value="@{{ $i }}">
+                                    <input type="text" name="TypeName"lay-verify="required" lay-verType="tips" placeholder="请输入" autocomplete="off" class="layui-input" value="@{{ $v }}">
                                 @{{end}}
                             @{{end}}
                         </div>

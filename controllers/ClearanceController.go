@@ -11,7 +11,6 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xlsx"
-	"github.com/astaxie/beego"
 )
 
 type ClearanceController struct {
@@ -36,17 +35,12 @@ func (c *ClearanceController) Prepare() {
 	// 如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	// 权限控制里会进行登录验证，因此这里不用再作登录验证
 	// c.checkLogin()
+	c.clearanceType, _ = models.GetSettingRValueByKey("ClearanceTypes")
 
 }
 
 func (c *ClearanceController) Index() {
-
-	clearanceType, err := beego.AppConfig.GetSection("clearance_type")
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("clearance_type:%v", err))
-	}
-	c.Data["type"] = clearanceType
-
+	c.Data["type"] = c.clearanceType
 	// 页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -71,19 +65,6 @@ func (c *ClearanceController) DataGrid() {
 }
 
 // 通关参数更新时间
-func (c *ClearanceController) GetClearanceUpdateTime() {
-	lastUpdateTime := c.getLastUpdteTime()
-	// 定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = 0
-	result["rows"] = lastUpdateTime
-	result["code"] = 0
-	c.Data["json"] = result
-
-	c.ServeJSON()
-}
-
-// 通关参数更新时间
 func (c *ClearanceController) GetClearanceUpdateTimeByType() {
 	clearanceType, _ := c.GetInt8(":type")
 	format := "超过一个月未更新"
@@ -94,10 +75,7 @@ func (c *ClearanceController) GetClearanceUpdateTimeByType() {
 		}
 	}
 
-	// 定义返回的数据结构
-	result := make(map[string]interface{})
-	result["data"] = format
-	c.Data["json"] = result
+	c.Data["json"] = format
 
 	c.ServeJSON()
 }
@@ -118,14 +96,12 @@ func (c *ClearanceController) Store() {
 	if err := c.ParseForm(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
-
 	c.validRequestData(m)
-
-	if _, err := models.ClearanceSave(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+	if nm, err := models.ClearanceSave(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
 	} else {
-		c.setLastUpdteTime(m.Type)
-		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
+		c.setLastUpdteTime(nm.Type)
+		c.jsonResult(enums.JRCodeSucc, "添加成功", nil)
 	}
 }
 
@@ -140,6 +116,7 @@ func (c *ClearanceController) Edit() {
 	}
 
 	c.Data["m"] = m
+	c.Data["cType"] = strconv.Itoa(int(m.Type))
 	c.Data["type"] = c.clearanceType
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
@@ -190,7 +167,7 @@ func (c *ClearanceController) AnnotationClearance() {
 
 //  orderClearance
 func (c *ClearanceController) OrderClearance() {
-	arg := []int8{2, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 39}
+	arg := []int8{2, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 39, 42}
 	data := models.ClearancePageListInTypes(arg)
 	jsonData := c.transforClearance(data, arg)
 	c.Data["json"] = jsonData
@@ -210,10 +187,12 @@ func (c *ClearanceController) Update() {
 	c.validRequestData(m)
 
 	if _, err := models.ClearanceSave(&m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "编辑失败", m)
+		c.jsonResult(enums.JRCodeFailed, "编辑失败", nil)
 	} else {
-		c.setLastUpdteTime(m.Type)
-		c.jsonResult(enums.JRCodeSucc, "编辑成功", m)
+		nm, _ := models.ClearanceOne(Id)
+		utils.LogDebug(nm)
+		c.setLastUpdteTime(nm.Type)
+		c.jsonResult(enums.JRCodeSucc, "编辑成功", nil)
 	}
 }
 
@@ -324,7 +303,6 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 
 // 获取最后更新时间
 func (c *ClearanceController) getLastUpdteTime() []*models.ClearanceUpdateTime {
-
 	// 直接获取参数 getDataGridData()
 	params := models.NewClearanceUpdateTimeQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
@@ -337,12 +315,14 @@ func (c *ClearanceController) getLastUpdteTime() []*models.ClearanceUpdateTime {
 
 // 设置最后更新时间
 func (c *ClearanceController) setLastUpdteTime(cType int8) {
+	if cType == 0 {
+		c.jsonResult(enums.JRCodeFailed, "类型错误", nil)
+	}
 
 	oldLastUpdateTime, err := models.GetLastUpdteTimeByClearanceType(cType)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)
 	}
-
 	if oldLastUpdateTime == nil {
 		lastUpdateTime := models.NewClearanceUpdateTime(0)
 		lastUpdateTime.LastUpdatedAt = time.Now()
@@ -353,6 +333,7 @@ func (c *ClearanceController) setLastUpdteTime(cType int8) {
 		}
 	} else {
 		oldLastUpdateTime.LastUpdatedAt = time.Now()
+		oldLastUpdateTime.Type = cType
 		_, err = models.ClearanceUpdateTimeSave(oldLastUpdateTime)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "设置最后更新时间失败", nil)

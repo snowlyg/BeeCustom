@@ -16,8 +16,8 @@
                     <div class="layui-col-md6">
                         <label class="layui-form-label"><i class="red margin-right-4">*</i>Vaule：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="Value" lay-verify="required" lay-verType="tips" placeholder="输入设置内容" autocomplete="off" class="layui-input"  value="@{{.m.Value }}">
-
+                            <input type="hidden" name="RValue" autocomplete="off" class="layui-input">
+                            <textarea name="Vaule" class="layui-textarea" id="LAY_demo1" style="display: none" >@{{ .m.Value }}</textarea>
                         </div>
                     </div>
                 </div>

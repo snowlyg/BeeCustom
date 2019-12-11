@@ -192,7 +192,6 @@ func init() {
 	beego.Router("/clearance/commonClearance", &controllers.ClearanceController{}, "Get:CommonClearance")
 	beego.Router("/clearance/orderClearance", &controllers.ClearanceController{}, "Get:OrderClearance")
 	beego.Router("/clearance/annotationClearance", &controllers.ClearanceController{}, "Get:AnnotationClearance")
-	beego.Router("/clearance/get_clearance_update_time", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTime")
 	beego.Router("/clearance/last_update_time/?:type", &controllers.ClearanceController{}, "Get:GetClearanceUpdateTimeByType")
 	beego.Router("/clearance/create/?:type", &controllers.ClearanceController{}, "Get:Create")
 	beego.Router("/clearance/store", &controllers.ClearanceController{}, "Post:Store")

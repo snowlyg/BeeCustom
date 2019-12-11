@@ -1,22 +1,27 @@
 <script>
-  layui.config({
-    base: '/static/customAdmin/',
-  }).extend({
-    index: 'lib/index',
-  }).use(['index'], function () {
-    const admin = layui.admin, form = layui.form
-    form.on('submit(perm_submit)', async (data) => {
-      let resultStatus = false;
-      if (`@{{ .m.Id }}`){
-        let result = await admin.patch(`/setting/update/` + @{{ .m.Id }}, data.field)
-        resultStatus=result.status
-      }else{
-        let result = await admin.post(@{{ urlfor "SettingController.Store" }}, data.field)
-        resultStatus=result.status
-      }
-      if (resultStatus){
-            admin.reloadFrame("系统设置iframe");
-      }
+    layui.config({
+        base: '/static/customAdmin/',
+    }).extend({
+        index: 'lib/index',
+    }).use(['index',"layedit"], function () {
+        const {admin, form, layedit} = layui;
+        //构建一个默认的编辑器
+        var index = layedit.build('LAY_demo1');
+        form.on('submit(perm_submit)', async (data) => {
+            let resultStatus = false;
+            data.field.Value = layedit.getContent(index);
+            data.field.RValue = layedit.getText(index);
+            if (`@{{ .m.Id }}`) {
+                let result = await admin.patch(`/setting/update/` + @{{ .m.Id }}, data.field);
+                resultStatus = result.status
+            } else {
+                let result = await admin.post(@{{ urlfor "SettingController.Store" }}, data.field);
+                resultStatus = result.status
+            }
+            if (resultStatus) {
+                admin.reloadFrame("系统设置iframe");
+                window.location.reload();
+            }
+        })
     })
-  })
 </script>

@@ -5,7 +5,6 @@
         index: 'lib/index'
     }).use(['index', 'table', 'admin', 'upload'], async () => {
         const table = layui.table, form = layui.form, admin = layui.admin, upload = layui.upload, $ = layui.$;
-
         const upload_clearance = upload.render({
             elem: '#clearance_upload'
             , url: '/clearance/import/' + $("#clearance_type_select").val()
@@ -136,11 +135,11 @@
         });
 
         let lastUpdateTime = await admin.get("/clearance/last_update_time/1");
-        $("#lastUpdateTime").text("最近更新：" + lastUpdateTime.data);
+        $("#lastUpdateTime").text("最近更新：" + lastUpdateTime);
 
         form.on('select(type)', async function (data) {
             let lastUpdateTime = await admin.get("/clearance/last_update_time/" + data.value);
-            $("#lastUpdateTime").text("最近更新：" + lastUpdateTime.data);
+            $("#lastUpdateTime").text("最近更新：" + lastUpdateTime);
             table.reload('clearance_lists', {
                 where: {
                     Type: data.value ? `${data.value}` : ''

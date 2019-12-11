@@ -25,7 +25,6 @@ type OrderContainerQueryParam struct {
 // OrderContainer 实体类
 type OrderContainer struct {
 	BaseModel
-
 	ContainerId     string    `orm:"column(container_id);size(11)" description:"集装箱号"`
 	ContainerMd     string    `orm:"column(container_md);size(2);null" description:"集装箱规格"`
 	ContainerMdName string    `orm:"column(container_md_name);size(200);null" description:"集装箱规格名称"`

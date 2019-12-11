@@ -5,7 +5,7 @@
     index: 'lib/index',
   }).use(['index', 'AutoComplete', 'laydate', 'upload'], async () => {
     const { form, admin, table, $, laydate, upload } = layui
-    let order_containers = [] /**集装箱**/
+    let OrderContainers = [] /**集装箱**/
       , order_id = parseInt(@{{.m.Id}}) //id
       , ieflag = "@{{.m.IEFlag}}" ? "@{{.m.IEFlag}}" : "@{{.IEFlag}}" //进出口标志
       , EntQualifData =  @{{.m.EntQualifTypes}} ? JSON.parse(@{{.m.EntQualifTypes}}) : [] /**企业资质**/
@@ -15,8 +15,6 @@
       , OrderQuasDeleteIds = []
       //货物申报产品资质VIN删除存储
       , OrderQuasVinDeleteIds = []
-      // 货物申报集装箱删除存储
-      , OrderContainersDeleteIds = []
       // 货物申报随附单证删除存储
       , OrderDocumentsDeleteIds = []
       // 货物申报原产地删除存储
@@ -55,6 +53,7 @@
       'enterprise_product',
       'site_code',
       'types_customs',
+      'lcl_flag',
       'ann_two_account_manual',
     ]);
     // 基础参数版本
@@ -1796,7 +1795,8 @@
 
       /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
       admin.is_total_number(admin.order_pros_data)
-    })
+    });
+
     /**商品--点击行反填数据**/
     table.on('row(order_pros)', function (obj) {
 
@@ -1842,7 +1842,8 @@
           }
         }
       }
-    })
+    });
+
     /**商品列表--按钮操作**/
     table.on('toolbar(order_pros)', async function (obj) {
       let checkStatus = table.checkStatus(obj.config.id)
@@ -2385,97 +2386,6 @@
       })
     }
 
-    /**查看商品申报要素-下一条**/
-
-    /*$("body").on("click", "#declaration_next_look", async function () {
-            if ((declaration_index + 1) == admin.order_pros_data.length) {
-                return layer.msg("已经是最后一条了");
-            }
-            declaration_index += 1;
-            const hs_code_data_show = await admin.get(`/hs_code/lists?limit=0&search=${admin.order_pros_data[declaration_index].code_t_s}`);
-            const declaration_data_array_show = hs_code_data_show.data[0].declaration.split(";");
-            const data_show = declaration_data_array_show.map((item, index) => {
-                if (index < 9) {
-                    return item.substr(1)
-                } else {
-                    return item.substr(2)
-                }
-            });
-            layui.laytpl($("#declaration_template").html()).render(data_show, function (html) {
-                $('#declaration_list_reload').html(html)
-            });
-            $(".manual_no_btn_next").show();
-            $(".order_table_form_show input").each(function () {
-                if (!declaration_edit) {
-                    $(this).attr("disabled", "disabled");
-                }
-                $(this).val("");
-            });
-            $("#selectCodeTs").val(admin.order_pros_data[declaration_index].g_name);
-            $("#good_information").val(`${admin.order_pros_data[declaration_index].g_no}-${admin.order_pros_data[declaration_index].contr_item ? admin.order_pros_data[declaration_index].contr_item : '一般贸易'}-${admin.order_pros_data[declaration_index].g_name}`);
-            let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`);
-            let data_filter_show = [];
-            for (let item of brand_type_show) {
-                data_filter_show.push({
-                    id: item.customs_code,
-                    label: `${item.customs_code}-${item.name}`,
-                    value: `${item.name}`
-                })
-            }
-            admin.brand_type_data = data_filter_show;
-            $("#val0Name").AutoComplete({
-                'data': data_filter_show,
-                'width': 280,
-                'itemHeight': 20,
-                'listStyle': 'custom',
-                'listDirection': 'down',
-                'createItemHandler': function (index, data) {
-                    return `<p class="auto_list_p">${data.label}</p>`
-                },
-                'afterSelectedHandler': function (data) {
-                    $("#val0").val(data.id);
-                }
-            });
-
-            let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`);
-            let data_filter_benefits_show = [];
-            for (let item of export_benefits_show) {
-                data_filter_benefits_show.push({
-                    id: item.customs_code,
-                    label: `${item.customs_code}-${item.name}`,
-                    value: `${item.name}`
-                })
-            }
-            admin.export_benefits_data = data_filter_benefits_show;
-            $("#val1Name").AutoComplete({
-                'data': data_filter_benefits_show,
-                'width': 280,
-                'itemHeight': 20,
-                'listStyle': 'custom',
-                'listDirection': 'down',
-                'createItemHandler': function (index, data) {
-                    return `<p class="auto_list_p">${data.label}</p>`
-                },
-                'afterSelectedHandler': function (data) {
-                    $("#val1").val(data.id);
-                }
-            });
-            $("#elements").val(admin.order_pros_data[declaration_index].g_model);
-            const arrAnge_show = admin.order_pros_data[declaration_index].g_model.split("|");
-            arrAnge_show.forEach((value, index) => {
-                $(`#val${index}`).val(value)
-            });
-            admin.brand_type_data.forEach((value, index) => {
-                if (value.id == $("#val0").val()) {
-                    $("#val0Name").val(value.value)
-                }
-            });
-            admin.export_benefits_data.forEach((value, index) => {
-                if (value.id == $("#val1").val()) {
-                    $("#val1Name").val(value.value)
-                }
-            });
-        });*/
     async function next_dec (type) {
       if ((declaration_index + 1) == admin.order_pros_data.length) {
         return layer.msg('已经是最后一条了')
@@ -2581,7 +2491,7 @@
 
     /**批量修改--货物属性**/
     $('body').on('click', '#goods_attr_open_batch', async function () {
-      const data = await admin.get(`/clearance/no_paginate?type=货物属性代码`)
+      const data = await admin.get(`/clearance/no_paginate?type=货物属性代码`);
       const len = data.length
       let result = []
       const sliceNum = 4
@@ -2590,7 +2500,7 @@
       }
       laytpl($('#goods_attr_batch_data_template').html()).render(result, function (html) {
         $('#goods_attr_batch_data_list').html(html)
-      })
+      });
       const goods_attr_batch_index = layer.open({
         type: 1,
         title: '货物属性',
@@ -2600,28 +2510,30 @@
         success: function (layero, index) {
           this.enterEsc = function (event) {
             if (event.keyCode === 13) {
-              layer.close(goods_attr_batch_index)
+              layer.close(goods_attr_batch_index);
               return false
             }
-          }
+          };
           $(document).on('keydown', this.enterEsc)
         },
         end: function () {
-          $(document).off('keydown', this.enterEsc)
+          $(document).off('keydown', this.enterEsc);
           $('#stuff_batch').focus()
         },
-      })
+      });
+
       $('.tableDiv_attr_batch_td').each(function () {
         const result = goods_attr_batch_data.some(item => {
           if (item.code == $(this).data('id')) {
             return true
           }
-        })
+        });
         if (result) {
           $(this).addClass('bgcolor')
         }
       })
-    })
+    });
+
     /**批量修改--货物属性选择**/
     $('body').on('click', '.tableDiv_attr_batch_td', function () {
       if ($(this).hasClass('bgcolor')) {
@@ -2646,21 +2558,23 @@
       const data = goods_attr_batch_data.map(item => item.name)
       $('#goods_attr_batch').val(data.join(','))
     })
+
     /**批量修改--征免方式回车**/
     $('body').on('keyup', '#duty_mode_name_batch', function (event) {
       const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
       if (event.shiftKey != 1 && eCode == 13) {
         $('#goods_attr_open_batch').click()
       }
-    })
+    });
     /**批量修改--生产批次回车**/
     $('body').on('keyup', '#prod_batch_no_batch', function (event) {
       const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
       if (event.shiftKey != 1 && eCode == 13) {
-        $('#batch_edit_save').click()
+        $('#batch_edit_save').click();
         return false
       }
-    })
+    });
+
     /**批量修改--保存**/
     form.on('submit(batch_edit_save)', async (data) => {
       const checkData = table.checkStatus('order_pros').data
@@ -2685,17 +2599,18 @@
       table.reload('order_pros', {
         data: admin.order_pros_data,
         limit: admin.order_pros_data.length,
-      })
-      layer.closeAll()
+      });
+      layer.closeAll();
       for (let item of data_map) {
         $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${parseInt(item) - 1}] input`).
           prop('checked', true)
       }
-      form.render('checkbox')
+      form.render('checkbox');
       $('#dec_users_submit').click()
-    })
+    });
+
     /**集装箱**/
-    let order_containers_index = null
+    let order_containers_index = null;
     table.render({
       elem: '#order_containers_table'
       , toolbar: '#order_containers_tool'
@@ -2708,59 +2623,61 @@
           , { field: 'container_md_name', title: '集装箱规格', width: 150 }
           , { field: 'lcl_flag_name', title: '拼箱标识', width: 120 },
         ]]
-      , data: order_containers
-      , limit: order_containers.length
+      , data: OrderContainers
+      , limit: OrderContainers.length
       , height: 200,
     })
+
     /**自动完成--集装箱规格**/
     // auto_fn({
     //     data: admin.chemicals_data,
     //     listDirection: false,
-    //     id: ['#lcl_flag_name'],
+    //     id: ['#LclFlagName'],
     //     after: ['#lcl_flag']
     // });
+
     /**集装箱--商品序号默认全选**/
     $('body').on('keyup', '#container_id', function (event) {
       const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
       if (event.shiftKey != 1 && eCode == 13) {
         if (admin.order_pros_data.length > 0) {
-          const data = admin.order_pros_data.map(item => item.g_no)
+          const data = admin.order_pros_data.map(item => item.g_no);
           $('#goods_no').val(data.join(','))
         }
       }
-    })
+    });
     /**集装箱--点击行反填数据**/
     table.on('row(order_containers_table)', function (obj) {
       for (let item in obj.data) {
         $(`#${item}`).val(obj.data[item])
       }
-      order_containers_index = obj.data.index
+      order_containers_index = obj.data.index;
       $('#container_id').focus()
     })
     /**集装箱--保存**/
     form.on('submit(order_containers_submit)', async (data) => {
-      delete data.field.layTableCheckbox
+      delete data.field.layTableCheckbox;
       if (order_containers_index) {
         for (let item in data.field) {
-          order_containers[order_containers_index - 1][item] = data.field[item]
+          OrderContainers[order_containers_index - 1][item] = data.field[item]
         }
       } else {
-        order_containers.push(data.field)
+        OrderContainers.push(data.field)
       }
-      order_containers.forEach((value, index) => {
+      OrderContainers.forEach((value, index) => {
         value.index = index + 1
-      })
+      });
       table.reload('order_containers_table', {
-        data: order_containers,
-        limit: order_containers.length,
-      })
+        data: OrderContainers,
+        limit: OrderContainers.length,
+      });
       $('#order_containers_form input').each(function () {
         $(this).val('')
-      })
-      $('#container_id').focus()
-      order_containers_index = null
-      let contaCount = 0
-      for (let item of order_containers) {
+      });
+      $('#container_id').focus();
+      order_containers_index = null;
+      let contaCount = 0;
+      for (let item of OrderContainers) {
         const containerMdCode = item.container_md
         if (containerMdCode == '11' || containerMdCode == '12' || containerMdCode == '13' || containerMdCode == '32') {
           contaCount += 2
@@ -2773,60 +2690,63 @@
         contaCount = ''
       }
       $('#container_counts').val(contaCount)
-    })
+    });
+
     /**集装箱--删除**/
     table.on('toolbar(order_containers_table)', function (obj) {
-      let checkStatus = table.checkStatus(obj.config.id)
-      let checkData = checkStatus.data
+      let checkStatus = table.checkStatus(obj.config.id);
+      let checkData = checkStatus.data;
       switch (obj.event) {
         case 'add':
           $('#order_containers_form input').each(function () {
             $(this).val('')
-          })
-          $('#container_id').focus()
-          order_containers_index = null
-          break
+          });
+          $('#container_id').focus();
+          order_containers_index = null;
+          break;
         case 'delete':
           if (checkData.length === 0) {
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let sup_data = order_containers.filter(item => {
+            let sup_data = OrderContainers.filter(item => {
               return checkData.every(item2 => {
                 return item.index != item2.index
               })
-            })
+            });
             for (let item_apply of checkData) {
               if (item_apply.id) {
                 admin.order_containers_delete_ids.push(item_apply.id)
               }
             }
-            order_containers = sup_data
-            order_containers.forEach((value, index) => {
+            OrderContainers = sup_data;
+            OrderContainers.forEach((value, index) => {
               value.index = index + 1
-            })
+            });
             table.reload('order_containers_table', {
-              data: order_containers,
-              limit: order_containers.length,
-            })
+              data: OrderContainers,
+              limit: OrderContainers.length,
+            });
             $('#order_containers_form input').each(function () {
               $(this).val('')
-            })
-            $('#container_id').focus()
-            order_containers_index = null
+            });
+            $('#container_id').focus();
+            order_containers_index = null;
             layer.close(index)
-          })
+          });
           break
       }
-    })
+    });
+
     /**集装箱--按enter保存**/
     $('body').on('keyup', '#goods_no', function (event) {
-      const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
+      const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
       if (event.shiftKey != 1 && eCode == 13) {
-        $('#order_containers_submit').click()
+        $('#order_containers_submit').click();
         $('#container_id').focus()
       }
     })
+
     /**集装箱--商品序号关系列表**/
     $('body').on('click', '#goods_no_open', function () {
       layer.open({
@@ -2838,17 +2758,17 @@
         success: function (layero, index) {
           this.enterEsc = function (event) {
             if (event.keyCode === 13) {
-              $('#goods_no_save').click()
+              $('#goods_no_save').click();
               return false
             }
-          }
+          };
           $(document).on('keydown', this.enterEsc)
         },
         end: function () {
           $(document).off('keydown', this.enterEsc)
         },
-      })
-      const check_data = $('#goods_no').val().split(',').map(Number)
+      });
+      const check_data = $('#GoodsNo').val().split(',').map(Number);
       table.render({
         elem: '#goods_no_table'
         , toolbar: true
@@ -2869,15 +2789,17 @@
         , limit: admin.order_pros_data.length
         , height: 350,
       })
-    })
+    });
+
     /**集装箱--商品序号关系列表--保存**/
     $('body').on('click', '#goods_no_save', function () {
-      let checkData = table.checkStatus('goods_no_table').data
-      const data = checkData.map(item => item.g_no)
-      $('#goods_no').val(data.join(','))
-      $('#goods_no').focus()
+      let checkData = table.checkStatus('goods_no_table').data;
+      const data = checkData.map(item => item.g_no);
+      $('#goods_no').val(data.join(','));
+      $('#goods_no').focus();
       layer.closeAll()
-    })
+    });
+
     /**随附单证**/
     let order_documents_index = null
     table.render({
@@ -3728,11 +3650,11 @@
       data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt
       /**集装箱数据**/
       for (let item of admin.order_containers_delete_ids) {
-        order_containers.push({
+        OrderContainers.push({
           id: item,
         })
       }
-      data.field.containers = order_containers
+      data.field.containers = OrderContainers
       /**随附单证数据**/
       for (let item of admin.order_documents_delete_ids) {
         order_documents.push({
@@ -4350,11 +4272,11 @@
       data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt
       /**集装箱数据**/
       for (let item of admin.order_containers_delete_ids) {
-        order_containers.push({
+        OrderContainers.push({
           id: item,
         })
       }
-      data.field.containers = order_containers
+      data.field.containers = OrderContainers
       /**随附单证数据**/
       for (let item of admin.order_documents_delete_ids) {
         order_documents.push({
@@ -4566,13 +4488,14 @@
       data.field.OverseasConsignorCname = DecRequestCertsData.OverseasConsignorCname
       data.field.OverseasConsignorAddr = DecRequestCertsData.OverseasConsignorAddr
       data.field.CmplDschrgDt = DecRequestCertsData.CmplDschrgDt
+
       /**集装箱数据**/
       for (let item of admin.order_containers_delete_ids) {
-        order_containers.push({
+        OrderContainers.push({
           id: item,
         })
       }
-      data.field.containers = order_containers
+      data.field.containers = OrderContainers;
       /**随附单证数据**/
       for (let item of admin.order_documents_delete_ids) {
         order_documents.push({
