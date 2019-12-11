@@ -1262,50 +1262,62 @@ layui.define('view', function (exports) {
         }, 100)
       },
 
-      //新建--进口报关整合申报--料件数据--成品数据
-      materials_data: [],
-      goods_data: [],
-
       //监听进出口报关整合申报备案序号
-      contr_item_change: async function (dom) {
+      contr_item_change: async function (dom,flag,handBookId) {
+        let type = 0
+        if (flag === 'I') {
+          type = 2
+        } else if (flag === 'E') {
+          type = 1
+        }
         if ($(dom).val().trim()) {
-          const flag = $(dom).data('flag')
-          let data = admin.get_goods_materials_data(flag)
+          let data = {
+            HandBookId: parseInt(handBookId),
+            Type: type,
+            Serial: $(dom).val(),
+          }
+          let handbookgoods = await admin.post(
+            '/handbook/get_hand_book_good_by_hand_book_id',
+            JSON.stringify(data), true)
 
-          for (let item of data) {
-            if (item.serial == $(dom).val()) {
-              $('#code_t_s').val(item.hs_code)
-              $('#g_name').val(item.name)
-              $('#g_model').val(item.special)
-
-              $('#g_unit').val(item.unit_one_code)
-              $('#g_unit_name').val(item.unit_one)
-
-              $('#decl_price').val(item.price)
-
-              $('#trade_curr').val(item.moneyunit_code)
-              $('#trade_curr_name').val(item.moneyunit)
-
-              $('#first_unit').val(item.unit_two_code)
-              $('#first_unit_name').val(item.unit_two)
-
-              if (item.manuplace_code) {
-                $('#origin_country').val(item.manuplace_code)
-              }
-              if (item.manuplace) {
-                $('#origin_country_name').val(item.manuplace)
-              }
-
-              $('#g_qty').focus()
-              const code_data = await admin.get(
-                `/hs_code/lists?limit=0&search=${item.hs_code}`)
-              if (code_data.data.length > 0) {
-                if (code_data.data[0].unit2) {
-                  $('#second_unit').val(code_data.data[0].unit2)
-                  $('#second_unit_name').val(code_data.data[0].unit2_name)
-                }
+          if (handbookgoods.rows.length === 1) {
+            let item = handbookgoods.rows[0]
+            $('#GdsMtno').val(item.RecordNo)
+            $('#DclUnitcd').val(item.UnitOneCode)
+            $('#DclUnitcdName').val(item.UnitOne)
+            $('#CodeTS').val(item.HsCode)
+            $('#GName').val(item.Name)
+            $('#GModel').val(item.Special)
+            $('#GUnit').val(item.UnitOneCode)
+            $('#GUnitName').val(item.UnitOne)
+            $('#DeclPrice').val(item.Price)
+            $('#TradeCurr').val(item.MoneyunitCode)
+            $('#TradeCurrName').val(item.Moneyunit)
+            $('#FirstUnit').val(item.UnitTwoCode)
+            $('#FirstUnitName').val(item.UnitTwo)
+            if (item.ManuplaceCode) {
+              $('#OriginCountry').val(item.ManuplaceCode)
+            }
+            if (item.Manuplace) {
+              $('#OriginCountryName').val(item.Manuplace)
+            }
+            const code_data = await admin.get(`/hs_code/lists?limit=0&search=${item.HsCode}`)
+            if (code_data.data.length > 0) {
+              if (code_data.data[0].Unit2) {
+                $('#SecondUnit').val(code_data.data[0].Unit2)
+                $('#SecondUnitName').val(code_data.data[0].Unit2Name)
               }
             }
+            $('#GQty').focus()
+          } else {
+            setTimeout(async () => {
+              layer.msg('查询失败！', {
+                offset: '15px',
+                icon: 2,
+                time: 1000,
+                id: 'Message',
+              })
+            }, 100)
           }
         }
       },
@@ -1387,8 +1399,7 @@ layui.define('view', function (exports) {
 
       //监听进出口清单加工单位海关编码
       async rcvgd_etpsno_change (dom) {
-        if ($('#rvsngd_etps_sccd').val() == '' || $('#rcvgd_etps_nm').val() ==
-          '') {
+        if ($('#rvsngd_etps_sccd').val() == '' || $('#rcvgd_etps_nm').val() =='') {
           let CompanyList = await admin.post('/company/datagrid',
             JSON.stringify({
               NameLike: $(dom).val(),
@@ -1400,7 +1411,6 @@ layui.define('view', function (exports) {
         }
       },
 
-      //新建--清单--料件数据--成品数据
       /* 监听进出口清单备案序号*/
       putrec_seqno_change: async function (dom, flag, handBookId) {
         let type = 0
@@ -1654,7 +1664,7 @@ layui.define('view', function (exports) {
         let gQty = $.trim($('#DclQty').val())
         let declTotal = $.trim($('#DclTotalAmt').val())
         if (gQty && !isNaN(gQty)) {
-          declPrice = admin.decToDecimal(declTotal, gQty, '4', '3', '6')
+         let declPrice = admin.decToDecimal(declTotal, gQty, '4', '3', '6')
           $('#DclUprcAmt').val(declPrice)
         }
       }
@@ -1668,7 +1678,7 @@ layui.define('view', function (exports) {
         if (isNaN(gQty) || isNaN(declPrice)) {
           return false
         }
-        declTotal = admin.decToDecimal(gQty, declPrice, '2', '2', '6')
+        let  declTotal = admin.decToDecimal(gQty, declPrice, '2', '2', '6')
         $('#DclTotalAmt').val(declTotal)
       },
 

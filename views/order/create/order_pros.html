@@ -6,31 +6,29 @@
             <td class="td-scale-04 text-align-right">序号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" disabled name="g_no" id="g_no" autocomplete="off"
-                           value="1">
+                    <input type="text" class="non-empty" disabled name="GNo" id="GNo" autocomplete="off" value="1">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">备案序号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty"  name="contr_item" id="contr_item" autocomplete="off"
-                           onchange="layui.admin.contr_item_change(this)" data-flag="I">
-                    <i class="iconfont iconmore-horiz input_more" id="contr_item_open"></i>
+                    <input type="text" class="non-empty"  name="ContrItem" id="ContrItem" autocomplete="off"
+                           onchange="layui.admin.contr_item_change(this,'@{{.IEFlag}}','@{{.m.HandBookId}}')">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">商品编号</td>
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="code_t_s" id="code_t_s" autocomplete="off" maxlength="10"
+                           name="CodeTS" id="CodeTS" autocomplete="off" maxlength="10"
                            onkeyup="layui.admin.openGoodsWindow(event);" oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">检验检疫名称</td>
             <td colspan="3">
                 <div class="input-group valid">
-                    <input type="hidden" name="ciq_code" id="ciq_code">
-                    <input type="text" class="non-empty" disabled name="ciq_name" id="ciq_name" autocomplete="off">
+                    <input type="hidden" name="CiqCode" id="CiqCode">
+                    <input type="text" class="non-empty" disabled name="CiqName" id="CiqName" autocomplete="off">
                     <i class="iconfont iconmore-horiz input_more" id="ciq_name_open"></i>
                 </div>
             </td>
@@ -40,13 +38,13 @@
             <td colspan="4">
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="g_name" id="g_name" autocomplete="off">
+                           name="GName" id="GName" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">规格型号</td>
             <td colspan="4">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" disabled name="g_model" id="g_model" autocomplete="off">
+                    <input type="text" class="non-empty" disabled name="GModel" id="GModel" autocomplete="off">
                 </div>
             </td>
         </tr>
@@ -55,23 +53,23 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="g_qty" id="g_qty" autocomplete="off" onchange="layui.admin.g_qty_change(this)"
+                           name="GQty" id="GQty" autocomplete="off" onchange="layui.admin.g_qty_change(this)"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">成交计量单位</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="g_unit" id="g_unit">
+                    <input type="hidden" name="GUnit" id="GUnit">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="g_unit_name" id="g_unit_name" autocomplete="off" onchange="layui.admin.g_unit_name_change(this)">
+                           name="GUnitName" id="GUnitName" autocomplete="off" onchange="layui.admin.g_unit_name_change(this)">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">单价</td>
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="decl_price" id="decl_price" autocomplete="off" onchange="layui.admin.priceChange()"
+                           name="DeclPrice" id="DeclPrice" autocomplete="off" onchange="layui.admin.priceChange()"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
@@ -79,16 +77,16 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="decl_total" id="decl_total" autocomplete="off" onchange="layui.admin.totalChange()"
+                           name="DeclTotal" id="DeclTotal" autocomplete="off" onchange="layui.admin.totalChange()"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">币制</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="trade_curr" id="trade_curr" no_empty>
+                    <input type="hidden" name="TradeCurr" id="TradeCurr" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="trade_curr_name" id="trade_curr_name" autocomplete="off" no_empty>
+                           name="TradeCurrName" id="TradeCurrName" autocomplete="off" no_empty>
                 </div>
             </td>
         </tr>
@@ -97,37 +95,37 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="first_qty" id="first_qty" autocomplete="off"
+                           name="FirstQty" id="FirstQty" autocomplete="off"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">法定第一计量单位</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="first_unit" id="first_unit">
-                    <input type="text" class="non-empty required" name="first_unit_name" id="first_unit_name"
+                    <input type="hidden" name="FirstUnit" id="FirstUnit">
+                    <input type="text" class="non-empty required" name="FirstUnitName" id="FirstUnitName"
                            autocomplete="off" lay-verify="required" lay-vertype="tips">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">加工成品单耗版本号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="exg_version" id="exg_version"
+                    <input type="text" class="non-empty" name="ExgVersion" id="ExgVersion"
                         autocomplete="off" maxlength="8" oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">货号</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="exg_no" id="exg_no" autocomplete="off">
+                    <input type="text" class="non-empty" name="ExgNo" id="ExgNo" autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">最终目的国(地区)</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="destination_country" id="destination_country" value="CHN" no_empty>
+                    <input type="hidden" name="DestinationCountry" id="DestinationCountry" value="CHN" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="destination_country_name" id="destination_country_name" autocomplete="off" value="中国"
+                           name="DestinationCountryName" id="DestinationCountryName" autocomplete="off" value="中国"
                            no_empty>
                 </div>
             </td>
@@ -136,31 +134,31 @@
             <td class="td-scale-04 text-align-right">法定第二数量</td>
             <td>
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="second_qty" id="second_qty" autocomplete="off"
+                    <input type="text" class="non-empty" name="SecondQty" id="SecondQty" autocomplete="off"
                            oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">法定第二计量单位</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="second_unit" id="second_unit">
-                    <input type="text" class="non-empty" name="second_unit_name" id="second_unit_name"
+                    <input type="hidden" name="SecondUnit" id="SecondUnit">
+                    <input type="text" class="non-empty" name="SecondUnitName" id="SecondUnitName"
                            autocomplete="off">
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">原产国（地区）</td>
             <td colspan="3">
                 <div class="input-group valid">
-                    <input type="hidden" name="origin_country" id="origin_country" no_empty>
+                    <input type="hidden" name="OriginCountry" id="OriginCountry" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="origin_country_name" id="origin_country_name" autocomplete="off" no_empty>
+                           name="OriginCountryName" id="OriginCountryName" autocomplete="off" no_empty>
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">原产地区</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="orig_place_code" id="orig_place_code">
-                    <input type="text" class="non-empty" name="orig_place_code_name" id="orig_place_code_name"
+                    <input type="hidden" name="OrigPlaceCode" id="OrigPlaceCode">
+                    <input type="text" class="non-empty" name="OrigPlaceCodeName" id="OrigPlaceCodeName"
                            autocomplete="off">
                 </div>
             </td>
@@ -175,25 +173,25 @@
             <td class="td-scale-04 text-align-right">境内目的地</td>
             <td colspan="2">
                 <div class="input-group valid">
-                    <input type="hidden" name="district_code" id="district_code" no_empty>
+                    <input type="hidden" name="DistrictCode" id="DistrictCode" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="district_code_name" id="district_code_name" autocomplete="off" placeholder="境内目的地代码"
+                           name="DistrictCodeName" id="DistrictCodeName" autocomplete="off" placeholder="境内目的地代码"
                            no_empty>
                 </div>
             </td>
             <td colspan="3">
                 <div class="input-group valid">
-                    <input type="hidden" name="dest_code" id="dest_code" no_empty>
+                    <input type="hidden" name="DestCode" id="DestCode" no_empty>
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="dest_code_name" id="dest_code_name" autocomplete="off" placeholder="目的地代码" no_empty>
+                           name="DestCodeName" id="DestCodeName" autocomplete="off" placeholder="目的地代码" no_empty>
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">征免方式</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="duty_mode" id="duty_mode" no_empty value="1">
+                    <input type="hidden" name="DutyMode" id="DutyMode" no_empty value="1">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="duty_mode_name" id="duty_mode_name" autocomplete="off" no_empty value="照章征税">
+                           name="DutyModeName" id="DutyModeName" autocomplete="off" no_empty value="照章征税">
                 </div>
             </td>
         </tr>
@@ -201,7 +199,7 @@
             <td class="td-scale-04 text-align-right">检验检疫货物规格</td>
             <td colspan="7">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" disabled id="goods_spec_data" autocomplete="off">
+                    <input type="text" class="non-empty" disabled id="GoodsSpecData" autocomplete="off">
                     <i class="iconfont iconmore-horiz input_more" id="goods_spec_open"></i>
                 </div>
             </td>
@@ -216,15 +214,15 @@
             <td class="td-scale-04 text-align-right">货物属性</td>
             <td colspan="4">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" disabled id="goods_attr" autocomplete="off">
+                    <input type="text" class="non-empty" disabled id="GoodsAttr" autocomplete="off">
                     <i class="iconfont iconmore-horiz input_more" id="goods_attr_open"></i>
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">用途</td>
             <td colspan="2">
                 <div class="input-group valid">
-                    <input type="hidden" name="purpose" id="purpose">
-                    <input type="text" class="non-empty required" name="purpose_name" id="purpose_name"
+                    <input type="hidden" name="Purpose" id="Purpose">
+                    <input type="text" class="non-empty required" name="PurposeName" id="PurposeName"
                            lay-vertype="tips" autocomplete="off">
                 </div>
             </td>

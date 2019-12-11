@@ -1,11 +1,11 @@
 package models
 
 import (
+	"html"
 	"strings"
 	"time"
 
 	"github.com/astaxie/beego/orm"
-	"golang.org/x/net/html"
 )
 
 // SettingQueryParam 用于搜索的类

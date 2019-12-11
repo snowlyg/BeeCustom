@@ -3,12 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"strconv"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/utils"
-	"golang.org/x/net/html"
 )
 
 type SettingController struct {
