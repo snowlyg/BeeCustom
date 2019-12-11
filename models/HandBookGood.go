@@ -72,7 +72,7 @@ func NewHandBookGood(id int64) HandBookGood {
 	return HandBookGood{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
-//查询参数
+// 查询参数
 func NewHandBookGoodQueryParam() HandBookGoodQueryParam {
 	return HandBookGoodQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
@@ -110,23 +110,22 @@ func HandBookGoodGetRelations(v *HandBookGood, relations string) (*HandBookGood,
 	return v, nil
 }
 
-// HandBookGoodOne 根据id获取单条
-func HandBookGoodOne(id int64, relations string) (*HandBookGood, error) {
+// GetHandBookGoodById 根据id获取单条
+func GetHandBookGoodById(params *HandBookGoodQueryParam) (*HandBookGood, error) {
 	m := NewHandBookGood(0)
-	o := orm.NewOrm()
-	if err := o.QueryTable(HandBookGoodTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
+
+	query := orm.NewOrm().QueryTable(HandBookGoodTBName())
+	query = query.Distinct().Filter("hand_book_id", params.HandBookId).Filter("Type", params.Type)
+	if len(params.Serial) > 0 {
+		query = query.Filter("Serial", params.Serial)
+	}
+
+	if err := query.One(&m); err != nil {
 		return nil, err
 	}
 
-	if len(relations) > 0 {
-		_, err := HandBookGoodGetRelations(&m, relations)
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	if &m == nil {
-		return &m, errors.New("获取失败")
+		return nil, errors.New("获取失败")
 	}
 
 	return &m, nil
@@ -147,7 +146,7 @@ func GetHandBookGoodBySerial(serial string) (*HandBookGood, error) {
 	return &m, nil
 }
 
-//批量插入
+// 批量插入
 func InsertHandBookGoodMulti(datas []*HandBookGood) (num int64, err error) {
 	return BaseInsertMulti(datas)
 }

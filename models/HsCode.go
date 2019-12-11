@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -62,4 +64,20 @@ func HsCodePageList(params *HsCodeQueryParam) ([]*HsCode, int64) {
 	_, _ = query.All(&datas)
 
 	return datas, total
+}
+
+// GetHsCodeByCode
+func GetHsCodeByCode(hsCodeS string) (*HsCode, error) {
+	m := NewHsCode(0)
+	query := orm.NewOrm().QueryTable(HsCodeTBName())
+	query = query.Distinct().Filter("code", hsCodeS)
+	if err := query.One(&m); err != nil {
+		return nil, err
+	}
+
+	if &m == nil {
+		return nil, errors.New("获取失败")
+	}
+
+	return &m, nil
 }

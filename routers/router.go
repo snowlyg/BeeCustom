@@ -189,6 +189,7 @@ func init() {
 
 	// 商品编码管理
 	beego.Router("/hs_code/index", &controllers.HsCodeController{}, "*:Index")
+	beego.Router("/hs_code/get_hs_code_by_code/?:hs_code", &controllers.HsCodeController{}, "Get:Get")
 	beego.Router("/hs_code/datagrid", &controllers.HsCodeController{}, "Post:DataGrid")
 	beego.Router("/hs_code/import", &controllers.HsCodeController{}, "Post:Import")
 

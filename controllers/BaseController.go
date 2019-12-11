@@ -18,15 +18,15 @@ import (
 
 type BaseController struct {
 	beego.Controller
-	controllerName string             //当前控制名称
-	actionName     string             //当前action名称
-	curUser        models.BackendUser //当前用户信息
+	controllerName string             // 当前控制名称
+	actionName     string             // 当前action名称
+	curUser        models.BackendUser // 当前用户信息
 }
 
 func (c *BaseController) Prepare() {
-	//附值
+	// 附值
 	c.controllerName, c.actionName = c.GetControllerAndAction()
-	//从Session里获取数据 设置用户信息
+	// 从Session里获取数据 设置用户信息
 	c.adapterUserInfo()
 }
 
@@ -47,13 +47,13 @@ func (c *BaseController) ResponseList(data interface{}, total int64) {
 // 一定要在BaseController.Prepare()后执行
 func (c *BaseController) checkLogin() {
 	if c.curUser.Id == 0 {
-		//登录页面地址
+		// 登录页面地址
 		urlstr := c.URLFor("HomeController.Login") + "?url="
-		//登录成功后返回的址为当前
+		// 登录成功后返回的址为当前
 		returnURL := c.Ctx.Request.URL.Path
-		//如果ajax请求则返回相应的错码和跳转的地址
+		// 如果ajax请求则返回相应的错码和跳转的地址
 		if c.Ctx.Input.IsAjax() {
-			//由于是ajax请求，因此地址是header里的Referer
+			// 由于是ajax请求，因此地址是header里的Referer
 			returnURL := c.Ctx.Input.Refer()
 			c.jsonResult(enums.JRCode302, "请登录", urlstr+returnURL)
 		}
@@ -68,12 +68,12 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 		return false
 	}
 
-	//从session获取用户信息
+	// 从session获取用户信息
 	user := c.GetSession("backenduser")
-	//类型断言
+	// 类型断言
 	bu, ok := user.(models.BackendUser)
 	if ok {
-		//如果是超级管理员，则直接通过
+		// 如果是超级管理员，则直接通过
 		if bu.IsSuper {
 			return true
 		}
@@ -93,7 +93,7 @@ func (c *BaseController) checkActionAuthor(ctrlName, ActName string) bool {
 // 判断某 Controller.Action 当前用户是否有权访问
 func (c *BaseController) getActionData(upper string, actionNames ...string) {
 
-	//清单，货物进出口分离权限
+	// 清单，货物进出口分离权限
 	if len(upper) > 0 {
 		actions := make(map[string]map[string]bool)
 		action := make(map[string]bool)
@@ -112,19 +112,19 @@ func (c *BaseController) getActionData(upper string, actionNames ...string) {
 }
 
 // checkLogin判断用户是否有权访问某地址，无权则会跳转到错误页面
-//一定要在BaseController.Prepare()后执行
+// 一定要在BaseController.Prepare()后执行
 // 会调用checkLogin
 // 传入的参数为需要权限控制的Action
 func (c *BaseController) checkAuthor(actionNames []string) {
-	//先判断是否登录
+	// 先判断是否登录
 	c.checkLogin()
-	//如果Action在忽略列表里，则直接通用
+	// 如果Action在忽略列表里，则直接通用
 	for _, actionName := range actionNames {
 		if actionName == c.actionName {
 			hasAuthor := c.checkActionAuthor(c.controllerName, c.actionName)
 			if !hasAuthor {
 				utils.LogDebug(fmt.Sprintf("author control: path=%s.%s userid=%v  无权访问", c.controllerName, c.actionName, c.curUser.Id))
-				//如果没有权限
+				// 如果没有权限
 				if !hasAuthor {
 					if c.Ctx.Input.IsAjax() {
 						c.jsonResult(enums.JRCode401, "无权访问", "")
@@ -140,7 +140,7 @@ func (c *BaseController) checkAuthor(actionNames []string) {
 
 }
 
-//从session里取用户信息
+// 从session里取用户信息
 func (c *BaseController) adapterUserInfo() {
 	a := c.GetSession("backenduser")
 	if a != nil {
@@ -149,7 +149,7 @@ func (c *BaseController) adapterUserInfo() {
 	}
 }
 
-//SetBackendUser2Session 获取用户信息（包括资源UrlFor）保存至Session
+// SetBackendUser2Session 获取用户信息（包括资源UrlFor）保存至Session
 func (c *BaseController) setBackendUser2Session(userId int64) error {
 	m, err := models.BackendUserOne(userId)
 	if err != nil {
@@ -172,7 +172,7 @@ func (c *BaseController) setTpl(template ...string) {
 		tplName = template[0]
 		layout = template[1]
 	default:
-		//不要Controller这个10个字母
+		// 不要Controller这个10个字母
 		ctrlName := strings.ToLower(c.controllerName[0 : len(c.controllerName)-10])
 		actionName := strings.ToLower(c.actionName)
 		tplName = ctrlName + "/" + actionName + ".html"
@@ -231,7 +231,7 @@ func (c *BaseController) validRequestData(m interface{}) {
 
 }
 
-//上传文件
+// 上传文件
 func (c *BaseController) BaseUpload(fileType string) (string, error) {
 	f, h, err := c.GetFile("filename")
 	if err != nil {
@@ -252,7 +252,7 @@ func (c *BaseController) BaseUpload(fileType string) (string, error) {
 	}
 }
 
-//格式时间
+// 格式时间
 func (c *BaseController) GetDateTime(timeString, timeFormatString string) (*time.Time, error) {
 	tS := c.GetString(timeString)
 	fTimeFormat, err := time.ParseInLocation(timeFormatString, tS, time.Local)
@@ -297,4 +297,44 @@ func UpdateOrderStatus(m *models.Order, StatusString string, isRestart bool) err
 	}
 
 	return nil
+}
+
+// TransformHandBookGood 格式化列表数据
+func (c *HandBookController) TransformHandBookGood(v *models.HandBookGood) map[string]interface{} {
+
+	clearances1 := models.GetClearancesByTypes("货币代码", true)
+	clearances2 := models.GetClearancesByTypes("计量单位代码", false)
+	var unitOneCode interface{}
+	var unitTwoCode interface{}
+	var moneyunitCode interface{}
+	for _, c := range clearances2 {
+		if c[0] == v.UnitOne {
+			unitOneCode = c[1]
+		}
+
+		if c[0] == v.UnitTwo {
+			unitTwoCode = c[1]
+		}
+	}
+	for _, c := range clearances1 {
+		if c[0] == v.Moneyunit {
+			moneyunitCode = c[1]
+		}
+
+	}
+	handBook := make(map[string]interface{})
+	handBook["Id"] = strconv.FormatInt(v.Id, 10)
+	handBook["RecordNo"] = v.RecordNo
+	handBook["HsCode"] = v.HsCode
+	handBook["Name"] = v.Name
+	handBook["Special"] = v.Special
+	handBook["UnitOne"] = v.UnitOne
+	handBook["UnitOneCode"] = unitOneCode
+	handBook["UnitTwo"] = v.UnitTwo
+	handBook["UnitTwoCode"] = unitTwoCode
+	handBook["Price"] = v.Price
+	handBook["Moneyunit"] = v.Moneyunit
+	handBook["MoneyunitCode"] = moneyunitCode
+
+	return handBook
 }

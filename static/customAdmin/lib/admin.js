@@ -1276,37 +1276,32 @@ layui.define('view', function (exports) {
             Type: type,
             Serial: $(dom).val(),
           }
-          let handbookgoods = await admin.post(
+          let handbookgood = await admin.post(
             '/handbook/get_hand_book_good_by_hand_book_id',
             JSON.stringify(data), true)
 
-          if (handbookgoods.rows.length === 1) {
-            let item = handbookgoods.rows[0]
-            $('#GdsMtno').val(item.RecordNo)
-            $('#DclUnitcd').val(item.UnitOneCode)
-            $('#DclUnitcdName').val(item.UnitOne)
-            $('#CodeTS').val(item.HsCode)
-            $('#GName').val(item.Name)
-            $('#GModel').val(item.Special)
-            $('#GUnit').val(item.UnitOneCode)
-            $('#GUnitName').val(item.UnitOne)
-            $('#DeclPrice').val(item.Price)
-            $('#TradeCurr').val(item.MoneyunitCode)
-            $('#TradeCurrName').val(item.Moneyunit)
-            $('#FirstUnit').val(item.UnitTwoCode)
-            $('#FirstUnitName').val(item.UnitTwo)
-            if (item.ManuplaceCode) {
-              $('#OriginCountry').val(item.ManuplaceCode)
+          if (handbookgood) {
+            $('#GdsMtno').val(handbookgood.RecordNo)
+            $('#DclUnitcd').val(handbookgood.UnitOneCode)
+            $('#DclUnitcdName').val(handbookgood.UnitOne)
+            $('#CodeTS').val(handbookgood.HsCode)
+            $('#GName').val(handbookgood.Name)
+            $('#GModel').val(handbookgood.Special)
+            $('#GUnit').val(handbookgood.UnitOneCode)
+            $('#GUnitName').val(handbookgood.UnitOne)
+            $('#DeclPrice').val(handbookgood.Price)
+            $('#TradeCurr').val(handbookgood.MoneyunitCode)
+            $('#TradeCurrName').val(handbookgood.Moneyunit)
+            $('#FirstUnit').val(handbookgood.UnitTwoCode)
+            $('#FirstUnitName').val(handbookgood.UnitTwo)
+            if (handbookgood.ManuplaceCode && handbookgood.Manuplace) {
+              $('#OriginCountry').val(handbookgood.ManuplaceCode)
+              $('#OriginCountryName').val(handbookgood.Manuplace)
             }
-            if (item.Manuplace) {
-              $('#OriginCountryName').val(item.Manuplace)
-            }
-            const code_data = await admin.get(`/hs_code/lists?limit=0&search=${item.HsCode}`)
-            if (code_data.data.length > 0) {
-              if (code_data.data[0].Unit2) {
-                $('#SecondUnit').val(code_data.data[0].Unit2)
-                $('#SecondUnitName').val(code_data.data[0].Unit2Name)
-              }
+            const codeData = await admin.get(`/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
+            if (codeData && codeData.Unit2) {
+                $('#SecondUnit').val(codeData.Unit2)
+                $('#SecondUnitName').val(codeData.Unit2Name)
             }
             $('#GQty').focus()
           } else {
@@ -1425,23 +1420,31 @@ layui.define('view', function (exports) {
             Type: type,
             Serial: $(dom).val(),
           }
-          let handbookgoods = await admin.post(
+          let handbookgood = await admin.post(
             '/handbook/get_hand_book_good_by_hand_book_id',
             JSON.stringify(data), true)
 
-          if (handbookgoods.rows.length === 1) {
-            let item = handbookgoods.rows[0]
-            $('#GdsMtno').val(item.RecordNo)
-            $('#Gdecd').val(item.HsCode)
-            $('#GdsNm').val(item.Name)
-            $('#GdsSpcfModelDesc').val(item.Special)
-            $('#DclCurrcd').val(item.MoneyunitCode)
-            $('#DclCurrcdName').val(item.Moneyunit)
-            $('#DclUnitcd').val(item.UnitOneCode)
-            $('#DclUnitcdName').val(item.UnitOne)
-            $('#DclUprcAmt').val(item.Price)
-            $('#LawfUnitcd').val(item.UnitTwoCode)
-            $('#LawfUnitcdName').val(item.UnitTwo)
+          if (handbookgood) {
+            $('#GdsMtno').val(handbookgood.RecordNo)
+            $('#Gdecd').val(handbookgood.HsCode)
+            $('#GdsNm').val(handbookgood.Name)
+            $('#GdsSpcfModelDesc').val(handbookgood.Special)
+            $('#DclCurrcd').val(handbookgood.MoneyunitCode)
+            $('#DclCurrcdName').val(handbookgood.Moneyunit)
+            $('#DclUnitcd').val(handbookgood.UnitOneCode)
+            $('#DclUnitcdName').val(handbookgood.UnitOne)
+            $('#DclUprcAmt').val(handbookgood.Price)
+            $('#LawfUnitcd').val(handbookgood.UnitTwoCode)
+            $('#LawfUnitcdName').val(handbookgood.UnitTwo)
+            if (handbookgood.ManuplaceCode && handbookgood.Manuplace) {
+              $('#Natcd').val(handbookgood.ManuplaceCode)
+              $('#NatcdName').val(handbookgood.Manuplace)
+            }
+            const codeData = await admin.get(`/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
+            if (codeData && codeData.Unit2) {
+              $('#SecdLawfUnitcd').val(codeData.Unit2)
+              $('#SecdLawfUnitcdName').val(codeData.Unit2Name)
+            }
             $('#EntryGdsSeqno').focus()
           } else {
             setTimeout(async () => {

@@ -19,9 +19,9 @@ type HandBookController struct {
 }
 
 func (c *HandBookController) Prepare() {
-	//先执行
+	// 先执行
 	c.BaseController.Prepare()
-	//如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
+	// 如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
 	perms := []string{
 		"Index",
 		"Create",
@@ -30,9 +30,9 @@ func (c *HandBookController) Prepare() {
 	}
 	c.checkAuthor(perms)
 
-	//如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
-	//权限控制里会进行登录验证，因此这里不用再作登录验证
-	//c.checkLogin()
+	// 如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
+	// 权限控制里会进行登录验证，因此这里不用再作登录验证
+	// c.checkLogin()
 
 }
 
@@ -84,52 +84,34 @@ func (c *HandBookController) GoodDataGrid() {
 
 // 根据 handbookid 获取handbookgoods
 func (c *HandBookController) GetHandBookGoodByHandBookId() {
-
 	params := models.NewHandBookGoodQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
-	//获取数据列表和总数
-	data, total := models.HandBookGoodPageList(&params)
-	// 格式化数据
-	handBookGoodsList := c.TransformHandBookGoodsList(data)
-	c.ResponseList(handBookGoodsList, total)
+	data, _ := models.GetHandBookGoodById(&params)
 
+	handBookGoodsList := c.TransformHandBookGood(data)
+
+	c.Data["json"] = handBookGoodsList
 	c.ServeJSON()
 }
 
 //HandBook 列表数据
 func (c *HandBookController) DataGrid() {
-	//直接获取参数 GoodDataGrid()
 	params := models.NewHandBookQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
-	//获取数据列表和总数
 	data, total := models.HandBookPageList(&params)
-	//定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = total
-	result["rows"] = data
-	result["code"] = 0
-	c.Data["json"] = result
-
+	c.ResponseList(data, total)
 	c.ServeJSON()
 }
 
 // Ullage 列表数据
 func (c *HandBookController) UllageDataGrid() {
-	//直接获取参数 getDataGridData()
 	params := models.NewHandBookUllageQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
-	//获取数据列表和总数
 	data, total := models.HandBookUllagePageList(&params)
-	//定义返回的数据结构
-	result := make(map[string]interface{})
-	result["total"] = total
-	result["rows"] = data
-	result["code"] = 0
-	c.Data["json"] = result
-
+	c.ResponseList(data, total)
 	c.ServeJSON()
 }
 
