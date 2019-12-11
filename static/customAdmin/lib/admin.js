@@ -1479,8 +1479,8 @@ layui.define('view', function (exports) {
       /*货物申报-监听修改成交数量*/
       g_qty_change_index: '',
       g_qty_change (dom) {
-        if (admin.cutZero($('#decl_price').val().trim()) > 0 && admin.cutZero(
-          $('#decl_total').val().trim()) > 0) {
+        if (admin.cutZero($('#DeclPrice').val().trim()) > 0 && admin.cutZero(
+          $('#DeclTotal').val().trim()) > 0) {
           admin.g_qty_change_index = layer.open({
             type: 1,
             title: '报关修改单价/总价？',
@@ -1518,21 +1518,21 @@ layui.define('view', function (exports) {
               })
             },
             end: function () {
-              $('#g_unit_name').focus()
+              $('#GUnitName').focus()
             },
           })
         }
-        if ($('#decl_price').val().trim() &&
-          !($('#decl_total').val().trim()) && admin.cutZero(
-            $('#decl_price').val().trim()) > 0) {
+        if ($('#DeclPrice').val().trim() &&
+          !($('#DeclTotal').val().trim()) && admin.cutZero(
+            $('#DeclPrice').val().trim()) > 0) {
           admin.calculationDeclTotal()
         }
-        if ($('#g_unit').val().trim()) {
-          if ($('#g_unit').val().trim() == $('#first_unit').val().trim()) {
-            $('#first_qty').val($(dom).val().trim())
+        if ($('#GUnit').val().trim()) {
+          if ($('#GUnit').val().trim() == $('#FirstUnit').val().trim()) {
+            $('#FirstQty').val($(dom).val().trim())
           }
-          if ($('#g_unit').val().trim() == $('#second_unit').val().trim()) {
-            $('#second_qty').val($(dom).val().trim())
+          if ($('#GUnit').val().trim() == $('#SecondUnit').val().trim()) {
+            $('#SecondQty').val($(dom).val().trim())
           }
         }
       }
