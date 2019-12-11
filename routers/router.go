@@ -7,6 +7,16 @@ import (
 
 func init() {
 
+	// 货物申报集装箱管理
+	beego.Router("/order_document/store/?:aid", &controllers.OrderDocumentController{}, "Post:Store")
+	beego.Router("/order_document/update/?:id", &controllers.OrderDocumentController{}, "Patch:Update")
+	beego.Router("/order_document/delete/", &controllers.OrderDocumentController{}, "Post:Delete")
+
+	// 货物申报集装箱管理
+	beego.Router("/order_container/store/?:aid", &controllers.OrderContainerController{}, "Post:Store")
+	beego.Router("/order_container/update/?:id", &controllers.OrderContainerController{}, "Patch:Update")
+	beego.Router("/order_container/delete/", &controllers.OrderContainerController{}, "Post:Delete")
+
 	// 客户联系人
 	beego.Router("/annotation_company_admin_user/?:id", &controllers.AnnotationController{}, "Get:CompanyAdminUser")
 	// 清单附件列表

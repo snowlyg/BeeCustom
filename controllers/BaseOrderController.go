@@ -132,7 +132,7 @@ func (c *BaseOrderController) bStore(iEFlag string) {
 
 // copy 复制
 func (c *BaseOrderController) bCopy(id int64) {
-	m, err := models.OrderOne(id, "Company,OrderItems")
+	m, err := models.OrderOne(id, "Company,OrderItems,OrderContainers,OrderDocuments")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据出错", nil)
 	}
@@ -163,7 +163,7 @@ func (c *BaseOrderController) bCopy(id int64) {
 
 // Edit 添加 编辑 页面
 func (c *BaseOrderController) bEdit(id int64) {
-	m, err := models.OrderOne(id, "")
+	m, err := models.OrderOne(id, "OrderItems,OrderContainers,OrderDocuments")
 	if err != nil {
 		c.pageError("数据无效，请刷新后重试")
 	}
@@ -171,7 +171,7 @@ func (c *BaseOrderController) bEdit(id int64) {
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("OrderController.Make")
 	c.Data["BackendUsers"] = backendUsers
-	c.Data["m"] = models.TransformOrder(id, "OrderItems")
+	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments")
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)
@@ -187,7 +187,7 @@ func (c *BaseOrderController) bMake(id int64) {
 		}
 	}
 	c.setStatusOnly(m, "制单中", false)
-	c.Data["m"] = models.TransformOrder(id, "OrderItems")
+	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments")
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)
@@ -203,7 +203,7 @@ func (c *BaseOrderController) bReMake(id int64) {
 		}
 	}
 
-	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderRecords")
+	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments,OrderRecords")
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)
@@ -294,7 +294,7 @@ func (c *BaseOrderController) bDistribute(backendUserId, id int64) {
 
 // Update 添加 编辑 页面
 func (c *BaseOrderController) bUpdate(id int64) {
-	m, err := models.OrderOne(id, "Company,OrderItems")
+	m, err := models.OrderOne(id, "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
@@ -316,7 +316,7 @@ func (c *BaseOrderController) bUpdate(id int64) {
 
 // bForRecheck 申请复核
 func (c *BaseOrderController) bForRecheck(id int64) {
-	m, err := models.OrderOne(id, "Company,OrderItems")
+	m, err := models.OrderOne(id, "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
@@ -335,7 +335,7 @@ func (c *BaseOrderController) bForRecheck(id int64) {
 
 // bRestart 重新开启
 func (c *BaseOrderController) bRestart(id int64) {
-	m, err := models.OrderOne(id, "Company,OrderItems")
+	m, err := models.OrderOne(id, "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
@@ -354,7 +354,7 @@ func (c *BaseOrderController) bRestart(id int64) {
 
 // bReForRecheck 重新申请复核
 func (c *BaseOrderController) bReForRecheck(id int64) {
-	m, err := models.OrderOne(id, "Company,OrderItems")
+	m, err := models.OrderOne(id, "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
@@ -374,7 +374,7 @@ func (c *BaseOrderController) bReForRecheck(id int64) {
 // bRecheckPass 通过复核、驳回
 func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionName string) {
 	Id, _ := c.GetInt64(":id", 0)
-	m, err := models.OrderOne(Id, "Company,OrderItems")
+	m, err := models.OrderOne(Id, "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
@@ -423,7 +423,7 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 
 // bRecheck 复核
 func (c *BaseOrderController) bRecheck(id int64) {
-	m, err := models.OrderOne(id, "OrderItems")
+	m, err := models.OrderOne(id, "")
 	if err != nil {
 		c.pageError("数据无效，请刷新后重试")
 	}
@@ -431,7 +431,7 @@ func (c *BaseOrderController) bRecheck(id int64) {
 		c.getActionData(m.IEFlag, "RecheckPass", "RecheckReject")
 	}
 	c.setStatusOnly(m, "复核中", false)
-	order := models.TransformOrder(id, "OrderItems")
+	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments")
 	c.Data["m"] = order
 	c.setTpl("order/recheck.html")
 	c.LayoutSections = make(map[string]string)
@@ -442,7 +442,7 @@ func (c *BaseOrderController) bRecheck(id int64) {
 
 // bPrint 打印
 func (c *BaseOrderController) bPrint(id int64) {
-	m, err := models.OrderOne(id, "OrderItems")
+	m, err := models.OrderOne(id, "OrderItems,OrderContainers,OrderDocuments")
 	if err != nil {
 		c.pageError("数据无效，请刷新后重试")
 	}
@@ -459,7 +459,7 @@ func (c *BaseOrderController) bPrint(id int64) {
 
 // bPushXml 提交单一
 func (c *BaseOrderController) bPushXml(id int64) {
-	m, err := models.OrderOne(id, "OrderItems")
+	m, err := models.OrderOne(id, "OrderItems,OrderContainers,OrderDocuments")
 	if err != nil || m == nil {
 		c.pageError("数据无效，请刷新后重试")
 	} else {

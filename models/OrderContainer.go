@@ -30,6 +30,7 @@ type OrderContainer struct {
 	ContainerMdName string    `orm:"column(container_md_name);size(200);null" description:"集装箱规格名称"`
 	ContainerWt     float64   `orm:"column(container_wt);null;digits(13);decimals(5)" description:"自重（KG）"`
 	LclFlag         int8      `orm:"column(lcl_flag);null" description:"拼箱规格（拼箱标识）拼箱标识可选项：0:否；1:是"`
+	LclFlagName     string    `orm:"column(lcl_flag_name)size(100);null" description:"拼箱规格名称"`
 	GoodsNo         string    `orm:"column(goods_no);size(255);null" description:"商品项号关系:商品项号用半角逗号分隔，如“1,3”，该节点长度为255"`
 	GoodsContaWt    float64   `orm:"column(goods_conta_wt);null;digits(17);decimals(5)" description:"箱货重量:集装箱箱体自重（千克）+ 装载货物重量（千克）,不计算该值，报文也不发送"`
 	DeletedAt       time.Time `orm:"column(deleted_at);type(timestamp);null"`
@@ -109,20 +110,6 @@ func OrderContainerOne(id int64) (*OrderContainer, error) {
 //Save 添加、编辑页面 保存
 func OrderContainerSave(m *OrderContainer) error {
 	o := orm.NewOrm()
-
-	//进出口原产国和目的国是相反的数据
-	//if m.Order.ImpexpMarkcd == "E" {
-	//	natcd := m.Natcd
-	//	natcdName := m.NatcdName
-	//	destinationNatcd := m.DestinationNatcd
-	//	destinationNatcdName := m.DestinationNatcdName
-	//
-	//	m.Natcd = destinationNatcd
-	//	m.NatcdName = destinationNatcdName
-	//	m.DestinationNatcd = natcd
-	//	m.DestinationNatcdName = natcdName
-	//}
-
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("OrderContainerSave:%v", err))
@@ -134,40 +121,6 @@ func OrderContainerSave(m *OrderContainer) error {
 			utils.LogDebug(fmt.Sprintf("OrderContainerSave:%v", err))
 			return err
 		}
-	}
-
-	return nil
-}
-
-//OrderContainerUpdateAll 添加、编辑页面 保存
-func OrderContainerUpdateAll(aid int64, m *OrderContainer) error {
-	o := orm.NewOrm()
-	qs := o.QueryTable(OrderContainerTBName()).Filter("order_id", aid)
-
-	var params orm.Params
-	//if len(m.Natcd) > 0 {
-	//	params = orm.Params{
-	//		"dcl_currcd":      m.DclCurrcd,
-	//		"dcl_currcd_name": m.DclCurrcdName,
-	//		"natcd":           m.Natcd,
-	//		"natcd_name":      m.NatcdName,
-	//	}
-	//} else if len(m.DestinationNatcd) > 0 {
-	//	params = orm.Params{
-	//		"dcl_currcd":      m.DclCurrcd,
-	//		"dcl_currcd_name": m.DclCurrcdName,
-	//		"natcd":           m.DestinationNatcd,
-	//		"natcd_name":      m.DestinationNatcdName,
-	//	}
-	//}
-
-	if params != nil {
-		_, err := qs.Update(params)
-		if err != nil {
-			return err
-		}
-	} else {
-		return errors.New("未更新")
 	}
 
 	return nil

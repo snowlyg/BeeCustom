@@ -34,6 +34,7 @@ func init() {
 		new(OrderFile),
 		new(OrderItem),
 		new(OrderContainer),
+		new(OrderDocument),
 		new(Setting),
 	)
 }
@@ -177,4 +178,9 @@ func OrderItemTBName() string {
 // OrderContainerTBName 获取 OrderContainerTBName 对应的表名称
 func OrderContainerTBName() string {
 	return TableName("order_containers")
+}
+
+// OrderDocumentTBName 获取 OrderDocumentTBName 对应的表名称
+func OrderDocumentTBName() string {
+	return TableName("order_documents")
 }

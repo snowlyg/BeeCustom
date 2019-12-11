@@ -6,6 +6,7 @@
             <td class="td-scale-01 text-align-right">集装箱号</td>
             <td class="td-scale-02" colspan="3">
                 <div class="input-group valid">
+                    <input type="hidden" name="OrderContainerId" id="OrderContainerId" >
                     <input type="text" class="non-empty required" name="ContainerId" id="ContainerId"
                            autocomplete="off" lay-verify="required" lay-vertype="tips">
                 </div>
@@ -25,7 +26,7 @@
             <td class="td-scale-01 text-align-right">自重(KG)</td>
             <td class="td-scale-02" colspan="3">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty" name="ContainerWt" id="ContainerWt" autocomplete="off">
+                    <input type="text" class="non-empty" name="ContainerWt" id="ContainerWt" autocomplete="off" oninput="layui.admin.is_onlyNumFloat(this, 'four')">
                 </div>
             </td>
         </tr>
@@ -42,7 +43,7 @@
             <td class="td-scale-01 text-align-right">商品项号关系</td>
             <td class="td-scale-02" colspan="3">
                 <div class="input-group valid">
-                    <input type="text" class="non-empty required" name="goods_no" id="GoodsNo"
+                    <input type="text" class="non-empty required" name="GoodsNo" id="GoodsNo"
                            autocomplete="off" lay-verify="required" lay-vertype="tips">
                     <i class="iconfont iconmore-horiz input_more" id="goods_no_open"></i>
                 </div>
