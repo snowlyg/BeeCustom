@@ -532,71 +532,80 @@ layui.define('view', function (exports) {
       //进口成交方式是C&I/出口成交方式是C&F，则允许录入运费，而不允许录入保费；
       //进口成交方式是C&F/出口成交方式是C&I，则不允许录入运费，而允许录入保费；否则，运费和保费都允许录入
       transModeControl: function (cusIEFlag,isCreate) {
-        const transMode = $('#TransMode').val()
-        if (('I' == cusIEFlag && transMode == '1') ||
-          ('E' == cusIEFlag && transMode == '3')) {
-          $('#FeeMark').val('')
-          $('#FeeMarkName').val('')
-          $('#FeeRate').val('')
-          $('#FeeCurrName').val('')
-          $('#FeeCurr').val('')
-          $('#FeeMarkName').attr('disabled', 'disabled')
-          $('#FeeMarkName').removeAttr('lay-verify')
-          $('#FeeCurrName').attr('disabled', 'disabled')
-          $('#FeeRate').attr('disabled', 'disabled')
-          $('#InsurMark').val('')
-          $('#InsurMarkName').val('')
-          $('#InsurRate').val('')
-          $('#InsurCurrName').val('')
-          $('#InsurCurr').val('')
-          $('#InsurMarkName').attr('disabled', 'disabled')
-          $('#InsurCurrName').attr('disabled', 'disabled')
+        $('#DestinationCountryName').val('中国');
+        $('#DestinationCountry').val('CHN');
+        const transMode = $('#TransMode').val();
+        if (('I' == cusIEFlag && transMode == '1') || ('E' == cusIEFlag && transMode == '3')) {
+          $('#FeeMarkName').val('');
+          $('#FeeMark').val('');
+          $('#FeeRate').val('');
+          $('#FeeCurrName').val('');
+          $('#FeeCurr').val('');
+
+          $('#FeeMarkName').attr('disabled', 'disabled');
+          $('#FeeMarkName').removeAttr('lay-verify');
+          $('#FeeCurrName').attr('disabled', 'disabled');
+          $('#FeeRate').attr('disabled', 'disabled');
+
+          $('#InsurMark').val('');
+          $('#InsurMarkName').val('');
+          $('#InsurRate').val('');
+          $('#InsurCurrName').val('');
+          $('#InsurCurr').val('');
+
+          $('#InsurMarkName').attr('disabled', 'disabled');
+          $('#InsurCurrName').attr('disabled', 'disabled');
           $('#InsurRate').attr('disabled', 'disabled')
-        } else if (('I' == cusIEFlag && transMode == '2') ||
-          ('E' == cusIEFlag && transMode == '4')) {
-          $('#FeeMarkName').val('')
-          $('#FeeMark').val('')
-          $('#FeeRate').val('')
-          $('#FeeCurrName').val('')
-          $('#FeeCurr').val('')
-          $('#FeeMarkName').attr('disabled', 'disabled')
-          $('#FeeMarkName').removeAttr('lay-verify')
-          $('#FeeCurrName').attr('disabled', 'disabled')
-          $('#FeeRate').attr('disabled', 'disabled')
-          $('#InsurMarkName').removeAttr('disabled', 'disabled')
-          $('#InsurRate').removeAttr('disabled', 'disabled')
+
+        } else if (('I' == cusIEFlag && transMode == '2') || ('E' == cusIEFlag && transMode == '4')) {
+          $('#FeeMarkName').val('');
+          $('#FeeMark').val('');
+          $('#FeeRate').val('');
+          $('#FeeCurrName').val('');
+          $('#FeeCurr').val('');
+
+          $('#FeeMarkName').attr('disabled', 'disabled');
+          $('#FeeMarkName').removeAttr('lay-verify');
+          $('#FeeCurrName').attr('disabled', 'disabled');
+          $('#FeeRate').attr('disabled', 'disabled');
+
+          $('#InsurMarkName').removeAttr('disabled', 'disabled');
+          $('#InsurRate').removeAttr('disabled', 'disabled');
           if ($('#InsurMark').val() != '1') {
             $('#InsurCurrName').removeAttr('disabled', 'disabled')
           }
-        } else if (('I' == cusIEFlag && transMode == '4') ||
-          ('E' == cusIEFlag && transMode == '2')) {
-          $('#InsurMarkName').val('')
-          $('#InsurMark').val('')
-          $('#InsurRate').val('')
-          $('#InsurCurrName').val('')
-          $('#InsurCurr').val('')
-          $('#InsurMarkName').attr('disabled', 'disabled')
-          $('#InsurCurrName').attr('disabled', 'disabled')
-          $('#InsurRate').attr('disabled', 'disabled')
-          $('#FeeMarkName').removeAttr('disabled', 'disabled')
+
+        } else if (('I' == cusIEFlag && transMode == '4') || ('E' == cusIEFlag && transMode == '2')) {
+
+          $('#InsurMarkName').val('');
+          $('#InsurMark').val('');
+          $('#InsurRate').val('');
+          $('#InsurCurrName').val('');
+          $('#InsurCurr').val('');
+
+          $('#InsurMarkName').attr('disabled', 'disabled');
+          $('#InsurCurrName').attr('disabled', 'disabled');
+          $('#InsurRate').attr('disabled', 'disabled');
+          $('#FeeMarkName').removeAttr('disabled', 'disabled');
+
           if(!isCreate){
-            $('#FeeMarkName').attr('lay-verify', 'required')
+            $('#FeeMarkName').attr('lay-verify', 'required');
           }
           if ($('#FeeMark').val() != '1') {
-            $('#FeeCurrName').removeAttr('disabled', 'disabled')
+            $('#FeeCurrName').removeAttr('disabled', 'disabled');
           }
-          $('#FeeRate').removeAttr('disabled', 'disabled')
+          $('#FeeRate').removeAttr('disabled', 'disabled');
         } else {
-          $('#FeeMarkName').removeAttr('disabled', 'disabled')
+          $('#FeeMarkName').removeAttr('disabled', 'disabled');
           if(!isCreate){
-            $('#FeeMarkName').attr('lay-verify', 'required')
+            $('#FeeMarkName').attr('lay-verify', 'required');
           }
-          $('#FeeRate').removeAttr('disabled', 'disabled')
+          $('#FeeRate').removeAttr('disabled', 'disabled');
           if ($('#FeeMark').val() != '1') {
-            $('#FeeCurrName').removeAttr('disabled', 'disabled')
+            $('#FeeCurrName').removeAttr('disabled', 'disabled');
           }
-          $('#InsurMarkName').removeAttr('disabled', 'disabled')
-          $('#InsurRate').removeAttr('disabled', 'disabled')
+          $('#InsurMarkName').removeAttr('disabled', 'disabled');
+          $('#InsurRate').removeAttr('disabled', 'disabled');
           if ($('#InsurMark').val() != '1') {
             $('#InsurCurrName').removeAttr('disabled', 'disabled')
           }
@@ -607,7 +616,7 @@ layui.define('view', function (exports) {
       keydown_input_textarea: function () {
         $('body').on('keydown', 'textarea', function (e) {
           let self = $(this)
-          let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode
+          let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
           if (eCode == 13) {
             e.preventDefault()
           }

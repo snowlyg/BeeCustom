@@ -121,13 +121,18 @@
                     <input type="text" class="non-empty" name="ExgNo" id="ExgNo" autocomplete="off">
                 </div>
             </td>
-            <td class="td-scale-04 text-align-right">最终目的国(地区)</td>
+            <td class="td-scale-04 text-align-right"> 最终目的国(地区)</td>
             <td>
                 <div class="input-group valid">
-                    <input type="hidden" name="DestinationCountry" id="DestinationCountry" value="CHN" no_empty>
-                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="DestinationCountryName" id="DestinationCountryName" autocomplete="off" value="中国"
-                           no_empty>
+                    @{{if eq .IEFlag "I"}}
+                <input type="hidden" name="DestinationCountry" id="DestinationCountry"  no_empty>
+                <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                       name="DestinationCountryName" id="DestinationCountryName" autocomplete="off" no_empty>
+                @{{else if eq .IEFlag "E"}}
+                <input type="hidden" name="OriginCountry" id="OriginCountry" no_empty>
+                <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                       name="OriginCountryName" id="OriginCountryName" autocomplete="off" no_empty>
+                @{{end}}
                 </div>
             </td>
         </tr>
@@ -150,9 +155,15 @@
             <td class="td-scale-04 text-align-right">原产国（地区）</td>
             <td colspan="3">
                 <div class="input-group valid">
-                    <input type="hidden" name="OriginCountry" id="OriginCountry" no_empty>
-                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="OriginCountryName" id="OriginCountryName" autocomplete="off" no_empty>
+                    @{{if eq .IEFlag "E"}}
+                <input type="hidden" name="DestinationCountry" id="DestinationCountry"  no_empty>
+                <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                       name="DestinationCountryName" id="DestinationCountryName" autocomplete="off" no_empty>
+                @{{else if eq .IEFlag "I"}}
+                <input type="hidden" name="OriginCountry" id="OriginCountry" no_empty>
+                <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                       name="OriginCountryName" id="OriginCountryName" autocomplete="off" no_empty>
+                @{{end}}
                 </div>
             </td>
             <td class="td-scale-04 text-align-right">原产地区</td>
@@ -171,6 +182,7 @@
                     <span>报检信息录入</span>
                 </div>
             </td>
+            @{{if eq .IEFlag "I"}}
             <td class="td-scale-04 text-align-right">境内目的地</td>
             <td colspan="2">
                 <div class="input-group valid">
@@ -187,6 +199,24 @@
                            name="DestCodeName" id="DestCodeName" autocomplete="off" placeholder="目的地代码" no_empty>
                 </div>
             </td>
+            @{{else if eq .IEFlag "E"}}
+            <td class="td-scale-04 text-align-right">境内货源地</td>
+            <td colspan="2">
+                <div class="input-group valid">
+                    <input type="hidden" name="district_code" id="district_code" no_empty>
+                    <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
+                           name="district_code_name" id="district_code_name" autocomplete="off" placeholder="境内货源地代码"
+                           no_empty>
+                </div>
+            </td>
+            <td colspan="3">
+                <div class="input-group valid">
+                    <input type="hidden" name="dest_code" id="dest_code" no_empty>
+                    <input type="text" class="non-empty" name="dest_code_name" id="dest_code_name"
+                           autocomplete="off" placeholder="产地代码" no_empty>
+                </div>
+            </td>
+            @{{end}}
             <td class="td-scale-04 text-align-right">征免方式</td>
             <td>
                 <div class="input-group valid">
