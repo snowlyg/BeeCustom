@@ -1832,10 +1832,6 @@ layui.define('view', function (exports) {
 
       /*选中商品编码申报要素*/
       declaration_data: '',
-
-      /*标志是否已经打开了窗口*/
-      isOpenGoodsWindow:
-        false,
       isOpenGoodsElementWindow:
         false,
 
@@ -1937,35 +1933,6 @@ layui.define('view', function (exports) {
         }
       }
       ,
-
-//非危险化学品/集装箱规格
-      chemicals_data: [
-        {
-          id: '0',
-          label: '0-否',
-          value: '否',
-        }, {
-          id: '1',
-          label: '1-是',
-          value: '是',
-        }],
-      //危包类别
-      category_data:
-        [
-          {
-            id: '1',
-            label: '1-一类',
-            value: '一类',
-          }, {
-          id: '2',
-          label: '2-二类',
-          value: '二类',
-        }, {
-          id: '3',
-          label: '3-三类',
-          value: '三类',
-        }],
-
       //历史申报要素数据
       elements_his_data:
         [],
@@ -1978,13 +1945,13 @@ layui.define('view', function (exports) {
 
       //规范要素回车事件
       decFocus (e, id) {
-        let fanalVal = ''
-        let surtax = ''
-        let surtaxIndex = -1
-        let objList = document.getElementsByName('dyanInput')
+        let fanalVal = '';
+        let surtax = '';
+        let surtaxIndex = -1;
+        let objList = document.getElementsByName('dyanInput');
         for (var i = 0; i < objList.length; i++) {
           if (objList[i].getAttribute('decElemType') == '9') {
-            fanalVal += '<' + objList[i].value + '>'
+            fanalVal += '<' + objList[i].value + '>';
             surtaxIndex = i
           } else {
             if (surtaxIndex > -1) {
@@ -2051,104 +2018,25 @@ layui.define('view', function (exports) {
       }
       ,
 
-//表体商品编号弹窗
-      async openGoodsWindow (e) {
-        if (admin.isOpenGoodsWindow) {
-          return false
-        }
-        const eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode
-        if (eCode == 13 || !eCode) {
-          // 输入商品编号大于等于4位时才弹商品列表框
-          const codeTs = $('#code_t_s').val()
-          const data = await admin.get(
-            `/hs_code/lists?limit=0&search=${codeTs}`)
-          if (data.data.length === 0) {
-            layer.msg('无此商品编码')
-            return
-          }
-          if (codeTs.length >= 4) {
-            admin.isOpenGoodsWindow = true //标志窗口已经打开
-            layer.open({
-              type: 1,
-              title: '商品列表',
-              shadeClose: true,
-              area: admin.screen() < 2 ? ['80%', '300px'] : [
-                '910px',
-                '480px'],
-              content: $('#code_t_s_list').html(),
-              success: function (layero, index) {
-                this.enterEsc = function (event) {
-                  if (event.keyCode === 13) {
-                    $('#code_t_s_save').click()
-                    return false
-                  }
-                }
-                $(document).on('keydown', this.enterEsc)
-              },
-              end: function () {
-                admin.isOpenGoodsWindow = false
-                $(document).off('keydown', this.enterEsc)
-                admin.openMerchElement()
-              },
-            })
-            layui.table.render({
-              elem: '#code_t_s_list_table',
-              toolbar: true,
-              defaultToolbar: ['filter'],
-              colFilterRecord: 'local',
-              cols: [
-                [
-                  {
-                    type: 'radio',
-                  }, {
-                  field: 'code',
-                  title: '商品编号',
-                  width: 180,
-                }, {
-                  field: 'name',
-                  title: '商品名称',
-                  width: 320,
-                }, {
-                  field: 'remark',
-                  title: '备注',
-                }],
-              ],
-              data: data.data,
-              limit: data.data.length,
-              height: 300,
-            })
-            $(`.layui-table-view[lay-id='code_t_s_list_table'] .layui-table-body tr[data-index='0'] .layui-form-radio`).
-              click()
-          } else if (!codeTs) {
-            return false
-          } else {
-            layer.msg('请至少输入四位商品编码！')
-            $(`input[id="code_t_s"]`).focus()
-            return false
-          }
-        }
-      }
-      ,
-
-//编辑检验检疫货物规格回车
+      //编辑检验检疫货物规格回车
       changeFoucsTogoodsAttr (event) {
         const eCode = event.keyCode ? event.keyCode : event.which
           ? event.which
           : event.charCode
         if (event.shiftKey != 1 && eCode == 13) {
-          $('#goods_spec_save').click()
+          $('#goods_spec_save').click();
           layer.closeAll()
         }
       }
       ,
 
-//编辑货物危险信息回车
+    // 编辑货物危险信息回车
       changeFoucsDanger (event) {
         const eCode = event.keyCode ? event.keyCode : event.which
           ? event.which
           : event.charCode
         if (event.shiftKey != 1 && eCode == 13) {
-          $('#dang_save').click()
+          $('#dang_save').click();
           layer.closeAll()
         }
       }
@@ -2197,17 +2085,17 @@ layui.define('view', function (exports) {
           after: obj.after,
           filter: function (data, data_filter) {
             data.forEach((item, index) => {
-              let value = `${item.Name}`
-              let label = `${item.CustomsCode}-${value}`
-              let data_filter_id = item.CustomsCode
+              let value = `${item.Name}`;
+              let label = `${item.CustomsCode}-${value}`;
+              let data_filter_id = item.CustomsCode;
               if (obj.filter_type === 'l') {
                 label = `<span class="auto_list_p_left">${item.CustomsCode}-${value}</span><span class="auto_list_p_right"><i>${item.OldCustomCode}</i><i>${item.OldCiqCode}</i></span>`
               } else if (obj.filter_type === 'anns') {
-                label = `${item.OldCustomCode}-${value}`
+                label = `${item.OldCustomCode}-${value}`;
                 data_filter_id = item.OldCustomCode
               }
               /**循环插入数据，after 使用*/
-              let ids = []
+              let ids = [];
               for (let i = 0; i < obj.after.length; i++) {
                 ids.push(data_filter_id)
               }
@@ -2232,7 +2120,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#InvtTypeName'],
             after: ['#InvtType'],
-          }
+          };
           await admin.base_clearance_data_auto(list_types)
         }
 
@@ -2761,7 +2649,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#DocuCodeName'],
             after: ['#DocuCode'],
-          }
+          };
           await admin.base_clearance_data_auto(documents_attached)
         }
 
@@ -2773,7 +2661,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#CusFieName'],
             after: ['#CusFie'],
-          }
+          };
           await admin.base_clearance_data_auto(site_code)
         }
 
@@ -3609,7 +3497,7 @@ layui.define('view', function (exports) {
               title: '规格',
               width: 200,
             }, {
-              field: 'GQtyString',
+              field: 'GQty',
               title: '成交数量',
               width: 100,
             }, {
@@ -3617,11 +3505,11 @@ layui.define('view', function (exports) {
               title: '成交单位',
               width: 100,
             }, {
-              field: 'DeclPriceString',
+              field: 'DeclPrice',
               title: '单价',
               width: 100,
             }, {
-              field: 'DeclTotalString',
+              field: 'DeclTotal',
               title: '总价',
               width: 120,
             }, {

@@ -18,8 +18,12 @@
                                 <div class="layui-card layui-form width-25">
                                     <select id="clearance_type_select" lay-filter="type">
                                         @{{ range $i,$v := .type }}
-                                    <option value="@{{$i}}">@{{$v}}</option>
-                                    @{{end}}
+                                        @{{if eq $i "1" }}
+                                        <option selected value="@{{$i}}">@{{$v}}</option>
+                                        @{{else}}
+                                        <option value="@{{$i}}">@{{$v}}</option>
+                                        @{{end}}
+                                        @{{end}}
                                     </select>
                                 </div>
                                 <div class="width-75">

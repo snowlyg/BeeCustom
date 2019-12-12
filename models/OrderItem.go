@@ -71,15 +71,18 @@ type OrderItem struct {
 	GoodsBrand             string  `orm:"column(goods_brand);null" description:"货物品牌"`
 	ProduceDate            string  `orm:"column(produce_date);null" description:"生产日期"`
 	ProdBatchNo            string  `orm:"column(prod_batch_no);null" description:"生产批号:货物的生产批号"`
-	GoodsAttr              string  `orm:"column(goods_attr);size(30);null" description:"货物属性代码 array [11-3c目录内]"`
+	GoodsAttr              string  `orm:"column(goods_attr);type(text);null" description:"货物属性代码 array"`
+	GoodsAttrName          string  `orm:"column(goods_attr_name);type(text);null" description:"货物属性name"`
 	Purpose                string  `orm:"column(purpose);size(2);null" description:"用途"`
 	PurposeName            string  `orm:"column(purpose_name);size(100);null" description:"用途名称"`
 	NoDangFlag             string  `orm:"column(no_dang_flag);size(1);null" description:"非危险化学品"`
+	NoDangFlagName         string  `orm:"column(no_dang_flag_name);size(1);null" description:"非危险化学品"`
 	DangName               string  `orm:"column(dang_name);size(80);null" description:"危险货物名称"`
 	UnCode                 string  `orm:"column(un_code);size(20);null" description:"UN编码"`
 	DangPackType           string  `orm:"column(dang_pack_type);size(4);null" description:"危包类别"`
+	DangPackTypeName       string  `orm:"column(dang_pack_type_name);size(200);null" description:"危包类别名称"`
 	DangPackSpec           string  `orm:"column(dang_pack_spec);size(24);null" description:"危包规格"`
-	DangPackTypeName       string  `orm:"column(dang_pack_type_name);size(200);null" description:"危包规格名称"`
+	DangPackSpecName       string  `orm:"column(dang_pack_spec_name);size(100);null" description:"危包规格"`
 
 	DeletedAt time.Time `orm:"column(deleted_at);type(timestamp);null"`
 

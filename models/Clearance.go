@@ -72,18 +72,17 @@ func ClearancePageList(params *ClearanceQueryParam) ([]*Clearance, int64) {
 	query := orm.NewOrm().QueryTable(ClearanceTBName())
 	datas := make([]*Clearance, 0)
 
-	clearanceTypeStrings, err := beego.AppConfig.GetSection("clearance_type")
-	if err != nil {
-		return nil, 0
-	}
-
-	clearanceTypeStrings = xlsx.FilpValueString(clearanceTypeStrings)
-	clearanceTypeString := "关区代码"
-	if len(params.TypeString) > 0 {
-		clearanceTypeString = params.TypeString
-	}
-	cType := clearanceTypeStrings[clearanceTypeString]
-
+	//clearanceTypeStrings, err := beego.AppConfig.GetSection("clearance_type")
+	//if err != nil {
+	//	return nil, 0
+	//}
+	//clearanceTypeStrings = xlsx.FilpValueString(clearanceTypeStrings)
+	//clearanceTypeString := "关区代码"
+	//if len(params.TypeString) > 0 {
+	//	clearanceTypeString = params.TypeString
+	//}
+	//cType := clearanceTypeStrings[clearanceTypeString]
+	cType := "1"
 	if len(params.Type) > 0 {
 		cType = params.Type
 	}
