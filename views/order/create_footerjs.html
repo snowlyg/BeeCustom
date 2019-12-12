@@ -35,6 +35,9 @@
             , OrderItemDangPackSpec
             , OrderItemDangPackSpecName
 
+            //货物申报产品资质
+            , OrderItemLimits =[]
+
             // 货物申报产品资质删除存储
             , OrderQuasDeleteIds = []
             //货物申报产品资质VIN删除存储
@@ -1056,9 +1059,9 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '530px'],
                 content: $('#dec_goods_template').html(),
             })
-            $('#licenceCodeTs').val($('#CodeTS').val());
-            $('#licenceGName').val($('#GName').val());
-            $('#licenceCiqName').val($('#CiqName').val());
+            $('#LicenceCodeTs').val($('#CodeTS').val());
+            $('#LicenceGName').val($('#GName').val());
+            $('#LicenceCiqName').val($('#CiqName').val());
             table.render({
                 elem: '#dec_goods_table'
                 , toolbar: '#dec_goods_tool'
@@ -1075,60 +1078,71 @@
                         , {field: 'LicWrtofQty', title: '核销数量', width: 110}
                         , {field: 'LicWrtofQtyUnitName', title: '核销数量单位', width: 140},
                     ]]
-                , data: quas
-                , limit: quas.length
+                , data: OrderItemLimits
+                , limit: OrderItemLimits.length
                 , height: 350,
             });
 
             $('#LicTypeName').focus();
             /**自动完成--许可证类别**/
-            // auto_fn({
-            //     data: admin.all_complete_data.enterprise_product,
-            //     listDirection: false,
-            //     id: ['#lic_type_name'],
-            //     after: ['#lic_type_code']
-            // });
+            let site_code = {
+                    dataType: 'orderClearance',
+                    type: 13,
+                    name: '企业产品许可类别代码',
+                    filter_type: 's',
+                    id: ['#LicTypeName'],
+                    after: ['#LicTypeCode'],
+                };
+            await admin.base_clearance_data_auto(site_code);
             /**自动完成--核销数量单位**/
-            // auto_fn({
-            //     data: admin.all_complete_data.unit_measurement,
-            //     listDirection: false,
-            //     id: ['#lic_wrtof_qty_unit_name'],
-            //     after: ['#lic_wrtof_qty_unit']
-            // });
+            let unit_measurement = {
+                dataType: 'commonClearance',
+                type: 23,
+                name: '计量单位代码',
+                filter_type: 's',
+                id: ['#LicWrtofQtyUnitName'],
+                after: ['#LicWrtofQtyUnit'],
+            };
+            await admin.base_clearance_data_auto(unit_measurement);
+
         });
 
         /**编辑产品许可证/审批/备案信息--点击行反填数据**/
         table.on('row(dec_goods_table)', function (obj) {
-            $('#goodsLimitSeqNo').val(obj.data.goods_no);
-            $('#LicTypeCode').val(obj.data.lic_type_code);
-            $('#LicTypeName').val(obj.data.lic_type_name);
-            $('#LicenceNo').val(obj.data.licence_no);
-            $('#LicWrtofDetailNo').val(obj.data.lic_wrtof_detail_no);
-            $('#LicWrtofQty').val(obj.data.lic_wrtof_qty);
-            $('#LicWrtofQtyUnit').val(obj.data.lic_wrtof_qty_unit);
-            $('#LicWrtofQtyUnitName').val(obj.data.lic_wrtof_qty_unit_name);
+            $('#GoodsLimitSeqNo').val(obj.data.GoodsNo);
+            $('#LicTypeCode').val(obj.data.LicTypeCode);
+            $('#LicTypeName').val(obj.data.LicTypeName);
+            $('#LicenceNo').val(obj.data.LicenceNo);
+            $('#LicWrtofDetailNo').val(obj.data.LicWrtofDetailNo);
+            $('#LicWrtofQty').val(obj.data.LicWrtofQty);
+            $('#LicWrtofQtyUnit').val(obj.data.LicWrtofQtyUnit);
+            $('#LicWrtofQtyUnitName').val(obj.data.LicWrtofQtyUnitName);
             $('#LicTypeName').focus();
-            dec_goods_index = obj.data.goods_no
+            dec_goods_index = obj.data.GoodsNo
         });
 
         /**编辑产品许可证/审批/备案信息--保存**/
         form.on('submit(dec_goods_submit)', async (data) => {
             delete data.field.layTableCheckbox;
+
             if (dec_goods_index) {
                 for (let item in data.field) {
-                    quas[dec_goods_index - 1][item] = data.field[item]
+                    OrderItemLimits[dec_goods_index - 1][item] = data.field[item]
                 }
             } else {
-                quas.push(data.field)
+                OrderItemLimits.push(data.field)
             }
-            quas.forEach((value, index) => {
+
+            OrderItemLimits.forEach((value, index) => {
                 value.goods_no = index + 1
-            })
+            });
+
             table.reload('dec_goods_table', {
-                data: quas,
-                limit: quas.length,
-            })
-            $('#goodsLimitSeqNo').val('');
+                data: OrderItemLimits,
+                limit: OrderItemLimits.length,
+            });
+
+            $('#GoodsLimitSeqNo').val('');
             $('#lic_type_code').val('');
             $('#lic_type_name').val('');
             $('#licence_no').val('');
@@ -1137,91 +1151,75 @@
             $('#lic_wrtof_qty_unit').val('');
             $('#lic_wrtof_qty_unit_name').val('');
             $('#lic_type_name').focus();
+
             dec_goods_index = null
         });
 
         /**编辑产品许可证/审批/备案信息--删除**/
         table.on('toolbar(dec_goods_table)', function (obj) {
-            let checkStatus = table.checkStatus(obj.config.id)
-            let checkData = checkStatus.data
+            let checkStatus = table.checkStatus(obj.config.id);
+            let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
-                    $('#goodsLimitSeqNo').val('')
-                    $('#lic_type_code').val('')
-                    $('#lic_type_name').val('')
-                    $('#licence_no').val('')
-                    $('#lic_wrtof_detail_no').val('')
-                    $('#lic_wrtof_qty').val('')
-                    $('#lic_wrtof_qty_unit').val('')
-                    $('#lic_wrtof_qty_unit_name').val('')
-                    $('#lic_type_name').focus()
-                    dec_goods_index = null
-                    break
+                    $('#GoodsLimitSeqNo').val('');
+                    $('#LicTypeCode').val('');
+                    $('#LicTypeName').val('');
+                    $('#LicenceNo').val('');
+                    $('#LicWrtofDetailNo').val('');
+                    $('#LicWrtofQty').val('');
+                    $('#LicWrtofQtyUnit').val('');
+                    $('#LicWrtofQtyUnitName').val('');
+                    $('#LicTypeName').focus();
+                    dec_goods_index = null;
+                    break;
                 case 'delete':
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据')
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                        dec_goods_index = null
-                        let sup_data = quas.filter(item => {
-                            return checkData.every(item2 => {
-                                return item.goods_no != item2.goods_no
-                            })
-                        })
-                        for (let item_apply of checkData) {
-                            if (item_apply.id) {
-                                OrderQuasDeleteIds.push({
-                                    index: order_pros_index - 1,
-                                    id: item_apply.id,
-                                })
-                            }
-                        }
-                        quas = sup_data
-                        quas.forEach((value, index) => {
-                            value.goods_no = index + 1
-                        })
-                        table.reload('dec_goods_table', {
-                            data: quas,
-                            limit: quas.length,
-                        })
-                        $('#goodsLimitSeqNo').val('')
-                        $('#lic_type_code').val('')
-                        $('#lic_type_name').val('')
-                        $('#licence_no').val('')
-                        $('#lic_wrtof_detail_no').val('')
-                        $('#lic_wrtof_qty').val('')
-                        $('#lic_wrtof_qty_unit').val('')
-                        $('#lic_wrtof_qty_unit_name').val('')
-                        $('#lic_type_name').focus()
+
+
+                        $('#GoodsLimitSeqNo').val('');
+                        $('#lic_type_code').val('');
+                        $('#lic_type_name').val('');
+                        $('#licence_no').val('');
+                        $('#lic_wrtof_detail_no').val('');
+                        $('#lic_wrtof_qty').val('');
+                        $('#lic_wrtof_qty_unit').val('');
+                        $('#lic_wrtof_qty_unit_name').val('');
+                        $('#lic_type_name').focus();
+
                         layer.close(index)
-                    })
+                    });
                     break
             }
-        })
+        });
+
         /**编辑产品许可证/审批/备案信息--按enter保存**/
         $('body').on('keyup', '#lic_wrtof_qty_unit_name', function (event) {
             if (event.keyCode == 13) {
-                $('#dec_goods_submit').click()
-                $('#lic_type_name').focus()
+                $('#dec_goods_submit').click();
+                $('#LicTypeName').focus();
             }
-        })
+        });
+
         /**许可证VIN信息**/
         let dec_goods_vin_index = null
         form.on('submit(dec_goods_vin)', async (data) => {
-            delete data.field.layTableCheckbox
+            delete data.field.layTableCheckbox;
             if (dec_goods_index) {
                 for (let item in data.field) {
-                    quas[dec_goods_index - 1][item] = data.field[item]
+                    OrderItemLimits[dec_goods_index - 1][item] = data.field[item]
                 }
             } else {
-                quas.push(data.field)
+                OrderItemLimits.push(data.field)
             }
-            quas.forEach((value, index) => {
+            OrderItemLimits.forEach((value, index) => {
                 value.goods_no = index + 1
             })
             table.reload('dec_goods_table', {
-                data: quas,
-                limit: quas.length,
+                data: OrderItemLimits,
+                limit: OrderItemLimits.length,
             })
             layer.open({
                 type: 1,
@@ -1230,7 +1228,7 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['1002px', '590px'],
                 content: $('#dec_goods_vin_template').html(),
             })
-            let dec_goods_vin_data = quas[dec_goods_index - 1].order_pro_qua_vins || []
+            let dec_goods_vin_data = OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins || []
             table.render({
                 elem: '#dec_goods_vin_table'
                 , toolbar: '#dec_goods_vin_tool'
@@ -1255,50 +1253,54 @@
                 , data: dec_goods_vin_data
                 , limit: dec_goods_vin_data.length
                 , height: 350,
-            })
+            });
             laydate.render({elem: '#bill_lad_date', theme: '#1E9FFF', fixed: true})
-            $('#licTypeCodeVinName').val(quas[dec_goods_index - 1].lic_type_name)
-            $('#licenceNo').val(quas[dec_goods_index - 1].licence_no)
-            $('#vin_no').focus()
-        })
+            $('#LicTypeCodeVinName').val(OrderItemLimits[dec_goods_index - 1].LicTypeName)
+            $('#LicenceNo').val(OrderItemLimits[dec_goods_index - 1].LicenceNo)
+            $('#VinNo').focus()
+        });
+
         /**许可证VIN信息--点击行反填数据**/
         table.on('row(dec_goods_vin_table)', function (obj) {
-            $('#goodsLimitVinSeqNo').val(obj.data.index)
-            $('#vin_no').val(obj.data.vin_no)
-            $('#bill_lad_date').val(obj.data.bill_lad_date)
-            $('#quality_qgp').val(obj.data.quality_qgp)
-            $('#motor_no').val(obj.data.motor_no)
-            $('#vin_code').val(obj.data.vin_code)
-            $('#chassis_no').val(obj.data.chassis_no)
-            $('#invoice_no').val(obj.data.invoice_no)
-            $('#invoice_num').val(obj.data.invoice_num)
-            $('#prod_cnnm').val(obj.data.prod_cnnm)
-            $('#prod_ennm').val(obj.data.prod_ennm)
-            $('#model_en').val(obj.data.model_en)
-            $('#price_per_unit').val(obj.data.price_per_unit)
-            $('#vin_no').focus()
+            $('#GoodsLimitVinSeqNo').val(obj.data.index);
+            $('#VinNo').val(obj.data.vin_no);
+            $('#BillLadDate').val(obj.data.bill_lad_date);
+            $('#QualityQgp').val(obj.data.quality_qgp);
+            $('#MotorNo').val(obj.data.motor_no);
+            $('#VinCode').val(obj.data.vin_code);
+            $('#ChassisNo').val(obj.data.chassis_no);
+            $('#InvoiceNo').val(obj.data.invoice_no);
+            $('#InvoiceNum').val(obj.data.invoice_num);
+            $('#ProdCnnm').val(obj.data.prod_cnnm);
+            $('#ProdEnnm').val(obj.data.prod_ennm);
+            $('#ModelEn').val(obj.data.model_en);
+            $('#PricePerUnit').val(obj.data.price_per_unit);
+            $('#VinNo').focus();
             dec_goods_vin_index = obj.data.index
-        })
+        });
+
         /**许可证VIN信息--保存**/
         form.on('submit(dec_goods_vin_submit)', async (data) => {
             delete data.field.layTableCheckbox
-            if (!(quas[dec_goods_index - 1].order_pro_qua_vins)) {
-                quas[dec_goods_index - 1].order_pro_qua_vins = []
+            if (!(OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins)) {
+                OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins = []
             }
             if (dec_goods_vin_index) {
                 for (let item in data.field) {
-                    quas[dec_goods_index - 1].order_pro_qua_vins[dec_goods_vin_index - 1][item] = data.field[item]
+                    OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins[dec_goods_vin_index - 1][item] = data.field[item]
                 }
             } else {
-                quas[dec_goods_index - 1].order_pro_qua_vins.push(data.field)
+                OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins.push(data.field)
             }
-            quas[dec_goods_index - 1].order_pro_qua_vins.forEach((value, index) => {
+            OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins.forEach((value, index) => {
                 value.index = index + 1
-            })
+            });
+
             table.reload('dec_goods_vin_table', {
-                data: quas[dec_goods_index - 1].order_pro_qua_vins,
-                limit: quas[dec_goods_index - 1].order_pro_qua_vins.length,
-            })
+                data: OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins,
+                limit: OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins.length,
+            });
+
             $('#goodsLimitVinSeqNo').val('')
             $('#vin_no').val('')
             $('#bill_lad_date').val('')
@@ -1314,7 +1316,8 @@
             $('#price_per_unit').val('')
             $('#vin_no').focus()
             dec_goods_vin_index = null
-        })
+        });
+
         /**许可证VIN信息--删除**/
         table.on('toolbar(dec_goods_vin_table)', function (obj) {
             let checkStatus = table.checkStatus(obj.config.id)
@@ -1343,7 +1346,7 @@
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         dec_goods_vin_index = null
-                        let sup_data = quas[dec_goods_index - 1].order_pro_qua_vins.filter(item => {
+                        let sup_data = OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins.filter(item => {
                             return checkData.every(item2 => {
                                 return item.index != item2.index
                             })
@@ -1357,30 +1360,33 @@
                                 })
                             }
                         }
-                        quas[dec_goods_index - 1].order_pro_qua_vins = sup_data
-                        quas[dec_goods_index - 1].order_pro_qua_vins.forEach((value, index) => {
+                        OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins = sup_data
+                        OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins.forEach((value, index) => {
                             value.index = index + 1
                         })
                         table.reload('dec_goods_vin_table', {
-                            data: quas[dec_goods_index - 1].order_pro_qua_vins,
-                            limit: quas[dec_goods_index - 1].order_pro_qua_vins.length,
-                        })
-                        $('#goodsLimitVinSeqNo').val('')
-                        $('#VinNo').val('')
-                        $('#BillLadDate').val('')
-                        $('#QualityQgp').val('')
-                        $('#MotorNo').val('')
-                        $('#VinCode').val('')
-                        $('#ChassisNo').val('')
-                        $('#InvoiceNo').val('')
-                        $('#InvoiceNum').val('')
-                        $('#ProdCnnm').val('')
-                        $('#ProdEnnm').val('')
-                        $('#ModelEn').val('')
-                        $('#price_per_unit').val('')
-                        $('#vin_no').focus()
+                            data: OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins,
+                            limit: OrderItemLimits[dec_goods_index - 1].order_pro_qua_vins.length,
+                        });
+
+                        $('#GoodsLimitVinSeqNo').val('');
+                        $('#VinNo').val('');
+                        $('#BillLadDate').val('');
+                        $('#QualityQgp').val('');
+                        $('#MotorNo').val('');
+                        $('#VinCode').val('');
+                        $('#ChassisNo').val('');
+                        $('#InvoiceNo').val('');
+                        $('#InvoiceNum').val('');
+                        $('#ProdCnnm').val('');
+                        $('#ProdEnnm').val('');
+                        $('#ModelEn').val('');
+                        $('#PricePerUnit').val('');
+                        $('#VinNo').focus();
+
                         layer.close(index)
-                    })
+                    });
+
                     break
             }
         });
@@ -1389,7 +1395,7 @@
         $('body').on('keyup', '#price_per_unit', function (event) {
             if (event.keyCode == 13) {
                 $('#dec_goods_vin_submit').click();
-                $('#vin_no').focus()
+                $('#VinNo').focus();
             }
         });
 
@@ -1681,7 +1687,7 @@
             data.field.DangPackSpecName = OrderItemDangPackSpecName;
 
             // 产品资质
-            // data.field.quas = quas
+            data.field.OrderItemLimits = OrderItemLimits;
 
             data.field.OrderId = order_id;  // id
             let resultStatus = false;
@@ -1757,7 +1763,7 @@
                 }
             }
 
-            // quas = obj.data.quas; // 产品资质
+            // OrderItemLimits = obj.data.OrderItemLimits; // 产品资质
 
             $('#GoodsAttr').val(OrderItemGoodsAttrName); // 货物属性
             $('#GoodsSpecData').val(GoodsSpecData); // 检验检疫货物规格
@@ -1801,7 +1807,7 @@
                         }
                     })
                     // goods_spec_data = {}
-                    // quas = []
+                    // OrderItemLimits = []
                     // GoodsAttrData = []
                     // dang_data = {}
                     if ($('#contr_item').is(':disabled')) {
@@ -1846,7 +1852,7 @@
                             }
                         })
                         // goods_spec_data = {}
-                        // quas = []
+                        // OrderItemLimits = []
                         // GoodsAttrData = []
                         // dang_data = {}
                         if ($('#contr_item').is(':disabled')) {
@@ -1950,7 +1956,7 @@
                         }
                     })
                     // goods_spec_data = {}
-                    // quas = []
+                    // OrderItemLimits = []
                     // GoodsAttrData = []
                     // dang_data = {}
                     if ($('#contr_item').is(':disabled')) {
@@ -3299,17 +3305,17 @@
                     id: item,
                 })
             }
-            data.field.quas = EntQualifData
+            data.field.OrderItemLimits = EntQualifData
             /**使用人数据**/
             data.field.DecUsers = DecUsersData
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
-                OrderItemsData[item.pros_index].quas[item.index].order_pro_qua_vins.push({
+                OrderItemsData[item.pros_index].OrderItemLimits[item.index].order_pro_qua_vins.push({
                     id: item.id,
                 })
             }
             for (let item of OrderQuasDeleteIds) {
-                OrderItemsData[item.index].quas.push({
+                OrderItemsData[item.index].OrderItemLimits.push({
                     id: item.id,
                 })
             }
@@ -3916,17 +3922,17 @@
                     id: item,
                 })
             }
-            data.field.quas = EntQualifData
+            data.field.OrderItemLimits = EntQualifData
             /**使用人数据**/
             data.field.dec_users = DecUsersData
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
-                OrderItemsData[item.pros_index].quas[item.index].order_pro_qua_vins.push({
+                OrderItemsData[item.pros_index].OrderItemLimits[item.index].order_pro_qua_vins.push({
                     id: item.id,
                 })
             }
             for (let item of OrderQuasDeleteIds) {
-                OrderItemsData[item.index].quas.push({
+                OrderItemsData[item.index].OrderItemLimits.push({
                     id: item.id,
                 })
             }
@@ -4129,17 +4135,17 @@
                     id: item,
                 })
             }
-            data.field.quas = EntQualifData
+            data.field.OrderItemLimits = EntQualifData
             /**使用人数据**/
             data.field.dec_users = DecUsersData
             /**表体商品数据**/
             for (let item of OrderQuasVinDeleteIds) {
-                OrderItemsData[item.pros_index].quas[item.index].order_pro_qua_vins.push({
+                OrderItemsData[item.pros_index].OrderItemLimits[item.index].order_pro_qua_vins.push({
                     id: item.id,
                 })
             }
             for (let item of OrderQuasDeleteIds) {
-                OrderItemsData[item.index].quas.push({
+                OrderItemsData[item.index].OrderItemLimits.push({
                     id: item.id,
                 })
             }
