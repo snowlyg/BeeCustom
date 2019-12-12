@@ -578,7 +578,8 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 
 	orderItem["OrderContainers"] = v.OrderContainers
 	orderItem["OrderDocuments"] = v.OrderDocuments
-	orderItem["OrderItems"] = v.OrderItems
+	items, _ := OrderItemGetRelations(v.OrderItems, "OrderItemLimits")
+	orderItem["OrderItems"] = items
 
 	orderItem["ContactSignDate"] = enums.GetDateTimeString(&v.ContactSignDate, enums.BaseDateFormat) // contact_sign_date);type(datetime);null" description:"合同签约日期（进出口日期前一个月）"`
 	orderItem["AplDate"] = enums.GetDateTimeString(&v.AplDate, enums.BaseDateFormat)

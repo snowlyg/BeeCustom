@@ -86,6 +86,8 @@ type OrderItem struct {
 
 	DeletedAt time.Time `orm:"column(deleted_at);type(timestamp);null"`
 
+	OrderItemLimits []*OrderItemLimit `orm:"reverse(many)"` // 设置一对多关系
+
 	Order   *Order `orm:"column(order_id);rel(fk)"`
 	OrderId int64  `orm:"-" form:"OrderId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
 }
@@ -116,7 +118,6 @@ func OrderItemPageList(params *OrderItemQueryParam) ([]*OrderItem, int64) {
 
 // OrderItemPageList 获取分页数据
 func OrderItemsByOrderId(aId int64) ([]*OrderItem, error) {
-
 	datas := make([]*OrderItem, 0)
 	_, err := orm.NewOrm().QueryTable(OrderItemTBName()).Filter("order_id", aId).All(&datas)
 	if err != nil {
@@ -226,7 +227,7 @@ func OrderItemUpdateAll(aid int64, m *OrderItem) error {
 	return nil
 }
 
-//删除
+// 删除
 func OrderItemDelete(id int64) (num int64, err error) {
 	m := NewOrderItem(id)
 	if num, err := BaseDelete(&m); err != nil {

@@ -58,12 +58,12 @@ func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
 		aId = m.OrderId
 	}
 
-	annotation, err := models.OrderOne(aId, "")
+	order, err := models.OrderOne(aId, "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
 	}
 
-	m.Order = annotation
+	m.Order = order
 
 	if err := models.OrderItemSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)

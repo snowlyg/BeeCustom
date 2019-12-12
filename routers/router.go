@@ -8,6 +8,11 @@ import (
 func init() {
 
 	// 货物申报表体管理
+	beego.Router("/order_item_limit/store/?:aid", &controllers.OrderItemLimitController{}, "Post:Store")
+	beego.Router("/order_item_limit/update/?:id", &controllers.OrderItemLimitController{}, "Patch:Update")
+	beego.Router("/order_item_limit/delete/", &controllers.OrderItemLimitController{}, "Post:Delete")
+
+	// 货物申报表体管理
 	beego.Router("/order_item/store/?:aid", &controllers.OrderItemController{}, "Post:Store")
 	beego.Router("/order_item/update/?:id", &controllers.OrderItemController{}, "Patch:Update")
 	beego.Router("/order_item/delete/", &controllers.OrderItemController{}, "Post:Delete")

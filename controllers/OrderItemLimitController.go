@@ -10,11 +10,11 @@ import (
 	"BeeCustom/utils"
 )
 
-type OrderDocumentController struct {
+type OrderItemLimitController struct {
 	BaseController
 }
 
-func (c *OrderDocumentController) Prepare() {
+func (c *OrderItemLimitController) Prepare() {
 	// 先执行
 	c.BaseController.Prepare()
 	// 如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
@@ -29,23 +29,23 @@ func (c *OrderDocumentController) Prepare() {
 }
 
 // Store 添加 新建 页面
-func (c *OrderDocumentController) Store() {
+func (c *OrderItemLimitController) Store() {
 	Id, _ := c.GetInt64(":aid", 0)
-	m := models.NewOrderDocument(0)
+	m := models.NewOrderItemLimit(0)
 
 	c.saveOrUpdate(&m, Id)
 }
 
 // Update 添加 编辑 页面
-func (c *OrderDocumentController) Update() {
+func (c *OrderItemLimitController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
-	m := models.NewOrderDocument(Id)
+	m := models.NewOrderItemLimit(Id)
 
 	c.saveOrUpdate(&m, 0)
 }
 
 // Update 添加 编辑 页面
-func (c *OrderDocumentController) saveOrUpdate(m *models.OrderDocument, aId int64) {
+func (c *OrderItemLimitController) saveOrUpdate(m *models.OrderItemLimit, aId int64) {
 	// 获取form里的值
 	if err := c.ParseForm(m); err != nil {
 		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
@@ -55,17 +55,17 @@ func (c *OrderDocumentController) saveOrUpdate(m *models.OrderDocument, aId int6
 	c.validRequestData(m)
 
 	if aId == 0 {
-		aId = m.OrderId
+		aId = m.OrderItemId
 	}
 
-	annotation, err := models.OrderOne(aId, "")
+	orderItem, err := models.OrderItemOne(aId)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
 	}
 
-	m.Order = annotation
+	m.OrderItem = orderItem
 
-	if err := models.OrderDocumentSave(m); err != nil {
+	if err := models.OrderItemLimitSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -73,15 +73,16 @@ func (c *OrderDocumentController) saveOrUpdate(m *models.OrderDocument, aId int6
 }
 
 // 删除
-func (c *OrderDocumentController) Delete() {
+func (c *OrderItemLimitController) Delete() {
 	idsString := c.GetString("Ids")
 	Ids := strings.Split(idsString, ",")
+
 	for _, i := range Ids {
 		id, err := strconv.ParseInt(i, 10, 64)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
-		if _, err := models.OrderDocumentDelete(id); err != nil {
+		if _, err := models.OrderItemLimitDelete(id); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}

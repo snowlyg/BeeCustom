@@ -86,6 +86,6 @@ func (c *OrderContainerController) Delete() {
 		}
 	}
 
-	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", 0), "")
+	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(Ids)), "")
 
 }
