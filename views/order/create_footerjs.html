@@ -1175,16 +1175,12 @@
                       })
 
                       if (result.status) {
+                        ids = ids.isArray ? ids : [ids];
                         OrderItemLimits.forEach(function (item,index,arr) {
-                          ids = ids.isArray ? ids : [ids];
-                          console.log(item.OrderItemLimitId);
-                          console.log(ids);
-                          console.log($.inArray(item.OrderItemLimitId,ids)>=0);
-                         if($.inArray(item.OrderItemLimitId,ids)>=0){
+                         if($.inArray(item.Id,ids)>=0){
                            OrderItemLimits.splice(index,1)
                          }
                         })
-                        console.log(OrderItemLimits);
 
                          OrderItemLimits.forEach(function (item,index,arr) {
                           item.GoodsNo = index+1
