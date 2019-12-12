@@ -1044,9 +1044,9 @@
         /**编辑产品许可证/审批/备案信息**/
         let dec_goods_index = null
         $('body').on('click', '#goodsTargetBtn', async function () {
-            if (!($('#code_t_s').val())) {
-                layer.msg('请填写商品编号')
-                $('#code_t_s').focus()
+            if (!($('#CodeTS').val())) {
+                layer.msg('请填写商品编号');
+                $('#CodeTS').focus();
                 return
             }
             layer.open({
@@ -1056,9 +1056,9 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '530px'],
                 content: $('#dec_goods_template').html(),
             })
-            $('#licenceCodeTs').val($('#code_t_s').val());
-            $('#licenceGName').val($('#g_name').val());
-            $('#licenceCiqName').val($('#ciq_name').val());
+            $('#licenceCodeTs').val($('#CodeTS').val());
+            $('#licenceGName').val($('#GName').val());
+            $('#licenceCiqName').val($('#CiqName').val());
             table.render({
                 elem: '#dec_goods_table'
                 , toolbar: '#dec_goods_tool'
@@ -1067,13 +1067,13 @@
                 , cols: [
                     [
                         {type: 'checkbox'}
-                        , {field: 'goods_no', title: '序号', width: 80}
-                        , {field: 'lic_type_code', title: '许可证类别代码', width: 150}
-                        , {field: 'lic_type_name', title: '证书类别名称', width: 150}
-                        , {field: 'licence_no', title: '许可证编码', width: 130}
-                        , {field: 'lic_wrtof_detail_no', title: '核销货物序号', width: 150}
-                        , {field: 'lic_wrtof_qty', title: '核销数量', width: 110}
-                        , {field: 'lic_wrtof_qty_unit_name', title: '核销数量单位', width: 140},
+                        , {field: 'GoodsNo', title: '序号', width: 80}
+                        , {field: 'LicTypeCode', title: '许可证类别代码', width: 150}
+                        , {field: 'LicTypeName', title: '证书类别名称', width: 150}
+                        , {field: 'LicenceNo', title: '许可证编码', width: 130}
+                        , {field: 'LicWrtofDetailNo', title: '核销货物序号', width: 150}
+                        , {field: 'LicWrtofQty', title: '核销数量', width: 110}
+                        , {field: 'LicWrtofQtyUnitName', title: '核销数量单位', width: 140},
                     ]]
                 , data: quas
                 , limit: quas.length
@@ -1100,20 +1100,20 @@
         /**编辑产品许可证/审批/备案信息--点击行反填数据**/
         table.on('row(dec_goods_table)', function (obj) {
             $('#goodsLimitSeqNo').val(obj.data.goods_no);
-            $('#lic_type_code').val(obj.data.lic_type_code);
-            $('#lic_type_name').val(obj.data.lic_type_name);
-            $('#licence_no').val(obj.data.licence_no);
-            $('#lic_wrtof_detail_no').val(obj.data.lic_wrtof_detail_no);
-            $('#lic_wrtof_qty').val(obj.data.lic_wrtof_qty);
-            $('#lic_wrtof_qty_unit').val(obj.data.lic_wrtof_qty_unit);
-            $('#lic_wrtof_qty_unit_name').val(obj.data.lic_wrtof_qty_unit_name);
-            $('#lic_type_name').focus();
+            $('#LicTypeCode').val(obj.data.lic_type_code);
+            $('#LicTypeName').val(obj.data.lic_type_name);
+            $('#LicenceNo').val(obj.data.licence_no);
+            $('#LicWrtofDetailNo').val(obj.data.lic_wrtof_detail_no);
+            $('#LicWrtofQty').val(obj.data.lic_wrtof_qty);
+            $('#LicWrtofQtyUnit').val(obj.data.lic_wrtof_qty_unit);
+            $('#LicWrtofQtyUnitName').val(obj.data.lic_wrtof_qty_unit_name);
+            $('#LicTypeName').focus();
             dec_goods_index = obj.data.goods_no
         });
 
         /**编辑产品许可证/审批/备案信息--保存**/
         form.on('submit(dec_goods_submit)', async (data) => {
-            delete data.field.layTableCheckbox
+            delete data.field.layTableCheckbox;
             if (dec_goods_index) {
                 for (let item in data.field) {
                     quas[dec_goods_index - 1][item] = data.field[item]
@@ -1128,17 +1128,18 @@
                 data: quas,
                 limit: quas.length,
             })
-            $('#goodsLimitSeqNo').val('')
-            $('#lic_type_code').val('')
-            $('#lic_type_name').val('')
-            $('#licence_no').val('')
-            $('#lic_wrtof_detail_no').val('')
-            $('#lic_wrtof_qty').val('')
-            $('#lic_wrtof_qty_unit').val('')
-            $('#lic_wrtof_qty_unit_name').val('')
-            $('#lic_type_name').focus()
+            $('#goodsLimitSeqNo').val('');
+            $('#lic_type_code').val('');
+            $('#lic_type_name').val('');
+            $('#licence_no').val('');
+            $('#lic_wrtof_detail_no').val('');
+            $('#lic_wrtof_qty').val('');
+            $('#lic_wrtof_qty_unit').val('');
+            $('#lic_wrtof_qty_unit_name').val('');
+            $('#lic_type_name').focus();
             dec_goods_index = null
-        })
+        });
+
         /**编辑产品许可证/审批/备案信息--删除**/
         table.on('toolbar(dec_goods_table)', function (obj) {
             let checkStatus = table.checkStatus(obj.config.id)

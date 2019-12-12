@@ -33,6 +33,7 @@ func init() {
 		new(OrderRecord),
 		new(OrderFile),
 		new(OrderItem),
+		new(OrderItemLimit),
 		new(OrderContainer),
 		new(OrderDocument),
 		new(Setting),
@@ -173,6 +174,11 @@ func OrderFileTBName() string {
 // OrderItemTBName 获取 OrderItemTBName 对应的表名称
 func OrderItemTBName() string {
 	return TableName("order_items")
+}
+
+// OrderItemLimitTBName 获取 OrderItemLimitTBName 对应的表名称
+func OrderItemLimitTBName() string {
+	return TableName("order_item_limits")
 }
 
 // OrderContainerTBName 获取 OrderContainerTBName 对应的表名称
