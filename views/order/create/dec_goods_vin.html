@@ -7,20 +7,21 @@
                     <td class="td-scale-01 text-align-right">序号</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" disabled id="goodsLimitVinSeqNo"
-                                   autocomplete="off">
+                            <input type="hidden"  disabled id="OrderItemLimitVinOId" name="OrderItemLimitId">
+                            <input type="hidden"  disabled id="OrderItemLimitVinId" name="Id">
+                            <input type="text" class="non-empty" disabled id="GoodsLimitVinSeqNo" autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">许可证类别</td>
                     <td colspan="3">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" disabled id="licTypeCodeVinName" autocomplete="off">
+                            <input type="text" class="non-empty" disabled id="LicTypeCodeVinName" name="LicTypeCodeVinName" autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">许可证编号</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" disabled id="licenceNo" autocomplete="off">
+                            <input type="text" class="non-empty" disabled id="VinLicenceNo" name="LicenceNo" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -28,14 +29,13 @@
                     <td class="td-scale-01 text-align-right">VIN序号</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" id="vin_no" name="vin_no"
-                                   autocomplete="off">
+                            <input type="text" class="non-empty" id="VinNo" name="VinNo" autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">提/运单日期</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty required" name="bill_lad_date" id="bill_lad_date"
+                            <input type="text" class="non-empty required" name="BillLadDate" id="BillLadDate"
                                    autocomplete="off" lay-verify="required" lay-vertype="tips"
                                    onkeypress="return false">
                         </div>
@@ -43,14 +43,14 @@
                     <td class="td-scale-01 text-align-right">质量保质期</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty required" name="quality_qgp" id="quality_qgp"
+                            <input type="text" class="non-empty required" name="QualityQgp" id="QualityQgp"
                                    autocomplete="off" lay-verify="required" lay-vertype="tips">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">车辆识别代码(VIN)</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="vin_code" id="vin_code" autocomplete="off">
+                            <input type="text" class="non-empty" name="VinCode" id="VinCode" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -58,21 +58,21 @@
                     <td class="td-scale-01 text-align-right">发动机号或电机号</td>
                     <td colspan="2">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" id="motor_no" name="motor_no"
+                            <input type="text" class="non-empty" id="MotorNo" name="MotorNo"
                                    autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">发票号</td>
                     <td colspan="2">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="invoice_no" id="invoice_no"
+                            <input type="text" class="non-empty" name="InvoiceNo" id="InvoiceNo"
                                    autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">发票所列数量</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="invoice_num" id="invoice_num" autocomplete="off"
+                            <input type="text" class="non-empty" name="InvoiceNum" id="InvoiceNum" autocomplete="off"
                                    onkeyup="this.value=this.value.replace(/\D/g,'')" placeholder="只能输入自然数">
                         </div>
                     </td>
@@ -81,13 +81,13 @@
                     <td class="td-scale-01 text-align-right">品名(中文名称)</td>
                     <td colspan="3">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" id="prod_cnnm" name="prod_cnnm" autocomplete="off">
+                            <input type="text" class="non-empty" id="ProdCnnm" name="ProdCnnm" autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">品名(英文名称)</td>
                     <td colspan="3">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="prod_ennm" id="prod_ennm" autocomplete="off">
+                            <input type="text" class="non-empty" name="ProdEnnm" id="ProdEnnm" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -95,19 +95,19 @@
                     <td class="td-scale-01 text-align-right">型号(英文名称)</td>
                     <td colspan="3">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" id="model_en" name="model_en" autocomplete="off">
+                            <input type="text" class="non-empty" id="ModelEn" name="ModelEn" autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">底盘(车架)号</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="chassis_no" id="chassis_no" autocomplete="off">
+                            <input type="text" class="non-empty" name="ChassisNo" id="ChassisNo" autocomplete="off">
                         </div>
                     </td>
                     <td class="td-scale-01 text-align-right">单价</td>
                     <td>
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="price_per_unit" id="price_per_unit"
+                            <input type="text" class="non-empty" name="PricePerUnit" id="PricePerUnit"
                                    autocomplete="off">
                         </div>
                     </td>

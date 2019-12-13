@@ -7,7 +7,12 @@ import (
 
 func init() {
 
-	// 货物申报表体管理
+	// 货物申报表体许可证vin管理
+	beego.Router("/order_item_limit_vin/store/?:aid", &controllers.OrderItemLimitVinController{}, "Post:Store")
+	beego.Router("/order_item_limit_vin/update/?:id", &controllers.OrderItemLimitVinController{}, "Patch:Update")
+	beego.Router("/order_item_limit_vin/delete/", &controllers.OrderItemLimitVinController{}, "Post:Delete")
+
+	// 货物申报表体许可证管理
 	beego.Router("/order_item_limit/store/?:aid", &controllers.OrderItemLimitController{}, "Post:Store")
 	beego.Router("/order_item_limit/update/?:id", &controllers.OrderItemLimitController{}, "Patch:Update")
 	beego.Router("/order_item_limit/delete/", &controllers.OrderItemLimitController{}, "Post:Delete")

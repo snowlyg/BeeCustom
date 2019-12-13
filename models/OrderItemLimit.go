@@ -19,7 +19,7 @@ func (u *OrderItemLimit) TableName() string {
 type OrderItemLimitQueryParam struct {
 	BaseQueryParam
 
-	OrderId int64
+	OrderItemId int64
 }
 
 // OrderItemLimit 实体类
@@ -36,45 +36,14 @@ type OrderItemLimit struct {
 	LicWrtofQtyUnitName string    `orm:"column(lic_wrtof_qty_unit_name);size(50);null" description:"核销数量单位名称"`
 	DeletedAt           time.Time `orm:"column(deleted_at);type(timestamp);null"`
 
+	OrderItemLimitVins []*OrderItemLimitVin `orm:"reverse(many)"` // 设置一对多关系
+
 	OrderItem   *OrderItem `orm:"column(order_item_id);rel(fk)"`
-	OrderItemId int64      `orm:"-" form:"OrderItemId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
+	OrderItemId int64      `orm:"-" form:"OrderItemId"` //关联管理会自动生成
 }
 
 func NewOrderItemLimit(id int64) OrderItemLimit {
 	return OrderItemLimit{BaseModel: BaseModel{id, time.Now(), time.Now()}}
-}
-
-//查询参数
-func NewOrderItemLimitQueryParam() OrderItemLimitQueryParam {
-	return OrderItemLimitQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
-}
-
-// OrderItemLimitPageList 获取分页数据
-func OrderItemLimitPageList(params *OrderItemLimitQueryParam) ([]*OrderItemLimit, int64) {
-
-	query := orm.NewOrm().QueryTable(OrderItemLimitTBName())
-	datas := make([]*OrderItemLimit, 0)
-
-	query = query.Filter("order_id", params.OrderId)
-
-	total, _ := query.Count()
-	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
-	_, _ = query.All(&datas)
-
-	return datas, total
-}
-
-// OrderItemLimitPageList 获取分页数据
-func OrderItemLimitsByOrderId(aId int64) ([]*OrderItemLimit, error) {
-
-	datas := make([]*OrderItemLimit, 0)
-	_, err := orm.NewOrm().QueryTable(OrderItemLimitTBName()).Filter("order_id", aId).All(&datas)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("OrderItemLimitsByOrderId error :%v", err))
-		return nil, err
-	}
-
-	return datas, nil
 }
 
 func OrderItemLimitGetRelations(ms []*OrderItemLimit, relations string) ([]*OrderItemLimit, error) {
@@ -112,20 +81,6 @@ func OrderItemLimitOne(id int64) (*OrderItemLimit, error) {
 //Save 添加、编辑页面 保存
 func OrderItemLimitSave(m *OrderItemLimit, files []string) error {
 	o := orm.NewOrm()
-
-	//进出口原产国和目的国是相反的数据
-	//if m.Order.ImpexpMarkcd == "E" {
-	//	natcd := m.Natcd
-	//	natcdName := m.NatcdName
-	//	destinationNatcd := m.DestinationNatcd
-	//	destinationNatcdName := m.DestinationNatcdName
-	//
-	//	m.Natcd = destinationNatcd
-	//	m.NatcdName = destinationNatcdName
-	//	m.DestinationNatcd = natcd
-	//	m.DestinationNatcdName = natcdName
-	//}
-
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
@@ -152,25 +107,9 @@ func OrderItemLimitSave(m *OrderItemLimit, files []string) error {
 //OrderItemLimitUpdateAll 添加、编辑页面 保存
 func OrderItemLimitUpdateAll(aid int64, m *OrderItemLimit) error {
 	o := orm.NewOrm()
-	qs := o.QueryTable(OrderItemLimitTBName()).Filter("order_id", aid)
+	qs := o.QueryTable(OrderItemLimitTBName()).Filter("order_item_limit_id", aid)
 
 	var params orm.Params
-	//if len(m.Natcd) > 0 {
-	//	params = orm.Params{
-	//		"dcl_currcd":      m.DclCurrcd,
-	//		"dcl_currcd_name": m.DclCurrcdName,
-	//		"natcd":           m.Natcd,
-	//		"natcd_name":      m.NatcdName,
-	//	}
-	//} else if len(m.DestinationNatcd) > 0 {
-	//	params = orm.Params{
-	//		"dcl_currcd":      m.DclCurrcd,
-	//		"dcl_currcd_name": m.DclCurrcdName,
-	//		"natcd":           m.DestinationNatcd,
-	//		"natcd_name":      m.DestinationNatcdName,
-	//	}
-	//}
-
 	if params != nil {
 		_, err := qs.Update(params)
 		if err != nil {

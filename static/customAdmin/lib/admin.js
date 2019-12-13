@@ -80,18 +80,22 @@ layui.define('view', function (exports) {
           layui.data('commonClearance', {
             key: 'data',
             value: commonClearance,
-          })
+          });
           let orderClearance = await admin.get('/clearance/orderClearance');
           layui.data('orderClearance', {
             key: 'data',
             value: orderClearance,
-          })
+          });
           let annotationClearance = await admin.get(
-            '/clearance/annotationClearance')
+            '/clearance/annotationClearance');
           layui.data('annotationClearance', {
             key: 'data',
             value: annotationClearance,
-          })
+          });
+          layui.data('clearanceVersion', {
+            key: 'version',
+            value: clearanceVersion,
+          });
         }
       },
       escape: function (html) { //xss 转义

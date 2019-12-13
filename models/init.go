@@ -34,6 +34,7 @@ func init() {
 		new(OrderFile),
 		new(OrderItem),
 		new(OrderItemLimit),
+		new(OrderItemLimitVin),
 		new(OrderContainer),
 		new(OrderDocument),
 		new(Setting),
@@ -179,6 +180,11 @@ func OrderItemTBName() string {
 // OrderItemLimitTBName 获取 OrderItemLimitTBName 对应的表名称
 func OrderItemLimitTBName() string {
 	return TableName("order_item_limits")
+}
+
+// OrderItemLimitVinTBName 获取 OrderItemLimitVinTBName 对应的表名称
+func OrderItemLimitVinTBName() string {
+	return TableName("order_item_limit_vins")
 }
 
 // OrderContainerTBName 获取 OrderContainerTBName 对应的表名称

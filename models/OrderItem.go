@@ -96,38 +96,6 @@ func NewOrderItem(id int64) OrderItem {
 	return OrderItem{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
-//查询参数
-func NewOrderItemQueryParam() OrderItemQueryParam {
-	return OrderItemQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
-}
-
-// OrderItemPageList 获取分页数据
-func OrderItemPageList(params *OrderItemQueryParam) ([]*OrderItem, int64) {
-
-	query := orm.NewOrm().QueryTable(OrderItemTBName())
-	datas := make([]*OrderItem, 0)
-
-	query = query.Filter("order_id", params.OrderId)
-
-	total, _ := query.Count()
-	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
-	_, _ = query.All(&datas)
-
-	return datas, total
-}
-
-// OrderItemPageList 获取分页数据
-func OrderItemsByOrderId(aId int64) ([]*OrderItem, error) {
-	datas := make([]*OrderItem, 0)
-	_, err := orm.NewOrm().QueryTable(OrderItemTBName()).Filter("order_id", aId).All(&datas)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("OrderItemsByOrderId error :%v", err))
-		return nil, err
-	}
-
-	return datas, nil
-}
-
 func OrderItemGetRelations(ms []*OrderItem, relations string) ([]*OrderItem, error) {
 	if len(relations) > 0 {
 		o := orm.NewOrm()
@@ -163,20 +131,6 @@ func OrderItemOne(id int64) (*OrderItem, error) {
 //Save 添加、编辑页面 保存
 func OrderItemSave(m *OrderItem) error {
 	o := orm.NewOrm()
-
-	//进出口原产国和目的国是相反的数据
-	//if m.Order.ImpexpMarkcd == "E" {
-	//	natcd := m.Natcd
-	//	natcdName := m.NatcdName
-	//	destinationNatcd := m.DestinationNatcd
-	//	destinationNatcdName := m.DestinationNatcdName
-	//
-	//	m.Natcd = destinationNatcd
-	//	m.NatcdName = destinationNatcdName
-	//	m.DestinationNatcd = natcd
-	//	m.DestinationNatcdName = natcdName
-	//}
-
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
@@ -188,40 +142,6 @@ func OrderItemSave(m *OrderItem) error {
 			utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
 			return err
 		}
-	}
-
-	return nil
-}
-
-//OrderItemUpdateAll 添加、编辑页面 保存
-func OrderItemUpdateAll(aid int64, m *OrderItem) error {
-	o := orm.NewOrm()
-	qs := o.QueryTable(OrderItemTBName()).Filter("order_id", aid)
-
-	var params orm.Params
-	//if len(m.Natcd) > 0 {
-	//	params = orm.Params{
-	//		"dcl_currcd":      m.DclCurrcd,
-	//		"dcl_currcd_name": m.DclCurrcdName,
-	//		"natcd":           m.Natcd,
-	//		"natcd_name":      m.NatcdName,
-	//	}
-	//} else if len(m.DestinationNatcd) > 0 {
-	//	params = orm.Params{
-	//		"dcl_currcd":      m.DclCurrcd,
-	//		"dcl_currcd_name": m.DclCurrcdName,
-	//		"natcd":           m.DestinationNatcd,
-	//		"natcd_name":      m.DestinationNatcdName,
-	//	}
-	//}
-
-	if params != nil {
-		_, err := qs.Update(params)
-		if err != nil {
-			return err
-		}
-	} else {
-		return errors.New("未更新")
 	}
 
 	return nil
