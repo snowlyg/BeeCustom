@@ -129,7 +129,7 @@ func OrderItemOne(id int64) (*OrderItem, error) {
 }
 
 //Save 添加、编辑页面 保存
-func OrderItemSave(m *OrderItem) error {
+func OrderItemSave(m *OrderItem, fields []string) error {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
@@ -138,9 +138,16 @@ func OrderItemSave(m *OrderItem) error {
 		}
 	} else {
 
-		if _, err := o.Update(m); err != nil {
-			utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
-			return err
+		if len(fields) > 0 {
+			if _, err := o.Update(m, fields...); err != nil {
+				utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
+				return err
+			}
+		} else {
+			if _, err := o.Update(m); err != nil {
+				utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
+				return err
+			}
 		}
 	}
 

@@ -13,10 +13,27 @@ func (u *OrderItemLimitVin) TableName() string {
 	return OrderItemLimitVinTBName()
 }
 
+// OrderItemLimitVinFieldNames 设置OrderItemLimitVin填充名称
+func OrderItemLimitVinFieldNames() []string {
+	return []string{
+		"VinNo",
+		"BillLadDate",
+		"QualityQgp",
+		"VinCode",
+		"MotorNo",
+		"InvoiceNo",
+		"InvoiceNum",
+		"ProdCnnm",
+		"ProdEnnm",
+		"ModelEn",
+		"ChassisNo",
+		"PricePerUnit",
+	}
+}
+
 // OrderItemLimitVinQueryParam 用于查询的类
 type OrderItemLimitVinQueryParam struct {
 	BaseQueryParam
-
 	OrderItemLimitId int64
 }
 

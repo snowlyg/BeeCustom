@@ -1,9 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
-	"strconv"
-	"strings"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -65,7 +64,7 @@ func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
 
 	m.Order = order
 
-	if err := models.OrderItemSave(m); err != nil {
+	if err := models.OrderItemSave(m, []string{}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -74,14 +73,29 @@ func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
 
 // 删除
 func (c *OrderItemController) Delete() {
-	idsString := c.GetString("Ids")
-	Ids := strings.Split(idsString, ",")
-	for _, i := range Ids {
-		id, err := strconv.ParseInt(i, 10, 64)
-		if err != nil {
+	type OrderItemRequest struct {
+		Limits []models.OrderItem
+		Ids    []int64 `json:"Ids"`
+	}
+
+	ms := new(OrderItemRequest)
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ms)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("err: %v", err))
+	}
+
+	if len(ms.Ids) == 0 {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("Id 为空"), "")
+	}
+
+	for _, id := range ms.Ids {
+		if _, err := models.OrderItemDelete(id); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
-		if _, err := models.OrderItemDelete(id); err != nil {
+	}
+
+	for _, m := range ms.Limits {
+		if err := models.OrderItemSave(&m, models.OrderItemLimitVinFieldNames()); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}

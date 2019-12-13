@@ -73,12 +73,12 @@ func (c *OrderItemLimitVinController) saveOrUpdate(m *models.OrderItemLimitVin, 
 
 // 先删除后，批量更新，
 func (c *OrderItemLimitVinController) Delete() {
-	type OrderItemLimitVins struct {
+	type OrderItemLimitVinRequests struct {
 		Limits []models.OrderItemLimitVin
 		Ids    []int64 `json:"Ids"`
 	}
 
-	ms := new(OrderItemLimitVins)
+	ms := new(OrderItemLimitVinRequests)
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ms)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("err: %v", err))
@@ -89,14 +89,13 @@ func (c *OrderItemLimitVinController) Delete() {
 	}
 
 	for _, id := range ms.Ids {
-		if _, err := models.OrderItemLimitVinDelete(int64(id)); err != nil {
+		if _, err := models.OrderItemLimitVinDelete(id); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}
 
 	for _, m := range ms.Limits {
-		fileds := []string{"GoodsNo", "LicTypeCode", "LicTypeName", "LicenceNo", "LicWrtofDetailNo", "LicWrtofQty", "LicWrtofQtyUnit", "LicWrtofQtyUnitName"}
-		if err := models.OrderItemLimitVinSave(&m, fileds); err != nil {
+		if err := models.OrderItemLimitVinSave(&m, models.OrderItemLimitVinFieldNames()); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}

@@ -73,12 +73,12 @@ func (c *OrderItemLimitController) saveOrUpdate(m *models.OrderItemLimit, aId in
 
 // 先删除后，批量更新，
 func (c *OrderItemLimitController) Delete() {
-	type OrderItemLimits struct {
+	type OrderItemLimitRequests struct {
 		Limits []models.OrderItemLimit
 		Ids    []int64 `json:"Ids"`
 	}
 
-	ms := new(OrderItemLimits)
+	ms := new(OrderItemLimitRequests)
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ms)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("err: %v", err))
@@ -89,14 +89,13 @@ func (c *OrderItemLimitController) Delete() {
 	}
 
 	for _, id := range ms.Ids {
-		if _, err := models.OrderItemLimitDelete(int64(id)); err != nil {
+		if _, err := models.OrderItemLimitDelete(id); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}
 
 	for _, m := range ms.Limits {
-		fileds := []string{"GoodsNo", "LicTypeCode", "LicTypeName", "LicenceNo", "LicWrtofDetailNo", "LicWrtofQty", "LicWrtofQtyUnit", "LicWrtofQtyUnitName"}
-		if err := models.OrderItemLimitSave(&m, fileds); err != nil {
+		if err := models.OrderItemLimitSave(&m, models.OrderItemLimitFieldNames()); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}

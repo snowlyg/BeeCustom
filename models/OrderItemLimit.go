@@ -15,6 +15,20 @@ func (u *OrderItemLimit) TableName() string {
 	return OrderItemLimitTBName()
 }
 
+// OrderItemLimitVinFieldNames 设置OrderItemLimitVin填充名称
+func OrderItemLimitFieldNames() []string {
+	return []string{
+		"GoodsNo",
+		"LicTypeCode",
+		"LicTypeName",
+		"LicenceNo",
+		"LicWrtofDetailNo",
+		"LicWrtofQty",
+		"LicWrtofQtyUnit",
+		"LicWrtofQtyUnitName",
+	}
+}
+
 // OrderItemLimitQueryParam 用于查询的类
 type OrderItemLimitQueryParam struct {
 	BaseQueryParam

@@ -1124,13 +1124,13 @@
             'LicWrtofQtyUnit',
             'LicWrtofQtyUnitName',
         ];
+
         let order_item_limit_set_empty = {
             table_name : 'dec_goods_table',
             table_datas:OrderItemLimits,
             from_input_names :order_item_limit_table_names,
             focus_input_name: 'LicTypeName'
         };
-
         /**编辑产品许可证/审批/备案信息--保存**/
         form.on('submit(dec_goods_submit)', async (data) => {
             delete data.field.layTableCheckbox;
@@ -1155,6 +1155,7 @@
         table.on('toolbar(dec_goods_table)', function (obj) {
             let checkStatus = table.checkStatus(obj.config.id);
             let checkData = checkStatus.data;
+            console.log(OrderItemLimits);
             switch (obj.event) {
                 case 'add':
                     order_item_limit_set_empty.table_datas = OrderItemLimits;
@@ -1165,17 +1166,17 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据')
                     }
+
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let ids = checkData.map(item => item.Id);
-                        OrderItemLimits.forEach(function (item, index, arr) {
-                            if ($.inArray(item.Id,ids)>=0) {
-                                arr.splice(index, 1)
-                            }
+                        checkData.forEach(function (item, index) {
+                            OrderItemLimits.splice(OrderItemLimits.indexOf(item), 1)
                         });
+
                         OrderItemLimits.forEach(function (item, index, arr) {
                             item.GoodsNo = `${index + 1}`;
                             item.LicWrtofQty =  parseInt(item.LicWrtofQty);
-                            item.OrderItemId  =  parseInt(item.OrderItemId)
+                            item.OrderItemId  =  parseInt(item.OrderItemId);
                             item.Id  =  parseInt(item.Id)
                         });
 
@@ -1328,10 +1329,8 @@
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let ids = checkData.map(item => item.Id);
-                        OrderItemLimitVinDatas.forEach(function (item, index, arr) {
-                            if ($.inArray(item.Id,ids)>=0) {
-                                arr.splice(index, 1)
-                            }
+                        checkData.forEach(function (item, index) {
+                            OrderItemLimitVinDatas.splice(OrderItemLimitVinDatas.indexOf(item), 1)
                         });
 
                         OrderItemLimitVinDatas.forEach(function (item, index, arr) {
