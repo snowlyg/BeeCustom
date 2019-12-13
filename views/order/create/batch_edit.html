@@ -8,8 +8,7 @@
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
                             <input type="hidden" name="TradeCurr" id="TradeCurrBatch">
-                            <input type="text" class="non-empty" name="trade_curr_name"
-                                   id="trade_curr_name_batch" autocomplete="off">
+                            <input type="text" class="non-empty" name="TradeCurrName" id="TradeCurrNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -17,9 +16,8 @@
                     <td class="td-scale-01 text-align-right">原产国（地区）</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="origin_country" id="origin_country_batch">
-                            <input type="text" class="non-empty" name="origin_country_name"
-                                   id="origin_country_name_batch" autocomplete="off">
+                            <input type="hidden" name="origin_country" id="OriginCountryBatch">
+                            <input type="text" class="non-empty" name="origin_country_name" id="OriginCountryNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -28,8 +26,7 @@
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
                             <input type="hidden" name="district_code" id="district_code_batch">
-                            <input type="text" class="non-empty" name="district_code_name"
-                                   id="district_code_name_batch" autocomplete="off">
+                            <input type="text" class="non-empty" name="DistrictCodeName" id="DistrictCodeNameBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -37,8 +34,8 @@
                     <td class="td-scale-01 text-align-right">征免方式</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="duty_mode" id="duty_mode_batch">
-                            <input type="text" class="non-empty" name="duty_mode_name" id="duty_mode_name_batch"
+                            <input type="hidden" name="duty_mode" id="DutyModeBatch">
+                            <input type="text" class="non-empty" name="DutyModeName" id="DutyModeNameBatch"
                                    autocomplete="off">
                         </div>
                     </td>
@@ -47,8 +44,8 @@
                     <td class="td-scale-01 text-align-right">货物属性</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" disabled id="goods_attr_batch" autocomplete="off">
-                            <i class="iconfont iconmore-horiz input_more" id="goods_attr_open_batch"></i>
+                            <input type="text" class="non-empty" disabled id="GoodsAttrBatch" autocomplete="off">
+                            <i class="iconfont iconmore-horiz input_more" id="GoodsAttrOpenBatch"></i>
                         </div>
                     </td>
                 </tr>
@@ -61,8 +58,7 @@
                     <td class="td-scale-01 text-align-right">成分/原料/组分</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_stuff" id="stuff_batch"
-                                   autocomplete="off">
+                            <input type="text" class="non-empty" name="TypeStuff" id="StuffBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>
@@ -70,7 +66,7 @@
                     <td class="td-scale-01 text-align-right">产品有效期</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_prod_valid_dt" id="prod_valid_dt_batch"
+                            <input type="text" class="non-empty" name="TypeProdValidDt" id="ProdValidDtBatch"
                                    autocomplete="off" placeholder="年/月/日">
                         </div>
                     </td>
@@ -79,7 +75,7 @@
                     <td class="td-scale-01 text-align-right">产品保质期(天)</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_prod_qgp" id="prod_qgp_batch"
+                            <input type="text" class="non-empty" name="TypeProdQgp" id="ProdQgpBatch"
                                    autocomplete="off" onkeyup="layui.admin.decCheckInt(this)">
                         </div>
                     </td>
@@ -88,7 +84,7 @@
                     <td class="td-scale-01 text-align-right">境外生产企业</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_eng_man_ent_cnm" id="eng_man_ent_cnm_batch"
+                            <input type="text" class="non-empty" name="TypeEngManEntCnm" id="EngManEntCnmBatch"
                                    autocomplete="off">
                         </div>
                     </td>
@@ -97,7 +93,7 @@
                     <td class="td-scale-01 text-align-right">货物规格</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_goods_spec" id="goods_spec_batch"
+                            <input type="text" class="non-empty" name="TypeGoodsSpec" id="GoodsSpecBatch"
                                    autocomplete="off">
                         </div>
                     </td>
@@ -106,7 +102,7 @@
                     <td class="td-scale-01 text-align-right">货物型号</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_goods_model" id="goods_model_batch"
+                            <input type="text" class="non-empty" name="TypeGoodsModel" id="GoodsModelBatch"
                                    autocomplete="off">
                         </div>
                     </td>
@@ -115,7 +111,7 @@
                     <td class="td-scale-01 text-align-right">货物品牌</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_goods_brand" id="goods_brand_batch"
+                            <input type="text" class="non-empty" name="TypeGoodsBrand" id="GoodsBrandBatch"
                                    autocomplete="off">
                         </div>
                     </td>
@@ -124,7 +120,7 @@
                     <td class="td-scale-01 text-align-right">生产日期</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_produce_date" id="produce_date_batch"
+                            <input type="text" class="non-empty" name="TypeProduceDate" id="ProduceDateBatch"
                                    autocomplete="off" placeholder="年/月/日">
                         </div>
                     </td>
@@ -133,8 +129,7 @@
                     <td class="td-scale-01 text-align-right">生产批次</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="type_prod_batch_no" id="prod_batch_no_batch"
-                                   autocomplete="off">
+                            <input type="text" class="non-empty" name="TypeProdBatchNo" id="ProdBatchNoBatch" autocomplete="off">
                         </div>
                     </td>
                 </tr>

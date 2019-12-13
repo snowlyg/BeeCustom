@@ -101,5 +101,4 @@ func (c *OrderItemLimitController) Delete() {
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")
-
 }

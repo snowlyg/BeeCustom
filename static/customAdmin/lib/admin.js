@@ -2070,41 +2070,31 @@ layui.define('view', function (exports) {
       }
       ,
 
-//tips计算总价/成交数量合计/法定第一数量/法定第二数量
+      //tips计算总价/成交数量合计/法定第一数量/法定第二数量
       is_total_number (order_pros_data) {
-        let totalPrice = 0,
-          totalGQty = 0,
-          totalQty1 = 0,
-          totalQty2 = 0
+        let totalPrice = 0, totalGQty = 0, totalQty1 = 0, totalQty2 = 0;
         for (let item of order_pros_data) {
-
-          if (item.decl_total_string != '' && item.decl_total_string !=
-            'null' && item.decl_total_string) {
-            totalPrice += parseFloat(item.decl_total_string) * 100000
+          if (item.DeclTotal != '' && item.DeclTotal != 'null' && item.DeclTotal) {
+            totalPrice += parseFloat(item.DeclTotal) * 100000
           }
-          if (item.g_qty_string != '' && item.g_qty_string != 'null' &&
-            item.g_qty_string) {
-            totalGQty += parseFloat(item.g_qty_string) * 100000
+          if (item.GQty != '' && item.GQty != 'null' && item.GQty) {
+            totalGQty += parseFloat(item.GQty) * 100000
           }
-          if (item.first_qty_string != '' && item.first_qty_string !=
-            'null' && item.first_qty_string) {
-            totalQty1 += parseFloat(item.first_qty_string) * 100000
+          if (item.FirstQty != '' && item.FirstQty != 'null' && item.FirstQty) {
+            totalQty1 += parseFloat(item.FirstQty) * 100000
           }
-          if (item.second_qty_string != '' && item.second_qty_string !=
-            'null' && item.second_qty_string) {
-            totalQty2 += parseFloat(item.second_qty_string) * 100000
+          if (item.SecondQty != '' && item.SecondQty != 'null' && item.SecondQty) {
+            totalQty2 += parseFloat(item.SecondQty) * 100000
           }
-
         }
 
-        $('#totalPrice').text(admin.cutZero((totalPrice / 100000).toString()))
-        $('#totalGQty').text(admin.cutZero((totalGQty / 100000).toString()))
-        $('#totalQty1').text(admin.cutZero((totalQty1 / 100000).toString()))
-        $('#totalQty2').text(admin.cutZero((totalQty2 / 100000).toString()))
+        $('#TotalPrice').text(admin.cutZero((totalPrice / 100000).toString()))
+        $('#TotalGQty').text(admin.cutZero((totalGQty / 100000).toString()))
+        $('#TotalQty1').text(admin.cutZero((totalQty1 / 100000).toString()))
+        $('#TotalQty2').text(admin.cutZero((totalQty2 / 100000).toString()))
       },
 
-      async base_clearance_data_auto (obj) {
-        //货物
+      async base_clearance_data_auto (obj) { //货物
         await admin.auto_fn({
           data: layui.data(obj.dataType).data[obj.type],
           clearanceType: obj.name,
@@ -3182,7 +3172,7 @@ layui.define('view', function (exports) {
       }
       ,
 
-//去除末尾多余的零
+      // 去除末尾多余的零
       cutZero (old) {
         let newstr = old
         let leng = old.length - old.indexOf('.') - 1
