@@ -34,39 +34,54 @@ layui.define('view', function (exports) {
       },
       //设置基础参数版本
       getClearanceVersionData: async () => {
-        let clearanceVersionData = layui.data('clearanceVersion')
+        let clearanceVersionData = layui.data('clearanceVersion');
         if (admin.layuiDataIsEmpty(clearanceVersionData)) {
           let clearanceVersion = await admin.get(
-            '/setting/getOne/ClearanceVersion')
+            '/setting/getOne/ClearanceVersion');
           layui.data('clearanceVersion', {
             key: 'version',
             value: clearanceVersion,
           })
         }
       },
+
+      // 置空表单数据
+      SetEmptyData(obj) {
+        setTimeout(() => {
+          layui.table.reload(obj.table_name, {
+            data: obj.table_datas,
+            limit: obj.table_datas.length,
+          });
+          for (let item in obj.from_input_names) {
+            $(`#${obj.from_input_names[item]}`).val('');
+          }
+          $(`#${obj.focus_input_name}`).focus();
+        }, 100)
+
+    },
       //layui data is Empty
       layuiDataIsEmpty: function (data) {
         return !data || $.isEmptyObject(data)
       },
       //获取基础参数
       getClearanceData: async () => {
-        let clearanceVersionData = layui.data('clearanceVersion')
-        let commonClearanceData = layui.data('commonClearance')
-        let orderClearanceData = layui.data('orderClearance')
-        let annotationClearanceData = layui.data('annotationClearance')
-        let clearanceVersion = await admin.get('/setting/getOne/ClearanceVersion')
+        let clearanceVersionData = layui.data('clearanceVersion');
+        let commonClearanceData = layui.data('commonClearance');
+        let orderClearanceData = layui.data('orderClearance');
+        let annotationClearanceData = layui.data('annotationClearance');
+        let clearanceVersion = await admin.get('/setting/getOne/ClearanceVersion');
         if (
           admin.layuiDataIsEmpty(commonClearanceData) ||
           admin.layuiDataIsEmpty(orderClearanceData) ||
           admin.layuiDataIsEmpty(annotationClearanceData) ||
           admin.layuiDataIsEmpty(clearanceVersionData) ||
           clearanceVersionData.version != clearanceVersion) {
-          let commonClearance = await admin.get('/clearance/commonClearance')
+          let commonClearance = await admin.get('/clearance/commonClearance');
           layui.data('commonClearance', {
             key: 'data',
             value: commonClearance,
           })
-          let orderClearance = await admin.get('/clearance/orderClearance')
+          let orderClearance = await admin.get('/clearance/orderClearance');
           layui.data('orderClearance', {
             key: 'data',
             value: orderClearance,

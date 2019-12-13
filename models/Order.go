@@ -426,13 +426,16 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	if err != nil {
 		return nil
 	}
+
 	// 转换表头复核标记
-	recheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.RecheckErrorInputIds, `id":"`, "", -1), `[{"`, "", -1), `"}]`, "", -1)
-	recheckErrorInputIdsSlice := strings.Split(recheckErrorInputIds, `"},{"`)
+	//recheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.RecheckErrorInputIds, `id":"`, "", -1), `[{"`, "", -1), `"}]`, "", -1)
+	//recheckErrorInputIdsSlice := strings.Split(recheckErrorInputIds, `"},{"`)
+	recheckErrorInputIdsSlice := enums.TramsformStringToSlice(v.RecheckErrorInputIds, `[{"`, `"},{"`, `id":"`, `"}]`)
 
 	// 转换表体复核标记
-	itemRecheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.ItemRecheckErrorInputIds, `index":`, "", -1), `[{"`, "", -1), `"]}]`, "", -1)
-	itemRecheckErrorInputIdsSlice := strings.Split(itemRecheckErrorInputIds, `"]},{"`)
+	//itemRecheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.ItemRecheckErrorInputIds, `index":`, "", -1), `[{"`, "", -1), `"]}]`, "", -1)
+	//itemRecheckErrorInputIdsSlice := strings.Split(itemRecheckErrorInputIds, `"]},{"`)
+	itemRecheckErrorInputIdsSlice := enums.TramsformStringToSlice(v.ItemRecheckErrorInputIds, `[{"`, `"]},{"`, `index":`, `"]}]`)
 	var itemRecheckErrorInputIdsSlices []map[int][]string
 	for _, v := range itemRecheckErrorInputIdsSlice {
 		itemRecheckErrorInputIdsSlices1 := map[int][]string{}

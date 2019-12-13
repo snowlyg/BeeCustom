@@ -26,16 +26,15 @@ type OrderItemLimitQueryParam struct {
 type OrderItemLimit struct {
 	BaseModel
 
-	GoodsNo             string `orm:"column(goods_no);size(9)" description:"序号"`
-	LicTypeCode         string `orm:"column(lic_type_code);size(5);null" description:"许可证类别代码"`
-	LicTypeName         string `orm:"column(lic_type_name);size(100);null" description:"许可证类别名称"`
-	LicenceNo           string `orm:"column(licence_no);size(40);null" description:"许可证编码"`
-	LicWrtofDetailNo    string `orm:"column(lic_wrtof_detail_no);size(4);null" description:"核销货物序号"`
-	LicWrtofQty         int    `orm:"column(lic_wrtof_qty);null" description:"核销数量"`
-	LicWrtofQtyUnit     string `orm:"column(lic_wrtof_qty_unit);size(3);null" description:"核销数量单位"`
-	LicWrtofQtyUnitName string `orm:"column(lic_wrtof_qty_unit_name);size(50);null" description:"核销数量单位名称"`
-
-	DeletedAt time.Time `orm:"column(deleted_at);type(timestamp);null"`
+	GoodsNo             string    `orm:"column(goods_no);size(9)" description:"序号"`
+	LicTypeCode         string    `orm:"column(lic_type_code);size(5);null" description:"许可证类别代码"`
+	LicTypeName         string    `orm:"column(lic_type_name);size(100);null" description:"许可证类别名称"`
+	LicenceNo           string    `orm:"column(licence_no);size(40);null" description:"许可证编码"`
+	LicWrtofDetailNo    string    `orm:"column(lic_wrtof_detail_no);size(4);null" description:"核销货物序号"`
+	LicWrtofQty         int       `orm:"column(lic_wrtof_qty);null" description:"核销数量"`
+	LicWrtofQtyUnit     string    `orm:"column(lic_wrtof_qty_unit);size(3);null" description:"核销数量单位"`
+	LicWrtofQtyUnitName string    `orm:"column(lic_wrtof_qty_unit_name);size(50);null" description:"核销数量单位名称"`
+	DeletedAt           time.Time `orm:"column(deleted_at);type(timestamp);null"`
 
 	OrderItem   *OrderItem `orm:"column(order_item_id);rel(fk)"`
 	OrderItemId int64      `orm:"-" form:"OrderItemId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
@@ -111,7 +110,7 @@ func OrderItemLimitOne(id int64) (*OrderItemLimit, error) {
 }
 
 //Save 添加、编辑页面 保存
-func OrderItemLimitSave(m *OrderItemLimit) error {
+func OrderItemLimitSave(m *OrderItemLimit, files []string) error {
 	o := orm.NewOrm()
 
 	//进出口原产国和目的国是相反的数据
@@ -133,11 +132,18 @@ func OrderItemLimitSave(m *OrderItemLimit) error {
 			return err
 		}
 	} else {
-
-		if _, err := o.Update(m); err != nil {
-			utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
-			return err
+		if len(files) > 0 {
+			if _, err := o.Update(m, files...); err != nil {
+				utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
+				return err
+			}
+		} else {
+			if _, err := o.Update(m); err != nil {
+				utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
+				return err
+			}
 		}
+
 	}
 
 	return nil

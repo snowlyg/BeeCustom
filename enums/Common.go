@@ -243,3 +243,21 @@ func IsIZore(i int) string {
 
 	return strconv.Itoa(i)
 }
+
+/**
+* string to slice
+* s: [{"OrderItemLimitOId":"1","OrderItemLimitId":"1","GoodsNo":1,"LicTypeCode":"100","LicTypeName":"通关司类","LicenceNo":"1","LicWrtofDetailNo":"1","LicWrtofQty":"1","LicWrtofQtyUnit":"001","LicWrtofQtyUnit
+* Name":"台","OrderItemId":"1","Id":"1"},{"OrderItemLimitOId":"1","OrderItemLimitId":"","GoodsNo":2,"LicTypeCode":"100","LicTypeName":"通关司类","LicenceNo":"1","LicWrtofDetailNo":"1","LicWrtofQty":"1","LicWrtofQtyUnit":"001","LicWrto
+* fQtyUnitName":"台","OrderItemId":"1","Id":2},{"OrderItemLimitOId":"1","OrderItemLimitId":"","GoodsNo":3,"LicTypeCode":"000","LicTypeName":"企业产品许可类别","LicenceNo":"1","LicWrtofDetailNo":"1","LicWrtofQty":"1","LicWrtofQtyUnit":
+* "001","LicWrtofQtyUnitName":"台","OrderItemId":"1","Id":3}]
+* start : `[{"`
+* end : `}]`
+* mid : `},{"`
+* imid : `","`
+*
+ */
+func TramsformStringToSlice(s, start, mid, imid, end string) []string {
+	sJ := strings.Replace(strings.Replace(strings.Replace(s, imid, "", -1), start, "", -1), end, "", -1)
+	sJSlice := strings.Split(sJ, mid)
+	return sJSlice
+}
