@@ -64,7 +64,7 @@ func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
 
 	m.Order = order
 
-	if err := models.OrderItemSave(m, []string{}); err != nil {
+	if err := models.OrderItemSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -95,7 +95,7 @@ func (c *OrderItemController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
-		if err := models.OrderItemSave(&m, models.OrderItemLimitVinFieldNames()); err != nil {
+		if err := models.OrderItemSave(&m); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}

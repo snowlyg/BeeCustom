@@ -89,7 +89,7 @@ type OrderItem struct {
 	OrderItemLimits []*OrderItemLimit `orm:"reverse(many)"` // 设置一对多关系
 
 	Order   *Order `orm:"column(order_id);rel(fk)"`
-	OrderId int64  `orm:"-" form:"OrderId"` //关联管理会自动生成 CompanyId 字段，此处不生成字段
+	OrderId int64  `orm:"-" form:"OrderId"` // 关联管理会自动生成 CompanyId 字段，此处不生成字段
 }
 
 func NewOrderItem(id int64) OrderItem {
@@ -128,8 +128,8 @@ func OrderItemOne(id int64) (*OrderItem, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
-func OrderItemSave(m *OrderItem, fields []string) error {
+// Save 添加、编辑页面 保存
+func OrderItemSave(m *OrderItem) error {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
@@ -137,17 +137,9 @@ func OrderItemSave(m *OrderItem, fields []string) error {
 			return err
 		}
 	} else {
-
-		if len(fields) > 0 {
-			if _, err := o.Update(m, fields...); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
-				return err
-			}
-		} else {
-			if _, err := o.Update(m); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
-				return err
-			}
+		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
+			return err
 		}
 	}
 

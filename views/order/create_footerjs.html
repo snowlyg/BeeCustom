@@ -855,12 +855,12 @@
         layer.msg('请选择商品')
         return
       }
-      admin.declaration_data = data[0].declaration
-      $('#code_t_s').val(data[0].code)
-      $('#first_unit').val(data[0].unit1)
-      $('#first_unit_name').val(data[0].unit1_name)
-      $('#second_unit').val(data[0].unit2)
-      $('#second_unit_name').val(data[0].unit2_name)
+      admin.DeclarationData = data[0].Declaration
+      $('#CodeTS').val(data[0].Code)
+      $('#FirstUnit').val(data[0].Unit1)
+      $('#FirstUnitName').val(data[0].Unit1Name)
+      $('#SecondUnit').val(data[0].Unit2)
+      $('#SecondUnitName').val(data[0].Unit2Name)
       layer.closeAll()
     })
 
@@ -1779,7 +1779,7 @@
 
             OrderItemsData.forEach(function (item, index, arr) {
               item.OrderId = parseInt(item.OrderId)
-              // item.ContainerWt = parseInt(item.ContainerWt)
+              item.GNo = index + 1
               item.Id = parseInt(item.Id)
             })
 
