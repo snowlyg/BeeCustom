@@ -1687,60 +1687,6 @@
       setOrderItemEmptyData()
     })
 
-    // 置空表体表单数据
-    function setOrderItemEmptyData () {
-      setTimeout(() => {
-        layui.table.reload('order_pros', {
-          data: OrderItemsData,
-          limit: OrderItemsData.length,
-        })
-        $('#order_pros_form input').each(function () {
-          if ($(this).attr('id') == 'GNo') {
-            $(this).val(OrderItemsData.length + 1)
-          } else {
-            if (!($(this).is('[no_empty]'))) {
-              $(this).val('')
-            }
-          }
-        })
-
-        OrderItemGoodsAttr = []
-        /**表体货物属性**/
-        OrderItemGoodsAttrName = []
-        /**表体货物属性名称**/
-        //  检验检疫货物规格 临时数据
-        OrderItemStuff = ''
-        OrderItemProdValidDt = ''
-        OrderItemProdQgp = ''
-        OrderItemEngManEntCnm = ''
-        OrderItemGoodsSpec = ''
-        OrderItemGoodsModel = ''
-        OrderItemGoodsBrand = ''
-        OrderItemProduceDate = ''
-        OrderItemProdBatchNo = ''
-
-        // 危险货物信息
-        OrderItemNoDangFlag = ''
-        OrderItemNoDangFlagName = ''
-        OrderItemDangName = ''
-        OrderItemUnCode = ''
-        OrderItemDangPackType = ''
-        OrderItemDangPackTypeName = ''
-        OrderItemDangPackSpec = ''
-        OrderItemDangPackSpecName = ''
-        OrderItemLimits = []  // 货物申报产品资质
-
-        if ($('#ContrItem').is(':disabled')) {
-          $('#CodeTS').focus()
-        } else {
-          $('#ContrItem').focus()
-        }
-        admin.is_total_number(OrderItemsData)
-        /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
-        orderItemIndex = null
-      }, 100)
-    }
-
     /**商品--点击行反填数据**/
     table.on('row(order_pros)', function (obj) {
       orderItemIndex = obj.data.index
@@ -2534,7 +2480,14 @@
     })
 
     /**集装箱**/
-    let orderContainerIndex = null
+    let ContaineremptyObj ={
+      formID: "order_containers_form",
+      focusId: "ContainerId",
+      tableName:"order_containers_table",
+      datas: OrderContainers,
+      index: null,
+    }
+
     table.render({
       elem: '#order_containers_table'
       , toolbar: '#order_containers_tool'
@@ -2565,7 +2518,7 @@
 
     /**集装箱--点击行反填数据**/
     table.on('row(order_containers_table)', function (obj) {
-      orderContainerIndex = obj.data.index
+      ContaineremptyObj.index = obj.data.index
       for (let item in obj.data) {
         if (item == 'Id') {
           $(`#OrderContainerId`).val(obj.data[item])
@@ -2577,19 +2530,12 @@
     })
 
     /**集装箱--保存**/
-    let ContaineremptyObj ={
-      formID: "order_containers_form",
-      focusId: "ContainerId",
-      tableName:"order_containers_table",
-      datas: OrderContainers,
-      index: orderContainerIndex,
-    }
     form.on('submit(order_containers_submit)', async (data) => {
       data.field.OrderId = order_id
       if (data.field.OrderContainerId && data.field.OrderContainerId != '0') {
         let result = await admin.patch(`/order_container/update/${data.field.OrderContainerId}`, data.field)
         if (result.status) {
-          OrderContainers.splice(orderContainerIndex, 1, data.field)
+          OrderContainers.splice(ContaineremptyObj.index, 1, data.field)
         }
       } else {
         let result = await admin.post('/order_container/store', data.field)
@@ -2598,7 +2544,7 @@
           OrderContainers.push( data.field)
         }
       }
-      setOrderRelationEmpty(emptyObj);
+      setOrderRelationEmpty(ContaineremptyObj);
     })
 
     /**集装箱--删除**/
@@ -2608,7 +2554,7 @@
       switch (obj.event) {
         case 'add':
           ContaineremptyObj.datas= OrderContainers;
-          setOrderRelationEmpty(emptyObj);
+          setOrderRelationEmpty(ContaineremptyObj);
           break
         case 'delete':
           if (checkData.length === 0) {
@@ -2632,7 +2578,7 @@
 
             if (result.status) {
               ContaineremptyObj.datas= OrderContainers;
-              setOrderRelationEmpty(emptyObj);
+              setOrderRelationEmpty(ContaineremptyObj);
             }
           })
           break
@@ -2703,7 +2649,14 @@
     })
 
     /**随附单证**/
-    let orderDocumentIndex = null
+    let emptyObj ={
+      formID: "order_documents_form",
+      focusId: "DocuCodeName",
+      tableName:"order_documents_table",
+      datas: OrderDocuments,
+      index: null,
+    }
+
     table.render({
       elem: '#order_documents_table'
       , toolbar: '#order_documents_tool'
@@ -2729,25 +2682,18 @@
           $(`#${item}`).val(obj.data[item])
         }
       }
-      orderDocumentIndex = obj.data.index
+      emptyObj.index = obj.data.index
       $('#DocuCodeName').focus()
     })
 
     /**随附单证--保存**/
-    let emptyObj ={
-      formID: "order_documents_form",
-      focusId: "DocuCodeName",
-      tableName:"order_documents_table",
-      datas: OrderDocuments,
-      index: orderDocumentIndex,
-    }
     form.on('submit(order_documents_submit)', async (data) => {
       data.field.OrderId = order_id
       let orderDocumentId = data.field.OrderDocumentId
       if (orderDocumentId && orderDocumentId != '0') {
         let result = await admin.patch(`/order_document/update/${orderDocumentId}`, data.field)
         if (result.status) {
-          OrderDocuments.splice(orderDocumentIndex, 1, data.field)
+          OrderDocuments.splice(emptyObj.index, 1, data.field)
         }
       } else {
         let result = await admin.post('/order_document/store', data.field)
@@ -2756,9 +2702,7 @@
           OrderDocuments.push( data.field)
         }
       }
-
       setOrderRelationEmpty(emptyObj);
-
     })
     /**随附单证--操作按钮**/
     /**原产地对应关系录入--key**/
@@ -4375,6 +4319,62 @@
       })
       obj.index = null
     }
+
+
+    // 置空表体表单数据
+    function setOrderItemEmptyData () {
+      setTimeout(() => {
+        layui.table.reload('order_pros', {
+          data: OrderItemsData,
+          limit: OrderItemsData.length,
+        })
+        $('#order_pros_form input').each(function () {
+          if ($(this).attr('id') == 'GNo') {
+            $(this).val(OrderItemsData.length + 1)
+          } else {
+            if (!($(this).is('[no_empty]'))) {
+              $(this).val('')
+            }
+          }
+        })
+
+        OrderItemGoodsAttr = []
+        /**表体货物属性**/
+        OrderItemGoodsAttrName = []
+        /**表体货物属性名称**/
+        //  检验检疫货物规格 临时数据
+        OrderItemStuff = ''
+        OrderItemProdValidDt = ''
+        OrderItemProdQgp = ''
+        OrderItemEngManEntCnm = ''
+        OrderItemGoodsSpec = ''
+        OrderItemGoodsModel = ''
+        OrderItemGoodsBrand = ''
+        OrderItemProduceDate = ''
+        OrderItemProdBatchNo = ''
+
+        // 危险货物信息
+        OrderItemNoDangFlag = ''
+        OrderItemNoDangFlagName = ''
+        OrderItemDangName = ''
+        OrderItemUnCode = ''
+        OrderItemDangPackType = ''
+        OrderItemDangPackTypeName = ''
+        OrderItemDangPackSpec = ''
+        OrderItemDangPackSpecName = ''
+        OrderItemLimits = []  // 货物申报产品资质
+
+        if ($('#ContrItem').is(':disabled')) {
+          $('#CodeTS').focus()
+        } else {
+          $('#ContrItem').focus()
+        }
+        admin.is_total_number(OrderItemsData)
+        /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
+        orderItemIndex = null
+      }, 100)
+    }
+
 
   })
 </script>

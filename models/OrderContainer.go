@@ -1,9 +1,7 @@
 package models
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"BeeCustom/utils"
@@ -54,71 +52,6 @@ type OrderContainer struct {
 
 func NewOrderContainer(id int64) OrderContainer {
 	return OrderContainer{BaseModel: BaseModel{id, time.Now(), time.Now()}}
-}
-
-//查询参数
-func NewOrderContainerQueryParam() OrderContainerQueryParam {
-	return OrderContainerQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
-}
-
-// OrderContainerPageList 获取分页数据
-func OrderContainerPageList(params *OrderContainerQueryParam) ([]*OrderContainer, int64) {
-
-	query := orm.NewOrm().QueryTable(OrderContainerTBName())
-	datas := make([]*OrderContainer, 0)
-
-	query = query.Filter("order_id", params.OrderId)
-
-	total, _ := query.Count()
-	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)
-	_, _ = query.All(&datas)
-
-	return datas, total
-}
-
-// OrderContainerPageList 获取分页数据
-func OrderContainersByOrderId(aId int64) ([]*OrderContainer, error) {
-
-	datas := make([]*OrderContainer, 0)
-	_, err := orm.NewOrm().QueryTable(OrderContainerTBName()).Filter("order_id", aId).All(&datas)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("OrderContainersByOrderId error :%v", err))
-		return nil, err
-	}
-
-	return datas, nil
-}
-
-func OrderContainerGetRelations(ms []*OrderContainer, relations string) ([]*OrderContainer, error) {
-	if len(relations) > 0 {
-		o := orm.NewOrm()
-		rs := strings.Split(relations, ",")
-		for _, v := range ms {
-			for _, rv := range rs {
-				_, err := o.LoadRelated(v, rv)
-				if err != nil {
-					utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
-					return nil, err
-				}
-			}
-		}
-	}
-	return ms, nil
-}
-
-// OrderContainerOne 根据id获取单条
-func OrderContainerOne(id int64) (*OrderContainer, error) {
-	m := NewOrderContainer(0)
-	o := orm.NewOrm()
-	if err := o.QueryTable(OrderContainerTBName()).Filter("Id", id).RelatedSel().One(&m); err != nil {
-		return nil, err
-	}
-
-	if &m == nil {
-		return &m, errors.New("数据获取失败")
-	}
-
-	return &m, nil
 }
 
 // Save 添加、编辑页面 保存
