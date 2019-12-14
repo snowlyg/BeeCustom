@@ -1327,7 +1327,7 @@ layui.define('view', function (exports) {
               $('#OriginCountryName').val(handbookgood.Manuplace)
             }
             const codeData = await admin.get(`/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
-            if (codeData && codeData.Unit2) {
+            if (codeData && codeData.Unit2 && codeData.Unit2Name) {
                 $('#SecondUnit').val(codeData.Unit2)
                 $('#SecondUnitName').val(codeData.Unit2Name)
             }

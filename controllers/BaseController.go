@@ -316,6 +316,7 @@ func (c *HandBookController) TransformHandBookGood(v *models.HandBookGood) map[s
 			unitTwoCode = c[1]
 		}
 	}
+
 	for _, c := range clearances1 {
 		if c[0] == v.Moneyunit {
 			moneyunitCode = c[1]
