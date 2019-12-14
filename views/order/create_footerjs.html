@@ -47,6 +47,7 @@
       , order_note_data /**附注数据**/
       , DeclaratioMaterialCode = @{{.m.DeclaratioMaterialCode}}   /**企业承诺**/
       , save_btn = false
+      ,orderItemIndex = null
 
     // 基础参数版本
     await admin.getClearanceData()
@@ -84,8 +85,6 @@
     admin.keydown_input_textarea()
     /**首次进入自动聚焦 and 初始数据赋值**/
     admin.transModeControl(ieflag, isCreate())
-    /**产品**/
-    admin.getOrderTable(OrderItemsData, ieflag)
     /**光标进入全选**/
     $('body').on('focus', 'input,textarea', function (e) {
       $(this).select()
@@ -471,7 +470,7 @@
       $('#EntQualifTypeCodeTem').val(obj.data.EntQualifTypeCode)
       $('#EntQualifTypeNameTem').val(obj.data.EntQualifTypeName)
       $('#EntQualifNoTem').val(obj.data.EntQualifNo)
-      ent_qualif_index = obj.data.index
+      ent_qualif_index = obj.tr.data("index")
     })
 
     /**编辑企业资质信息--保存**/
@@ -645,7 +644,7 @@
     table.on('row(dec_users_table)', function (obj) {
       $('#UseOrgPersonCode').val(obj.data.UseOrgPersonCode)
       $('#UseOrgPersonTel').val(obj.data.UseOrgPersonTel)
-      dec_users_index = obj.data.index
+      dec_users_index = obj.tr.data("index")
     })
 
     /**编辑使用人信息--保存**/
@@ -1111,7 +1110,7 @@
     /**编辑产品许可证/审批/备案信息--点击行反填数据**/
     let orderItemLimitIndex = 0
     table.on('row(dec_goods_table)', function (obj) {
-      orderItemLimitIndex = obj.tr.data('index')
+      orderItemLimitIndex = obj.tr.data("index")
       $('#OrderItemLimitId').val(obj.data.Id)
       $('#LimitGoodsNo').val(obj.data.GoodsNo)
       $('#LicTypeCode').val(obj.data.LicTypeCode)
@@ -1265,9 +1264,9 @@
     /**许可证VIN信息--点击行反填数据**/
     let orderItemLimitVinIndex = null
     table.on('row(dec_goods_vin_table)', function (obj) {
-      orderItemLimitVinIndex = obj.data.index
+      orderItemLimitVinIndex = obj.tr.data("index")
       $('#OrderItemLimitVinId').val(obj.data.Id)
-      $('#GoodsLimitVinSeqNo').val(obj.tr.data('index') + 1)
+      $('#GoodsLimitVinSeqNo').val(orderItemLimitVinIndex + 1)
       $('#VinNo').val(obj.data.VinNo)
       $('#BillLadDate').val(obj.data.BillLadDate)
       $('#QualityQgp').val(obj.data.QualityQgp)
@@ -1611,7 +1610,6 @@
     })
 
     /**保存商品**/
-    let orderItemIndex = null
     form.on('submit(order_pros_submit)', async function (data) {
       if ($('#GNo').val() > 50) {
         layer.msg('商品数量不能超过50条！')
@@ -1689,7 +1687,7 @@
 
     /**商品--点击行反填数据**/
     table.on('row(order_pros)', function (obj) {
-      orderItemIndex = obj.data.index
+      orderItemIndex = obj.tr.data("index")
       let GoodsSpecData = ''
       let e = [
         'Stuff',
@@ -2486,8 +2484,7 @@
       tableName:"order_containers_table",
       datas: OrderContainers,
       index: null,
-    }
-
+    };
     table.render({
       elem: '#order_containers_table'
       , toolbar: '#order_containers_tool'
@@ -2518,7 +2515,7 @@
 
     /**集装箱--点击行反填数据**/
     table.on('row(order_containers_table)', function (obj) {
-      ContaineremptyObj.index = obj.data.index
+      ContaineremptyObj.index = obj.tr.data("index")
       for (let item in obj.data) {
         if (item == 'Id') {
           $(`#OrderContainerId`).val(obj.data[item])
@@ -2683,7 +2680,7 @@
           $(`#${item}`).val(obj.data[item])
         }
       }
-      emptyObj.index = obj.data.index
+      emptyObj.index = obj.tr.data("index")
       $('#DocuCodeName').focus()
     })
 
@@ -4324,11 +4321,9 @@
 
     // 置空表体表单数据
     function setOrderItemEmptyData () {
-      setTimeout(() => {
-        layui.table.reload('order_pros', {
-          data: OrderItemsData,
-          limit: OrderItemsData.length,
-        })
+      // setTimeout(() => {
+      /**产品**/
+        admin.getOrderTable(OrderItemsData, ieflag)
         $('#order_pros_form input').each(function () {
           if ($(this).attr('id') == 'GNo') {
             $(this).val(OrderItemsData.length + 1)
@@ -4373,7 +4368,7 @@
         admin.is_total_number(OrderItemsData)
         /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
         orderItemIndex = null
-      }, 100)
+      // }, 100)
     }
 
 
