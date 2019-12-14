@@ -477,9 +477,7 @@
     form.on('submit(ent_qualif_submit)', async (data) => {
       delete data.field.layTableCheckbox
       if (ent_qualif_index) {
-        for (let item in data.field) {
-          EntQualifData[ent_qualif_index - 1][item] = data.field[item]
-        }
+        EntQualifData.splice(ent_qualif_index, 1, data.field)
       } else {
         EntQualifData.push(data.field)
       }
@@ -516,20 +514,13 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let sup_data = EntQualifData.filter(item => {
-              return checkData.every(item2 => {
-                return item.index != item2.index
-              })
+            EntQualifData.forEach(function (item, index) {
+              EntQualifData.splice(EntQualifData.indexOf(item), 1)
             })
-            for (let item_apply of checkData) {
-              if (item_apply.id) {
-                OrderEntQualifDeleteIds.push(item_apply.id)
-              }
-            }
-            EntQualifData = sup_data
             EntQualifData.forEach((value, index) => {
               value.index = index + 1
             })
+
             table.reload('EntQualifTable', {
               data: EntQualifData,
               limit: EntQualifData.length,
@@ -651,9 +642,7 @@
     form.on('submit(dec_users_submit_tem)', async (data) => {
       delete data.field.layTableCheckbox
       if (dec_users_index) {
-        for (let item in data.field) {
-          DecUsersData[dec_users_index - 1][item] = data.field[item]
-        }
+        DecUsersData.splice(dec_users_index, 1, data.field)
       } else {
         DecUsersData.push(data.field)
       }
@@ -685,16 +674,13 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            dec_users_index = null
-            let sup_data = DecUsersData.filter(item => {
-              return checkData.every(item2 => {
-                return item.index != item2.index
-              })
+            checkData.forEach(function (item, index) {
+              DecUsersData.splice(DecUsersData.indexOf(item), 1)
             })
-            DecUsersData = sup_data
             DecUsersData.forEach((value, index) => {
               value.index = index + 1
             })
+
             table.reload('dec_users_table', {
               data: DecUsersData,
               limit: DecUsersData.length,
@@ -702,6 +688,7 @@
             $('#UseOrgPersonCode').val('')
             $('#UseOrgPersonTel').val('')
             $('#UseOrgPersonCode').focus()
+            dec_users_index = null
             layer.close(index)
           })
           break
@@ -1785,22 +1772,25 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let sup_data = OrderItemsData.filter(item => {
-              return checkData.every(item2 => {
-                return item.g_no != item2.g_no
-              })
-            })
-            for (let item_apply of checkData) {
-              if (item_apply.id) {
-                admin.order_pros_delete_ids.push(item_apply.id)
-              }
-            }
-            OrderItemsData = sup_data
-            OrderItemsData.forEach((value, index) => {
-              value.g_no = index + 1
+            let ids = checkData.map(item => item.Id)
+            checkData.forEach(function (item, index) {
+              OrderItemsData.splice(OrderItemsData.indexOf(item), 1)
             })
 
-            setOrderItemEmptyData()
+            OrderItemsData.forEach(function (item, index, arr) {
+              item.OrderId = parseInt(item.OrderId)
+              // item.ContainerWt = parseInt(item.ContainerWt)
+              item.Id = parseInt(item.Id)
+            })
+
+            let result = await admin.post(`/order_item/delete/`, JSON.stringify({
+              Limits: OrderItemsData,
+              Ids: ids,
+            }))
+
+            if (result.status) {
+              setOrderItemEmptyData()
+            }
 
             layer.close(index)
           })
@@ -2550,7 +2540,6 @@
       let checkData = checkStatus.data
       switch (obj.event) {
         case 'add':
-          ContaineremptyObj.datas= OrderContainers;
           setOrderRelationEmpty(ContaineremptyObj);
           break
         case 'delete':
@@ -2575,7 +2564,6 @@
             }))
 
             if (result.status) {
-              ContaineremptyObj.datas= OrderContainers;
               setOrderRelationEmpty(ContaineremptyObj);
             }
           })
@@ -2709,7 +2697,6 @@
       let checkData = checkStatus.data
       switch (obj.event) {
         case 'add':
-          emptyObj.datas = OrderDocuments;
           setOrderRelationEmpty(emptyObj);
           break
         case 'delete':
@@ -2733,8 +2720,6 @@
             }))
 
             if (result.status) {
-
-              emptyObj.datas = OrderDocuments;
               setOrderRelationEmpty(emptyObj);
             }
           })
@@ -2782,14 +2767,15 @@
         if (!(data.field.NetWt)) {
           return layer.msg('存在表体商品且是千克，必填净重！')
         }
+
         let total = 0
         for (let item of OrderItemsData) {
-          if (item.g_unit == '035') {
-            total += parseFloat(item.g_qty) * 100000
-          } else if (item.first_unit == '035') {
-            total += parseFloat(item.first_qty) * 100000
-          } else if (item.second_unit == '035') {
-            total += parseFloat(item.second_qty) * 100000
+          if (item.GUnit == '035') {
+            total += parseFloat(item.GQty) * 100000
+          } else if (item.FirstUnit == '035') {
+            total += parseFloat(item.FirstQty) * 100000
+          } else if (item.SecondUnit == '035') {
+            total += parseFloat(item.SecondQty) * 100000
           }
         }
 
