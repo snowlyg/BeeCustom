@@ -63,7 +63,7 @@ func NewOrderItemLimitVin(id int64) OrderItemLimitVin {
 }
 
 //Save 添加、编辑页面 保存
-func OrderItemLimitVinSave(m *OrderItemLimitVin, files []string) error {
+func OrderItemLimitVinSave(m *OrderItemLimitVin, fields []string) error {
 	o := orm.NewOrm()
 
 	if m.Id == 0 {
@@ -72,8 +72,8 @@ func OrderItemLimitVinSave(m *OrderItemLimitVin, files []string) error {
 			return err
 		}
 	} else {
-		if len(files) > 0 {
-			if _, err := o.Update(m, files...); err != nil {
+		if len(fields) > 0 {
+			if _, err := o.Update(m, fields...); err != nil {
 				utils.LogDebug(fmt.Sprintf("OrderItemLimitVinSave:%v", err))
 				return err
 			}
@@ -83,7 +83,6 @@ func OrderItemLimitVinSave(m *OrderItemLimitVin, files []string) error {
 				return err
 			}
 		}
-
 	}
 
 	return nil

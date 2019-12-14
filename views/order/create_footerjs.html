@@ -199,7 +199,7 @@
         }
       }
 
-      setOrderItemEmptyData();
+      setOrderItemEmptyData()
     }
     /**table点击行选中**/
     admin.table_radio_click()
@@ -1282,6 +1282,7 @@
       $('#PricePerUnit').val(obj.data.PricePerUnit)
       $('#VinNo').focus()
     })
+
     let order_item_limit_vin_table_names = [
       'OrderItemLimitVinId',
       'VinNo',
@@ -1316,7 +1317,7 @@
       } else {
         let result = await admin.post('/order_item_limit_vin/store', data.field)
         if (result.status) {
-          OrderItemLimitVinDatas.splice(orderItemLimitVinIndex, 1, data.field)
+          OrderItemLimitVinDatas.push(data.field)
         }
       }
 
@@ -1669,6 +1670,7 @@
 
       data.field.OrderId = order_id  // id
       let orderItemId = data.field.OrderItemId
+
       if (orderItemId && orderItemId != '0') {
         let result = await admin.patch(`/order_item/update/${orderItemId}`, data.field)
         if (result.status) {
@@ -1677,11 +1679,12 @@
       } else {
         let result = await admin.post('/order_item/store', data.field)
         if (result.status) {
-          OrderItemsData.splice(orderItemIndex, 1, data.field)
+          data.field.orderItemId = result.obj.Id
+          OrderItemsData.push( data.field)
         }
       }
 
-      setOrderItemEmptyData();
+      setOrderItemEmptyData()
     })
 
     // 置空表体表单数据
@@ -1732,8 +1735,9 @@
         } else {
           $('#ContrItem').focus()
         }
-        admin.is_total_number(OrderItemsData) /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
-        orderItemIndex = null;
+        admin.is_total_number(OrderItemsData)
+        /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
+        orderItemIndex = null
       }, 100)
     }
 
@@ -1750,7 +1754,8 @@
         'GoodsModel',
         'GoodsBrand',
         'ProduceDate',
-        'ProdBatchNo']
+        'ProdBatchNo',
+      ]
       for (let item in obj.data) {
         if (item == 'Id') {
           $(`#OrderItemId`).val(obj.data[item])
@@ -1829,7 +1834,7 @@
       let checkData = checkStatus.data
       switch (obj.event) {
         case 'add':
-          setOrderItemEmptyData();
+          setOrderItemEmptyData()
           break
         case 'delete':
           if (checkData.length === 0) {
@@ -1851,7 +1856,7 @@
               value.g_no = index + 1
             })
 
-            setOrderItemEmptyData();
+            setOrderItemEmptyData()
 
             layer.close(index)
           })
@@ -1879,7 +1884,7 @@
           $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${OrderItemsData.length -
           1}]`).click()
 
-          setOrderItemEmptyData();
+          setOrderItemEmptyData()
           break
         case 'up':
           if (checkData.length === 0) {
@@ -1897,7 +1902,7 @@
             value.g_no = index + 1
           })
 
-          setOrderItemEmptyData();
+          setOrderItemEmptyData()
 
           break
         case 'down':
@@ -1916,7 +1921,7 @@
             value.g_no = index + 1
           })
 
-          setOrderItemEmptyData();
+          setOrderItemEmptyData()
           break
         case 'insert':
           if (checkData.length === 0) {
@@ -1926,7 +1931,7 @@
             return layer.msg('只能选择一条数据插入')
           }
 
-          setOrderItemEmptyData();
+          setOrderItemEmptyData()
           break
         case 'again':
 
@@ -2529,7 +2534,7 @@
     })
 
     /**集装箱**/
-    let order_containers_index = null
+    let orderContainerIndex = null
     table.render({
       elem: '#order_containers_table'
       , toolbar: '#order_containers_tool'
@@ -2552,13 +2557,15 @@
       const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
       if (event.shiftKey != 1 && eCode == 13) {
         if (OrderItemsData.length > 0) {
-          const data = OrderItemsData.map(item => item.g_no)
+          const data = OrderItemsData.map(item => item.GNo)
           $('#GoodsNo').val(data.join(','))
         }
       }
-    })
+    });
+
     /**集装箱--点击行反填数据**/
     table.on('row(order_containers_table)', function (obj) {
+      orderContainerIndex = obj.data.index
       for (let item in obj.data) {
         if (item == 'Id') {
           $(`#OrderContainerId`).val(obj.data[item])
@@ -2566,26 +2573,32 @@
           $(`#${item}`).val(obj.data[item])
         }
       }
-      order_containers_index = obj.data.index
       $('#ContainerId').focus()
     })
 
     /**集装箱--保存**/
+    let ContaineremptyObj ={
+      formID: "order_containers_form",
+      focusId: "ContainerId",
+      tableName:"order_containers_table",
+      datas: OrderContainers,
+      index: orderContainerIndex,
+    }
     form.on('submit(order_containers_submit)', async (data) => {
       data.field.OrderId = order_id
-      let resultStatus = false
       if (data.field.OrderContainerId && data.field.OrderContainerId != '0') {
         let result = await admin.patch(`/order_container/update/${data.field.OrderContainerId}`, data.field)
-        resultStatus = result.status
+        if (result.status) {
+          OrderContainers.splice(orderContainerIndex, 1, data.field)
+        }
       } else {
         let result = await admin.post('/order_container/store', data.field)
-        resultStatus = result.status
+        if (result.status) {
+          data.field.OrderContainerId = result.obj.Id
+          OrderContainers.push( data.field)
+        }
       }
-      if (resultStatus) {
-        setTimeout(() => {
-          window.location.reload()
-        }, 100)
-      }
+      setOrderRelationEmpty(emptyObj);
     })
 
     /**集装箱--删除**/
@@ -2594,24 +2607,32 @@
       let checkData = checkStatus.data
       switch (obj.event) {
         case 'add':
-          $('#order_containers_form input').each(function () {
-            $(this).val('')
-          })
-          $('#ContainerId').focus()
-          order_containers_index = null
+          ContaineremptyObj.datas= OrderContainers;
+          setOrderRelationEmpty(emptyObj);
           break
         case 'delete':
           if (checkData.length === 0) {
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let result = await admin.post(`/order_container/delete/`, {
-              Ids: checkData.map(item => item.Id).join(','),
+            let ids = checkData.map(item => item.Id)
+            checkData.forEach(function (item, index) {
+              OrderContainers.splice(OrderContainers.indexOf(item), 1)
             })
+
+            OrderContainers.forEach(function (item, index, arr) {
+              item.OrderId = parseInt(item.OrderId)
+              item.Id = parseInt(item.Id)
+            })
+
+            let result = await admin.post(`/order_container/delete/`, JSON.stringify({
+              Limits: OrderContainers,
+              Ids: ids,
+            }))
+
             if (result.status) {
-              setTimeout(() => {
-                window.location.reload()
-              }, 100)
+              ContaineremptyObj.datas= OrderContainers;
+              setOrderRelationEmpty(emptyObj);
             }
           })
           break
@@ -2682,7 +2703,7 @@
     })
 
     /**随附单证**/
-    let order_documents_index = null
+    let orderDocumentIndex = null
     table.render({
       elem: '#order_documents_table'
       , toolbar: '#order_documents_tool'
@@ -2708,27 +2729,36 @@
           $(`#${item}`).val(obj.data[item])
         }
       }
-      order_documents_index = obj.data.index
+      orderDocumentIndex = obj.data.index
       $('#DocuCodeName').focus()
     })
 
     /**随附单证--保存**/
+    let emptyObj ={
+      formID: "order_documents_form",
+      focusId: "DocuCodeName",
+      tableName:"order_documents_table",
+      datas: OrderDocuments,
+      index: orderDocumentIndex,
+    }
     form.on('submit(order_documents_submit)', async (data) => {
       data.field.OrderId = order_id
-      let resultStatus = false
       let orderDocumentId = data.field.OrderDocumentId
       if (orderDocumentId && orderDocumentId != '0') {
         let result = await admin.patch(`/order_document/update/${orderDocumentId}`, data.field)
-        resultStatus = result.status
+        if (result.status) {
+          OrderDocuments.splice(orderDocumentIndex, 1, data.field)
+        }
       } else {
         let result = await admin.post('/order_document/store', data.field)
-        resultStatus = result.status
+        if (result.status) {
+          data.field.OrderDocumentId = result.obj.Id
+          OrderDocuments.push( data.field)
+        }
       }
-      if (resultStatus) {
-        setTimeout(() => {
-          window.location.reload()
-        }, 100)
-      }
+
+      setOrderRelationEmpty(emptyObj);
+
     })
     /**随附单证--操作按钮**/
     /**原产地对应关系录入--key**/
@@ -2737,24 +2767,33 @@
       let checkData = checkStatus.data
       switch (obj.event) {
         case 'add':
-          $('#order_documents_form input').each(function () {
-            $(this).val('')
-          })
-          $('#DocuCodeName').focus()
-          order_documents_index = null
+          emptyObj.datas = OrderDocuments;
+          setOrderRelationEmpty(emptyObj);
           break
         case 'delete':
           if (checkData.length === 0) {
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let result = await admin.post(`/order_document/delete/`, {
-              Ids: checkData.map(item => item.Id).join(','),
+            let ids = checkData.map(item => item.Id)
+            checkData.forEach(function (item, index) {
+              OrderDocuments.splice(OrderDocuments.indexOf(item), 1)
             })
+
+            OrderDocuments.forEach(function (item, index, arr) {
+              item.OrderId = parseInt(item.OrderId)
+              item.Id = parseInt(item.Id)
+            })
+
+            let result = await admin.post(`/order_document/delete/`, JSON.stringify({
+              Limits: OrderDocuments,
+              Ids: ids,
+            }))
+
             if (result.status) {
-              setTimeout(() => {
-                window.location.reload()
-              }, 100)
+
+              emptyObj.datas = OrderDocuments;
+              setOrderRelationEmpty(emptyObj);
             }
           })
           break
@@ -4323,5 +4362,19 @@
     function isCreate () {
       return !@{{.m.StatusString}} || $.inArray("@{{.m.StatusString}}", ['待审核', '审核中', '审核通过', '审核不通过']) >= 0
     }
+
+    // 置空集装箱/随附单证数据
+    function setOrderRelationEmpty (obj) {
+      $(`#${obj.formID} input`).each(function () {
+        $(this).val('')
+      })
+      $(`#${obj.focusId}`).focus()
+      layui.table.reload(obj.tableName, {
+        data: obj.datas,
+        limit: obj.datas.length,
+      })
+      obj.index = null
+    }
+
   })
 </script>

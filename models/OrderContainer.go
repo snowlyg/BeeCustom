@@ -15,6 +15,20 @@ func (u *OrderContainer) TableName() string {
 	return OrderContainerTBName()
 }
 
+// OrderContainerFieldNames 设置OrderItemLimitVin填充名称
+func OrderContainerFieldNames() []string {
+	return []string{
+		"ContainerId",
+		"ContainerMd",
+		"ContainerMdName",
+		"ContainerWt",
+		"LclFlag",
+		"LclFlagName",
+		"GoodsNo",
+		"GoodsContaWt",
+	}
+}
+
 // OrderContainerQueryParam 用于查询的类
 type OrderContainerQueryParam struct {
 	BaseQueryParam
@@ -107,8 +121,8 @@ func OrderContainerOne(id int64) (*OrderContainer, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
-func OrderContainerSave(m *OrderContainer) error {
+// Save 添加、编辑页面 保存
+func OrderContainerSave(m *OrderContainer, fields []string) error {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
@@ -116,17 +130,23 @@ func OrderContainerSave(m *OrderContainer) error {
 			return err
 		}
 	} else {
-
-		if _, err := o.Update(m); err != nil {
-			utils.LogDebug(fmt.Sprintf("OrderContainerSave:%v", err))
-			return err
+		if len(fields) > 0 {
+			if _, err := o.Update(m, fields...); err != nil {
+				utils.LogDebug(fmt.Sprintf("OrderContainerSave:%v", err))
+				return err
+			}
+		} else {
+			if _, err := o.Update(m); err != nil {
+				utils.LogDebug(fmt.Sprintf("OrderContainerSave:%v", err))
+				return err
+			}
 		}
 	}
 
 	return nil
 }
 
-//删除
+// 删除
 func OrderContainerDelete(id int64) (num int64, err error) {
 	m := NewOrderContainer(id)
 	if num, err := BaseDelete(&m); err != nil {
