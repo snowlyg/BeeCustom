@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"BeeCustom/xlsx"
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -110,7 +109,7 @@ func GetClearancesByTypes(clearanceType string, isOld bool) []orm.ParamsList {
 	var lists []orm.ParamsList
 	query := orm.NewOrm().QueryTable(ClearanceTBName())
 
-	clearanceTypeStrings, err := beego.AppConfig.GetSection("clearance_type")
+	clearanceTypeStrings, err := GetSettingRValueByKey("clearanceTypes")
 	if err != nil {
 		return nil
 	}

@@ -20,6 +20,7 @@ func init() {
 	// 货物申报表体管理
 	beego.Router("/order_item/store/?:aid", &controllers.OrderItemController{}, "Post:Store")
 	beego.Router("/order_item/update/?:id", &controllers.OrderItemController{}, "Patch:Update")
+	beego.Router("/order_item/updateMul", &controllers.OrderItemController{}, "Patch:UpdateMul")
 	beego.Router("/order_item/delete/", &controllers.OrderItemController{}, "Post:Delete")
 
 	// 货物申报集装箱管理

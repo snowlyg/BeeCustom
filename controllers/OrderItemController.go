@@ -44,6 +44,27 @@ func (c *OrderItemController) Update() {
 }
 
 // Update 添加 编辑 页面
+func (c *OrderItemController) UpdateMul() {
+	type OrderItemRequest struct {
+		OrderItems []models.OrderItem
+	}
+
+	ms := new(OrderItemRequest)
+	if err := c.ParseForm(ms); err != nil {
+		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", nil)
+	}
+
+	for _, m := range ms.OrderItems {
+		if err := models.OrderItemSave(&m); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+		}
+	}
+
+	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("操作成功"), "")
+}
+
+// Update 添加 编辑 页面
 func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
 	// 获取form里的值
 	if err := c.ParseForm(m); err != nil {
@@ -61,9 +82,7 @@ func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
 	}
-
 	m.Order = order
-
 	if err := models.OrderItemSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
@@ -95,11 +114,12 @@ func (c *OrderItemController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
+		utils.LogDebug(m.GNo)
 		if err := models.OrderItemSave(&m); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
 	}
 
-	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", 0), "")
+	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")
 
 }

@@ -1791,7 +1791,6 @@
             if (result.status) {
               setOrderItemEmptyData()
             }
-
             layer.close(index)
           })
           break
@@ -1805,20 +1804,18 @@
           if (OrderItemsData.length >= 50) {
             return layer.msg('商品数量不能超过50条！')
           }
-          checkData[0].g_no = OrderItemsData.length + 1
-          if (checkData[0].id) {
-            delete checkData[0].id
+
+          checkData[0].GNo = OrderItemsData.length + 1
+          checkData[0].OrderId = order_id
+          if (checkData[0].Id) {
+            delete checkData[0].Id
           }
-          OrderItemsData.push(checkData[0])
 
-          $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr input`).each(function (index, el) {
-            el.checked = false
-          })
-          form.render('checkbox')
-          $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${OrderItemsData.length -
-          1}]`).click()
-
-          setOrderItemEmptyData()
+          let resultCopy = await admin.post('/order_item/store',checkData[0])
+          if (resultCopy.status) {
+            OrderItemsData.push( checkData[0])
+            setOrderItemEmptyData()
+          }
           break
         case 'up':
           if (checkData.length === 0) {
@@ -1827,17 +1824,23 @@
           if (checkData.length != 1) {
             return layer.msg('只能选择一条数据移动')
           }
-          if (checkData[0].g_no == 1) {
+          if (checkData[0].GNo == 1) {
             return layer.msg('已是第一条商品表体，无法执行上移操作。')
           }
-          const upIndex = parseInt(checkData[0].g_no) - 1
+
+          const upIndex = parseInt(checkData[0].GNo) - 1
           OrderItemsData = admin.swapItems(OrderItemsData, upIndex, upIndex - 1)
           OrderItemsData.forEach((value, index) => {
-            value.g_no = index + 1
+            value.GNo = index + 1
           })
 
-          setOrderItemEmptyData()
+          let responseUp = await admin.patch(`/order_item/updateMul/`, JSON.stringify({
+            OrderItems : OrderItemsData,
+          }))
 
+          if (responseUp.status) {
+            setOrderItemEmptyData()
+          }
           break
         case 'down':
           if (checkData.length === 0) {
@@ -1846,16 +1849,22 @@
           if (checkData.length != 1) {
             return layer.msg('只能选择一条数据移动')
           }
-          if (checkData[0].g_no == OrderItemsData.length) {
+          if (checkData[0].GNo == OrderItemsData.length) {
             return layer.msg('已是最后一条数据，无法执行下移移操作。')
           }
-          const downIndex = parseInt(checkData[0].g_no) - 1
+          const downIndex = parseInt(checkData[0].GNo) - 1
           OrderItemsData = admin.swapItems(OrderItemsData, downIndex, downIndex + 1)
           OrderItemsData.forEach((value, index) => {
-            value.g_no = index + 1
+            value.GNo = index + 1
           })
 
-          setOrderItemEmptyData()
+          let responseDown = await admin.patch(`/order_item/updateMul/`, JSON.stringify({
+            OrderItems : OrderItemsData,
+          }))
+
+          if (responseDown.status) {
+            setOrderItemEmptyData()
+          }
           break
         case 'insert':
           if (checkData.length === 0) {
@@ -2528,7 +2537,7 @@
         let result = await admin.post('/order_container/store', data.field)
         if (result.status) {
           data.field.OrderContainerId = result.obj.Id
-          OrderContainers.push( data.field)
+          OrderContainers.push(data.field)
         }
       }
       setOrderRelationEmpty(ContaineremptyObj);

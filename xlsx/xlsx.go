@@ -88,12 +88,11 @@ func GetExcelName(configSection string) (string, error) {
 	return name, nil
 }
 
-//设置值
+// 设置值
 func FilpValueString(obj map[string]string) map[string]string {
 	for i, v := range obj {
 		obj[v] = i
 	}
-
 	return obj
 }
 
