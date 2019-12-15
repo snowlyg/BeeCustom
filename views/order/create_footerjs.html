@@ -8,7 +8,6 @@
     const { form, admin, table, $, laydate, upload, laytpl } = layui
     /**根据屏幕等比例缩小**/
     admin.sideFlexible_window()
-
     let OrderContainers = @{{.m.OrderContainers}} || [] /**集装箱**/
       , DecUsersData = @{{.m.DecUsers}} ? JSON.parse(@{{.m.DecUsers}}) : [] /**使用人**/
       , OrderDocuments = @{{.m.OrderDocuments}} || [] /**随附单证**/
@@ -197,9 +196,13 @@
           $(`#${item}`).val(orderData[item])
         }
       }
-
-      setOrderItemEmptyData()
+    }else{
+      $(`#IEDate`).val(admin.getCurrDate())
+      $(`#AplDate`).val(admin.getCurrDate())
+      $(`#CustomMasterName`).val('凤岗海关')
+      $(`#CustomMaster`).val(5207)
     }
+    setOrderItemEmptyData()
     /**table点击行选中**/
     admin.table_radio_click()
     /**table左右拖动**/
@@ -514,9 +517,8 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            EntQualifData.forEach(function (item, index) {
-              EntQualifData.splice(EntQualifData.indexOf(item), 1)
-            })
+            let delData = admin.getDelIds(EntQualifData,checkData);
+            EntQualifData = delData.Datas;
             EntQualifData.forEach((value, index) => {
               value.index = index + 1
             })
@@ -546,7 +548,7 @@
     /**编辑企业资质信息--按enter保存**/
     $('body').on('keyup', '#EntQualifNoTem', function (event) {
       if (event.keyCode == 13) {
-        $('#EntQualifSubmit').click()
+        $('#ent_qualif_submit').click()
         $('#EntQualifTypeNameTem').focus()
       }
     })
@@ -674,9 +676,8 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            checkData.forEach(function (item, index) {
-              DecUsersData.splice(DecUsersData.indexOf(item), 1)
-            })
+            let delData = admin.getDelIds(DecUsersData,checkData);
+            DecUsersData = delData.Datas;
             DecUsersData.forEach((value, index) => {
               value.index = index + 1
             })
@@ -698,7 +699,7 @@
     /**编辑使用人信息--按enter保存**/
     $('body').on('keyup', '#UseOrgPersonTel', function (event) {
       if (event.keyCode == 13) {
-        $('#DecUsersSubmitTem').click()
+        $('#dec_users_submit_tem').click()
         $('#UseOrgPersonCode').focus()
       }
     })
@@ -1165,11 +1166,8 @@
           }
 
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let ids = checkData.map(item => item.Id)
-            checkData.forEach(function (item, index) {
-              OrderItemLimits.splice(OrderItemLimits.indexOf(item), 1)
-            })
-
+            let delData = admin.getDelIds(OrderItemLimits,checkData);
+            OrderItemLimits = delData.Datas
             OrderItemLimits.forEach(function (item, index, arr) {
               item.GoodsNo = `${index + 1}`
               item.LicWrtofQty = parseInt(item.LicWrtofQty)
@@ -1179,7 +1177,7 @@
 
             let result = await admin.post(`/order_item_limit/delete/`, JSON.stringify({
               Limits: OrderItemLimits,
-              Ids: ids,
+              Ids: delData.Ids,
             }))
 
             if (result.status) {
@@ -1326,10 +1324,8 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let ids = checkData.map(item => item.Id)
-            checkData.forEach(function (item, index) {
-              OrderItemLimitVinDatas.splice(OrderItemLimitVinDatas.indexOf(item), 1)
-            })
+            let delData = admin.getDelIds(OrderItemLimitVinDatas,checkData);
+            OrderItemLimitVinDatas = delData.Datas
 
             OrderItemLimitVinDatas.forEach(function (item, index, arr) {
               item.OrderItemVinId = parseInt(item.OrderItemVinId)
@@ -1338,7 +1334,7 @@
 
             let result = await admin.post(`/order_item_limit_vin/delete/`, JSON.stringify({
               Limits: OrderItemLimitVinDatas,
-              Ids: ids,
+              Ids: delData.Ids,
             }))
 
             if (result.status) {
@@ -1772,10 +1768,8 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let ids = checkData.map(item => item.Id)
-            checkData.forEach(function (item, index) {
-              OrderItemsData.splice(OrderItemsData.indexOf(item), 1)
-            })
+            let delData = admin.getDelIds(OrderItemsData,checkData);
+            OrderItemsData = delData.Datas
 
             OrderItemsData.forEach(function (item, index, arr) {
               item.OrderId = parseInt(item.OrderId)
@@ -1785,7 +1779,7 @@
 
             let result = await admin.post(`/order_item/delete/`, JSON.stringify({
               Limits: OrderItemsData,
-              Ids: ids,
+              Ids: delData.Ids,
             }))
 
             if (result.status) {
@@ -2556,11 +2550,8 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let ids = checkData.map(item => item.Id)
-            checkData.forEach(function (item, index) {
-              OrderContainers.splice(OrderContainers.indexOf(item), 1)
-            })
-
+            let delData = admin.getDelIds(OrderContainers,checkData);
+            OrderContainers = delData.Datas
             OrderContainers.forEach(function (item, index, arr) {
               item.OrderId = parseInt(item.OrderId)
               item.ContainerWt = parseInt(item.ContainerWt)
@@ -2569,7 +2560,7 @@
 
             let result = await admin.post(`/order_container/delete/`, JSON.stringify({
               Limits: OrderContainers,
-              Ids: ids,
+              Ids: delData.Ids,
             }))
 
             if (result.status) {
@@ -2713,11 +2704,8 @@
             return layer.msg('请选择数据')
           }
           layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let ids = checkData.map(item => item.Id)
-            checkData.forEach(function (item, index) {
-              OrderDocuments.splice(OrderDocuments.indexOf(item), 1)
-            })
-
+            let delData = admin.getDelIds(OrderDocuments,checkData);
+            OrderDocuments = delData.Datas
             OrderDocuments.forEach(function (item, index, arr) {
               item.OrderId = parseInt(item.OrderId)
               item.Id = parseInt(item.Id)
@@ -2725,7 +2713,7 @@
 
             let result = await admin.post(`/order_document/delete/`, JSON.stringify({
               Limits: OrderDocuments,
-              Ids: ids,
+              Ids: delData.Ids,
             }))
 
             if (result.status) {

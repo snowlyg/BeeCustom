@@ -74,15 +74,17 @@ func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
 
 	c.validRequestData(m)
 
-	if aId == 0 {
-		aId = m.OrderId
+	if m.Order == nil {
+		if aId == 0 {
+			aId = m.OrderId
+		}
+		order, err := models.OrderOne(aId, "")
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
+		}
+		m.Order = order
 	}
 
-	order, err := models.OrderOne(aId, "")
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
-	}
-	m.Order = order
 	if err := models.OrderItemSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
@@ -114,10 +116,7 @@ func (c *OrderItemController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
-		utils.LogDebug(m.GNo)
-		if err := models.OrderItemSave(&m); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
-		}
+		c.saveOrUpdate(&m, 0)
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")

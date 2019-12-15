@@ -13,20 +13,6 @@ func (u *OrderContainer) TableName() string {
 	return OrderContainerTBName()
 }
 
-// OrderContainerFieldNames 设置OrderItemLimitVin填充名称
-func OrderContainerFieldNames() []string {
-	return []string{
-		"ContainerId",
-		"ContainerMd",
-		"ContainerMdName",
-		"ContainerWt",
-		"LclFlag",
-		"LclFlagName",
-		"GoodsNo",
-		"GoodsContaWt",
-	}
-}
-
 // OrderContainerQueryParam 用于查询的类
 type OrderContainerQueryParam struct {
 	BaseQueryParam

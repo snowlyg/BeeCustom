@@ -53,18 +53,18 @@ func (c *OrderDocumentController) saveOrUpdate(m *models.OrderDocument, aId int6
 
 	c.validRequestData(m)
 
-	if aId == 0 {
-		aId = m.OrderId
+	if m.Order == nil {
+		if aId == 0 {
+			aId = m.OrderId
+		}
+		order, err := models.OrderOne(aId, "")
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
+		}
+		m.Order = order
 	}
 
-	annotation, err := models.OrderOne(aId, "")
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
-	}
-
-	m.Order = annotation
-
-	if err := models.OrderDocumentSave(m, []string{}); err != nil {
+	if err := models.OrderDocumentSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -95,9 +95,7 @@ func (c *OrderDocumentController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
-		if err := models.OrderDocumentSave(&m, models.OrderDocumentFieldNames()); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
-		}
+		c.saveOrUpdate(&m, 0)
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")

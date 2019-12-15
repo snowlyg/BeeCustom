@@ -55,15 +55,15 @@ type OrderItemLimitVin struct {
 	PricePerUnit string `orm:"column(price_per_unit);size(20);null" description:"单价"`
 
 	OrderItemLimit   *OrderItemLimit `orm:"column(order_item_limit_id);rel(fk)"`
-	OrderItemLimitId int64           `orm:"-" form:"OrderItemLimitId"` //关联管理会自动生成
+	OrderItemLimitId int64           `orm:"-" form:"OrderItemLimitId"` // 关联管理会自动生成
 }
 
 func NewOrderItemLimitVin(id int64) OrderItemLimitVin {
 	return OrderItemLimitVin{BaseModel: BaseModel{id, time.Now(), time.Now()}}
 }
 
-//Save 添加、编辑页面 保存
-func OrderItemLimitVinSave(m *OrderItemLimitVin, fields []string) error {
+// Save 添加、编辑页面 保存
+func OrderItemLimitVinSave(m *OrderItemLimitVin) error {
 	o := orm.NewOrm()
 
 	if m.Id == 0 {
@@ -72,23 +72,16 @@ func OrderItemLimitVinSave(m *OrderItemLimitVin, fields []string) error {
 			return err
 		}
 	} else {
-		if len(fields) > 0 {
-			if _, err := o.Update(m, fields...); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderItemLimitVinSave:%v", err))
-				return err
-			}
-		} else {
-			if _, err := o.Update(m); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderItemLimitVinSave:%v", err))
-				return err
-			}
+		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("OrderItemLimitVinSave:%v", err))
+			return err
 		}
 	}
 
 	return nil
 }
 
-//删除
+// 删除
 func OrderItemLimitVinDelete(id int64) (num int64, err error) {
 	m := NewOrderItemLimitVin(id)
 	if num, err := BaseDelete(&m); err != nil {

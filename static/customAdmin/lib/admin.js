@@ -34,10 +34,10 @@ layui.define('view', function (exports) {
       },
       //设置基础参数版本
       getClearanceVersionData: async () => {
-        let clearanceVersionData = layui.data('clearanceVersion');
+        let clearanceVersionData = layui.data('clearanceVersion')
         if (admin.layuiDataIsEmpty(clearanceVersionData)) {
           let clearanceVersion = await admin.get(
-            '/setting/getOne/ClearanceVersion');
+            '/setting/getOne/ClearanceVersion')
           layui.data('clearanceVersion', {
             key: 'version',
             value: clearanceVersion,
@@ -46,56 +46,57 @@ layui.define('view', function (exports) {
       },
 
       // 置空表单数据
-      SetEmptyData(obj) {
+      SetEmptyData (obj) {
         setTimeout(() => {
           layui.table.reload(obj.table_name, {
             data: obj.table_datas,
             limit: obj.table_datas.length,
-          });
+          })
           for (let item in obj.from_input_names) {
-            $(`#${obj.from_input_names[item]}`).val('');
+            $(`#${obj.from_input_names[item]}`).val('')
           }
-          $(`#${obj.focus_input_name}`).focus();
+          $(`#${obj.focus_input_name}`).focus()
         }, 100)
 
-    },
+      },
       //layui data is Empty
       layuiDataIsEmpty: function (data) {
         return !data || $.isEmptyObject(data)
       },
       //获取基础参数
       getClearanceData: async () => {
-        let clearanceVersionData = layui.data('clearanceVersion');
-        let commonClearanceData = layui.data('commonClearance');
-        let orderClearanceData = layui.data('orderClearance');
-        let annotationClearanceData = layui.data('annotationClearance');
-        let clearanceVersion = await admin.get('/setting/getOne/ClearanceVersion');
+        let clearanceVersionData = layui.data('clearanceVersion')
+        let commonClearanceData = layui.data('commonClearance')
+        let orderClearanceData = layui.data('orderClearance')
+        let annotationClearanceData = layui.data('annotationClearance')
+        let clearanceVersion = await admin.get(
+          '/setting/getOne/ClearanceVersion')
         if (
           admin.layuiDataIsEmpty(commonClearanceData) ||
           admin.layuiDataIsEmpty(orderClearanceData) ||
           admin.layuiDataIsEmpty(annotationClearanceData) ||
           admin.layuiDataIsEmpty(clearanceVersionData) ||
           clearanceVersionData.version != clearanceVersion) {
-          let commonClearance = await admin.get('/clearance/commonClearance');
+          let commonClearance = await admin.get('/clearance/commonClearance')
           layui.data('commonClearance', {
             key: 'data',
             value: commonClearance,
-          });
-          let orderClearance = await admin.get('/clearance/orderClearance');
+          })
+          let orderClearance = await admin.get('/clearance/orderClearance')
           layui.data('orderClearance', {
             key: 'data',
             value: orderClearance,
-          });
+          })
           let annotationClearance = await admin.get(
-            '/clearance/annotationClearance');
+            '/clearance/annotationClearance')
           layui.data('annotationClearance', {
             key: 'data',
             value: annotationClearance,
-          });
+          })
           layui.data('clearanceVersion', {
             key: 'version',
             value: clearanceVersion,
-          });
+          })
         }
       },
       escape: function (html) { //xss 转义
@@ -550,81 +551,84 @@ layui.define('view', function (exports) {
       //进口时，成交方式是CIF/出口成交方式是FOB，则不允许录入运费和保费；
       //进口成交方式是C&I/出口成交方式是C&F，则允许录入运费，而不允许录入保费；
       //进口成交方式是C&F/出口成交方式是C&I，则不允许录入运费，而允许录入保费；否则，运费和保费都允许录入
-      transModeControl: function (cusIEFlag,isCreate) {
-        $('#DestinationCountryName').val('中国');
-        $('#DestinationCountry').val('CHN');
-        const transMode = $('#TransMode').val();
-        if (('I' == cusIEFlag && transMode == '1') || ('E' == cusIEFlag && transMode == '3')) {
-          $('#FeeMarkName').val('');
-          $('#FeeMark').val('');
-          $('#FeeRate').val('');
-          $('#FeeCurrName').val('');
-          $('#FeeCurr').val('');
+      transModeControl: function (cusIEFlag, isCreate) {
+        $('#DestinationCountryName').val('中国')
+        $('#DestinationCountry').val('CHN')
+        const transMode = $('#TransMode').val()
+        if (('I' == cusIEFlag && transMode == '1') ||
+          ('E' == cusIEFlag && transMode == '3')) {
+          $('#FeeMarkName').val('')
+          $('#FeeMark').val('')
+          $('#FeeRate').val('')
+          $('#FeeCurrName').val('')
+          $('#FeeCurr').val('')
 
-          $('#FeeMarkName').attr('disabled', 'disabled');
-          $('#FeeMarkName').removeAttr('lay-verify');
-          $('#FeeCurrName').attr('disabled', 'disabled');
-          $('#FeeRate').attr('disabled', 'disabled');
+          $('#FeeMarkName').attr('disabled', 'disabled')
+          $('#FeeMarkName').removeAttr('lay-verify')
+          $('#FeeCurrName').attr('disabled', 'disabled')
+          $('#FeeRate').attr('disabled', 'disabled')
 
-          $('#InsurMark').val('');
-          $('#InsurMarkName').val('');
-          $('#InsurRate').val('');
-          $('#InsurCurrName').val('');
-          $('#InsurCurr').val('');
+          $('#InsurMark').val('')
+          $('#InsurMarkName').val('')
+          $('#InsurRate').val('')
+          $('#InsurCurrName').val('')
+          $('#InsurCurr').val('')
 
-          $('#InsurMarkName').attr('disabled', 'disabled');
-          $('#InsurCurrName').attr('disabled', 'disabled');
+          $('#InsurMarkName').attr('disabled', 'disabled')
+          $('#InsurCurrName').attr('disabled', 'disabled')
           $('#InsurRate').attr('disabled', 'disabled')
 
-        } else if (('I' == cusIEFlag && transMode == '2') || ('E' == cusIEFlag && transMode == '4')) {
-          $('#FeeMarkName').val('');
-          $('#FeeMark').val('');
-          $('#FeeRate').val('');
-          $('#FeeCurrName').val('');
-          $('#FeeCurr').val('');
+        } else if (('I' == cusIEFlag && transMode == '2') ||
+          ('E' == cusIEFlag && transMode == '4')) {
+          $('#FeeMarkName').val('')
+          $('#FeeMark').val('')
+          $('#FeeRate').val('')
+          $('#FeeCurrName').val('')
+          $('#FeeCurr').val('')
 
-          $('#FeeMarkName').attr('disabled', 'disabled');
-          $('#FeeMarkName').removeAttr('lay-verify');
-          $('#FeeCurrName').attr('disabled', 'disabled');
-          $('#FeeRate').attr('disabled', 'disabled');
+          $('#FeeMarkName').attr('disabled', 'disabled')
+          $('#FeeMarkName').removeAttr('lay-verify')
+          $('#FeeCurrName').attr('disabled', 'disabled')
+          $('#FeeRate').attr('disabled', 'disabled')
 
-          $('#InsurMarkName').removeAttr('disabled', 'disabled');
-          $('#InsurRate').removeAttr('disabled', 'disabled');
+          $('#InsurMarkName').removeAttr('disabled', 'disabled')
+          $('#InsurRate').removeAttr('disabled', 'disabled')
           if ($('#InsurMark').val() != '1') {
             $('#InsurCurrName').removeAttr('disabled', 'disabled')
           }
 
-        } else if (('I' == cusIEFlag && transMode == '4') || ('E' == cusIEFlag && transMode == '2')) {
+        } else if (('I' == cusIEFlag && transMode == '4') ||
+          ('E' == cusIEFlag && transMode == '2')) {
 
-          $('#InsurMarkName').val('');
-          $('#InsurMark').val('');
-          $('#InsurRate').val('');
-          $('#InsurCurrName').val('');
-          $('#InsurCurr').val('');
+          $('#InsurMarkName').val('')
+          $('#InsurMark').val('')
+          $('#InsurRate').val('')
+          $('#InsurCurrName').val('')
+          $('#InsurCurr').val('')
 
-          $('#InsurMarkName').attr('disabled', 'disabled');
-          $('#InsurCurrName').attr('disabled', 'disabled');
-          $('#InsurRate').attr('disabled', 'disabled');
-          $('#FeeMarkName').removeAttr('disabled', 'disabled');
+          $('#InsurMarkName').attr('disabled', 'disabled')
+          $('#InsurCurrName').attr('disabled', 'disabled')
+          $('#InsurRate').attr('disabled', 'disabled')
+          $('#FeeMarkName').removeAttr('disabled', 'disabled')
 
-          if(!isCreate){
-            $('#FeeMarkName').attr('lay-verify', 'required');
+          if (!isCreate) {
+            $('#FeeMarkName').attr('lay-verify', 'required')
           }
           if ($('#FeeMark').val() != '1') {
-            $('#FeeCurrName').removeAttr('disabled', 'disabled');
+            $('#FeeCurrName').removeAttr('disabled', 'disabled')
           }
-          $('#FeeRate').removeAttr('disabled', 'disabled');
+          $('#FeeRate').removeAttr('disabled', 'disabled')
         } else {
-          $('#FeeMarkName').removeAttr('disabled', 'disabled');
-          if(!isCreate){
-            $('#FeeMarkName').attr('lay-verify', 'required');
+          $('#FeeMarkName').removeAttr('disabled', 'disabled')
+          if (!isCreate) {
+            $('#FeeMarkName').attr('lay-verify', 'required')
           }
-          $('#FeeRate').removeAttr('disabled', 'disabled');
+          $('#FeeRate').removeAttr('disabled', 'disabled')
           if ($('#FeeMark').val() != '1') {
-            $('#FeeCurrName').removeAttr('disabled', 'disabled');
+            $('#FeeCurrName').removeAttr('disabled', 'disabled')
           }
-          $('#InsurMarkName').removeAttr('disabled', 'disabled');
-          $('#InsurRate').removeAttr('disabled', 'disabled');
+          $('#InsurMarkName').removeAttr('disabled', 'disabled')
+          $('#InsurRate').removeAttr('disabled', 'disabled')
           if ($('#InsurMark').val() != '1') {
             $('#InsurCurrName').removeAttr('disabled', 'disabled')
           }
@@ -635,7 +639,7 @@ layui.define('view', function (exports) {
       keydown_input_textarea: function () {
         $('body').on('keydown', 'textarea', function (e) {
           let self = $(this)
-          let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+          let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode
           if (eCode == 13) {
             e.preventDefault()
           }
@@ -984,10 +988,11 @@ layui.define('view', function (exports) {
       async auto_fn (type) {
         let data_filter = []
         if (type.url) {
-          let requestData = JSON.stringify({ Limit: 5000, TypeString: type.clearanceType })
+          let requestData = JSON.stringify(
+            { Limit: 5000, TypeString: type.clearanceType })
           let data = await admin.post(type.url, requestData, true)
           type.filter(data.rows, data_filter)
-        } else if(type.data) {
+        } else if (type.data) {
           type.filter(type.data, data_filter)
         }
 
@@ -1291,7 +1296,7 @@ layui.define('view', function (exports) {
       },
 
       //监听进出口报关整合申报备案序号
-      contr_item_change: async function (dom,flag,handBookId) {
+      contr_item_change: async function (dom, flag, handBookId) {
         let type = 0
         if (flag === 'I') {
           type = 2
@@ -1326,10 +1331,11 @@ layui.define('view', function (exports) {
               $('#OriginCountry').val(handbookgood.ManuplaceCode)
               $('#OriginCountryName').val(handbookgood.Manuplace)
             }
-            const codeData = await admin.get(`/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
+            const codeData = await admin.get(
+              `/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
             if (codeData && codeData.Unit2 && codeData.Unit2Name) {
-                $('#SecondUnit').val(codeData.Unit2)
-                $('#SecondUnitName').val(codeData.Unit2Name)
+              $('#SecondUnit').val(codeData.Unit2)
+              $('#SecondUnitName').val(codeData.Unit2Name)
             }
             $('#GQty').focus()
           } else {
@@ -1422,7 +1428,8 @@ layui.define('view', function (exports) {
 
       //监听进出口清单加工单位海关编码
       async rcvgd_etpsno_change (dom) {
-        if ($('#rvsngd_etps_sccd').val() == '' || $('#rcvgd_etps_nm').val() =='') {
+        if ($('#rvsngd_etps_sccd').val() == '' || $('#rcvgd_etps_nm').val() ==
+          '') {
           let CompanyList = await admin.post('/company/datagrid',
             JSON.stringify({
               NameLike: $(dom).val(),
@@ -1468,7 +1475,8 @@ layui.define('view', function (exports) {
               $('#Natcd').val(handbookgood.ManuplaceCode)
               $('#NatcdName').val(handbookgood.Manuplace)
             }
-            const codeData = await admin.get(`/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
+            const codeData = await admin.get(
+              `/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
             if (codeData && codeData.Unit2) {
               $('#SecdLawfUnitcd').val(codeData.Unit2)
               $('#SecdLawfUnitcdName').val(codeData.Unit2Name)
@@ -1695,7 +1703,7 @@ layui.define('view', function (exports) {
         let gQty = $.trim($('#DclQty').val())
         let declTotal = $.trim($('#DclTotalAmt').val())
         if (gQty && !isNaN(gQty)) {
-         let declPrice = admin.decToDecimal(declTotal, gQty, '4', '3', '6')
+          let declPrice = admin.decToDecimal(declTotal, gQty, '4', '3', '6')
           $('#DclUprcAmt').val(declPrice)
         }
       }
@@ -1709,7 +1717,7 @@ layui.define('view', function (exports) {
         if (isNaN(gQty) || isNaN(declPrice)) {
           return false
         }
-        let  declTotal = admin.decToDecimal(gQty, declPrice, '2', '2', '6')
+        let declTotal = admin.decToDecimal(gQty, declPrice, '2', '2', '6')
         $('#DclTotalAmt').val(declTotal)
       },
 
@@ -1973,13 +1981,13 @@ layui.define('view', function (exports) {
 
       //规范要素回车事件
       decFocus (e, id) {
-        let fanalVal = '';
-        let surtax = '';
-        let surtaxIndex = -1;
-        let objList = document.getElementsByName('dyanInput');
+        let fanalVal = ''
+        let surtax = ''
+        let surtaxIndex = -1
+        let objList = document.getElementsByName('dyanInput')
         for (var i = 0; i < objList.length; i++) {
           if (objList[i].getAttribute('decElemType') == '9') {
-            fanalVal += '<' + objList[i].value + '>';
+            fanalVal += '<' + objList[i].value + '>'
             surtaxIndex = i
           } else {
             if (surtaxIndex > -1) {
@@ -2052,19 +2060,19 @@ layui.define('view', function (exports) {
           ? event.which
           : event.charCode
         if (event.shiftKey != 1 && eCode == 13) {
-          $('#goods_spec_save').click();
+          $('#goods_spec_save').click()
           layer.closeAll()
         }
       }
       ,
 
-    // 编辑货物危险信息回车
+      // 编辑货物危险信息回车
       changeFoucsDanger (event) {
         const eCode = event.keyCode ? event.keyCode : event.which
           ? event.which
           : event.charCode
         if (event.shiftKey != 1 && eCode == 13) {
-          $('#dang_save').click();
+          $('#dang_save').click()
           layer.closeAll()
         }
       }
@@ -2072,9 +2080,10 @@ layui.define('view', function (exports) {
 
       //tips计算总价/成交数量合计/法定第一数量/法定第二数量
       is_total_number (order_pros_data) {
-        let totalPrice = 0, totalGQty = 0, totalQty1 = 0, totalQty2 = 0;
+        let totalPrice = 0, totalGQty = 0, totalQty1 = 0, totalQty2 = 0
         for (let item of order_pros_data) {
-          if (item.DeclTotal != '' && item.DeclTotal != 'null' && item.DeclTotal) {
+          if (item.DeclTotal != '' && item.DeclTotal != 'null' &&
+            item.DeclTotal) {
             totalPrice += parseFloat(item.DeclTotal) * 100000
           }
           if (item.GQty != '' && item.GQty != 'null' && item.GQty) {
@@ -2083,7 +2092,8 @@ layui.define('view', function (exports) {
           if (item.FirstQty != '' && item.FirstQty != 'null' && item.FirstQty) {
             totalQty1 += parseFloat(item.FirstQty) * 100000
           }
-          if (item.SecondQty != '' && item.SecondQty != 'null' && item.SecondQty) {
+          if (item.SecondQty != '' && item.SecondQty != 'null' &&
+            item.SecondQty) {
             totalQty2 += parseFloat(item.SecondQty) * 100000
           }
         }
@@ -2103,17 +2113,17 @@ layui.define('view', function (exports) {
           after: obj.after,
           filter: function (data, data_filter) {
             data.forEach((item, index) => {
-              let value = `${item.Name}`;
-              let label = `${item.CustomsCode}-${value}`;
-              let data_filter_id = item.CustomsCode;
+              let value = `${item.Name}`
+              let label = `${item.CustomsCode}-${value}`
+              let data_filter_id = item.CustomsCode
               if (obj.filter_type === 'l') {
                 label = `<span class="auto_list_p_left">${item.CustomsCode}-${value}</span><span class="auto_list_p_right"><i>${item.OldCustomCode}</i><i>${item.OldCiqCode}</i></span>`
               } else if (obj.filter_type === 'anns') {
-                label = `${item.OldCustomCode}-${value}`;
+                label = `${item.OldCustomCode}-${value}`
                 data_filter_id = item.OldCustomCode
               }
               /**循环插入数据，after 使用*/
-              let ids = [];
+              let ids = []
               for (let i = 0; i < obj.after.length; i++) {
                 ids.push(data_filter_id)
               }
@@ -2138,7 +2148,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#InvtTypeName'],
             after: ['#InvtType'],
-          };
+          }
           await admin.base_clearance_data_auto(list_types)
         }
 
@@ -2472,7 +2482,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#EntyPortName'],
             after: ['#EntyPortCode'],
-          };
+          }
           await admin.base_clearance_data_auto(domestic_ports)
         }
 
@@ -2484,7 +2494,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#EntryTypeName'],
             after: ['#EntryType'],
-          };
+          }
           await admin.base_clearance_data_auto(types_customs)
         }
 
@@ -2498,7 +2508,7 @@ layui.define('view', function (exports) {
               '#OrgCodeName',
               '#VsaOrgCodeName',
               '#InspOrgName',
-              '#PurpOrgName'
+              '#PurpOrgName',
             ],
             after: [
               '#OrgCode',
@@ -2667,7 +2677,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#DocuCodeName'],
             after: ['#DocuCode'],
-          };
+          }
           await admin.base_clearance_data_auto(documents_attached)
         }
 
@@ -2679,7 +2689,7 @@ layui.define('view', function (exports) {
             filter_type: 's',
             id: ['#CusFieName'],
             after: ['#CusFie'],
-          };
+          }
           await admin.base_clearance_data_auto(site_code)
         }
 
@@ -2801,6 +2811,28 @@ layui.define('view', function (exports) {
         }
       },
 
+      // 删除数据，返回删除 id array
+      getDelIds (datas, checkData) {
+        let ids = checkData.map(item => item.Id)
+        let delIndexs = []
+        datas.forEach(function (item, index) {
+          if ($.inArray(item.Id, ids) >= 0) {
+            delIndexs.push(index)
+          }
+        })
+
+        if (delIndexs.length > 0) {
+          delIndexs.forEach(function (item, index) {
+            datas.splice(item, 1)
+          })
+        }
+
+        return {
+          Ids:ids,
+          Datas:datas
+        }
+      },
+
       /** 数组上移、下移*/
       swapItems (arr, index1, index2) {
         arr[index1] = arr.splice(index2, 1, arr[index1])[0]
@@ -2897,7 +2929,14 @@ layui.define('view', function (exports) {
         }],
 
       //特殊业务标识反填比对数据
-      SpecDeclFlagData: ['国际赛事', '特殊进出军工物资', '国际援助物资', '国际会议', '直通放行', '外交礼遇', '转关'],
+      SpecDeclFlagData: [
+        '国际赛事',
+        '特殊进出军工物资',
+        '国际援助物资',
+        '国际会议',
+        '直通放行',
+        '外交礼遇',
+        '转关'],
 
       //获取附件数据赋值打印
       async getPdf (order_id, i_e_flag, print_list) {
@@ -2938,7 +2977,7 @@ layui.define('view', function (exports) {
       }
       ,
 
-    //判断一个字符串是否为数字
+      //判断一个字符串是否为数字
       isNumber (val) {
         var regPos = /^\d+(\.\d+)?$/ //非负浮点数
         var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/ //负浮点数

@@ -53,18 +53,19 @@ func (c *OrderItemLimitVinController) saveOrUpdate(m *models.OrderItemLimitVin, 
 
 	c.validRequestData(m)
 
-	if aId == 0 {
-		aId = m.OrderItemLimitId
+	if m.OrderItemLimit == nil {
+		if aId == 0 {
+			aId = m.OrderItemLimitId
+		}
+
+		orderItemLimit, err := models.OrderItemLimitOne(aId)
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
+		}
+
+		m.OrderItemLimit = orderItemLimit
 	}
-
-	orderItemLimit, err := models.OrderItemLimitOne(aId)
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
-	}
-
-	m.OrderItemLimit = orderItemLimit
-
-	if err := models.OrderItemLimitVinSave(m, []string{}); err != nil {
+	if err := models.OrderItemLimitVinSave(m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -95,9 +96,7 @@ func (c *OrderItemLimitVinController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
-		if err := models.OrderItemLimitVinSave(&m, models.OrderItemLimitVinFieldNames()); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
-		}
+		c.saveOrUpdate(&m, 0)
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")

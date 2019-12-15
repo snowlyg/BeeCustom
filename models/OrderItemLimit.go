@@ -15,20 +15,6 @@ func (u *OrderItemLimit) TableName() string {
 	return OrderItemLimitTBName()
 }
 
-// OrderItemLimitVinFieldNames 设置OrderItemLimitVin填充名称
-func OrderItemLimitFieldNames() []string {
-	return []string{
-		"GoodsNo",
-		"LicTypeCode",
-		"LicTypeName",
-		"LicenceNo",
-		"LicWrtofDetailNo",
-		"LicWrtofQty",
-		"LicWrtofQtyUnit",
-		"LicWrtofQtyUnitName",
-	}
-}
-
 // OrderItemLimitQueryParam 用于查询的类
 type OrderItemLimitQueryParam struct {
 	BaseQueryParam
@@ -53,7 +39,7 @@ type OrderItemLimit struct {
 	OrderItemLimitVins []*OrderItemLimitVin `orm:"reverse(many)"` // 设置一对多关系
 
 	OrderItem   *OrderItem `orm:"column(order_item_id);rel(fk)"`
-	OrderItemId int64      `orm:"-" form:"OrderItemId"` //关联管理会自动生成
+	OrderItemId int64      `orm:"-" form:"OrderItemId"` // 关联管理会自动生成
 }
 
 func NewOrderItemLimit(id int64) OrderItemLimit {
@@ -92,8 +78,8 @@ func OrderItemLimitOne(id int64) (*OrderItemLimit, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
-func OrderItemLimitSave(m *OrderItemLimit, files []string) error {
+// Save 添加、编辑页面 保存
+func OrderItemLimitSave(m *OrderItemLimit) error {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
@@ -101,24 +87,16 @@ func OrderItemLimitSave(m *OrderItemLimit, files []string) error {
 			return err
 		}
 	} else {
-		if len(files) > 0 {
-			if _, err := o.Update(m, files...); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
-				return err
-			}
-		} else {
-			if _, err := o.Update(m); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
-				return err
-			}
+		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
+			return err
 		}
-
 	}
 
 	return nil
 }
 
-//OrderItemLimitUpdateAll 添加、编辑页面 保存
+// OrderItemLimitUpdateAll 添加、编辑页面 保存
 func OrderItemLimitUpdateAll(aid int64, m *OrderItemLimit) error {
 	o := orm.NewOrm()
 	qs := o.QueryTable(OrderItemLimitTBName()).Filter("order_item_limit_id", aid)
@@ -136,7 +114,7 @@ func OrderItemLimitUpdateAll(aid int64, m *OrderItemLimit) error {
 	return nil
 }
 
-//删除
+// 删除
 func OrderItemLimitDelete(id int64) (num int64, err error) {
 	m := NewOrderItemLimit(id)
 	if num, err := BaseDelete(&m); err != nil {

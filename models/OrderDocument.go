@@ -13,15 +13,6 @@ func (u *OrderDocument) TableName() string {
 	return OrderDocumentTBName()
 }
 
-// OrderDocumentFieldNames 设置OrderItemLimitVin填充名称
-func OrderDocumentFieldNames() []string {
-	return []string{
-		"DocuCode",
-		"DocuCodeName",
-		"CertCode",
-	}
-}
-
 // OrderDocumentQueryParam 用于查询的类
 type OrderDocumentQueryParam struct {
 	BaseQueryParam
@@ -45,7 +36,7 @@ func NewOrderDocument(id int64) OrderDocument {
 }
 
 // Save 添加、编辑页面 保存
-func OrderDocumentSave(m *OrderDocument, fields []string) error {
+func OrderDocumentSave(m *OrderDocument) error {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
@@ -53,23 +44,16 @@ func OrderDocumentSave(m *OrderDocument, fields []string) error {
 			return err
 		}
 	} else {
-		if len(fields) > 0 {
-			if _, err := o.Update(m, fields...); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderDocumentSave:%v", err))
-				return err
-			}
-		} else {
-			if _, err := o.Update(m); err != nil {
-				utils.LogDebug(fmt.Sprintf("OrderDocumentSave:%v", err))
-				return err
-			}
+		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("OrderDocumentSave:%v", err))
+			return err
 		}
 	}
 
 	return nil
 }
 
-//删除
+// 删除
 func OrderDocumentDelete(id int64) (num int64, err error) {
 	m := NewOrderDocument(id)
 	if num, err := BaseDelete(&m); err != nil {
