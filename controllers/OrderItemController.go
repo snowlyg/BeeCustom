@@ -32,6 +32,14 @@ func (c *OrderItemController) Store() {
 	Id, _ := c.GetInt64(":aid", 0)
 	m := models.NewOrderItem(0)
 
+	// 获取form里的值
+	if err := c.ParseForm(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	c.validRequestData(m)
+
 	c.saveOrUpdate(&m, Id)
 }
 
@@ -39,6 +47,14 @@ func (c *OrderItemController) Store() {
 func (c *OrderItemController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
 	m := models.NewOrderItem(Id)
+
+	// 获取form里的值
+	if err := c.ParseForm(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+
+	c.validRequestData(m)
 
 	c.saveOrUpdate(&m, 0)
 }
@@ -66,14 +82,6 @@ func (c *OrderItemController) UpdateMul() {
 
 // Update 添加 编辑 页面
 func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
-	// 获取form里的值
-	if err := c.ParseForm(m); err != nil {
-		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
-	}
-
-	c.validRequestData(m)
-
 	if m.Order == nil {
 		if aId == 0 {
 			aId = m.OrderId
@@ -116,6 +124,7 @@ func (c *OrderItemController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
+		utils.LogDebug(fmt.Sprintf("m: %v", m))
 		c.saveOrUpdate(&m, 0)
 	}
 

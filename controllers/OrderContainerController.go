@@ -75,8 +75,7 @@ func (c *OrderContainerController) saveOrUpdate(m *models.OrderContainer, aId in
 // 删除
 func (c *OrderContainerController) Delete() {
 	type OrderContainerRequests struct {
-		Limits []models.OrderContainer
-		Ids    []int64 `json:"Ids"`
+		Ids []int64 `json:"Ids"`
 	}
 
 	ms := new(OrderContainerRequests)
@@ -93,10 +92,6 @@ func (c *OrderContainerController) Delete() {
 		if _, err := models.OrderContainerDelete(id); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
-	}
-
-	for _, m := range ms.Limits {
-		c.saveOrUpdate(&m, 0)
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")

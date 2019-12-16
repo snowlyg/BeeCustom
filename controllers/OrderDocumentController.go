@@ -74,8 +74,7 @@ func (c *OrderDocumentController) saveOrUpdate(m *models.OrderDocument, aId int6
 // 删除
 func (c *OrderDocumentController) Delete() {
 	type OrderDocumentRequests struct {
-		Limits []models.OrderDocument
-		Ids    []int64 `json:"Ids"`
+		Ids []int64 `json:"Ids"`
 	}
 
 	ms := new(OrderDocumentRequests)
@@ -92,10 +91,6 @@ func (c *OrderDocumentController) Delete() {
 		if _, err := models.OrderDocumentDelete(id); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "删除失败", err)
 		}
-	}
-
-	for _, m := range ms.Limits {
-		c.saveOrUpdate(&m, 0)
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")

@@ -2813,29 +2813,23 @@ layui.define('view', function (exports) {
 
       // 删除数据，返回删除 id array
       getDelIds (datas, checkData) {
-        let ids = checkData.map(item => item.Id)
-        let delIndexs = []
+        let ids = checkData.map(item => item.Id);
+        let newData=[];
         datas.forEach(function (item, index) {
-          if ($.inArray(item.Id, ids) >= 0) {
-            delIndexs.push(index)
+          if ($.inArray(item.Id, ids) < 0) {
+            newData.push(item)
           }
-        })
-
-        if (delIndexs.length > 0) {
-          delIndexs.forEach(function (item, index) {
-            datas.splice(item, 1)
-          })
-        }
+        });
 
         return {
           Ids:ids,
-          Datas:datas
+          Datas:newData
         }
       },
 
       /** 数组上移、下移*/
       swapItems (arr, index1, index2) {
-        arr[index1] = arr.splice(index2, 1, arr[index1])[0]
+        arr[index1] = arr.splice(index2, 1, arr[index1])[0];
         return arr
       },
 
