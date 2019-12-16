@@ -29,10 +29,19 @@ func (c *OrderItemLimitController) Prepare() {
 
 // Store 添加 新建 页面
 func (c *OrderItemLimitController) Store() {
-	Id, _ := c.GetInt64(":aid", 0)
-	m := models.NewOrderItemLimit(0)
 
-	c.saveOrUpdate(&m, Id)
+	m := models.NewOrderItemLimit(0)
+	// 获取form里的值
+	if err := c.ParseForm(&m); err != nil {
+		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
+	}
+	c.validRequestData(m)
+	if err := models.OrderItemLimitSave(&m); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	} else {
+		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
+	}
 }
 
 // Update 添加 编辑 页面
@@ -40,32 +49,15 @@ func (c *OrderItemLimitController) Update() {
 	Id, _ := c.GetInt64(":id", 0)
 	m := models.NewOrderItemLimit(Id)
 
-	c.saveOrUpdate(&m, 0)
-}
-
-// Update 添加 编辑 页面
-func (c *OrderItemLimitController) saveOrUpdate(m *models.OrderItemLimit, aId int64) {
 	// 获取form里的值
-	if err := c.ParseForm(m); err != nil {
+	if err := c.ParseForm(&m); err != nil {
 		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
 
 	c.validRequestData(m)
 
-	if m.OrderItem == nil {
-		if aId == 0 {
-			aId = m.OrderItemId
-		}
-
-		orderItem, err := models.OrderItemOne(aId)
-		if err != nil {
-			c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
-		}
-
-		m.OrderItem = orderItem
-	}
-	if err := models.OrderItemLimitSave(m); err != nil {
+	if err := models.OrderItemLimitSave(&m); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
 		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
@@ -96,7 +88,11 @@ func (c *OrderItemLimitController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
-		c.saveOrUpdate(&m, 0)
+		if err := models.OrderItemLimitSave(&m); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+		} else {
+			c.jsonResult(enums.JRCodeSucc, "操作成功", m)
+		}
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")

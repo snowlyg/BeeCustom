@@ -80,6 +80,15 @@ func OrderItemLimitOne(id int64) (*OrderItemLimit, error) {
 
 // Save 添加、编辑页面 保存
 func OrderItemLimitSave(m *OrderItemLimit) error {
+	if m.OrderItem == nil {
+		aId := m.OrderItemId
+		orderItem, err := OrderItemOne(aId)
+		if err != nil {
+			return err
+		}
+		m.OrderItem = orderItem
+	}
+
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
@@ -91,24 +100,6 @@ func OrderItemLimitSave(m *OrderItemLimit) error {
 			utils.LogDebug(fmt.Sprintf("OrderItemLimitSave:%v", err))
 			return err
 		}
-	}
-
-	return nil
-}
-
-// OrderItemLimitUpdateAll 添加、编辑页面 保存
-func OrderItemLimitUpdateAll(aid int64, m *OrderItemLimit) error {
-	o := orm.NewOrm()
-	qs := o.QueryTable(OrderItemLimitTBName()).Filter("order_item_limit_id", aid)
-
-	var params orm.Params
-	if params != nil {
-		_, err := qs.Update(params)
-		if err != nil {
-			return err
-		}
-	} else {
-		return errors.New("未更新")
 	}
 
 	return nil

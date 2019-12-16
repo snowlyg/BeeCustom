@@ -40,7 +40,11 @@ func (c *OrderItemController) Store() {
 
 	c.validRequestData(m)
 
-	c.saveOrUpdate(&m, Id)
+	if err := models.OrderItemSave(&m, Id); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	} else {
+		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
+	}
 }
 
 // Update 添加 编辑 页面
@@ -56,7 +60,11 @@ func (c *OrderItemController) Update() {
 
 	c.validRequestData(m)
 
-	c.saveOrUpdate(&m, 0)
+	if err := models.OrderItemSave(&m, 0); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+	} else {
+		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
+	}
 }
 
 // Update 添加 编辑 页面
@@ -72,32 +80,12 @@ func (c *OrderItemController) UpdateMul() {
 	}
 
 	for _, m := range ms.OrderItems {
-		if err := models.OrderItemSave(&m); err != nil {
+		if err := models.OrderItemSave(&m, 0); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 		}
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("操作成功"), "")
-}
-
-// Update 添加 编辑 页面
-func (c *OrderItemController) saveOrUpdate(m *models.OrderItem, aId int64) {
-	if m.Order == nil {
-		if aId == 0 {
-			aId = m.OrderId
-		}
-		order, err := models.OrderOne(aId, "")
-		if err != nil {
-			c.jsonResult(enums.JRCodeFailed, "获取表头数据失败", m)
-		}
-		m.Order = order
-	}
-
-	if err := models.OrderItemSave(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
-	} else {
-		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
-	}
 }
 
 // 删除
@@ -124,8 +112,9 @@ func (c *OrderItemController) Delete() {
 	}
 
 	for _, m := range ms.Limits {
-		utils.LogDebug(fmt.Sprintf("m: %v", m))
-		c.saveOrUpdate(&m, 0)
+		if err := models.OrderItemSave(&m, 0); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+		}
 	}
 
 	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", len(ms.Ids)), "")

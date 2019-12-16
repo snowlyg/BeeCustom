@@ -425,7 +425,8 @@
         })
 
         /**编辑企业资质信息**/
-        let ent_qualif_index = null
+        let ent_qualif_index = null;
+        let ent_qualif_del_indexs = [];
         $('body').on('click', '#EnterpriseBtn', async function () {
             layer.open({
                 type: 1,
@@ -445,7 +446,7 @@
                 , cols: [
                     [
                         {type: 'checkbox'}
-                        , {field: 'index', title: '序号'}
+                        , {type: 'numbers', title: '序号'}
                         , {field: 'EntQualifTypeCode', title: '企业资质类别代码'}
                         , {field: 'EntQualifTypeName', title: '企业资质类别名称'}
                         , {field: 'EntQualifNo', title: '企业资质编号'},
@@ -453,7 +454,7 @@
                 , data: EntQualifData
                 , limit: EntQualifData.length
                 , height: 350,
-            })
+            });
 
             let enterprise_product = {
                 dataType: 'orderClearance',
@@ -462,64 +463,58 @@
                 filter_type: 's',
                 id: ['#EntQualifTypeNameTem'],
                 after: ['#EntQualifTypeCodeTem'],
-            }
+            };
             await admin.base_clearance_data_auto(enterprise_product)
-        })
+        });
 
         /**编辑企业资质信息--点击行反填数据**/
         table.on('row(EntQualifTable)', function (obj) {
-            $('#EntQualifTypeCodeTem').val(obj.data.EntQualifTypeCode)
-            $('#EntQualifTypeNameTem').val(obj.data.EntQualifTypeName)
-            $('#EntQualifNoTem').val(obj.data.EntQualifNo)
-            ent_qualif_index = obj.tr.data("index")
-        })
+            $('#EntQualifTypeCodeTem').val(obj.data.EntQualifTypeCode);
+            $('#EntQualifTypeNameTem').val(obj.data.EntQualifTypeName);
+            $('#EntQualifNoTem').val(obj.data.EntQualifNo);
+            ent_qualif_index = obj.tr.data("index");
+            ent_qualif_del_indexs.push(obj.tr.data("index"))
+        });
 
         /**编辑企业资质信息--保存**/
         form.on('submit(ent_qualif_submit)', async (data) => {
-            delete data.field.layTableCheckbox
-            if (ent_qualif_index) {
+            delete data.field.layTableCheckbox;
+            if (ent_qualif_index != null) {
                 EntQualifData.splice(ent_qualif_index, 1, data.field)
             } else {
                 EntQualifData.push(data.field)
-            }
-            EntQualifData.forEach((value, index) => {
-                value.index = index + 1
-            })
+            };
             table.reload('EntQualifTable', {
                 data: EntQualifData,
                 limit: EntQualifData.length,
-            })
-            $('#EntQualifTypeCodeTem').val('')
-            $('#EntQualifTypeNameTem').val('')
-            $('#EntQualifNoTem').val('')
-            $('#EntQualifTypeCode').val(EntQualifData[0].EntQualifTypeCode)
-            $('#EntQualifTypeName').val(EntQualifData[0].EntQualifTypeName)
-            $('#EntQualifTypeNameTem').focus()
-            ent_qualif_index = null
-        })
+            });
+            $('#EntQualifTypeCodeTem').val('');
+            $('#EntQualifTypeNameTem').val('');
+            $('#EntQualifNoTem').val('');
+            $('#EntQualifTypeCode').val(EntQualifData[0].EntQualifTypeCode);
+            $('#EntQualifTypeName').val(EntQualifData[0].EntQualifTypeName);
+            $('#EntQualifTypeNameTem').focus();
+            ent_qualif_index = null;
+        });
 
         /**编辑企业资质信息--删除**/
         table.on('toolbar(EntQualifTable)', function (obj) {
-            let checkStatus = table.checkStatus(obj.config.id)
-            let checkData = checkStatus.data
+            let checkStatus = table.checkStatus(obj.config.id);
+            let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
-                    $('#EntQualifTypeCodeTem').val('')
-                    $('#EntQualifTypeNameTem').val('')
-                    $('#EntQualifNoTem').val('')
+                    $('#EntQualifTypeCodeTem').val('');
+                    $('#EntQualifTypeNameTem').val('');
+                    $('#EntQualifNoTem').val('');
+                    $('#EntQualifTypeNameTem').focus();
                     ent_qualif_index = null
-                    $('#EntQualifTypeNameTem').focus()
-                    break
+                    break;
                 case 'delete':
-                    if (checkData.length === 0) {
+                    if (ent_qualif_del_indexs.length === 0) {
                         return layer.msg('请选择数据')
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let delData = admin.getDelIds(EntQualifData, checkData);
-                        delData.Datas.forEach((value, index) => {
-                            value.index = index + 1
-                        });
-
                         table.reload('EntQualifTable', {
                             data: delData.Datas,
                             limit: delData.Datas.length,
@@ -530,11 +525,11 @@
                         $('#EntQualifTypeCodeTem').val('');
                         $('#EntQualifTypeNameTem').val('');
                         $('#EntQualifNoTem').val('');
-                        ent_qualif_index = null
                         $('#EntQualifTypeNameTem').focus();
+                        ent_qualif_index = null;
 
                         layer.close(index)
-                    })
+                    });
                     break
             }
         })
@@ -637,7 +632,7 @@
         /**编辑使用人信息--保存**/
         form.on('submit(dec_users_submit_tem)', async (data) => {
             delete data.field.layTableCheckbox
-            if (dec_users_index) {
+            if (dec_users_index != null) {
                 DecUsersData.splice(dec_users_index, 1, data.field)
             } else {
                 DecUsersData.push(data.field)
@@ -912,7 +907,6 @@
                 NameLike: hs,
             }), true)
             const ciqs = response.rows
-            console.log(ciqs)
             layer.open({
                 type: 1,
                 title: '检验检疫编码列表',
@@ -1130,13 +1124,13 @@
             if (orderItemLimitId && orderItemLimitId != 0) {
                 let result = await admin.patch(`/order_item_limit/update/${orderItemLimitId}`, data.field);
                 if (result.status) {
-                    OrderItemLimits.splice(orderItemLimitIndex, 1,  result.obj)
+                    OrderItemLimits.splice(orderItemLimitIndex, 1, result.obj)
                 }
             } else {
                 data.field.GoodsNo = OrderItemLimits.length + 1;
                 let result = await admin.post('/order_item_limit/store', data.field);
                 if (result.status) {
-                    OrderItemLimits.push( result.obj)
+                    OrderItemLimits.push(result.obj)
                 }
             }
             order_item_limit_set_empty.table_datas = OrderItemLimits;
@@ -1147,7 +1141,6 @@
         table.on('toolbar(dec_goods_table)', function (obj) {
             let checkStatus = table.checkStatus(obj.config.id)
             let checkData = checkStatus.data
-            console.log(OrderItemLimits)
             switch (obj.event) {
                 case 'add':
                     order_item_limit_set_empty.table_datas = OrderItemLimits
@@ -1290,12 +1283,12 @@
             if (orderItemLimitVinId && orderItemLimitVinId != 0) {
                 let result = await admin.patch(`/order_item_limit_vin/update/${orderItemLimitVinId}`, data.field);
                 if (result.status) {
-                    OrderItemLimitVinDatas.splice(orderItemLimitVinIndex, 1,  result.obj)
+                    OrderItemLimitVinDatas.splice(orderItemLimitVinIndex, 1, result.obj)
                 }
             } else {
                 let result = await admin.post('/order_item_limit_vin/store', data.field);
                 if (result.status) {
-                    OrderItemLimitVinDatas.push( result.obj)
+                    OrderItemLimitVinDatas.push(result.obj)
                 }
             }
 
@@ -1319,14 +1312,12 @@
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
                         let delData = admin.getDelIds(OrderItemLimitVinDatas, checkData);
-
                         delData.Datas.forEach(function (item, index, arr) {
                             item.OrderItemVinId = parseInt(item.OrderItemVinId);
                             item.Id = parseInt(item.Id)
                         });
 
                         let result = await admin.post(`/order_item_limit_vin/delete/`, JSON.stringify({
-                            Limits: delData.Datas,
                             Ids: delData.Ids,
                         }));
 
@@ -1643,7 +1634,7 @@
             if (orderItemId && orderItemId != '0') {
                 let result = await admin.patch(`/order_item/update/${orderItemId}`, data.field);
                 if (result.status) {
-                    OrderItemsData.splice(orderItemIndex, 1,  result.obj)
+                    OrderItemsData.splice(orderItemIndex, 1, result.obj)
                 }
             } else {
                 let result = await admin.post('/order_item/store', data.field);
@@ -1742,27 +1733,26 @@
             // }
         })
 
-    /**商品列表--按钮操作**/
-    table.on('toolbar(order_pros)', async function (obj) {
-      let checkStatus = table.checkStatus(obj.config.id)
-      let checkData = checkStatus.data
-      switch (obj.event) {
-        case 'add':
-          setOrderItemEmptyData()
-          break
-        case 'delete':
-          if (checkData.length === 0) {
-            return layer.msg('请选择数据')
-          }
-          layer.confirm('真的删除么', { title: '提示' }, async (index) => {
-            let delData = admin.getDelIds(OrderItemsData,checkData);
-            OrderItemsData = delData.Datas
-
-            OrderItemsData.forEach(function (item, index, arr) {
-              item.OrderId = parseInt(item.OrderId)
-              item.GNo = index + 1
-              item.Id = parseInt(item.Id)
-            })
+        /**商品列表--按钮操作**/
+        table.on('toolbar(order_pros)', async function (obj) {
+            let checkStatus = table.checkStatus(obj.config.id)
+            let checkData = checkStatus.data;
+            switch (obj.event) {
+                case 'add':
+                    setOrderItemEmptyData();
+                    break
+                case 'delete':
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据')
+                    }
+                    layer.confirm('真的删除么', {title: '提示'}, async (index) => {
+                        let delData = admin.getDelIds(OrderItemsData, checkData);
+                        OrderItemsData = delData.Datas;
+                        OrderItemsData.forEach(function (item, index, arr) {
+                            item.OrderId = parseInt(item.OrderId);
+                            item.GNo = index + 1;
+                            item.Id = parseInt(item.Id)
+                        })
 
                         let result = await admin.post(`/order_item/delete/`, JSON.stringify({
                             Limits: OrderItemsData,
@@ -2658,12 +2648,12 @@
             if (orderDocumentId && orderDocumentId != '0') {
                 let result = await admin.patch(`/order_document/update/${orderDocumentId}`, data.field)
                 if (result.status) {
-                    OrderDocuments.splice(emptyObj.index, 1,  result.obj)
+                    OrderDocuments.splice(emptyObj.index, 1, result.obj)
                 }
             } else {
                 let result = await admin.post('/order_document/store', data.field)
                 if (result.status) {
-                    OrderDocuments.push( result.obj)
+                    OrderDocuments.push(result.obj)
                 }
             }
             setOrderRelationEmpty(emptyObj);
@@ -4266,7 +4256,7 @@
                 $(this).val('')
             });
             $(`#${obj.focusId}`).focus();
-            if(obj.datas){
+            if (obj.datas) {
                 layui.table.reload(obj.tableName, {
                     data: obj.datas,
                     limit: obj.datas.length,

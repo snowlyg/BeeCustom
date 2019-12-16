@@ -129,7 +129,19 @@ func OrderItemOne(id int64) (*OrderItem, error) {
 }
 
 // Save 添加、编辑页面 保存
-func OrderItemSave(m *OrderItem) error {
+func OrderItemSave(m *OrderItem, aId int64) error {
+
+	if m.Order == nil {
+		if aId == 0 {
+			aId = m.OrderId
+		}
+		order, err := OrderOne(aId, "")
+		if err != nil {
+			return err
+		}
+		m.Order = order
+	}
+
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
