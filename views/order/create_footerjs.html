@@ -644,8 +644,8 @@
             if (dec_users_index != null) {
                 DecUsersData.splice(dec_users_index, 1, data.field)
             } else {
-              let EntUseOrgPersonTels = EntQualifData.map(item => item.EntUseOrgPersonTel);
-              if($.inArray(data.field.EntUseOrgPersonTel,EntUseOrgPersonTels)>=0){
+              let UseOrgPersonTels = EntQualifData.map(item => item.UseOrgPersonTel);
+              if($.inArray(data.field.UseOrgPersonTel,UseOrgPersonTels)>=0){
                 return layer.msg('使用人已存在')
               }
                 DecUsersData.push(data.field)
@@ -678,10 +678,10 @@
                         return layer.msg('请选择数据')
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                      let checkEntUseOrgPersonTels = checkData.map(item => item.EntUseOrgPersonTel);
+                      let checkUseOrgPersonTels = checkData.map(item => item.UseOrgPersonTel);
                       let newDecUsersData=[];
                       DecUsersData.forEach(function (item, index) {
-                        if ($.inArray(item.EntUseOrgPersonTel, checkEntUseOrgPersonTels) < 0) {
+                        if ($.inArray(item.UseOrgPersonTel, checkUseOrgPersonTels) < 0) {
                           newDecUsersData.push(item)
                         }
                       });
