@@ -426,7 +426,6 @@
 
         /**编辑企业资质信息**/
         let ent_qualif_index = null;
-        let ent_qualif_del_indexs = [];
         $('body').on('click', '#EnterpriseBtn', async function () {
             layer.open({
                 type: 1,
@@ -473,7 +472,6 @@
             $('#EntQualifTypeNameTem').val(obj.data.EntQualifTypeName);
             $('#EntQualifNoTem').val(obj.data.EntQualifNo);
             ent_qualif_index = obj.tr.data("index");
-            ent_qualif_del_indexs.push(obj.tr.data("index"))
         });
 
         /**编辑企业资质信息--保存**/
@@ -482,7 +480,11 @@
             if (ent_qualif_index != null) {
                 EntQualifData.splice(ent_qualif_index, 1, data.field)
             } else {
-                EntQualifData.push(data.field)
+              let EntQualifTypeCodes = EntQualifData.map(item => item.EntQualifTypeCode);
+              if($.inArray(data.field.EntQualifTypeCode,EntQualifTypeCodes)>=0){
+                return layer.msg('企业资质已存在')
+              }
+              EntQualifData.push(data.field)
             };
             table.reload('EntQualifTable', {
                 data: EntQualifData,
@@ -514,10 +516,17 @@
                         return layer.msg('请选择数据')
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                        let delData = admin.getDelIds(EntQualifData, checkData);
+                      let checkEntQualifTypeCodes = checkData.map(item => item.EntQualifTypeCode);
+                      let newEntQualifData=[];
+                      EntQualifData.forEach(function (item, index) {
+                        if ($.inArray(item.EntQualifTypeCode, checkEntQualifTypeCodes) < 0) {
+                          newEntQualifData.push(item)
+                        }
+                      });
+
                         table.reload('EntQualifTable', {
-                            data: delData.Datas,
-                            limit: delData.Datas.length,
+                            data: newEntQualifData,
+                            limit: newEntQualifData.length,
                         });
 
                         $('#EntQualifTypeCode').val('');
@@ -635,6 +644,10 @@
             if (dec_users_index != null) {
                 DecUsersData.splice(dec_users_index, 1, data.field)
             } else {
+              let EntUseOrgPersonTels = EntQualifData.map(item => item.EntUseOrgPersonTel);
+              if($.inArray(data.field.EntUseOrgPersonTel,EntUseOrgPersonTels)>=0){
+                return layer.msg('使用人已存在')
+              }
                 DecUsersData.push(data.field)
             }
             DecUsersData.forEach((value, index) => {
@@ -665,14 +678,17 @@
                         return layer.msg('请选择数据')
                     }
                     layer.confirm('真的删除么', {title: '提示'}, async (index) => {
-                        let delData = admin.getDelIds(DecUsersData, checkData);
-                        delData.Datas.forEach((value, index) => {
-                            value.index = index + 1
-                        });
+                      let checkEntUseOrgPersonTels = checkData.map(item => item.EntUseOrgPersonTel);
+                      let newDecUsersData=[];
+                      DecUsersData.forEach(function (item, index) {
+                        if ($.inArray(item.EntUseOrgPersonTel, checkEntUseOrgPersonTels) < 0) {
+                          newDecUsersData.push(item)
+                        }
+                      });
 
                         table.reload('dec_users_table', {
-                            data: delData.Datas,
-                            limit: delData.Datas.length,
+                            data: newDecUsersData,
+                            limit: newDecUsersData.length,
                         })
                         $('#UseOrgPersonCode').val('');
                         $('#UseOrgPersonTel').val('');

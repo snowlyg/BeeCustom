@@ -22,7 +22,7 @@ func DataReset() (bool, error) {
 	//数据库端口
 	dbPort := beego.AppConfig.String(dbType + "::db_port")
 
-	arv := []string{fmt.Sprintf("--host=%s", dbHost), fmt.Sprintf("--port=%d", dbPort), fmt.Sprintf("-u%s", dbUser), fmt.Sprintf("-p%s", dbPwd), ">", "bee_custom.sql"}
+	arv := []string{fmt.Sprintf("--host=%s", dbHost), fmt.Sprintf("--port=%d", dbPort), fmt.Sprintf("-u%s", dbUser), fmt.Sprintf("-p%s", dbPwd), ">", "bee_custom_clearances.sql"}
 
 	cmd := exec.Command("mysql ", arv...)
 
