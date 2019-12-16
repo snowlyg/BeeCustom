@@ -45,7 +45,11 @@
             , order_note_data /**附注数据**/
             , DeclaratioMaterialCode = @{{.m.DeclaratioMaterialCode}}   /**企业承诺**/
             , save_btn = false
-            , orderItemIndex = null
+            , orderItemIndex = null;
+            // 排序表体
+            OrderItemsData.sort(function(a,b){
+                return a.GNo-b.GNo;
+            })
 
         // 基础参数版本
         await admin.getClearanceData()

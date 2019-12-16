@@ -182,7 +182,7 @@ func (c *BaseAnnotationController) bCopy(id int64) {
 		c.jsonResult(enums.JRCodeFailed, "获取数据出错", nil)
 	}
 	if err := UpdateAnnotationStatus(m, "待审核", true); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "添加失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
 	// 重置数据
 	if m != nil {
@@ -193,17 +193,29 @@ func (c *BaseAnnotationController) bCopy(id int64) {
 		m.SeqNo = ""
 		m.BondInvtNo = ""
 	}
+
 	if err := models.AnnotationUpdateOrSave(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	} else {
+
+		// 复制表体
+		for _, annotationItem := range m.AnnotationItems {
+			annotationItem.Id = 0
+			annotationItem.Annotation = m
+			annotationItem.AnnotationId = 0
+			if err := models.AnnotationItemSave(annotationItem); err != nil {
+				c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+			}
+		}
+
 		if err := c.setAnnotaionUserRelType(m, nil, "创建人"); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+			c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 		}
 		annotationRecord := c.newAnnotationRecord(m, "创建订单")
 		if err := models.AnnotationRecordSave(annotationRecord); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
+			c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 		}
-		c.jsonResult(enums.JRCodeSucc, "添加成功", m)
+		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 	}
 }
 

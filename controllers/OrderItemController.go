@@ -74,9 +74,9 @@ func (c *OrderItemController) UpdateMul() {
 	}
 
 	ms := new(OrderItemRequest)
-	if err := c.ParseForm(ms); err != nil {
-		utils.LogDebug(fmt.Sprintf("获取数据失败:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "获取数据失败", nil)
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ms)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("err: %v", err))
 	}
 
 	for _, m := range ms.OrderItems {

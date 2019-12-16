@@ -19,9 +19,9 @@ type HandBookController struct {
 }
 
 func (c *HandBookController) Prepare() {
-	// 先执行
+	//  先执行
 	c.BaseController.Prepare()
-	// 如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
+	//  如果一个Controller的多数Action都需要权限控制，则将验证放到Prepare
 	perms := []string{
 		"Index",
 		"Create",
@@ -30,9 +30,9 @@ func (c *HandBookController) Prepare() {
 	}
 	c.checkAuthor(perms)
 
-	// 如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
-	// 权限控制里会进行登录验证，因此这里不用再作登录验证
-	// c.checkLogin()
+	//  如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
+	//  权限控制里会进行登录验证，因此这里不用再作登录验证
+	//  c.checkLogin()
 
 }
 
@@ -56,7 +56,7 @@ func (c *HandBookController) Index() {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
-	//页面模板设置
+	// 页面模板设置
 	c.setTpl()
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "handbook/index_footerjs.html"
@@ -64,25 +64,25 @@ func (c *HandBookController) Index() {
 	c.Data["count"] = count
 	c.Data["searchWord"] = searchWord
 
-	//页面里按钮权限控制
+	// 页面里按钮权限控制
 	c.getActionData("", "Delete", "Import")
 
 	c.GetXSRFToken()
 }
 
-//handbookgoods 列表数据
+// handbookgoods 列表数据
 func (c *HandBookController) GoodDataGrid() {
-	//直接获取参数 GoodDataGrid()
+	// 直接获取参数 GoodDataGrid()
 	params := models.NewHandBookGoodQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
-	//获取数据列表和总数
+	// 获取数据列表和总数
 	data, total := models.HandBookGoodPageList(&params)
 	c.ResponseList(data, total)
 	c.ServeJSON()
 }
 
-// 根据 handbookid 获取handbookgoods
+//  根据 handbookid 获取 handbookgoods
 func (c *HandBookController) GetHandBookGoodByHandBookId() {
 	params := models.NewHandBookGoodQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
@@ -95,7 +95,7 @@ func (c *HandBookController) GetHandBookGoodByHandBookId() {
 	c.ServeJSON()
 }
 
-//HandBook 列表数据
+// HandBook 列表数据
 func (c *HandBookController) DataGrid() {
 	params := models.NewHandBookQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
@@ -105,7 +105,7 @@ func (c *HandBookController) DataGrid() {
 	c.ServeJSON()
 }
 
-// Ullage 列表数据
+//  Ullage 列表数据
 func (c *HandBookController) UllageDataGrid() {
 	params := models.NewHandBookUllageQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
@@ -115,7 +115,7 @@ func (c *HandBookController) UllageDataGrid() {
 	c.ServeJSON()
 }
 
-// Edit 添加 编辑 页面
+//  Edit 添加 编辑 页面
 func (c *HandBookController) Show() {
 	Id, _ := c.GetInt64(":id", 0)
 	m, err := models.HandBookOne(Id, "Company")
@@ -151,7 +151,7 @@ func (c *HandBookController) Show() {
 	c.GetXSRFToken()
 }
 
-//删除
+// 删除
 func (c *HandBookController) Delete() {
 	id, _ := c.GetInt64(":id")
 	if num, err := models.HandBookDelete(id); err == nil {
@@ -161,7 +161,7 @@ func (c *HandBookController) Delete() {
 	}
 }
 
-//导入
+// 导入
 func (c *HandBookController) Import() {
 	importType, _ := c.GetInt8(":type")
 
@@ -261,7 +261,7 @@ func (c *HandBookController) Import() {
 
 }
 
-//导入账册表体
+// 导入账册表体
 func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam, hBGIP *models.HandBookGoodImportParam) {
 	accountSheetName, err := xlsx.GetExcelName(hBGIP.ExcelNameString)
 	if err != nil {
@@ -280,7 +280,7 @@ func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam
 
 }
 
-//获取 xlsx 文件内容
+// 获取 xlsx 文件内容
 func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam, Info []map[string]string) error {
 	var handBookGoods []*models.HandBookGood
 	for i := 0; i < len(Info); i++ {
@@ -305,7 +305,7 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam,
 	return nil
 }
 
-//获取 xlsx 文件内容
+// 获取 xlsx 文件内容
 func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportParam, Info []map[string]string) error {
 
 	var handBookUllages []*models.HandBookUllage
@@ -334,14 +334,14 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 	return nil
 }
 
-//导入基础参数 xlsx 文件内容
+// 导入基础参数 xlsx 文件内容
 func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImportParam) {
 
 	t := reflect.ValueOf(&hIP.HandBook).Elem()
 	for i := 0; i < reflect.ValueOf(hIP.HandBook).NumField(); i++ {
 		obj := reflect.TypeOf(hIP.HandBook).Field(i)
 		for iw, v := range hIP.ExcelTitle {
-			// Get value from cell by given worksheet name and axis.
+			//  Get value from cell by given worksheet name and axis.
 			if iw == strings.ToLower(obj.Name) {
 				cell, err := xlsx.GetExcelCell(hIP.FileNamePath, hIP.ExcelName, v)
 				if err != nil {
@@ -368,7 +368,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 		c.jsonResult(enums.JRCodeFailed, errMsg, nil)
 	}
 
-	CompanyManageCode := hIP.HandBook.CompanyManageCode // 经营单位代码
+	CompanyManageCode := hIP.HandBook.CompanyManageCode //  经营单位代码
 	company, err := models.CompanyByManageCode(CompanyManageCode)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
@@ -378,7 +378,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 
 }
 
-//导入基础参数 xlsx 文件内容
+// 导入基础参数 xlsx 文件内容
 func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportParam, handBookTypeString string) {
 	rows, err := xlsx.GetExcelRows(hIP.FileNamePath, hIP.ExcelName)
 	if err != nil {
@@ -386,19 +386,19 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 	}
 
 	var Info []map[string]string
-	if len(handBookTypeString) > 0 { //表体
+	if len(handBookTypeString) > 0 { // 表体
 		obj := models.NewHandBookGood(0)
 		for roI, row := range rows {
-			if roI > 1 { //忽略标题和表头 2 行
-				//将数组  转成对应的 map
+			if roI > 1 { // 忽略标题和表头 2 行
+				// 将数组  转成对应的 map
 				var info = make(map[string]string)
-				// 模型前两个字段是 BaseModel ，Type 不需要赋值
+				//  模型前两个字段是 BaseModel ，Type 不需要赋值
 				for i := 0; i < reflect.ValueOf(obj).NumField(); i++ {
 					obj := reflect.TypeOf(obj).Field(i)
 					for _, iw := range hIP.ExcelTitle {
 						if iw == obj.Name {
 							rI := xlsx.ObjIsExists(hIP.ExcelTitle, iw)
-							// 模板字段数量定义
+							//  模板字段数量定义
 							if rI != -1 && rI <= len(row)-1 {
 								info[obj.Name] = row[rI]
 							}
@@ -422,20 +422,20 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
 
-	} else { //单损
+	} else { // 单损
 
 		obj := models.NewHandBookUllage(0)
 		for roI, row := range rows {
-			if roI > 1 { //忽略标题行
-				//将数组  转成对应的 map
+			if roI > 1 { // 忽略标题行
+				// 将数组  转成对应的 map
 				var info = make(map[string]string)
-				// 模型前两个字段是 BaseModel ，Type 不需要赋值
+				//  模型前两个字段是 BaseModel ，Type 不需要赋值
 				for i := 0; i < reflect.ValueOf(obj).NumField(); i++ {
 					obj := reflect.TypeOf(obj).Field(i)
 					for _, iw := range hIP.ExcelTitle {
 						if iw == obj.Name {
 							rI := xlsx.ObjIsExists(hIP.ExcelTitle, iw)
-							// 模板字段数量定义
+							//  模板字段数量定义
 							if rI != -1 && rI <= len(row) {
 								info[obj.Name] = row[rI]
 							}
@@ -456,7 +456,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 	}
 }
 
-// TransformHandBookGoodsList 格式化列表数据
+//  TransformHandBookGoodsList 格式化列表数据
 func (c *HandBookController) TransformHandBookGoodsList(ms []*models.HandBookGood) []*map[string]interface{} {
 	var handBookList []*map[string]interface{}
 	clearances1 := models.GetClearancesByTypes("货币代码", true)
