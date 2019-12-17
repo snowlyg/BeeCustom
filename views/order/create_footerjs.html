@@ -44,15 +44,16 @@
             , DecRequestCertsData = @{{.m.DecRequestCerts}} ? JSON.parse(@{{.m.DecRequestCerts}}) : []//检验检疫申报要素
             , order_note_data /**附注数据**/
             , DeclaratioMaterialCode = @{{.m.DeclaratioMaterialCode}}   /**企业承诺**/
-            , save_btn = false
-            , orderItemIndex = null;
-            // 排序表体
-            OrderItemsData.sort(function(a,b){
+            , save_btn = false //是否保存数据
+            , orderItemIndex = null // 表体当前数据下标
+            , isOrderItemInsert = false; //插入数据标志
+
+            OrderItemsData.sort(function(a,b){  // 排序表体
                 return a.GNo-b.GNo;
-            })
+            });
 
         // 基础参数版本
-        await admin.getClearanceData()
+        await admin.getClearanceData();
         /** 基础参数加载 */
         await admin.clearance_data_auto([
             'entry_clearance',
@@ -205,7 +206,7 @@
             $(`#CustomMasterName`).val('凤岗海关')
             $(`#CustomMaster`).val(5207)
         }
-        setOrderItemEmptyData()
+        setOrderItemEmptyData(false)
         /**table点击行选中**/
         admin.table_radio_click()
         /**table左右拖动**/
@@ -1650,20 +1651,32 @@
             data.field.OrderItemLimits = OrderItemLimits // 产品资质
 
             data.field.OrderId = order_id;  // id
-            let orderItemId = data.field.OrderItemId
-            if (orderItemId && orderItemId != '0') {
-                let result = await admin.patch(`/order_item/update/${orderItemId}`, data.field);
-                if (result.status) {
-                    OrderItemsData.splice(orderItemIndex, 1, result.obj)
-                }
-            } else {
-                let result = await admin.post('/order_item/store', data.field);
-                if (result.status) {
-                    OrderItemsData.push(result.obj)
+            if(isOrderItemInsert){
+                OrderItemsData.splice(orderItemIndex-1,0,data.field);  // id
+                OrderItemsData.forEach((value, index) => {
+                    value.GNo = index + 1
+                });
+
+                await admin.patch(`/order_item/updateMul/`, JSON.stringify({
+                    OrderItems: OrderItemsData,
+                }));
+
+            }else{
+                let orderItemId = data.field.OrderItemId;
+                if (orderItemId && orderItemId != '0') {
+                    let result = await admin.patch(`/order_item/update/${orderItemId}`, data.field);
+                    if (result.status) {
+                        OrderItemsData.splice(orderItemIndex, 1, result.obj)
+                    }
+                } else {
+                    let result = await admin.post('/order_item/store', data.field);
+                    if (result.status) {
+                        OrderItemsData.push(result.obj)
+                    }
                 }
             }
 
-            setOrderItemEmptyData()
+            setOrderItemEmptyData(false)
         });
 
         /**商品--点击行反填数据**/
@@ -1705,7 +1718,7 @@
                 } else if (item == 'DangPackSpecName') {
                     OrderItemDangPackSpecName = obj.data[item]
                 } else if ($.inArray(item, e) >= 0 && obj.data[item]) {
-                    GoodsSpecData += obj.data[item] + ';'
+                    GoodsSpecData += obj.data[item] + ';';
                     if (item == 'Stuff') {
                         OrderItemStuff = obj.data[item]
                     } else if (item == 'ProdValidDt') {
@@ -1729,9 +1742,9 @@
                     $(`#${item}`).val(obj.data[item])
                 }
             }
-            OrderItemLimits = obj.data.OrderItemLimits // 产品资质
-            $('#GoodsAttr').val(OrderItemGoodsAttrName) // 货物属性
-            $('#GoodsSpecData').val(GoodsSpecData) // 检验检疫货物规格
+            OrderItemLimits = obj.data.OrderItemLimits; // 产品资质
+            $('#GoodsAttr').val(OrderItemGoodsAttrName); // 货物属性
+            $('#GoodsSpecData').val(GoodsSpecData); // 检验检疫货物规格
 
             // order_pros_index = obj.data.GNo;
             // insert_index = obj.data.GNo;
@@ -1759,7 +1772,7 @@
             let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
-                    setOrderItemEmptyData();
+                    setOrderItemEmptyData(false);
                     break
                 case 'delete':
                     if (checkData.length === 0) {
@@ -1772,7 +1785,7 @@
                             item.OrderId = parseInt(item.OrderId);
                             item.GNo = index + 1;
                             item.Id = parseInt(item.Id)
-                        })
+                        });
 
                         let result = await admin.post(`/order_item/delete/`, JSON.stringify({
                             Limits: OrderItemsData,
@@ -1780,7 +1793,7 @@
                         }));
 
                         if (result.status) {
-                            setOrderItemEmptyData()
+                            setOrderItemEmptyData(false)
                         }
 
                         layer.close(index)
@@ -1800,7 +1813,7 @@
                     let resultCopy = await admin.post('/order_item/copy/'+checkData[0].Id);
                     if (resultCopy.status) {
                         OrderItemsData.push(resultCopy.obj);
-                        setOrderItemEmptyData()
+                        setOrderItemEmptyData(false)
                     }
                     break;
                 case 'up':
@@ -1825,7 +1838,7 @@
                     }));
 
                     if (responseUp.status) {
-                        setOrderItemEmptyData()
+                        setOrderItemEmptyData(false)
                     }
                     break;
                 case 'down':
@@ -1849,7 +1862,7 @@
                     }));
 
                     if (responseDown.status) {
-                        setOrderItemEmptyData()
+                        setOrderItemEmptyData(false)
                     }
                     break;
                 case 'insert':
@@ -1859,8 +1872,7 @@
                     if (checkData.length != 1) {
                         return layer.msg('只能选择一条数据插入')
                     }
-
-                    setOrderItemEmptyData();
+                    setOrderItemEmptyData(true);
                     break;
                 case 'again':
 
@@ -4234,7 +4246,7 @@
             },
         }
         /**表单验证规则**/
-        form.verify(formVer)
+        form.verify(formVer);
         /** 一般贸易禁止输入备案序号 **/
         $(CheckManualNo())
         $('#ManualNo').bind('input propertychange', function () {
@@ -4282,7 +4294,7 @@
 
 
         // 置空表体表单数据
-        function setOrderItemEmptyData() {
+        function setOrderItemEmptyData(is_order_item_insert) {
             // setTimeout(() => {
             /**产品**/
             admin.getOrderTable(OrderItemsData, ieflag)
@@ -4330,6 +4342,7 @@
             admin.is_total_number(OrderItemsData)
             /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
             orderItemIndex = null
+            isOrderItemInsert = is_order_item_insert
             // }, 100)
         }
 

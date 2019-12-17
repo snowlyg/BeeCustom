@@ -24,7 +24,7 @@ func DataReset() (bool, error) {
 
 	arv := []string{fmt.Sprintf("--host=%s", dbHost), fmt.Sprintf("--port=%d", dbPort), fmt.Sprintf("-u%s", dbUser), fmt.Sprintf("-p%s", dbPwd), ">", "bee_custom_clearances.sql"}
 
-	cmd := exec.Command("mysql ", arv...)
+	cmd := exec.Command("mysql", arv...)
 
 	var out bytes.Buffer
 
