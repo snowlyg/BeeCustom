@@ -67,6 +67,43 @@ func (c *OrderItemController) Update() {
 	}
 }
 
+// Copy 复制
+func (c *OrderItemController) Copy() {
+	Id, _ := c.GetInt64(":id", 0)
+	m, _ := models.OrderItemOne(Id)
+	_ = models.OrderItemGetRelation(m, "OrderItemLimits")
+	orderItemLimits, _ := models.OrderItemLimitGetRelations(m.OrderItemLimits, "OrderItemLimitVins")
+
+	newOrderItem := models.NewOrderItem(0)
+	newOrderItem = *m
+	newOrderItem.Id = 0
+	newOrderItem.GNo = m.GNo + 1
+	if err := models.OrderItemSave(&newOrderItem, 0); err != nil {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+	} else {
+		for _, v := range orderItemLimits {
+			orderItemLimitVins := v.OrderItemLimitVins
+			newOrderItemLimit := models.NewOrderItemLimit(0)
+			newOrderItemLimit = *v
+			newOrderItemLimit.Id = 0
+			newOrderItemLimit.OrderItem = &newOrderItem
+			if err := models.OrderItemLimitSave(&newOrderItemLimit); err != nil {
+				c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+			}
+			for _, orderItemLimitVin := range orderItemLimitVins {
+				newOrderItemLimitVin := models.NewOrderItemLimitVin(0)
+				newOrderItemLimitVin = *orderItemLimitVin
+				newOrderItemLimitVin.Id = 0
+				newOrderItemLimitVin.OrderItemLimit = &newOrderItemLimit
+				if err := models.OrderItemLimitVinSave(&newOrderItemLimitVin); err != nil {
+					c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+				}
+			}
+		}
+		c.jsonResult(enums.JRCodeSucc, "操作成功", newOrderItem)
+	}
+}
+
 // Update 添加 编辑 页面
 func (c *OrderItemController) UpdateMul() {
 	type OrderItemRequest struct {

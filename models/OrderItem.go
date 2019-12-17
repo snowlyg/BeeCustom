@@ -113,6 +113,22 @@ func OrderItemGetRelations(ms []*OrderItem, relations string) ([]*OrderItem, err
 	return ms, nil
 }
 
+func OrderItemGetRelation(m *OrderItem, relations string) error {
+	if len(relations) > 0 {
+		o := orm.NewOrm()
+		rs := strings.Split(relations, ",")
+		for _, rv := range rs {
+			_, err := o.LoadRelated(m, rv)
+			if err != nil {
+				utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
+				return err
+			}
+		}
+
+	}
+	return nil
+}
+
 // OrderItemOne 根据id获取单条
 func OrderItemOne(id int64) (*OrderItem, error) {
 	m := NewOrderItem(0)
@@ -130,7 +146,6 @@ func OrderItemOne(id int64) (*OrderItem, error) {
 
 // Save 添加、编辑页面 保存
 func OrderItemSave(m *OrderItem, aId int64) error {
-
 	if m.Order == nil {
 		if aId == 0 {
 			aId = m.OrderId
@@ -141,13 +156,13 @@ func OrderItemSave(m *OrderItem, aId int64) error {
 		}
 		m.Order = order
 	}
-
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))
 			return err
 		}
+
 	} else {
 		if _, err := o.Update(m); err != nil {
 			utils.LogDebug(fmt.Sprintf("OrderItemSave:%v", err))

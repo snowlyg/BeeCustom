@@ -184,39 +184,45 @@ func (c *BaseAnnotationController) bCopy(id int64) {
 	if err := UpdateAnnotationStatus(m, "待审核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
+
 	// 重置数据
 	if m != nil {
-		m.Id = 0
-		m.InputTime = time.Now()
-		m.InvtDclTime = time.Now()
-		m.EtpsInnerInvtNo = c.getEtpsInnerInvtNo(m.ImpexpMarkcd, m.DclPlcCuscd)
-		m.SeqNo = ""
-		m.BondInvtNo = ""
-	}
-
-	if err := models.AnnotationUpdateOrSave(m); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
-	} else {
-
-		// 复制表体
-		for _, annotationItem := range m.AnnotationItems {
-			annotationItem.Id = 0
-			annotationItem.Annotation = m
-			annotationItem.AnnotationId = 0
-			if err := models.AnnotationItemSave(annotationItem); err != nil {
-				c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+		newAnnotation := models.NewAnnotation(0)
+		newAnnotation = *m
+		newAnnotation.Id = 0
+		newAnnotation.InputTime = time.Now()
+		newAnnotation.InvtDclTime = time.Now()
+		newAnnotation.EtpsInnerInvtNo = c.getEtpsInnerInvtNo(m.ImpexpMarkcd, m.DclPlcCuscd)
+		newAnnotation.SeqNo = ""
+		newAnnotation.BondInvtNo = ""
+		if err := models.AnnotationUpdateOrSave(&newAnnotation); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+		} else {
+			// 复制表体
+			for _, annotationItem := range m.AnnotationItems {
+				newAnnotationItem := models.NewAnnotationItem(0)
+				newAnnotationItem = *annotationItem
+				newAnnotationItem.Id = 0
+				newAnnotationItem.Annotation = m
+				newAnnotationItem.AnnotationId = 0
+				if err := models.AnnotationItemSave(&newAnnotationItem); err != nil {
+					c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+				}
 			}
-		}
 
-		if err := c.setAnnotaionUserRelType(m, nil, "创建人"); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "操作失败", m)
+			if err := c.setAnnotaionUserRelType(m, nil, "创建人"); err != nil {
+				c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+			}
+			annotationRecord := c.newAnnotationRecord(m, "创建订单")
+			if err := models.AnnotationRecordSave(annotationRecord); err != nil {
+				c.jsonResult(enums.JRCodeFailed, "操作失败", err)
+			}
+			c.jsonResult(enums.JRCodeSucc, "操作成功", m)
 		}
-		annotationRecord := c.newAnnotationRecord(m, "创建订单")
-		if err := models.AnnotationRecordSave(annotationRecord); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "操作失败", m)
-		}
-		c.jsonResult(enums.JRCodeSucc, "操作成功", m)
+	} else {
+		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
+
 }
 
 // Edit 添加 编辑 页面

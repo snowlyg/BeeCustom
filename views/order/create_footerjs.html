@@ -545,7 +545,7 @@
                     });
                     break
             }
-        })
+        });
 
         /**编辑企业资质信息--按enter保存**/
         $('body').on('keyup', '#EntQualifNoTem', function (event) {
@@ -572,7 +572,7 @@
             } else {
                 layer.msg('没有可查看的数据')
             }
-        })
+        });
 
         /**编辑企业资质信息--右移**/
         $('#EnterpriseDownBtn').click(function () {
@@ -591,7 +591,7 @@
             } else {
                 layer.msg('没有可查看的数据')
             }
-        })
+        });
 
         /**监听企业承诺**/
         form.on('checkbox(DeclaratioMaterialCode)', function (data) {
@@ -608,7 +608,7 @@
         laydate.render({elem: '#DespDate', theme: '#1E9FFF', fixed: true, format: 'yyyyMMdd'})
 
         /**编辑使用人信息**/
-        let dec_users_index = null
+        let dec_users_index = null;
         $('body').on('click', '#DecUsersBtn', async function () {
             layer.open({
                 type: 1,
@@ -616,8 +616,8 @@
                 shadeClose: true,
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '530px'],
                 content: $('#dec_users_template').html(),
-            })
-            $('#UseOrgPersonCode').focus()
+            });
+            $('#UseOrgPersonCode').focus();
             table.render({
                 elem: '#dec_users_table'
                 , toolbar: '#dec_users_tool'
@@ -634,17 +634,17 @@
                 , limit: DecUsersData.length
                 , height: 350,
             })
-        })
+        });
         /**编辑使用人信息--点击行反填数据**/
         table.on('row(dec_users_table)', function (obj) {
-            $('#UseOrgPersonCode').val(obj.data.UseOrgPersonCode)
-            $('#UseOrgPersonTel').val(obj.data.UseOrgPersonTel)
+            $('#UseOrgPersonCode').val(obj.data.UseOrgPersonCode);
+            $('#UseOrgPersonTel').val(obj.data.UseOrgPersonTel);
             dec_users_index = obj.tr.data("index")
-        })
+        });
 
         /**编辑使用人信息--保存**/
         form.on('submit(dec_users_submit_tem)', async (data) => {
-            delete data.field.layTableCheckbox
+            delete data.field.layTableCheckbox;
             if (dec_users_index != null) {
                 DecUsersData.splice(dec_users_index, 1, data.field)
             } else {
@@ -1797,18 +1797,12 @@
                         return layer.msg('商品数量不能超过50条！')
                     }
 
-                    checkData[0].GNo = OrderItemsData.length + 1;
-                    checkData[0].OrderId = order_id;
-                    if (checkData[0].Id) {
-                        delete checkData[0].Id
-                    }
-
-                    let resultCopy = await admin.post('/order_item/store', checkData[0]);
+                    let resultCopy = await admin.post('/order_item/copy/'+checkData[0].Id);
                     if (resultCopy.status) {
                         OrderItemsData.push(resultCopy.obj);
                         setOrderItemEmptyData()
                     }
-                    break
+                    break;
                 case 'up':
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据')
@@ -1833,7 +1827,7 @@
                     if (responseUp.status) {
                         setOrderItemEmptyData()
                     }
-                    break
+                    break;
                 case 'down':
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据')
@@ -1844,20 +1838,20 @@
                     if (checkData[0].GNo == OrderItemsData.length) {
                         return layer.msg('已是最后一条数据，无法执行下移移操作。')
                     }
-                    const downIndex = parseInt(checkData[0].GNo) - 1
-                    OrderItemsData = admin.swapItems(OrderItemsData, downIndex, downIndex + 1)
+                    const downIndex = parseInt(checkData[0].GNo) - 1;
+                    OrderItemsData = admin.swapItems(OrderItemsData, downIndex, downIndex + 1);
                     OrderItemsData.forEach((value, index) => {
                         value.GNo = index + 1
-                    })
+                    });
 
                     let responseDown = await admin.patch(`/order_item/updateMul/`, JSON.stringify({
                         OrderItems: OrderItemsData,
-                    }))
+                    }));
 
                     if (responseDown.status) {
                         setOrderItemEmptyData()
                     }
-                    break
+                    break;
                 case 'insert':
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据')
@@ -1866,15 +1860,15 @@
                         return layer.msg('只能选择一条数据插入')
                     }
 
-                    setOrderItemEmptyData()
-                    break
+                    setOrderItemEmptyData();
+                    break;
                 case 'again':
 
                     if (!($('#CodeTS').val().trim())) {
                         return layer.msg('请先填写商品编码')
                     }
                     const hs_code_data = await admin.get(
-                        `/hs_code/lists?limit=0&search=${OrderItemsData[declaration_index].code_t_s}`)
+                        `/hs_code/lists?limit=0&search=${OrderItemsData[declaration_index].code_t_s}`);
                     if (hs_code_data.data.length === 0) {
                         return layer.msg('此商品没有申报要素')
                     }
