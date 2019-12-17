@@ -1331,11 +1331,10 @@ layui.define('view', function (exports) {
               $('#OriginCountry').val(handbookgood.ManuplaceCode)
               $('#OriginCountryName').val(handbookgood.Manuplace)
             }
-            const codeData = await admin.get(
-              `/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
-            if (codeData && codeData.Unit2 && codeData.Unit2Name) {
-              $('#SecondUnit').val(codeData.Unit2)
-              $('#SecondUnitName').val(codeData.Unit2Name)
+            const codeData = await admin.get(`/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`);
+            if (codeData.length == 1 && codeData[0].Unit2 && codeData[0].Unit2Name) {
+              $('#SecondUnit').val(codeData[0].Unit2)
+              $('#SecondUnitName').val(codeData[0].Unit2Name)
             }
             $('#GQty').focus()
           } else {
@@ -1475,11 +1474,10 @@ layui.define('view', function (exports) {
               $('#Natcd').val(handbookgood.ManuplaceCode)
               $('#NatcdName').val(handbookgood.Manuplace)
             }
-            const codeData = await admin.get(
-              `/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
-            if (codeData && codeData.Unit2) {
-              $('#SecdLawfUnitcd').val(codeData.Unit2)
-              $('#SecdLawfUnitcdName').val(codeData.Unit2Name)
+            const codeData = await admin.get(`/hs_code/get_hs_code_by_code/${handbookgood.HsCode}`)
+            if (codeData.length==1 && codeData[0].Unit2) {
+              $('#SecdLawfUnitcd').val(codeData[0].Unit2)
+              $('#SecdLawfUnitcdName').val(codeData[0].Unit2Name)
             }
             $('#EntryGdsSeqno').focus()
           } else {
@@ -1867,13 +1865,13 @@ layui.define('view', function (exports) {
       ,
 
       /*选中商品编码申报要素*/
-      declaration_data: '',
-      isOpenGoodsElementWindow:
-        false,
+      DeclarationData: '',
+      isOpenGoodsWindow: false,
+      isOpenGoodsElementWindow: false,
 
       /*商品规范申报--商品申报要素*/
       async openMerchElement () {
-        const declaration_data_array = admin.declaration_data.split(';')
+        const declaration_data_array = admin.DeclarationData.split(';')
         const data = declaration_data_array.map((item, index) => {
           if (index < 9) {
             return item.substr(1)
@@ -1892,22 +1890,25 @@ layui.define('view', function (exports) {
           area: admin.screen() < 2 ? ['80%', '300px'] : ['1180px', '600px'],
           content: $('#declaration_list').html(),
           end: function () {
-            $('#g_qty').focus()
+            $('#GQty').focus()
           },
-        })
-        $('body #val0Name').focus()
-        $('#selectCodeTs').val($('#g_name').val())
-        let brand_type = await admin.post(`/clearance/no_paginate`,
-          JSON.stringify({ Type: '品牌类型' }))
-        let data_filter = []
+        });
+
+        $('body #val0Name').focus();
+        $('#selectCodeTs').val($('#GName').val());
+
+        $('#good_information').val(`${$('#GNo').val()}-${$('#ContrItem').val() ? $('#ContrItem').val() : '一般贸易'}- ${$('#GName').val()}`);
+        
+        let brand_type = layui.data('orderClearance').data[30];
+        let data_filter = [];
         for (let item of brand_type) {
           data_filter.push({
-            id: item.customs_code,
-            label: `${item.customs_code}-${item.name}`,
-            value: `${item.name}`,
+            id: item.CustomsCode,
+            label: `${item.CustomsCode}-${item.Name}`,
+            value: `${item.Name}`,
           })
         }
-        admin.brand_type_data = data_filter
+        admin.brand_type_data = data_filter;
         $('#val0Name').AutoComplete({
           'data': data_filter,
           'width': 280,
@@ -1920,19 +1921,18 @@ layui.define('view', function (exports) {
           'afterSelectedHandler': function (data) {
             $('#val0').val(data.id)
           },
-        })
+        });
 
-        let export_benefits = await admin.post(`/clearance/no_paginate`,
-          { Type: '出口享惠情况' })
-        let data_filter_benefits = []
+        let export_benefits = layui.data('orderClearance').data[31];
+        let data_filter_benefits = [];
         for (let item of export_benefits) {
           data_filter_benefits.push({
-            id: item.customs_code,
-            label: `${item.customs_code}-${item.name}`,
-            value: `${item.name}`,
+            id: item.CustomsCode,
+            label: `${item.CustomsCode}-${item.Name}`,
+            value: `${item.Name}`,
           })
         }
-        admin.export_benefits_data = data_filter_benefits
+        admin.export_benefits_data = data_filter_benefits;
         $('#val1Name').AutoComplete({
           'data': data_filter_benefits,
           'width': 280,
@@ -1970,14 +1970,11 @@ layui.define('view', function (exports) {
       }
       ,
       //历史申报要素数据
-      elements_his_data:
-        [],
+      elements_his_data: [],
       //品牌类型数据
-      brand_type_data:
-        [],
+      brand_type_data: [],
       //出口享惠情况数据
-      export_benefits_data:
-        [],
+      export_benefits_data: [],
 
       //规范要素回车事件
       decFocus (e, id) {
@@ -2053,6 +2050,79 @@ layui.define('view', function (exports) {
         return true
       }
       ,
+      //表体商品编号弹窗
+      async openGoodsWindow(e) {
+        if (admin.isOpenGoodsWindow) {
+          return false
+        }
+
+        const eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+        if (eCode == 13 || !eCode) {
+          // 输入商品编号大于等于4位时才弹商品列表框
+          const codeTs = $("#CodeTS").val();
+          const data = await admin.get(`/hs_code/get_hs_code_by_code/${codeTs}`);
+          if (data.length === 0) {
+            layer.msg("无此商品编码");
+            return
+          }
+          if (codeTs.length >= 4) {
+            admin.isOpenGoodsWindow = true; //标志窗口已经打开
+            layer.open({
+              type: 1,
+              title: '商品列表',
+              shadeClose: true,
+              area: admin.screen() < 2 ? ['80%', '300px'] : ['910px', '480px'],
+              content: $('#code_t_s_list').html(),
+              success: function (layero, index) {
+                this.enterEsc = function (event) {
+                  if (event.keyCode === 13) {
+                    $("#code_t_s_save").click();
+                    return false;
+                  }
+                };
+                $(document).on('keydown', this.enterEsc);
+              },
+              end: function () {
+                admin.isOpenGoodsWindow = false;
+                $(document).off('keydown', this.enterEsc);
+                admin.openMerchElement();
+              }
+            });
+            layui.table.render({
+              elem: '#code_t_s_list_table',
+              toolbar: true,
+              defaultToolbar: ['filter'],
+              colFilterRecord: 'local',
+              cols: [
+                [{
+                  type: 'radio'
+                }, {
+                  field: 'Code',
+                  title: '商品编号',
+                  width: 180
+                }, {
+                  field: 'Name',
+                  title: '商品名称',
+                  width: 320
+                }, {
+                  field: 'Remark',
+                  title: '备注'
+                }]
+              ],
+              data: data,
+              limit: data.length,
+              height: 300
+            });
+            $(`.layui-table-view[lay-id='code_t_s_list_table'] .layui-table-body tr[data-index='0'] .layui-form-radio`).click();
+          } else if (!codeTs) {
+            return false;
+          } else {
+            layer.msg("请至少输入四位商品编码！");
+            $(`input[id="CodeTS"]`).focus();
+            return false;
+          }
+        }
+      },
 
       //编辑检验检疫货物规格回车
       changeFoucsTogoodsAttr (event) {

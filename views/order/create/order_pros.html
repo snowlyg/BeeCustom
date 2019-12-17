@@ -21,7 +21,7 @@
             <td>
                 <div class="input-group valid">
                     <input type="text" class="non-empty required" lay-verify="required" lay-vertype="tips"
-                           name="CodeTS" id="CodeTS" autocomplete="off" maxlength="10"
+                           name="CodeTS" id="CodeTS" autocomplete="off" maxlength="10" onkeyup="layui.admin.openGoodsWindow(event);"
                            oninput="layui.admin.is_onlynumber(this)">
                 </div>
             </td>

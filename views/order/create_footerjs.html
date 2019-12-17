@@ -848,35 +848,35 @@
         /**保存检验检疫签证申报要素**/
         form.on('submit(dec_request_certs_submit)', function (data) {
             let checkData = table.checkStatus('dec_request_certs_table').data
-            DecRequestCertsData = data.field
-            DecRequestCertsData.checkData = checkData
-            let arr = []
+            DecRequestCertsData = data.field;
+            DecRequestCertsData.checkData = checkData;
+            let arr = [];
             for (let item of DecRequestCertsData.checkData) {
                 arr.push(item.AppCertName)
             }
-            $('#DecRequestCerts').val(arr.join(','))
+            $('#DecRequestCerts').val(arr.join(','));
             layer.closeAll()
         })
 
         /**保存商品编号**/
         $('body').on('click', '#code_t_s_save', function () {
-            const data = table.checkStatus('code_t_s_list_table').data
+            const data = table.checkStatus('code_t_s_list_table').data;
             if (data.length == 0) {
-                layer.msg('请选择商品')
+                layer.msg('请选择商品');
                 return
             }
-            admin.DeclarationData = data[0].Declaration
-            $('#CodeTS').val(data[0].Code)
-            $('#FirstUnit').val(data[0].Unit1)
-            $('#FirstUnitName').val(data[0].Unit1Name)
-            $('#SecondUnit').val(data[0].Unit2)
-            $('#SecondUnitName').val(data[0].Unit2Name)
+            admin.DeclarationData = data[0].Declaration;
+            $('#CodeTS').val(data[0].Code);
+            $('#FirstUnit').val(data[0].Unit1);
+            $('#FirstUnitName').val(data[0].Unit1Name);
+            $('#SecondUnit').val(data[0].Unit2);
+            $('#SecondUnitName').val(data[0].Unit2Name);
             layer.closeAll()
         })
 
         /**保存规格型号**/
-        let declaration_edit = false
-        let declaration_index = null
+        let declaration_edit = false;
+        let declaration_index = null;
         form.on('submit(declaration_save)', function (data) {
             declaration_save_btn(data)
         })
@@ -910,8 +910,8 @@
                     limit: OrderItemsData.length,
                 })
             } else {
-                $('#g_model').val(data.field.elements)
-                $('#g_qty').focus()
+                $('#GModel').val(data.field.elements)
+                $('#GQty').focus()
                 layer.closeAll()
             }
         }
@@ -1746,9 +1746,7 @@
             $('#GoodsAttr').val(OrderItemGoodsAttrName); // 货物属性
             $('#GoodsSpecData').val(GoodsSpecData); // 检验检疫货物规格
 
-            // order_pros_index = obj.data.GNo;
-            // insert_index = obj.data.GNo;
-            // declaration_index = order_pros_index - 1;
+            declaration_index = orderItemIndex - 1;
             // $('#order_pros_form input').removeClass('is_check_fail');
             //if ("@{{.m.StatusSTring}}" == '复核不通过') {
             // if (order_i_edit_data.reject_logs.length > 0) {
@@ -1768,7 +1766,7 @@
 
         /**商品列表--按钮操作**/
         table.on('toolbar(order_pros)', async function (obj) {
-            let checkStatus = table.checkStatus(obj.config.id)
+            let checkStatus = table.checkStatus(obj.config.id);
             let checkData = checkStatus.data;
             switch (obj.event) {
                 case 'add':
@@ -1875,28 +1873,25 @@
                     setOrderItemEmptyData(true);
                     break;
                 case 'again':
-
                     if (!($('#CodeTS').val().trim())) {
                         return layer.msg('请先填写商品编码')
                     }
-                    const hs_code_data = await admin.get(
-                        `/hs_code/lists?limit=0&search=${OrderItemsData[declaration_index].code_t_s}`);
-                    if (hs_code_data.data.length === 0) {
+                    const hs_code_data = await admin.get(`/hs_code/get_hs_code_by_code/${OrderItemsData[declaration_index].CodeTS}`);
+                    if (hs_code_data.length === 0) {
                         return layer.msg('此商品没有申报要素')
                     }
 
-                    declaration_edit = true
-                    const declaration_data_array = hs_code_data.data[0].declaration.split(';')
+                    declaration_edit = true;
+                    const declaration_data_array = hs_code_data[0].Declaration.split(';');
                     const data = declaration_data_array.map((item, index) => {
                         if (index < 9) {
                             return item.substr(1)
                         } else {
                             return item.substr(2)
                         }
-                    })
+                    });
 
-                    data.type = 'again'
-
+                    data.type = 'again';
                     laytpl($('#declaration_template').html()).render(data, function (html) {
                         $('#declaration_list').html(html)
                     })
@@ -1913,7 +1908,7 @@
                             })
                             form.render('checkbox')
                             $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${declaration_index}]`).click()
-                            $('#g_qty').focus()
+                            $('#GQty').focus()
                             declaration_edit = false
                             $(`.layui-table-view[lay-id='order_pros'] .layui-table-body`).animate({
                                 scrollTop: $(
@@ -1923,20 +1918,20 @@
                     })
                     $('.manual_no_btn_next').show()
                     $('body #val0Name').focus()
-                    $('#selectCodeTs').val(OrderItemsData[declaration_index].g_name)
-                    $('#good_information').val(`${OrderItemsData[declaration_index].g_no}-${OrderItemsData[declaration_index].contr_item
-                        ? OrderItemsData[declaration_index].contr_item
-                        : '一般贸易'}-${OrderItemsData[declaration_index].g_name}`)
-                    let brand_type = await admin.get(`/clearance/no_paginate?type=品牌类型`)
-                    let data_filter = []
+                    $('#selectCodeTs').val(OrderItemsData[declaration_index].GName);
+                    $('#good_information').val(`${OrderItemsData[declaration_index].GNo}-${OrderItemsData[declaration_index].ContrItem
+                        ? OrderItemsData[declaration_index].ContrItem
+                        : '一般贸易'}-${OrderItemsData[declaration_index].GName}`);
+                    let brand_type = layui.data('orderClearance').data[30];
+                    let data_filter = [];
                     for (let item of brand_type) {
                         data_filter.push({
-                            id: item.customs_code,
-                            label: `${item.customs_code}-${item.name}`,
-                            value: `${item.name}`,
+                            id: item.CustomsCode,
+                            label: `${item.CustomsCode}-${item.Name}`,
+                            value: `${item.Name}`,
                         })
                     }
-                    admin.brand_type_data = data_filter
+                    admin.brand_type_data = data_filter;
                     $('#val0Name').AutoComplete({
                         'data': data_filter,
                         'width': 280,
@@ -1949,18 +1944,18 @@
                         'afterSelectedHandler': function (data) {
                             $('#val0').val(data.id)
                         },
-                    })
+                    });
 
-                    let export_benefits = await admin.get(`/clearance/no_paginate?type=出口享惠情况`)
-                    let data_filter_benefits = []
+                    let export_benefits = layui.data('orderClearance').data[31];
+                    let data_filter_benefits = [];
                     for (let item of export_benefits) {
                         data_filter_benefits.push({
-                            id: item.customs_code,
-                            label: `${item.customs_code}-${item.name}`,
-                            value: `${item.name}`,
+                            id: item.CustomsCode,
+                            label: `${item.CustomsCode}-${item.Name}`,
+                            value: `${item.Name}`,
                         })
                     }
-                    admin.export_benefits_data = data_filter_benefits
+                    admin.export_benefits_data = data_filter_benefits;
                     $('#val1Name').AutoComplete({
                         'data': data_filter_benefits,
                         'width': 280,
@@ -1973,30 +1968,29 @@
                         'afterSelectedHandler': function (data) {
                             $('#val1').val(data.id)
                         },
-                    })
-                    $('#elements').val(OrderItemsData[declaration_index].g_model)
-                    const arrAnge = OrderItemsData[declaration_index].g_model.split('|')
+                    });;
+                    $('#elements').val(OrderItemsData[declaration_index].GModel);
+                    const arrAnge = OrderItemsData[declaration_index].GModel.split('|');
                     arrAnge.forEach((value, index) => {
                         $(`#val${index}`).val(value)
-                    })
+                    });
                     admin.brand_type_data.forEach((value, index) => {
                         if (value.id == $('#val0').val()) {
                             $('#val0Name').val(value.value)
                         }
-                    })
+                    });
                     admin.export_benefits_data.forEach((value, index) => {
                         if (value.id == $('#val1').val()) {
                             $('#val1Name').val(value.value)
                         }
-                    })
-                    break
+                    });
+                    break;
 
                 case 'look':
                     if (!($('#CodeTS').val().trim())) {
                         return layer.msg('请先填写商品编码')
                     }
-                    const hs_code_data_show = await admin.get(
-                        `/hs_code/lists?limit=0&search=${OrderItemsData[declaration_index].code_t_s}`)
+                    const hs_code_data_show = await admin.get(`/hs_code/get_hs_code_by_code/${OrderItemsData[declaration_index].CodeTS}`);
                     if (hs_code_data_show.data.length === 0) {
                         return layer.msg('此商品没有申报要素')
                     }
@@ -2031,7 +2025,7 @@
                     $('#good_information').val(`${OrderItemsData[declaration_index].g_no}-${OrderItemsData[declaration_index].contr_item
                         ? OrderItemsData[declaration_index].contr_item
                         : '一般贸易'}-${OrderItemsData[declaration_index].g_name}`)
-                    let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`)
+                    let brand_type_show = layui.data('orderClearance').data[30];
                     let data_filter_show = []
                     for (let item of brand_type_show) {
                         data_filter_show.push({
@@ -2055,7 +2049,7 @@
                         },
                     })
 
-                    let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`)
+                    let export_benefits_show = layui.data('orderClearance').data[31];
                     let data_filter_benefits_show = []
                     for (let item of export_benefits_show) {
                         data_filter_benefits_show.push({
@@ -2151,8 +2145,7 @@
                 return layer.msg('已经是第一条了')
             }
             declaration_index -= 1
-            const hs_code_data_show = await admin.get(
-                `/hs_code/lists?limit=0&search=${OrderItemsData[declaration_index].code_t_s}`)
+            const hs_code_data_show = await admin.get(`/hs_code/get_hs_code_by_code/${OrderItemsData[declaration_index].CodeTS}`);
             const declaration_data_array_show = hs_code_data_show.data[0].declaration.split(';')
             const data_show = declaration_data_array_show.map((item, index) => {
                 if (index < 9) {
@@ -2184,7 +2177,7 @@
             $('#good_information').val(`${OrderItemsData[declaration_index].g_no}-${OrderItemsData[declaration_index].contr_item
                 ? OrderItemsData[declaration_index].contr_item
                 : '一般贸易'}-${OrderItemsData[declaration_index].g_name}`)
-            let brand_type_show = await admin.get(`/clearance/no_paginate?type=品牌类型`)
+            let brand_type_show = layui.data('orderClearance').data[30];
             let data_filter_show = []
             for (let item of brand_type_show) {
                 data_filter_show.push({
@@ -2208,7 +2201,7 @@
                 },
             })
 
-            let export_benefits_show = await admin.get(`/clearance/no_paginate?type=出口享惠情况`)
+            let export_benefits_show = layui.data('orderClearance').data[31];
             let data_filter_benefits_show = []
             for (let item of export_benefits_show) {
                 data_filter_benefits_show.push({
@@ -2253,8 +2246,7 @@
                 return layer.msg('已经是最后一条了')
             }
             declaration_index += 1
-            const hs_code_data_show = await admin.get(
-                `/hs_code/lists?limit=0&search=${OrderItemsData[declaration_index].code_t_s}`)
+            const hs_code_data_show = await admin.get(`/hs_code/get_hs_code_by_code/${OrderItemsData[declaration_index].CodeTS}`);
             const declaration_data_array_show = hs_code_data_show.data[0].declaration.split(';')
             const data_show = declaration_data_array_show.map((item, index) => {
                 if (index < 9) {
