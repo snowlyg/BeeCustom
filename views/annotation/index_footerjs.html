@@ -106,7 +106,7 @@
     });
 
     /**派单**/
-    admin.distribute('.order_distribute', "@{{.m.Id}}", "@{{.ImpexpMarkcdName}}");
+    admin.distribute('.order_distribute', "@{{.m.Id}}", "@{{.ImpexpMarkcdName}}"+ '核注清单iframe',"annotation");
     /**时间筛选**/
     form.on('select(time_table)', async function(data) {
       MonthTime = data.value;

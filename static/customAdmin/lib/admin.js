@@ -552,8 +552,66 @@ layui.define('view', function (exports) {
       //进口成交方式是C&I/出口成交方式是C&F，则允许录入运费，而不允许录入保费；
       //进口成交方式是C&F/出口成交方式是C&I，则不允许录入运费，而允许录入保费；否则，运费和保费都允许录入
       transModeControl: function (cusIEFlag, isCreate) {
-        $('#DestinationCountryName').val('中国')
-        $('#DestinationCountry').val('CHN')
+        if(!isCreate){
+          console.log(!isCreate);
+          $('#TrafMode').attr('lay-verify', 'required');
+          $('#TrafModeName').attr('lay-verify', 'required');
+          $('#TrafModeName').addClass('required');
+
+          $('#TradeMode').attr('lay-verify', 'required');
+          $('#TradeModeName').attr('lay-verify', 'required');
+          $('#TradeModeName').addClass('required');
+
+          $('#DistinatePort').attr('lay-verify', 'required');
+          $('#DistinatePortName').attr('lay-verify', 'required');
+          $('#DistinatePortName').addClass('required');
+
+          $('#TransMode').attr('lay-verify', 'required');
+          $('#TransModeName').attr('lay-verify', 'required');
+          $('#TransModeName').addClass('required');
+
+          $('#PackNo').attr('lay-verify', 'required');
+          $('#PackNo').addClass('required');
+
+          $('#WrapType').attr('lay-verify', 'required');
+          $('#WrapTypeName').attr('lay-verify', 'required');
+          $('#WrapTypeName').addClass('required');
+
+          $('#GrossWet').attr('lay-verify', 'required');
+          $('#GrossWet').addClass('required');
+
+          $('#NetWt').attr('lay-verify', 'required');
+          $('#NetWt').addClass('required');
+
+          $('#EntyPort').attr('lay-verify', 'required');
+          $('#EntyPortName').attr('lay-verify', 'required');
+          $('#EntyPortName').addClass('required');
+
+          if('I' == cusIEFlag){
+            $('#GoodsPlace').attr('lay-verify', 'required');
+            $('#GoodsPlace').addClass('required');
+          }
+
+
+          $('#EntryType').attr('lay-verify', 'required');
+          $('#EntryTypeName').attr('lay-verify', 'required');
+          $('#EntryTypeName').addClass('required');
+
+          $('#DespPort').attr('lay-verify', 'required');
+          $('#DespPortName').attr('lay-verify', 'required');
+          $('#DespPortName').addClass('required');
+
+          $('#TradeCountry').attr('lay-verify', 'required');
+          $('#TradeCountryName').attr('lay-verify', 'required');
+          $('#TradeCountryName').addClass('required');
+
+          $('#MarkNo').attr('lay-verify', 'required');
+          $('#MarkNo').addClass('required');
+        }
+
+        $('#DestinationCountryName').val('中国');
+        $('#DestinationCountry').val('CHN');
+
         const transMode = $('#TransMode').val()
         if (('I' == cusIEFlag && transMode == '1') ||
           ('E' == cusIEFlag && transMode == '3')) {
@@ -1152,9 +1210,9 @@ layui.define('view', function (exports) {
         }
         layui.layer.close(admin.dec_users_commodity_index)
       },
-      //派单
-      distribute (clickEnum, id, impexpMarkcdName) {
 
+      //派单
+      distribute (clickEnum, id, parent_iframe_name,url_type) {
         /**派单**/
         $(document).on('click', clickEnum, function () {
           if (!id) {
@@ -1166,24 +1224,25 @@ layui.define('view', function (exports) {
             shadeClose: true,
             area: admin.screen() < 2 ? ['80%', '300px'] : ['450px', '340px'],
             content: $('#distribute_template').html(),
-          })
+          });
 
           layui.form.render()
-        })
+        });
 
         layui.form.on('submit(distribute_submit)', async (data) => {
-          let url = `/annotation/distribute/${id}`
-          let result = await admin.post(url, data.field)
+          let url = `/${url_type}/distribute/${id}`;
+          let result = await admin.post(url, data.field);
           if (result.status) {
             setTimeout(() => {
               if (clickEnum === '#order_dispatch') {
-                admin.reloadFrame(impexpMarkcdName + '核注清单iframe')
+                admin.reloadFrame(parent_iframe_name);
+                admin.reloadFrame();
                 parent.layui.admin.closeThisTabs()
               } else {
                 window.location.reload()
               }
 
-            }, 500)
+            }, 500);
             layer.closeAll()
           }
         })

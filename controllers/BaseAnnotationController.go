@@ -824,9 +824,10 @@ func (c *BaseAnnotationController) setAnnotaionUserRelType(m *models.Annotation,
 
 // TransformAnnotationList 格式化列表数据
 func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotation) []*map[string]interface{} {
-	var annotationCreatorName string // 制单人
+
 	var annotationList []*map[string]interface{}
 	for _, v := range ms {
+		annotationCreatorName := "" // 制单人
 		annotationItem := make(map[string]interface{})
 		aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
 		if err != nil {

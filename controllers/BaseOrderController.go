@@ -752,9 +752,10 @@ func (c *BaseOrderController) setAnnotaionUserRelType(m *models.Order, bu *model
 
 // TransformOrderList 格式化列表数据
 func (c *BaseOrderController) TransformOrderList(ms []*models.Order) []*map[string]interface{} {
-	var orderCreatorName string // 制单人
+
 	var orderList []*map[string]interface{}
 	for _, v := range ms {
+		orderCreatorName := "" // 制单人
 		orderItem := make(map[string]interface{})
 		aStatus, err := enums.GetSectionWithInt(v.Status, "order_status")
 		if err != nil {

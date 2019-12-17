@@ -436,7 +436,7 @@
       layer.closeAll('loading')
     })
     /**派单**/
-    admin.distribute('#order_dispatch', annotation_id, "@{{.ImpexpMarkcdName}}")
+    admin.distribute('#order_dispatch', annotation_id, "@{{.ImpexpMarkcdName}}" + '核注清单iframe',"annotation")
     /**附注**/
     let order_note_index
     let extraRemark = "@{{.m.ExtraRemark}}"

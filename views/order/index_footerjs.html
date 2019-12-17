@@ -106,7 +106,7 @@
     });
 
     /**派单**/
-    admin.distribute('.order_distribute', "@{{.m.Id}}", "@{{.IEFlagName}}");
+    admin.distribute('.order_distribute', "@{{.m.Id}}", "@{{.IEFlagName}}"+ '货物整合申报iframe',"order");
     /**时间筛选**/
     form.on('select(time_table)', async function(data) {
       MonthTime = data.value;
