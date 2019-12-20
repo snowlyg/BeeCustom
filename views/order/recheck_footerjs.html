@@ -19,13 +19,6 @@
           jq: $,
       });
 
-      // 复核页面渲染
-      let order = @{{.m}};
-      console.log(order);
-      laytpl($("#order_i_declaration_template").html()).render(order, function (html) {
-          $("#order_i_declaration").html(html)
-      });
-
     $('body').on('click', '#order_note', async function() {
       if (!order_id) {
         return layer.msg('请先保存订单！');

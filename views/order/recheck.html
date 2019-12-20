@@ -34,7 +34,7 @@
                 <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
             </button>
         </script>
-        <div id="order_i_declaration" class="order_i_e_declaration"></div>
+        @{{template "order/create/order_i_declaration.html" .}}
     </div>
 </div>
 
@@ -51,4 +51,3 @@
 @{{template "order/create/print_save_driver.html" .}}
 @{{template "/common/order_annotation/reject.html" .}}
 @{{template "order/create/order_application_change.html" .}}
-@{{template "order/create/order_i_declaration.html" .}}

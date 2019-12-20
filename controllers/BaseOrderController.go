@@ -171,7 +171,7 @@ func (c *BaseOrderController) bEdit(id int64) {
 	// 获取制单人
 	backendUsers := models.GetCreateBackendUsers("OrderController.Make")
 	c.Data["BackendUsers"] = backendUsers
-	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments")
+	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", false)
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)
@@ -187,7 +187,7 @@ func (c *BaseOrderController) bMake(id int64) {
 		}
 	}
 	c.setStatusOnly(m, "制单中", false)
-	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments")
+	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", false)
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)
@@ -203,7 +203,7 @@ func (c *BaseOrderController) bReMake(id int64) {
 		}
 	}
 
-	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments,OrderRecords")
+	c.Data["m"] = models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments,OrderRecords", false)
 	c.Data["canStore"] = c.getCanStore(m, "")
 	if m != nil {
 		c.getResponses(m.IEFlag)
@@ -431,7 +431,7 @@ func (c *BaseOrderController) bRecheck(id int64) {
 		c.getActionData(m.IEFlag, "RecheckPass", "RecheckReject")
 	}
 	c.setStatusOnly(m, "复核中", false)
-	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments")
+	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
 	c.Data["m"] = order
 	c.setTpl("order/recheck.html")
 	c.LayoutSections = make(map[string]string)

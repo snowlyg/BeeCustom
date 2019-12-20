@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -419,7 +420,7 @@ func GetOrderCommonListSql(sql string, params *OrderQueryParam) string {
 }
 
 // TransformOrder 格式化列表数据
-func TransformOrder(id int64, relation string) map[string]interface{} {
+func TransformOrder(id int64, relation string, isRechek bool) map[string]interface{} {
 	v, _ := OrderOne(id, relation)
 	orderItem := make(map[string]interface{})
 	aStatus, err := enums.GetSectionWithInt(v.Status, "order_status")
@@ -428,13 +429,13 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	}
 
 	// 转换表头复核标记
-	//recheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.RecheckErrorInputIds, `id":"`, "", -1), `[{"`, "", -1), `"}]`, "", -1)
-	//recheckErrorInputIdsSlice := strings.Split(recheckErrorInputIds, `"},{"`)
+	// recheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.RecheckErrorInputIds, `id":"`, "", -1), `[{"`, "", -1), `"}]`, "", -1)
+	// recheckErrorInputIdsSlice := strings.Split(recheckErrorInputIds, `"},{"`)
 	recheckErrorInputIdsSlice := enums.TramsformStringToSlice(v.RecheckErrorInputIds, `[{"`, `"},{"`, `id":"`, `"}]`)
 
 	// 转换表体复核标记
-	//itemRecheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.ItemRecheckErrorInputIds, `index":`, "", -1), `[{"`, "", -1), `"]}]`, "", -1)
-	//itemRecheckErrorInputIdsSlice := strings.Split(itemRecheckErrorInputIds, `"]},{"`)
+	// itemRecheckErrorInputIds := strings.Replace(strings.Replace(strings.Replace(v.ItemRecheckErrorInputIds, `index":`, "", -1), `[{"`, "", -1), `"]}]`, "", -1)
+	// itemRecheckErrorInputIdsSlice := strings.Split(itemRecheckErrorInputIds, `"]},{"`)
 	itemRecheckErrorInputIdsSlice := enums.TramsformStringToSlice(v.ItemRecheckErrorInputIds, `[{"`, `"]},{"`, `index":`, `"]}]`)
 	var itemRecheckErrorInputIdsSlices []map[int][]string
 	for _, v := range itemRecheckErrorInputIdsSlice {
@@ -579,17 +580,70 @@ func TransformOrder(id int64, relation string) map[string]interface{} {
 	orderItem["IsOther"] = v.IsOther                                     // is_other)" description:"是否异地报关"`
 	orderItem["IsSync"] = v.IsSync
 
-	orderItem["OrderContainers"] = v.OrderContainers
-	orderItem["OrderDocuments"] = v.OrderDocuments
-	items, _ := OrderItemGetRelations(v.OrderItems, "OrderItemLimits")
-	for _, v := range items {
-		orderItemLimits, _ := OrderItemLimitGetRelations(v.OrderItemLimits, "OrderItemLimitVins")
-		v.OrderItemLimits = orderItemLimits
-	}
-	orderItem["OrderItems"] = items
+	if isRechek {
+		var newItem []OrderItem
+		var otherOrderItem [][]OrderItem
+		var orderContatinersData string
+		var orderDocumentsData string
+		items, _ := OrderItemGetRelations(v.OrderItems, "OrderItemLimits")
+		for ii, v := range items {
+			orderItemLimits, _ := OrderItemLimitGetRelations(v.OrderItemLimits, "OrderItemLimitVins")
+			v.OrderItemLimits = orderItemLimits
 
+			if ii < 6 {
+				newItem = append(newItem, *v)
+			}
+
+		}
+		itemLn := (float64(len(items)) - float64(6)) / float64(14)
+		i2 := int(math.Ceil(itemLn))
+		for i := 0; i < i2; i++ {
+			var newOtherOrderItem []OrderItem
+			for ii, v := range items {
+				orderItemLimits, _ := OrderItemLimitGetRelations(v.OrderItemLimits, "OrderItemLimitVins")
+				v.OrderItemLimits = orderItemLimits
+
+				if ii >= i*14+6 && ii < (i+1)*14+6 {
+					newOtherOrderItem = append(newOtherOrderItem, *v)
+				}
+			}
+			otherOrderItem = append(otherOrderItem, newOtherOrderItem)
+		}
+
+		orderItem["OrderItems"] = newItem
+		orderItem["OtherOrderItems"] = otherOrderItem
+
+		if len(v.OrderDocuments) == 0 {
+			orderDocumentsData = "随附单证0:代理报关委托协议（电子）;"
+		} else {
+			orderDocumentsData = "随附单证" + strconv.Itoa(len(v.OrderDocuments)) + ":代理报关委托协议（电子）;"
+			for _, v := range v.OrderDocuments {
+				orderDocumentsData += v.DocuCodeName + ";" + v.CertCode + ";"
+			}
+		}
+		orderItem["OrderDocumentsData"] = orderDocumentsData
+
+		if len(v.OrderContainers) == 0 {
+			orderContatinersData = "0;无"
+		} else {
+			orderContatinersData = strconv.Itoa(len(v.OrderContainers)) + ";"
+			for _, v := range v.OrderContainers {
+				orderContatinersData += v.ContainerId + ";"
+			}
+		}
+		orderItem["OrderContatinersData"] = orderContatinersData
+
+	} else {
+		orderItem["OrderContainers"] = v.OrderContainers
+		orderItem["OrderDocuments"] = v.OrderDocuments
+		items, _ := OrderItemGetRelations(v.OrderItems, "OrderItemLimits")
+		for _, v := range items {
+			orderItemLimits, _ := OrderItemLimitGetRelations(v.OrderItemLimits, "OrderItemLimitVins")
+			v.OrderItemLimits = orderItemLimits
+		}
+		orderItem["OrderItems"] = items
+	}
 	orderItem["ContactSignDate"] = enums.GetDateTimeString(&v.ContactSignDate, enums.BaseDateFormat) // contact_sign_date);type(datetime);null" description:"合同签约日期（进出口日期前一个月）"`
 	orderItem["AplDate"] = enums.GetDateTimeString(&v.AplDate, enums.BaseDateFormat)
-
 	return orderItem
 }

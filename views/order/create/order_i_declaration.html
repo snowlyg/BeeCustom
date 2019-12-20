@@ -74,7 +74,6 @@
     }
 
 
-
     .pdf {
         font-family: 宋体;
     }
@@ -390,9 +389,9 @@
         font-weight: normal !important
     }
 </style>
-<script type="text/html" id="order_i_declaration_template">
+<div id="order_i_declaration" class="order_i_e_declaration">
     <div class="recheck_order_bj">
-        @include('order::e.common.recheck_delaration_header')
+        @{{template "/common/order_annotation/recheck_delaration_header.html" }}
         <div class="pdf">
             <div class="height_10"></div>
             <table cellspacing="0" cellpadding="0" class="pdf-table">
@@ -401,34 +400,34 @@
                     <td colspan="2" class="table_td_one_top">
                         <p class="table_td_p">
                             <span class="span_bold">境内发货人 </span>
-                            <span data-id="trade_co_scc" data-id="trade_co_scc">({{ $order->trade_co_scc ?:'无' }})</span>
+                            <span data-id="trade_co_scc" data-id="trade_co_scc">(@{{ .m.TradeCoScc  }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="trade_name">{{ $order->trade_name ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="trade_name">@{{ .m.TradeName  }}</span></p>
                     </td>
                     <td colspan="3" class="table_td_two_top">
                         <p class="table_td_p">
                             <span class="span_bold">出境关别</span>
-                            <span data-id="i_e_port">({{ $order->i_e_port ?:'无' }})</span>
+                            <span data-id="i_e_port">(@{{ .m.IEPort  }})</span>
                         </p>
-                        <p class="table_td_p" data-id="i_e_port_name"><span>{{ $order->i_e_port_name ?:'无' }}</span></p>
+                        <p class="table_td_p" data-id="i_e_port_name"><span>@{{ .m.IEPortName  }}</span></p>
                     </td>
                     <td colspan="4" class="table_td_two_top">
                         <p class="table_td_p">
                             <span class="span_bold">出口日期</span>
                         </p>
-                        <p class="table_td_p"><span data-id="i_e_date">{{ $order->i_e_date ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="i_e_date">@{{ .m.IEDate  }}</span></p>
                     </td>
                     <td colspan="4" class="table_td_two_top">
                         <p class="table_td_p">
                             <span class="span_bold">申报日期</span>
                         </p>
-                        <p class="table_td_p"><span data-id="apl_date">{{ $order->apl_date->format('Ymd') ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="apl_date">@{{ .m.AplDate  }}</span></p>
                     </td>
                     <td colspan="3" class="table_td_three_top">
                         <p class="table_td_p">
                             <span class="span_bold">备案号</span>
                         </p>
-                        <p class="table_td_p"><span data-id="manual_no">{{ $order->manual_no ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="manual_no">@{{ .m.ManualNo  }}</span></p>
                     </td>
                 </tr>
                 <tr class="pdf-table-tr-22">
@@ -436,55 +435,59 @@
                         <p class="table_td_p">
                             <span class="span_bold">境外收货人</span>
                         </p>
-                        <p class="table_td_p"><span data-id="overseas_consignee_ename">{{ $order->overseas_consignee_ename ?:'无' }}</span></p>
+                        <p class="table_td_p"><span
+                                    data-id="overseas_consignee_ename">@{{ .m.OverseasConsigneeEname  }}</span></p>
                     </td>
                     <td colspan="3" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">运输方式</span>
-                            <span data-id="traf_mode">({{ $order->traf_mode ?:'无' }})</span>
+                            <span data-id="traf_mode">(@{{ .m.TrafMode  }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="traf_mode_name">{{ $order->traf_mode_name ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="traf_mode_name">@{{ .m.TrafModeName  }}</span></p>
                     </td>
                     <td colspan="4" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">运输工具名称及航次号</span>
                         </p>
-                        <p class="table_td_p"><span data-id="traf_name">{{ $order->traf_name ?:'无' }}</span>/<span data-id="voy_no" class="create_span">{{ $order->voy_no ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="traf_name">@{{ .m.TrafName  }}</span>/<span
+                                    data-id="voy_no"
+                                    class="create_span">@{{ .m.VoyNo  }}</span>
+                        </p>
                     </td>
                     <td colspan="7" class="table_td_three_center">
                         <p class="table_td_p">
                             <span class="span_bold">提运单号</span>
                         </p>
-                        <p class="table_td_p"><span data-id="bill_no">{{ $order->bill_no ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="bill_no">@{{ .m.BillNo  }}</span></p>
                     </td>
                 </tr>
                 <tr class="pdf-table-tr-22">
                     <td colspan="2" class="table_td_one_center">
                         <p class="table_td_p">
                             <span class="span_bold">生产销售单位</span>
-                            <span data-id="owner_code_scc">({{ $order->owner_code_scc ?:'无' }})</span>
+                            <span data-id="owner_code_scc">(@{{ .m.OwnerCodeScc  }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="owner_name">{{ $order->owner_name ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="owner_name">@{{ .m.OwnerName  }}</span></p>
                     </td>
                     <td colspan="3" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">监管方式</span>
-                            <span data-id="trade_mode">({{ $order->trade_mode ?:'无' }})</span>
+                            <span data-id="trade_mode">(@{{ .m.TradeMode  }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="trade_mode_name">{{ $order->trade_mode_name ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="trade_mode_name">@{{ .m.TradeModeName  }}</span></p>
                     </td>
                     <td colspan="4" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">征免性质</span>
-                            <span data-id="cut_mode">({{ $order->cut_mode ?:'无' }})</span>
+                            <span data-id="cut_mode">(@{{ .m.CutMode  }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="cut_mode_name">{{ $order->cut_mode_name ?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="cut_mode_name">@{{ .m.CutModeName  }}</span></p>
                     </td>
                     <td colspan="7" class="table_td_three_center">
                         <p class="table_td_p">
                             <span class="span_bold">许可证号</span>
                         </p>
-                        <p class="table_td_p"><span data-id="license_no">{{$order->license_no?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="license_no">@{{ .m.LicenseNo }}</span></p>
                     </td>
                 </tr>
                 <tr class="pdf-table-tr-22">
@@ -492,78 +495,80 @@
                         <p class="table_td_p">
                             <span class="span_bold">合同协议号</span>
                         </p>
-                        <p class="table_td_p"><span data-id="contr_no">{{$order->contr_no?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="contr_no">@{{ .m.ContrNo }}</span></p>
                     </td>
                     <td colspan="3" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">贸易国（地区）</span>
-                            <span data-id="trade_area_code">({{$order->trade_area_code?:'无' }})</span>
+                            <span data-id="trade_area_code">(@{{ .m.TradeAreaCode }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="trade_area_name">{{$order->trade_area_name?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="trade_area_name">@{{ .m.TradeAreaName }}</span></p>
                     </td>
                     <td colspan="4" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">运抵国（地区）</span>
-                            <span data-id="trade_country_name">({{$order->trade_country?:'无' }})</span>
+                            <span data-id="trade_country_name">(@{{ .m.TradeCountry }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="trade_country_name">{{$order->trade_country_name?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="trade_country_name">@{{ .m.TradeCountryName }}</span></p>
                     </td>
                     <td colspan="4" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">指运港</span>
-                            <span data-id="distinate_port">({{$order->distinate_port?:'无' }})</span>
+                            <span data-id="distinate_port">(@{{ .m.DistinatePort }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="distinate_port_name">{{$order->distinate_port_name?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="distinate_port_name">@{{ .m.DistinatePortName }}</span></p>
                     </td>
                     <td colspan="3" class="table_td_three_center">
                         <p class="table_td_p">
                             <span class="span_bold">离境口岸</span>
-                            <span data-id="enty_port_code">({{$order->enty_port_code?:'无' }})</span>
+                            <span data-id="enty_port_code">(@{{ .m.EntyPortCode }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="enty_port_name">{{$order->enty_port_name?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="enty_port_name">@{{ .m.EntyPortName }}</span></p>
                     </td>
                 </tr>
                 <tr class="pdf-table-tr-22">
                     <td colspan="2" class="table_td_one_center">
                         <p class="table_td_p">
                             <span class="span_bold">包装种类</span>
-                            <span data-id="wrap_type">({{$order->wrap_type?:'无' }})</span>
+                            <span data-id="wrap_type">(@{{ .m.WrapType }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="wrap_type_name">{{$order->wrap_type_name?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="wrap_type_name">@{{ .m.WrapTypeName }}</span></p>
                     </td>
                     <td class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">件数</span>
                         </p>
-                        <p class="table_td_p"><span data-id="pack_no">{{$order->pack_no?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="pack_no">@{{ .m.PackNo }}</span></p>
                     </td>
                     <td colspan="2" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">毛重(千克)</span>
                         </p>
-                        <p class="table_td_p"><span data-id="gross_wet">{{$order->gross_wet_string?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="gross_wet">@{{ .m.GrossWet }}</span></p>
                     </td>
                     <td colspan="2" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">净重(千克)</span>
                         </p>
-                        <p class="table_td_p"><span data-id="net_wt">{{$order->net_wt_string?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="net_wt">@{{ .m.NetWt }}</span></p>
                     </td>
                     <td colspan="2" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">成交方式</span>
-                            <span data-id="trans_mode">({{$order->trans_mode?:'无' }})</span>
+                            <span data-id="trans_mode">(@{{ .m.TransMode }})</span>
                         </p>
-                        <p class="table_td_p"><span data-id="trans_mode_name">{{$order->trans_mode_name?:'无' }}</span></p>
+                        <p class="table_td_p"><span data-id="trans_mode_name">@{{ .m.TransModeName }}</span></p>
                     </td>
                     <td colspan="3" class="table_td_two_center">
                         <p class="table_td_p">
                             <span class="span_bold">运费</span>
                         </p>
                         <p class="table_td_p">
-                            @if( $order->fee_mark_name || $order->fee_curr_name || $order->fee_rate)
-                            <span class="create_span" data-id="fee_mark_name">{{ $order->fee_mark_name ?:'无' }}</span>/ <span class="create_span" data-id="fee_curr_name"> {{ $order->fee_curr_name ?:'无' }}</span>/ <span class="create_span" data-id="fee_rate"> {{ $order->fee_rate ?:'无' }}</span>
-                            @endif
+                            @{{ if .m.FeeMarkName  }}
+                        <span class="create_span" data-id="fee_mark_name">@{{ .m.FeeMarkName  }}</span>/ <span
+                                class="create_span" data-id="fee_curr_name"> @{{ .m.FeeCurrName  }}</span>/ <span
+                                class="create_span" data-id="fee_rate"> @{{ .m.FeeRate  }}</span>
+                        @{{end}}
                         </p>
                     </td>
                     <td colspan="2" class="table_td_two_center">
@@ -571,9 +576,11 @@
                             <span class="span_bold">保费</span>
                         </p>
                         <p class="table_td_p">
-                            @if( $order->insur_mark_name || $order->insur_curr_name || $order->insur_rate)
-                            <span class="create_span" data-id="insur_mark_name">{{ $order->insur_mark_name ?:'无' }}</span>/<span class="create_span" data-id="insur_curr_name"> {{ $order->insur_curr_name ?:'无' }}</span>/ <span class="create_span" data-id="insur_rate"> {{ $order->insur_rate ?:'无' }}</span>
-                            @endif
+                            @{{if .m.InsurMarkName }}
+                        <span class="create_span" data-id="insur_mark_name">@{{ .m.InsurMarkName  }}</span>/<span
+                                class="create_span" data-id="insur_curr_name"> @{{ .m.InsurCurrName  }}</span>/ <span
+                                class="create_span" data-id="insur_rate"> @{{ .m.InsurRate  }}</span>
+                        @{{end}}
                         </p>
                     </td>
                     <td colspan="2" class="table_td_three_center">
@@ -581,9 +588,11 @@
                             <span class="span_bold">杂费</span>
                         </p>
                         <p class="table_td_p">
-                            @if( $order->other_mark_name || $order->other_curr_name || $order->other_rate)
-                            <span class="create_span">{{ $order->other_mark_name ?:'无' }}</span>/ <span class="create_span">{{ $order->other_curr_name ?:'无' }}</span>/ <span class="create_span">{{ $order->other_rate ?:'无' }}</span>
-                            @endif
+                            @{{if .m.OtherMarkName }}
+                        <span class="create_span">@{{ .m.OtherMarkName  }}</span>/ <span
+                                class="create_span">@{{ .m.OtherCurrName  }}</span>/ <span
+                                class="create_span">@{{ .m.OtherRate  }}</span>
+                        @{{end}}
                         </p>
                     </td>
                 </tr>
@@ -594,15 +603,15 @@
                         </p>
                         <p class="table_td_p">
                                     <span data-id="documents">
-                                    @if($order->documents->isEmpty())
-                                            随附单证0
-                                    @else
-                                            随附单证{{$order->documents->count()}}:代理报关委托协议（电子）;
-                                            @foreach($order->documents as $doc)
-                                                {{$doc->docu_code_name . ';' . $doc->cert_code . ';'}}
-                                            @endforeach
-
-                                    @endif
+                                        @{{.m.OrderDocumentsData }}
+@{{/*                                    @{{ if !.m.OrderDocuments }}*/}}
+@{{/*                                       随附单证0*/}}
+@{{/*                                     @{{else}}*/}}
+@{{/*                                        docName =  "随附单证" + .m.OrderDocuments.length + ":代理报关委托协议（电子）;";*/}}
+@{{/*                                       layui.each(.m.OrderDocuments,function(i,v){*/}}
+@{{/*                                               docName = docName + $value.DocuCodeName + ';' + $value.CertCode + ';'*/}}
+@{{/*                                          })*/}}
+@{{/*                                   @{{end }}*/}}
                                     </span>
                         </p>
                     </td>
@@ -614,20 +623,16 @@
                         </p>
                         <div class="table_td_p">
                             <p>
-                                备注:<span class="create_span" data-id="note_s">{{$order->note_s?:'无' }}</span> <span class="create_span" data-id="mark_no">{{$order->mark_no?:'无' }}</span>
-                                @if($order->containers->isNotEmpty())
+                                备注:<span class="create_span" data-id="note_s">@{{ .m.NoteS }}</span> <span
+                                        class="create_span" data-id="mark_no">@{{ .m.MarkNo }}</span>
                                 集装箱标箱数及号码：
-                                <span class="create_span" data-id="containers">{{$order->container_counts }};{{implode(';', $order->containers->pluck('container_id')->toArray()) }}</span>
-                                @else
-                                集装箱标箱数及号码：
-                                <span class="create_span" data-id="containers">0;无</span>
-                                @endif
-                                @if($order->rel_id)
-                                <span id="containers" data-id="rel_id">关联报关单：{{$order->rel_id?:'无' }}</span>
-                                @endif
-                                @if($order->rel_man_no)
-                                <span id="containers" data-id="rel_man_no">关联报备案：{{$order->rel_man_no?:'无' }}</span>
-                                @endif
+                                <span class="create_span" data-id="containers">  @{{.m.OrderContatinersData }}</span>
+                                @{{if .m.RelId }}
+                            <span id="containers" data-id="rel_id">关联报关单：@{{ .m.RelId }}</span>
+                            @{{end}}
+                                @{{if .m.RelManNo }}
+                            <span id="containers" data-id="rel_man_no">关联报备案：@{{ .m.RelManNo }}</span>
+                            @{{end}}
                             </p>
                         </div>
                     </td>
@@ -680,167 +685,145 @@
                     </td>
                 </tr>
 
-                @php
-                $order_pros = $order->pros->toArray();
-                @endphp
 
-                @for ($i = 0; $i < 6; $i++) <tr class="pdf-table-tr-30-one">
+                @{{ range $i,$v := .m.OrderItems }}
+                <tr class="pdf-table-tr-30-one">
                     <td class="width_22">
-                        @if(array_key_exists($i,$order_pros))
                         <p class="table_list_p">
-                            <span class="table_list_span_9" data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_no">{{ $order_pros[$i]['g_no']?:'无' }}</span>
+                            <span class="table_list_span_9" data-index=@{{ $v.GNo  }}
+                                  data-id="g_no">@{{ $v.GNo }}</span>
                         </p>
                         <p class="table_list_p">
-                            <span class="table_list_span_9" data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="contr_item">({{ $order_pros[$i]['contr_item']?:'无' }})</span>
+                            <span class="table_list_span_9" data-index=@{{ $v.GNo  }}
+                                  data-id="contr_item">(@{{ $v.ContrItem }})</span>
                         </p>
-                        @endif
                     </td>
                     <td colspan="3">
-                        @if(array_key_exists($i,$order_pros))
                         <p class="goods_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="code_t_s">{{ $order_pros[$i]['code_t_s']?:'无' }} {{ $order_pros[$i]['g_name']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="code_t_s">@{{ $v.CodeTS }} @{{ $v.GName }}</span>
                         </p>
                         <p class="goods_name">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_model">{{ $order_pros[$i]['g_model']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="g_model">@{{ $v.GModel }}</span>
                         </p>
-                        @endif
                     </td>
                     <td>
-                        @if(array_key_exists($i,$order_pros))
                         <p class="unit_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_qty">{{$order_pros[$i]['g_qty_string']?:'无' }}</span>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_unit_name">{{$order_pros[$i]['g_unit_name']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="g_qty">@{{$v.GQty}}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="g_unit_name">@{{$v.GUnitName }}</span>
                         </p>
                         <p class="unit_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="first_qty">{{$order_pros[$i]['first_qty_string']?:'无' }}</span>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="first_unit_name">{{$order_pros[$i]['first_unit_name']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="first_qty">@{{$v.FirstQty }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="first_unit_name">@{{$v.FirstUnitName }}</span>
                         </p>
                         <p class="unit_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="second_qty">{{$order_pros[$i]['second_qty_string']?:'无' }}</span>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="second_unit_name">{{$order_pros[$i]['second_unit_name']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="second_qty">@{{$v.SecondUnit }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="second_unit_name">@{{$v.SecondUnitName }}</span>
                         </p>
-                        @endif
                     </td>
                     <td colspan="2">
-                        @if(array_key_exists($i,$order_pros))
                         <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="decl_price">{{$order_pros[$i]['decl_price_string']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="decl_price">@{{$v.DeclPrice }}</span>
                         </p>
                         <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="decl_total">{{$order_pros[$i]['decl_total_string']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="decl_total">@{{$v.DeclTotal }}</span>
                         </p>
                         <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="trade_curr_name">{{$order_pros[$i]['trade_curr_name']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="trade_curr_name">@{{$v.TradeCurrName }}</span>
                         </p>
-                        @endif
+
                     </td>
                     <td colspan="3">
-                        @if(array_key_exists($i,$order_pros))
                         <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="destination_country_name">{{$order_pros[$i]['destination_country_name']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="destination_country_name">@{{$v.DestinationCountryName }}</span>
                         </p>
                         <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="destination_country">({{$order_pros[$i]['destination_country']?:'无' }})</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="destination_country">(@{{$v.DestinationCountry }})</span>
                         </p>
-                        @endif
                     </td>
                     <td colspan="4">
-                        @if(array_key_exists($i,$order_pros))
                         <div class="destination">
                             <div class="destination_end">
                                 <p class="unit_number">
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="origin_country_name">{{$order_pros[$i]['origin_country_name']?:'无' }}</span>
+                                    <span data-index=@{{ $v.GNo  }}
+                                          data-id="origin_country_name">@{{$v.OriginCountryName }}</span>
                                 </p>
                                 <p class="unit_number">
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="origin_country">({{$order_pros[$i]['origin_country']?:'无' }})</span>
+                                    <span data-index=@{{ $v.GNo  }}
+                                          data-id="origin_country">(@{{$v.OriginCountry }})</span>
                                 </p>
                             </div>
                             <div class="destination_domestic">
                                 <p>(
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="district_code">{{$order_pros[$i]['district_code']?:'无' }}</span>
+                                    <span data-index=@{{ $v.GNo  }}
+                                          data-id="district_code">@{{$v.DistrictCode }}</span>
                                     /
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="dest_code">{{$order_pros[$i]['dest_code']?:'无' }}</span>
+                                    <span data-index=@{{ $v.GNo  }}
+                                          data-id="dest_code">@{{$v.DestCode }}</span>
                                     )
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="district_code_name">{{$order_pros[$i]['district_code_name']?:'无' }}</span>
+                                    <span data-index=@{{ $v.GNo  }}
+                                          data-id="district_code_name">@{{$v.DistrictCodeName }}</span>
                                     /
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="dest_code_name">{{$order_pros[$i]['dest_code_name']?:'无' }}</span>
+                                    <span data-index=@{{ $v.GNo  }}
+                                          data-id="dest_code_name">@{{$v.DestCodeName }}</span>
                                 </p>
                             </div>
                         </div>
-                        @endif
                     </td>
                     <td>
-                        @if(array_key_exists($i,$order_pros))
                         <div class="exempted">
-                            <p data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="duty_mode_name">{{$order_pros[$i]['duty_mode_name']?:'无' }}</p>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="duty_mode">({{$order_pros[$i]['duty_mode']?:'无' }})</span>
+                            <p data-index=@{{ $v.GNo  }}
+                               data-id="duty_mode_name">@{{$v.DutyModeName }}</p>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="duty_mode">(@{{$v.DutyMode }})</span>
                         </div>
-                        @endif
                     </td>
 
                     <td>
-                        @if(array_key_exists($i,$order_pros))
                         <p class="exempted">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="exg_version">{{ $order_pros[$i]['exg_version']?:'无' }}</span>
+                            <span data-index=@{{ $v.GNo  }}
+                                  data-id="exg_version">@{{ $v.ExgVersion }}</span>
                         </p>
-                        @endif
                     </td>
-
                 </tr>
-                @endfor
+                @{{end}}
 
                 <tr class="pdf-table-tr-21">
                     <td colspan="16">
                         <p class="confirm">
                             <span class="confirm_title">特殊关系确认：</span>
                             <span class="table_list_span_9" data-id="promise_itmes0">
-                                            @if($order->promise_itmes&& array_key_exists(0,$order->promise_itmes))
-                                            @if($order->promise_itmes[0] == '0')
-                                            否
-                                            @elseif($order->promise_itmes[0] == '1')
-                                            是
-                                            @elseif($order->promise_itmes[0] == '9')
-                                            空
-                                            @endif
-                                            @endif
+                                @{{.m.PromiseItmes0}}
                                         </span>
                             <span class="width_60"></span>
                             <span class="width_60"></span>
                             <span class="confirm_title">价格影响确认：</span>
                             <span class="table_list_span_9" data-id="promise_itmes1">
-                                            @if($order->promise_itmes&& array_key_exists(1,$order->promise_itmes))
-                                            @if($order->promise_itmes[1] == '0')
-                                            否
-                                            @elseif($order->promise_itmes[1] == '1')
-                                            是
-                                            @elseif($order->promise_itmes[1] == '9')
-                                            空
-                                            @endif
-                                            @endif
+                                           @{{.m.PromiseItmes1}}
                                         </span>
                             <span class="width_60"></span>
                             <span class="width_60"></span>
                             <span class="confirm_title">支付特许权使用费确认：</span>
                             <span class="table_list_span_9" data-id="promise_itmes2">
-                                            @if($order->promise_itmes&& array_key_exists(2,$order->promise_itmes))
-                                            @if($order->promise_itmes[2] == '0')
-                                            否
-                                            @elseif($order->promise_itmes[2] == '1')
-                                            是
-                                            @elseif($order->promise_itmes[2] == '9')
-                                            空
-                                            @endif
-                                            @endif
+                                                 @{{.m.PromiseItmes2}}
                                         </span>
                             <span class="width_60"></span>
                             <span class="width_60"></span>
                             <span class="confirm_title">自报自缴：</span>
                             <span class="table_list_span_9" data-id="type1">
-                                            @if(\Illuminate\Support\Str::contains('Z',$order->type))
-                                            是
-                                            @else
-                                            否
-                                            @endif
+                                          @{{.m.Type}}
                                         </span>
                         </p>
                     </td>
@@ -850,21 +833,22 @@
                         <div class="table_bottom_float_left">
                             <p class="table_bottom">
                                 <span class="confirm_title">报关人员</span>
-                                <span class="table_list_span_9" data-id="oper_name">{{$order->oper_name?:'无' }}</span>
+                                <span class="table_list_span_9" data-id="oper_name">@{{ .m.OperName }}</span>
                                 <span class="width_45"></span>
                                 <span class="confirm_title">报关人员证号</span>
                                 <span class="table_list_span_9"></span>
                                 <span class="width_45"></span>
                                 <span class="confirm_title">电话</span>
-                                <span class="table_list_span_9" data-id="agent_tel">{{config('agent.agent_tel')?:'无' }}</span>
+                                <span class="table_list_span_9"
+                                      data-id="agent_tel"></span>
                             </p>
                             <p>
                                 <span>&nbsp;</span>
                             </p>
                             <p class="table_bottom_i">
                                 <span class="confirm_title">申报单位</span>
-                                <span class="table_list_span_9" data-id="agent_code_scc">({{$order->agent_code_scc?:'无' }})</span>
-                                <span class="table_list_span_9" data-id="agent_name">{{$order->agent_name?:'无' }}</span>
+                                <span class="table_list_span_9" data-id="agent_code_scc">(@{{ .m.AgentCodeScc }})</span>
+                                <span class="table_list_span_9" data-id="agent_name">@{{ .m.AgentName }}</span>
                             </p>
                         </div>
                         <div class="table_bottom_float_right">
@@ -902,189 +886,200 @@
                 </tbody>
             </table>
 
-            @if(count($order_pros)>6)
-            @for ($x = 0; $x < ceil((count($order_pros)-6)/14); $x++) <div class="height_30">
-            </div>
-            @include('order::e.common.recheck_delaration_header')
-            <div class="height_10"></div>
-            <table cellspacing="0" cellpadding="0" class="pdf-table-two">
-                <tbody>
-                <tr class="pdf-table-tr-12">
-                    <td>
-                        <p class="table_td_p">
-                            <span class="span_bold">项号</span>
-                        </p>
-                    </td>
-                    <td colspan="3">
-                        <p class="table_td_p">
-                            <span class="span_bold">商品编号</span>
-                            <span style="width:75.9pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:116.7pt"></span>
-                            <span class="span_bold">商品名称及规格型号</span>
-                        </p>
-                    </td>
-                    <td>
-                        <p class="table_td_p">
-                            <span class="span_bold">数量及单位</span>
-                        </p>
-                    </td>
-                    <td colspan="2">
-                        <p class="table_td_p">
-                            <span class="span_bold">单价/总价/币制</span>
-                        </p>
-                    </td>
-                    <td colspan="3">
-                        <p class="table_td_p">
-                            <span class="span_bold">原产国(地区)</span>
-                        </p>
-                    </td>
-                    <td colspan="4">
-                        <p class="table_td_p">
-                            <span class="span_bold">最终目的国(地区)</span>
-                            <span style="width:47.15pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:111.9pt"></span>
-                            <span class="span_bold">境内货源地</span>
-                        </p>
-                    </td>
-                    <td>
-                        <p class="table_td_p">
-                            <span class="span_bold">征免</span>
-                        </p>
-                    </td>
-                    <td>
-                        <p class="table_td_p">
-                            <span class="span_bold">版本号</span>
-                        </p>
-                    </td>
-                </tr>
+      @{{ if .m.OtherOrderItems }}
+        @{{ range $index,$other := .m.OtherOrderItems}}
+        <div class="height_30">
+        </div>
+@{{/*        @{{template "/common/order_annotation/recheck_delaration_header.html" }}*/}}
+        <div class="height_10"></div>
+        <table cellspacing="0" cellpadding="0" class="pdf-table-two">
+            <tbody>
+            <tr class="pdf-table-tr-12">
+                <td>
+                    <p class="table_td_p">
+                        <span class="span_bold">项号</span>
+                    </p>
+                </td>
+                <td colspan="3">
+                    <p class="table_td_p">
+                        <span class="span_bold">商品编号</span>
+                        <span style="width:75.9pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:116.7pt"></span>
+                        <span class="span_bold">商品名称及规格型号</span>
+                    </p>
+                </td>
+                <td>
+                    <p class="table_td_p">
+                        <span class="span_bold">数量及单位</span>
+                    </p>
+                </td>
+                <td colspan="2">
+                    <p class="table_td_p">
+                        <span class="span_bold">单价/总价/币制</span>
+                    </p>
+                </td>
+                <td colspan="3">
+                    <p class="table_td_p">
+                        <span class="span_bold">原产国(地区)</span>
+                    </p>
+                </td>
+                <td colspan="4">
+                    <p class="table_td_p">
+                        <span class="span_bold">最终目的国(地区)</span>
+                        <span style="width:47.15pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:111.9pt"></span>
+                        <span class="span_bold">境内货源地</span>
+                    </p>
+                </td>
+                <td>
+                    <p class="table_td_p">
+                        <span class="span_bold">征免</span>
+                    </p>
+                </td>
+                <td>
+                    <p class="table_td_p">
+                        <span class="span_bold">版本号</span>
+                    </p>
+                </td>
+            </tr>
 
-                @for ($i = 6 + $x*14; $i < 20+ $x*14; $i++) <tr class="pdf-table-tr-30-two">
-                    <td class="width_22">
-                        @if(array_key_exists($i,$order_pros))
-                        <p class="table_list_p">
-                            <span class="table_list_span_9" data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_no">{{ $order_pros[$i]['g_no']?:'无' }}</span>
-                        </p>
-                        <p class="table_list_p">
-                            <span class="table_list_span_9" data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="contr_item">({{ $order_pros[$i]['contr_item']?:'无' }})</span>
-                        </p>
-                        @endif
-                    </td>
-                    <td colspan="3">
-                        @if(array_key_exists($i,$order_pros))
-                        <p class="goods_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="code_t_s">{{ $order_pros[$i]['code_t_s']?:'无' }}</span>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_name"> {{ $order_pros[$i]['g_name']?:'无' }}</span>
-                        </p>
-                        <p class="goods_name">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_model">{{ $order_pros[$i]['g_model']?:'无' }}</span>
-                        </p>
-                        @endif
-                    </td>
+            @{{ range $index,$value := $other}}
+            <tr class="pdf-table-tr-30-two">
+                <td class="width_22">
+                    <p class="table_list_p">
+                            <span class="table_list_span_9" data-index=@{{ $value.GNo  }}
+                                  data-id="g_no">@{{ $value.GNo }}</span>
+                    </p>
+                    <p class="table_list_p">
+                            <span class="table_list_span_9" data-index=@{{ $value.GNo  }}
+                                  data-id="contr_item">(@{{ $value.ContrItem }})</span>
+                    </p>
+                </td>
+                <td colspan="3">
+                    <p class="goods_number">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="code_t_s">@{{ $value.CodeTS }}</span>
+                        <span data-index=@{{ $value.GNo  }}
+                                  data-id="g_name"> @{{ $value.GName }}</span>
+                    </p>
+                    <p class="goods_name">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="g_model">@{{ $value.GModel }}</span>
+                    </p>
+                </td>
 
-                    <td>
-                        @if(array_key_exists($i,$order_pros))
-                        <p class="unit_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_qty">{{$order_pros[$i]['g_qty_string']?:'无' }}</span>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="g_unit_name">{{$order_pros[$i]['g_unit_name']?:'无' }}</span>
-                        </p>
-                        <p class="unit_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="first_qty">{{$order_pros[$i]['first_qty_string']?:'无' }}</span>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="first_unit_name">{{$order_pros[$i]['first_unit_name']?:'无' }}</span>
-                        </p>
-                        <p class="unit_number">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="second_qty">{{$order_pros[$i]['second_qty_string']?:'无' }}</span>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="second_unit_name">{{$order_pros[$i]['second_unit_name']?:'无' }}</span>
-                        </p>
-                        @endif
-                    </td>
-                    <td colspan="2">
-                        @if(array_key_exists($i,$order_pros))
-                        <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="decl_price">{{$order_pros[$i]['decl_price_string']?:'无' }}</span>
-                        </p>
-                        <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="decl_total">{{$order_pros[$i]['decl_total_string']?:'无' }}</span>
-                        </p>
-                        <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="trade_curr_name">{{$order_pros[$i]['trade_curr_name']?:'无' }}</span>
-                        </p>
-                        @endif
-                    </td>
-                    <td colspan="3">
-                        @if(array_key_exists($i,$order_pros))
-                        <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="destination_country_name">{{$order_pros[$i]['destination_country_name']?:'无' }}</span>
-                        </p>
-                        <p class="unit_price">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="destination_country">({{$order_pros[$i]['destination_country']?:'无' }})</span>
-                        </p>
-                        @endif
-                    </td>
-                    <td colspan="4">
-                        @if(array_key_exists($i,$order_pros))
-                        <div class="destination">
-                            <div class="destination_end">
-                                <p class="unit_number">
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="origin_country_name">{{$order_pros[$i]['origin_country_name']?:'无' }}</span>
-                                </p>
-                                <p class="unit_number">
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="origin_country">({{$order_pros[$i]['origin_country']?:'无' }})</span>
-                                </p>
-                            </div>
-                            <div class="destination_domestic">
-                                <p>(
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="district_code">{{$order_pros[$i]['district_code']?:'无' }}</span>
-                                    /
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="dest_code">{{$order_pros[$i]['dest_code']?:'无' }}</span>
-                                    )
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="district_code_name">{{$order_pros[$i]['district_code_name']?:'无' }}</span>
-                                    /
-                                    <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="dest_code_name">{{$order_pros[$i]['dest_code_name']?:'无' }}</span>
-                                </p>
-                            </div>
+                <td>
+                    <p class="unit_number">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="g_qty">@{{$value.GQty }}</span>
+                        <span data-index=@{{ $value.GNo  }}
+                                  data-id="g_unit_name">@{{$value.GUnitName }}</span>
+                    </p>
+                    <p class="unit_number">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="first_qty">@{{$value.FirstQty }}</span>
+                        <span data-index=@{{ $value.GNo  }}
+                                  data-id="first_unit_name">@{{$value.FirstUnitName }}</span>
+                    </p>
+                    <p class="unit_number">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="second_qty">@{{$value.SecondQty }}</span>
+                        <span data-index=@{{ $value.GNo  }}
+                                  data-id="second_unit_name">@{{$value.SecondUnitName }}</span>
+                    </p>
+                </td>
+                <td colspan="2">
+                    <p class="unit_price">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="decl_price">@{{$value.DeclPrice }}</span>
+                    </p>
+                    <p class="unit_price">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="decl_total">@{{$value.DeclTotal }}</span>
+                    </p>
+                    <p class="unit_price">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="trade_curr_name">@{{$value.TradeCurrName }}</span>
+                    </p>
+                </td>
+                <td colspan="3">
+                    <p class="unit_price">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="destination_country_name">@{{$value.DestinationCountryName }}</span>
+                    </p>
+                    <p class="unit_price">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="destination_country">(@{{$value.DestinationCountry }})</span>
+                    </p>
+                </td>
+                <td colspan="4">
+                    <div class="destination">
+                        <div class="destination_end">
+                            <p class="unit_number">
+                                    <span data-index=@{{ $value.GNo  }}
+                                          data-id="origin_country_name">@{{$value.OriginCountryName }}</span>
+                            </p>
+                            <p class="unit_number">
+                                    <span data-index=@{{ $value.GNo  }}
+                                          data-id="origin_country">(@{{$value.OriginCountry }})</span>
+                            </p>
                         </div>
-                        @endif
-                    </td>
-                    <td>
-                        @if(array_key_exists($i,$order_pros))
-                        <div class="exempted">
-                            <p data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="duty_mode_name">{{$order_pros[$i]['duty_mode_name']?:'无' }}</p>
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="duty_mode">({{$order_pros[$i]['duty_mode']?:'无' }})</span>
+                        <div class="destination_domestic">
+                            <p>(
+                                <span data-index=@{{ $value.GNo  }}
+                                          data-id="district_code">@{{$value.DistrictCode }}</span>
+                                /
+                                <span data-index=@{{ $value.GNo  }}
+                                          data-id="dest_code">@{{$value.DestCode }}</span>
+                                )
+                                <span data-index=@{{ $value.GNo  }}
+                                          data-id="district_code_name">@{{$value.DistrictCodeName }}</span>
+                                /
+                                <span data-index=@{{ $value.GNo  }}
+                                          data-id="dest_code_name">@{{$value.DestCodeName }}</span>
+                            </p>
                         </div>
-                        @endif
-                    </td>
-                    <td>
-                        @if(array_key_exists($i,$order_pros))
-                        <p class="exempted">
-                            <span data-index="{{ $order_pros[$i]['g_no'] ?:'无' }}" data-id="exg_version">{{ $order_pros[$i]['exg_version']?:'无' }}</span>
-                        </p>
-                        @endif
-                    </td>
+                    </div>
 
-                </tr>
-                @endfor
+                </td>
+                <td>
+                    <div class="exempted">
+                        <p data-index=@{{ $value.GNo  }}
+                           data-id="duty_mode_name">@{{$value.DutyModeName }}</p>
+                        <span data-index=@{{ $value.GNo  }}
+                                  data-id="duty_mode">(@{{$value.DutyMode }})</span>
+                    </div>
+                </td>
+                <td>
+                    <p class="exempted">
+                            <span data-index=@{{ $value.GNo  }}
+                                  data-id="exg_version">@{{ $value.ExgVersion }}</span>
+                    </p>
+                </td>
 
-                <tr style="height:0pt">
-                    <td style="width:21.75pt; border:none"></td>
-                    <td style="width:196.85pt; border:none"></td>
-                    <td style="width:45.75pt; border:none"></td>
-                    <td style="width:24.9pt; border:none"></td>
-                    <td style="width:57.65pt; border:none"></td>
-                    <td style="width:37.85pt; border:none"></td>
-                    <td style="width:41.7pt; border:none"></td>
-                    <td style="width:40.8pt; border:none"></td>
-                    <td style="width:12.5pt; border:none"></td>
-                    <td style="width:46.5pt; border:none"></td>
-                    <td style="width:8.25pt; border:none"></td>
-                    <td style="width:37.55pt; border:none"></td>
-                    <td style="width:28.55pt; border:none"></td>
-                    <td style="width:63.8pt; border:none"></td>
-                    <td style="width:63.75pt; border:none"></td>
-                    <td style="width:40.8pt; border:none"></td>
-                </tr>
-                </tbody>
-            </table>
-            @endfor
+            </tr>
 
-            @endif
+            <tr style="height:0pt">
+                <td style="width:21.75pt; border:none"></td>
+                <td style="width:196.85pt; border:none"></td>
+                <td style="width:45.75pt; border:none"></td>
+                <td style="width:24.9pt; border:none"></td>
+                <td style="width:57.65pt; border:none"></td>
+                <td style="width:37.85pt; border:none"></td>
+                <td style="width:41.7pt; border:none"></td>
+                <td style="width:40.8pt; border:none"></td>
+                <td style="width:12.5pt; border:none"></td>
+                <td style="width:46.5pt; border:none"></td>
+                <td style="width:8.25pt; border:none"></td>
+                <td style="width:37.55pt; border:none"></td>
+                <td style="width:28.55pt; border:none"></td>
+                <td style="width:63.8pt; border:none"></td>
+                <td style="width:63.75pt; border:none"></td>
+                <td style="width:40.8pt; border:none"></td>
+            </tr>
+            @{{end}}
+            </tbody>
+        </table>
+        @{{end}}
+        @{{end}}
         </div>
     </div>
-</script>
+</div>
