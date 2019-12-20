@@ -19,7 +19,10 @@
           jq: $,
       });
 
-      laytpl($("#order_i_declaration_template").html()).render({}, function (html) {
+      // 复核页面渲染
+      let order = @{{.m}};
+      console.log(order);
+      laytpl($("#order_i_declaration_template").html()).render(order, function (html) {
           $("#order_i_declaration").html(html)
       });
 

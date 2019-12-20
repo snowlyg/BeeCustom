@@ -14,7 +14,7 @@
             </div>
             <div class="two">
                 <span>海关编号：</span>
-                @{{ if .IsOther }}
+                @{{ if  .IsOther }}
                     异地报关
                 @{{ else  }}
                  @{{ .EntryId }}
@@ -23,6 +23,6 @@
             <div class="three">
                 <span>(@{{ .CustomMasterName }})</span>
             </div>
-            
+
         </div>
     </div>
