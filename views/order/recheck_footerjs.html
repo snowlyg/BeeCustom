@@ -3,17 +3,28 @@
     base: '/static/customAdmin/',
   }).extend({
     index: 'lib/index',
-  }).use(['index', 'form', 'admin', 'table', 'AutoComplete', 'laydate', 'laytpl', 'upload'], async () => {
-    const {form, admin, $} = layui;
-    let /**附注数据**/ order_note_data/**获取附件类型**/;
-    /**根据屏幕等比例缩小**/
-    admin.sideFlexible_window();
+  }).use(['index', 'AutoComplete', 'laydate', 'laytpl'], async () => {
+    const {form, admin, $,laytpl} = layui;
+      let order_note_data, order_note_index
+          , order_id = "@{{.m.Id}}" || null //状态
+          , iEFlagName = "@{{.IEFlagName}}"  //进出口标志名称
+          , statusString = "@{{.m.StatusString}}" || null ;//状态
+
+    admin.sideFlexible_window();  /**根据屏幕等比例缩小**/
     /**回车键光标跳转**/
     admin.keydown_input_textarea();
-    /**附注**/
-    let order_note_index;
+      // 加载按钮
+      admin.getBtnTem("#order_button_template","#order_button",{
+          statusString: statusString,
+          jq: $,
+      });
+
+      laytpl($("#order_i_declaration_template").html()).render({}, function (html) {
+          $("#order_i_declaration").html(html)
+      });
+
     $('body').on('click', '#order_note', async function() {
-      if (!@{{.m.Id}}) {
+      if (!order_id) {
         return layer.msg('请先保存订单！');
       }
       order_note_index = layer.open({
@@ -37,7 +48,7 @@
     /**附注保存**/
     form.on('submit(remark_note_submit)', async (data) => {
       order_note_data = data.field.ExtraRemark;
-      await admin.post(`/annotation/i/${@{{.m.Id}}}/extra_remark`, data.field);
+      await admin.post(`/order/i/${order_id}/extra_remark`, data.field);
       layer.close(order_note_index);
     });
 
@@ -47,23 +58,27 @@
         return layer.msg('有错误内容，无法通过！');
       }
       layer.load(2);
-      const result = await admin.post(`/annotation/recheck_pass/${@{{.m.Id}}}`, data.field, true);
+      const result = await admin.post(`/order/recheck_pass/${order_id}`, data.field, true);
       if (result.status) {
         layer.closeAll('loading');
         setTimeout(() => {
-          window.location.reload();
-          layui.admin.reloadFrame("@{{.ImpexpMarkcdName}}" + '进口核注清单iframe');
-        }, 1000);
+          layui.admin.reloadFrame(iEFlagName + '进口核注清单iframe');
+            // 加载按钮
+            admin.getBtnTem("#order_button_template","#order_button",{
+                statusString: statusString,
+                jq: $,
+            });
+        }, 150);
       }
 
     });
 
     /**打印**/
     $('body').on('click', '#order_print', async function() {
-      if (!@{{.m.Id}}) {
+      if (!order_id) {
         return layer.msg('请先保存订单！');
       }
-      let url = await admin.get(`/annotation/print/${@{{.m.Id}}}`);
+      let url = await admin.get(`/order/print/${order_id}`);
       if (url) {
         window.open(url,"打印清单")
       }
@@ -96,7 +111,7 @@
         data.field.ItemRecheckErrorInputIds = JSON.stringify(recheck_data_item);
         console.log(data.field.RecheckErrorInputIds)
         console.log(data.field.ItemRecheckErrorInputIds)
-        const res = await admin.post(`/annotation/recheck_reject/${@{{.m.Id}}}`, data.field, true);
+        const res = await admin.post(`/order/recheck_reject/${order_id}`, data.field, true);
         layer.closeAll('loading');
         if (res.status) {
           setTimeout(() => {

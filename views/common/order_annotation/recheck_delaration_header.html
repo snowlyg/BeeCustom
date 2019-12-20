@@ -1,0 +1,28 @@
+<div class="pdf-header">
+        <div class="pdf-top">
+            <div class="logo">
+                <img src="/static/images/declaration_logo.png" width="50">
+            </div>
+            <div class="height_15"></div>
+            <p class="title">中华人民共和国海关@{{.IEFlagName}}货物报关单</p>
+        </div>
+        <div class="height_30"></div>
+        <div class="pdf-number">
+            <div class="one">
+                <span>预录入编号：</span>
+                @{{ .PreEntryId }}
+            </div>
+            <div class="two">
+                <span>海关编号：</span>
+                @{{ if .IsOther }}
+                    异地报关
+                @{{ else  }}
+                 @{{ .EntryId }}
+                @{{ end }}
+            </div>
+            <div class="three">
+                <span>(@{{ .CustomMasterName }})</span>
+            </div>
+            
+        </div>
+    </div>

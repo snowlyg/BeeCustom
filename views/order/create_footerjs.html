@@ -55,7 +55,10 @@
         });
 
         // 加载按钮
-        getBtnTem();
+        admin.getBtnTem("#order_button_template","#order_button",{
+            statusString: statusString,
+            jq: $,
+        });
 
         // 基础参数版本
         await admin.getClearanceData();
@@ -3657,7 +3660,10 @@
                 setTimeout(() => {
                     admin.reloadFrame(iEFlagName + '报关整合申报iframe');
                     statusString = "待复核";
-                    getBtnTem();
+                    admin.getBtnTem("#order_button_template","#order_button",{
+                        statusString: statusString,
+                        jq: $,
+                    });
                 }, 150)
             }
 
@@ -4004,19 +4010,8 @@
             obj.index = null
         }
 
-        function getBtnTem() {  // 按钮模板渲染
-            laytpl($("#order_button_template").html()).render({
-                statusString: statusString,
-                jq: $,
-            }, function (html) {
-                $("#order_button").html(html)
-            });
-        }
-
-
         // 置空表体表单数据
         function setOrderItemEmptyData(is_order_item_insert) {
-            // setTimeout(() => {
             /**产品**/
             admin.getOrderTable(OrderItemsData, ieflag)
             $('#order_pros_form input').each(function () {
@@ -4064,7 +4059,6 @@
             /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
             orderItemIndex = null
             isOrderItemInsert = is_order_item_insert
-            // }, 100)
         }
 
 

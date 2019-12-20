@@ -1,0 +1,1107 @@
+<style>
+    .pdf-header {
+        font-family: 宋体;
+        /*min-height: 18cm;*/
+    }
+
+    .pdf-top {
+        position: relative;
+    }
+
+    .logo {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .c39 {
+        position: absolute;
+        top: 0;
+        right: 85px;
+    }
+
+    .c39 p {
+        font-size: 1.5em;
+        text-align: center;
+        letter-spacing: 2px;
+    }
+
+    .qrcode {
+        position: absolute;
+        top: 0;
+        right: 0px;
+    }
+
+    .title {
+        font-size: 2.1em;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+    }
+
+    .height_15 {
+        height: 15px;
+    }
+
+    .one span,
+    .two span,
+    .three span,
+    .four span {
+        font-weight: bold;
+    }
+
+    .one {
+        display: inline-block;
+        width: 300px;
+    }
+
+    .two {
+        display: inline-block;
+        width: 300px;
+    }
+
+    .three {
+        display: inline-block;
+        width: 550px;
+    }
+
+    .four {
+        display: inline-block;
+    }
+
+    .height_30 {
+        height: 30px;
+    }
+
+
+
+    .pdf {
+        font-family: 宋体;
+    }
+
+    .c39 p {
+        font-size: 1.5em;
+        text-align: center;
+        letter-spacing: 2px;
+    }
+
+    .one span,
+    .two span,
+    .three span,
+    .four span {
+        font-weight: bold;
+    }
+
+    .height_10 {
+        height: 0.37cm;
+    }
+
+    .pdf-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .pdf-table-two {
+        border-collapse: collapse;
+        width: 100%;
+        height: 21.06cm;
+    }
+
+    .pdf-table-tr-22 {
+        height: 22.5pt
+    }
+
+    .table_td_one_top {
+        border-left: 1.5pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 1.5pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .table_td_two_top {
+        border-left: 0.75pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 1.5pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .table_td_three_top {
+        border-left: 0.75pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 1.5pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .table_td_one_center {
+        border-left: 1.5pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .table_td_two_center {
+        border-left: 0.75pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .table_td_three_center {
+        border-left: 0.75pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .table_td_all {
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .pdf-table-tr-45 {
+        height: 45pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .pdf-table-tr-12 {
+        height: 12.75pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+        word-break: break-all;
+        page-break-before: always;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+
+    .pdf-table-tr-30-one {
+        height: 41.5pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .pdf-table-tr-30-two {
+        height: 41pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .pdf-table-tr-21 {
+        height: 26pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
+
+    .pdf-table-tr-52 {
+        height: 48pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 1.5pt solid #000000;
+    }
+
+    .table_td_p {
+        line-height: 11.55pt;
+        margin: 3pt 3pt 3pt 3.75pt;
+    }
+
+    .table_td_p .span_bold {
+        font-weight: bold;
+        color: #333333;
+    }
+
+    .table_td_p .span {
+        color: #333333;
+    }
+
+    .table_list_p {
+        line-height: 9.9pt;
+        margin: 0pt 0pt 0pt 5.75pt;
+    }
+
+    .table_list_span_9 {
+        font-size: 9pt;
+    }
+
+    .width_22 {
+        width: 25pt;
+    }
+
+    .goods_number span,
+    .goods_name span,
+    .unit_number span,
+    .unit_price span {
+        font-size: 9pt
+    }
+
+    .goods_number {
+        line-height: 10.2pt;
+        margin: 0pt 0pt 0pt 2.75pt;
+    }
+
+    .goods_name {
+        line-height: 11pt;
+        margin: 0pt 0pt 0pt 62pt;
+    }
+
+    .unit_number {
+        line-height: 10.7pt;
+        white-space: nowrap;
+    }
+
+    .unit_price {
+        line-height: 10.5pt;
+        text-align: left;
+    }
+
+    .destination {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+        flex-flow: row nowrap;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        page-break-inside: avoid !important;
+        width: 210pt;
+    }
+
+    .destination_end {
+        width: 80pt;
+        text-align: right;
+    }
+
+    .destination_domestic {
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+        width: 160pt;
+    }
+
+    .exempted {
+        font-size: 9pt;
+        line-height: 86%;
+        margin: 0.45pt 7.05pt 0pt 14.95pt;
+        padding-left: 4.5pt;
+        text-indent: -4.5pt;
+    }
+
+    .confirm {
+        margin: 4.7pt 0pt 0pt 72.45pt;
+    }
+
+    .confirm_title {
+        color: #333333;
+        font-family: 宋体;
+        font-size: 7.5pt;
+        font-weight: bold
+    }
+
+    .width_60 {
+        width: 60.5pt;
+        display: inline-block;
+    }
+
+    .width_45 {
+        width: 45pt;
+        display: inline-block;
+    }
+
+    .table_bottom {
+        margin: 6.8pt 0pt 0pt 8.25pt;
+    }
+
+    .table_bottom_i {
+        margin: 0pt 0pt 0pt 8.25pt;
+    }
+
+    .table_bottom_float_left {
+        float: left;
+    }
+
+    .table_bottom_float_right {
+        float: right;
+        text-align: right;
+        margin-right: 6pt;
+    }
+
+    .table_bottom_float_right p {
+        font-size: 9pt;
+        font-weight: bold;
+        margin-top: 8pt;
+    }
+
+    .stamped {
+        border-left: 0.75pt solid #000000;
+        vertical-align: top;
+    }
+
+    .stamped_p {
+        margin: 0pt 0pt 0pt 8.1pt;
+    }
+
+    /* 新增样式 */
+    .recheck_order_bj {
+        background: #ffffff;
+        padding: 25px;
+    }
+
+    .is_error {
+        background-color: rgba(255, 235, 236, 1);
+        color: #FF3940;
+        font-family: "iconfont" !important;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .is_error:after {
+        content: '\eb1f';
+    }
+
+    .is_warn {
+        background-color: #fff8f2;
+        color: #ff7608;
+        font-family: "iconfont" !important;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .is_warn:after {
+        content: '\e8eb';
+    }
+
+    .create_span {
+        font-weight: normal !important
+    }
+
+    .custom-order_form_content {
+        padding: 0;
+    }
+</style>
+<script type="text/html" id="order_i_declaration_template">
+<div class="recheck_order_bj">
+    @{{template "/common/order_annotation/recheck_delaration_header.html" .}}
+    <div class="pdf">
+        <div class="height_10"></div>
+        <table cellspacing="0" cellpadding="0" class="pdf-table">
+            <tbody>
+                <tr class="pdf-table-tr-22">
+                    <td colspan="2" class="table_td_one_top">
+                        <p class="table_td_p">
+                            <span class="span_bold">境内收货人 </span>
+                            <span data-id="trade_co_scc" data-id="trade_co_scc">(@{{ .TradeCoScc }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="trade_name">@{{ .TradeName }}</span></p>
+                    </td>
+                    <td colspan="3" class="table_td_two_top">
+                        <p class="table_td_p">
+                            <span class="span_bold">进境关别</span>
+                            <span data-id="i_e_port">(@{{ .IEPort }})</span>
+                        </p>
+                        <p class="table_td_p" data-id="i_e_port_name"><span>@{{ .IEPortName }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_top">
+                        <p class="table_td_p">
+                            <span class="span_bold">进口日期</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="i_e_date">@{{ .IEDate }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_top">
+                        <p class="table_td_p">
+                            <span class="span_bold">申报日期</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="apl_date">@{{ .AplDate }}</span></p>
+                    </td>
+                    <td colspan="3" class="table_td_three_top">
+                        <p class="table_td_p">
+                            <span class="span_bold">备案号</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="manual_no">@{{ .ManualNo }}</span></p>
+                    </td>
+                </tr>
+                <tr class="pdf-table-tr-22">
+                    <td colspan="2" class="table_td_one_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">境外发货人</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="overseas_consignee_ename">@{{ .OverseasConsignorEname }}</span></p>
+                    </td>
+                    <td colspan="3" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">运输方式</span>
+                            <span data-id="traf_mode">(@{{ .TrafMode }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="traf_mode_name">@{{ .TrafModeName }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">运输工具名称及航次号</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="traf_name">@{{ .TrafName }}</span>/<span data-id="voy_no" class="create_span">@{{ .VoyNo }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">提运单号</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="bill_no">@{{ .BillNo }}</span></p>
+                    </td>
+                    </td>
+                    <td colspan="7" class="table_td_three_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">货物存放地点</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="goods_place">@{{ .GoodsPlace }}</span></p>
+                    </td>
+                </tr>
+                <tr class="pdf-table-tr-22">
+                    <td colspan="2" class="table_td_one_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">生产销售单位</span>
+                            <span data-id="owner_code_scc">(@{{ .OwnerCodeScc }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="owner_name">@{{ .OwnerName }}</span></p>
+                    </td>
+                    <td colspan="3" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">监管方式</span>
+                            <span data-id="trade_mode">(@{{ .TradeMode }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="trade_mode_name">@{{ .TradeModeName }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">征免性质</span>
+                            <span data-id="cut_mode">(@{{ .CutMode }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="cut_mode_name">@{{ .CutModeName }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">许可证号</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="license_no">@{{.LicenseNo }}</span></p>
+                    </td>
+                    </td>
+                    <td colspan="3" class="table_td_three_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">启运港</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="desp_port_name">@{{.DespPortName }}</span></p>
+                    </td>
+                </tr>
+                <tr class="pdf-table-tr-22">
+                    <td colspan="2" class="table_td_one_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">合同协议号</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="contr_no">@{{.ContrNo }}</span></p>
+                    </td>
+                    <td colspan="3" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">贸易国（地区）</span>
+                            <span data-id="trade_area_code">(@{{.TradeAreaCode }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="trade_area_name">@{{.TradeAreaName }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">启运国（地区）</span>
+                            <span data-id="trade_country_name">(@{{.TradeCountry }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="trade_country_name">@{{.TradeCountryName }}</span></p>
+                    </td>
+                    <td colspan="4" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">指运港</span>
+                            <span data-id="distinate_port">(@{{.DistinatePort }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="distinate_port_name">@{{.DistinatePortName }}</span></p>
+                    </td>
+                    <td colspan="3" class="table_td_three_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">入境口岸</span>
+                            <span data-id="enty_port_code">(@{{.EntyPortCode }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="enty_port_name">@{{.EntyPortName }}</span></p>
+                    </td>
+                </tr>
+                <tr class="pdf-table-tr-22">
+                    <td colspan="2" class="table_td_one_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">包装种类</span>
+                            <span data-id="wrap_type">(@{{.WrapType }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="wrap_type_name">@{{.WrapTypeName }}</span></p>
+                    </td>
+                    <td class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">件数</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="pack_no">@{{.PackNo }}</span></p>
+                    </td>
+                    <td colspan="2" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">毛重(千克)</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="gross_wet">@{{.GrossWetString }}</span></p>
+                    </td>
+                    <td colspan="2" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">净重(千克)</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="net_wt">@{{.NetWtString }}</span></p>
+                    </td>
+                    <td colspan="2" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">成交方式</span>
+                            <span data-id="trans_mode">(@{{.TransMode }})</span>
+                        </p>
+                        <p class="table_td_p"><span data-id="trans_mode_name">@{{.TransModeName }}</span></p>
+                    </td>
+                    <td colspan="3" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">运费</span>
+                        </p>
+                        <p class="table_td_p">
+                            @{{if  .FeeMarkName  }}
+                            <span class="create_span" data-id="fee_mark_name">@{{ .FeeMarkName }}</span>/ <span class="create_span" data-id="fee_curr_name"> @{{ .FeeCurrName }}</span>/ <span class="create_span" data-id="fee_rate"> @{{ .FeeRate }}</span>
+                            @{{end}}
+                        </p>
+                    </td>
+                    <td colspan="2" class="table_td_two_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">保费</span>
+                        </p>
+                        <p class="table_td_p">
+                            @{{if .InsurMarkName  }}
+                            <span class="create_span" data-id="insur_mark_name">@{{ .InsurMarkName }}</span>/<span class="create_span" data-id="insur_curr_name"> @{{ .InsurCurrName }}</span>/ <span class="create_span" data-id="insur_rate"> @{{ .InsurRate }}</span>
+                            @{{end}}
+                        </p>
+                    </td>
+                    <td colspan="2" class="table_td_three_center">
+                        <p class="table_td_p">
+                            <span class="span_bold">杂费</span>
+                        </p>
+                        <p class="table_td_p">
+                            @{{if .OtherMarkName  }}
+                            <span class="create_span">@{{ .OtherMarkName }}</span>/ <span class="create_span">@{{ .OtherCurrName }}</span>/ <span class="create_span">@{{ .OtherRate }}</span>
+                            @{{end}}
+                        </p>
+                    </td>
+                </tr>
+                <tr class="pdf-table-tr-22">
+                    <td colspan="16" class="table_td_all">
+                        <p class="table_td_p">
+                            <span class="span_bold">随附单证及编号</span>
+                        </p>
+                        <p class="table_td_p">
+                            <span data-id="documents">
+                        @{{if .Documents }}
+                        随附单证0
+                        @{{else}}C
+                        随附单证@{{.Documentount}}:代理报关委托协议（电子）;
+                                    @{{ range $index,$doc :=  .Documents }}
+                                        @{{$doc.DocuCodeName . ';' . $doc.CertCode . ';'}}
+                                    @{{end}}
+                        @{{end}}
+                            </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr class="pdf-table-tr-45">
+                    <td colspan="16" class="table_td_all">
+                        <p class="table_td_p">
+                            <span class="span_bold">标记唛码及备注</span>
+                        </p>
+                        <div class="table_td_p">
+                            <p>
+                                备注:<span class="create_span" data-id="note_s">@{{.NoteS }}</span> <span class="create_span" data-id="mark_no">@{{.MarkNo }}</span>
+                                @{{if .Containers }}
+                                集装箱标箱数及号码：
+                                <span class="create_span" data-id="containers">@{{.ContainerCounts }};@{{.ContainerId }}</span>
+                                @{{else}}
+                                集装箱标箱数及号码：
+                                <span class="create_span" data-id="containers">0;无</span>
+                                @{{end}}
+                                @{{if .RelId}}
+                                <span id="containers" data-id="rel_id">关联报关单：@{{.RelId }}</span>
+                                @{{end}}
+                                @{{if .RelManNo }}
+                                <span id="containers" data-id="rel_man_no">关联报备案：@{{.RelManNo }}</span>
+                                @{{end}}
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="pdf-table-tr-12">
+                    <td>
+                        <p class="table_td_p">
+                            <span class="span_bold">项号</span>
+                        </p>
+                    </td>
+                    <td colspan="3">
+                        <p class="table_td_p">
+                            <span class="span_bold">商品编号</span>
+                            <span style="width:75.9pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:116.7pt"></span>
+                            <span class="span_bold">商品名称及规格型号</span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="table_td_p">
+                            <span class="span_bold">数量及单位</span>
+                        </p>
+                    </td>
+                    <td>
+                        <p style="margin:0pt; orphans:0; widows:0">
+                            <span style="font-family:'Times New Roman'; font-size:8pt">&nbsp;</span>
+                        </p>
+                    </td>
+                    <td colspan="2">
+                        <p class="table_td_p">
+                            <span class="span_bold">单价/总价/币制</span>
+                        </p>
+                    </td>
+                    <td colspan="3">
+                        <p class="table_td_p">
+                            <span class="span_bold">原产国(地区)</span>
+                        </p>
+                    </td>
+                    <td colspan="4">
+                        <p class="table_td_p">
+                            <span class="span_bold">最终目的国(地区)</span>
+                            <span style="width:47.15pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:111.9pt"></span>
+                            <span class="span_bold">境内货源地</span>
+                        </p>
+                    </td>
+                    <td style="border-right:1.5pt solid #000000">
+                        <p class="table_td_p">
+                            <span class="span_bold">征免</span>
+                        </p>
+                    </td>
+                </tr>
+
+@{{/*                @php*/}}
+@{{/*                $order_pros = .Pros->toArray();*/}}
+@{{/*                @endphp*/}}
+
+@{{/*                @for ($i = 0; $i < 6; $i++) */}}
+                @{{range $index,$pro := .Pros}}｝
+                <tr class="pdf-table-tr-30-one">
+                    <td class="width_22">
+                        @{{if $pro }}
+                        <p class="table_list_p">
+                            <span class="table_list_span_9" data-index="@{{ $pro.GNo }}" data-id="g_no">@{{ $pro.GNo }}</span>
+                        </p>
+                        <p class="table_list_p">
+                            <span class="table_list_span_9" data-index="@{{ $pro.GNo  }}" data-id="contr_item">(@{{ $pro.ContrItem }})</span>
+                        </p>
+                        @{{end}}
+                    </td>
+                    <td colspan="3">
+                        @{{if $pro }}
+                        <p class="goods_number">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="code_t_s">@{{ $pro.CodeTS }} @{{ $pro.GName }}</span>
+                        </p>
+                        <p class="goods_name">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="g_model">@{{ $pro.GModel }}</span>
+                        </p>
+                        @{{end}}
+                    </td>
+
+                    <td>
+                        @{{if $pro }}
+                        <p class="unit_number">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="g_qty">@{{$pro.GQtyString }}</span>
+                            <span data-index="@{{ $pro.GNo  }}" data-id="g_unit_name">@{{$pro.GUnitName }}</span>
+                        </p>
+                        <p class="unit_number">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="first_qty">@{{$pro.FirstQtyString }}</span>
+                            <span data-index="@{{ $pro.GNo  }}" data-id="first_unit_name">@{{$pro.FirstUnitName }}</span>
+                        </p>
+                        <p class="unit_number">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="second_qty">@{{$pro.SecondQtyString }}</span>
+                            <span data-index="@{{ $pro.GNo  }}" data-id="second_unit_name">@{{$pro.SecondUnitName }}</span>
+                        </p>
+                        @{{end}}
+                    </td>
+                    <td>
+                        @{{if $pro }}
+                        <p>
+                            <span>&nbsp;</span>
+                        </p>
+                        @{{end}}
+                    </td>
+                    <td colspan="2">
+                        @{{if $pro }}
+                        <p class="unit_price">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="decl_price">@{{$pro.DeclPriceString }}</span>
+                        </p>
+                        <p class="unit_price">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="decl_total">@{{$pro.DeclTotalString }}</span>
+                        </p>
+                        <p class="unit_price">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="trade_curr_name">@{{$pro.TradeCurrName }}</span>
+                        </p>
+                        @{{end}}
+                    </td>
+                    <td colspan="3">
+                        @{{if $pro }}
+                        <p class="unit_price">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="origin_country_name">@{{$pro.OriginCountryName }}</span>
+                        </p>
+                        <p class="unit_price">
+                            <span data-index="@{{ $pro.GNo  }}" data-id="origin_country">(@{{$pro.OriginCountry }})</span>
+                        </p>
+                        @{{end}}
+                    </td>
+                    <td colspan="4">
+                        @{{if $pro }}
+                        <div class="destination">
+                            <div class="destination_end">
+                                <p class="unit_number">
+                                    <span data-index="@{{ $pro.GNo  }}" data-id="destination_country_name">@{{$pro.DestinationCountryName }}</span>
+                                </p>
+                                <p class="unit_number">
+                                    <span data-index="@{{ $pro.GNo  }}" data-id="destination_country">(@{{$pro.DestinationCountry }})</span>
+                                </p>
+                            </div>
+                            <div class="destination_domestic">
+                                <p>(
+                                    <span data-index="@{{ $pro.GNo  }}" data-id="district_code">@{{$pro.DistrictCode }}</span>
+                                    /
+                                    <span data-index="@{{ $pro.GNo  }}" data-id="dest_code">@{{$pro.DestCode }}</span>
+                                    )
+                                    <span data-index="@{{ $pro.GNo  }}" data-id="district_code_name">@{{$pro.DistrictCodeName }}</span>
+                                    /
+                                    <span data-index="@{{ $pro.GNo  }}" data-id="dest_code_name">@{{$pro.DestCodeName }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        @{{end}}
+                    </td>
+                    <td style="border-right:1.5pt solid #000000">
+                        @{{if $pro }}
+                        <div class="exempted">
+                            <p data-index="@{{ $pro.GNo  }}" data-id="duty_mode_name">@{{$pro.DutyModeName }}</p>
+                            <span data-index="@{{ $pro.GNo  }}" data-id="duty_mode">(@{{$pro.DutyMode }})</span>
+                        </div>
+                        @{{end}}
+                    </td>
+
+                    </tr>
+                    @{{end}}
+
+                    <tr class="pdf-table-tr-21">
+                        <td colspan="16" style="border-right:1.5pt solid #000000">
+                            <p class="confirm">
+                                <span class="confirm_title">特殊关系确认：</span>
+                                <span class="table_list_span_9" data-id="promise_itmes0">
+                                    @{{if .PromiseItmes }}
+                                    @{{if   .PromiseItmes   }}
+                                    @{{if eq .PromiseItmes  '0'}}
+                                    否
+                                    @{{else if eq .PromiseItmes  '1'}}
+                                    是
+                                    @{{else if eq .PromiseItmes  '9'}}
+                                    空
+                                    @{{end}}
+                                    @{{end}}
+                                    @{{end}}
+                                </span>
+                                <span class="width_60"></span>
+                                <span class="width_60"></span>
+                                <span class="confirm_title">价格影响确认：</span>
+                                <span class="table_list_span_9" data-id="promise_itmes1">
+                                    @{{if .PromiseItmes }}
+                                    @{{if  .PromiseItmes   }}
+                                    @{{if eq .PromiseItmes  '0'}}
+                                    否
+                                    @{{else if eq .PromiseItmes  '1'}}
+                                    是
+                                    @{{else if eq .PromiseItmes  '9'}}
+                                    空
+                                    @{{end}}
+                                    @{{end}}
+                                    @{{end}}
+                                </span>
+                                <span class="width_60"></span>
+                                <span class="width_60"></span>
+                                <span class="confirm_title">支付特许权使用费确认：</span>
+                                <span class="table_list_span_9" data-id="promise_itmes2">
+                                    @{{if .PromiseItmes }}
+                                    @{{if   .PromiseItmes   }}
+                                    @{{if eq .PromiseItmes  '0' }}
+                                    否
+                                    @{{else if eq .PromiseItmes  '1'}}
+                                    是
+                                    @{{else if eq .PromiseItmes '9'}}
+                                    空
+                                    @{{end}}
+                                    @{{end}}
+                                    @{{end}}
+                                </span>
+                                <span class="width_60"></span>
+                                <span class="width_60"></span>
+                                <span class="confirm_title">自报自缴：</span>
+                                <span class="table_list_span_9" data-id="type1">
+@{{/*                                    @{{if eq .Type "Z" }}*/}}
+@{{/*                                    是*/}}
+@{{/*                                    @{{else}}*/}}
+@{{/*                                    否*/}}
+@{{/*                                    @{{end}}*/}}
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="pdf-table-tr-52">
+                        <td colspan="10">
+                            <div class="table_bottom_float_left">
+                                <p class="table_bottom">
+                                    <span class="confirm_title">报关人员</span>
+                                    <span class="table_list_span_9" data-id="oper_name">@{{.OperName }}</span>
+                                    <span class="width_45"></span>
+                                    <span class="confirm_title">报关人员证号</span>
+                                    <span class="table_list_span_9"></span>
+                                    <span class="width_45"></span>
+                                    <span class="confirm_title">电话</span>
+                                    <span class="table_list_span_9" data-id="agent_tel"></span>
+                                </p>
+                                <p>
+                                    <span>&nbsp;</span>
+                                </p>
+                                <p class="table_bottom_i">
+                                    <span class="confirm_title">申报单位</span>
+                                    <span class="table_list_span_9" data-id="agent_code_scc">(@{{.AgentCodeScc }})</span>
+                                    <span class="table_list_span_9" data-id="agent_name">@{{.AgentName }}</span>
+                                </p>
+                            </div>
+                            <div class="table_bottom_float_right">
+                                <p>兹申明对以上内容承担如实申报、依法纳税之法律责任</p>
+                                <p>申报单位（签章）</p>
+                            </div>
+                        </td>
+                        <td class="stamped" colspan="6" style="border-right:1.5pt solid #000000">
+                            <p>
+                                <span>&nbsp;</span>
+                            </p>
+                            <p class="stamped_p">
+                                <span class="confirm_title">海关批注及签章</span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:0pt">
+                        <td style="width:21.75pt; border:none"></td>
+                        <td style="width:196.85pt; border:none"></td>
+                        <td style="width:45.75pt; border:none"></td>
+                        <td style="width:24.9pt; border:none"></td>
+                        <td style="width:57.65pt; border:none"></td>
+                        <td style="width:37.85pt; border:none"></td>
+                        <td style="width:41.7pt; border:none"></td>
+                        <td style="width:40.8pt; border:none"></td>
+                        <td style="width:12.5pt; border:none"></td>
+                        <td style="width:46.5pt; border:none"></td>
+                        <td style="width:8.25pt; border:none"></td>
+                        <td style="width:37.55pt; border:none"></td>
+                        <td style="width:28.55pt; border:none"></td>
+                        <td style="width:63.8pt; border:none"></td>
+                        <td style="width:63.75pt; border:none"></td>
+                        <td style="width:40.8pt; border:none"></td>
+                    </tr>
+            </tbody>
+        </table>
+
+@{{/*        @{{if count($order_pros)>6)*/}}
+@{{/*        @for ($x = 0; $x < ceil((count($order_pros)-6)/14); $x++)*/}}
+        @{{if .Pros  }}
+        @{{range $index,$pro := .Pros }}
+        <div class="height_30">
+    </div>
+    @{{template "/common/order_annotation/recheck_delaration_header.html" .}}
+    <div class="height_10"></div>
+    <table cellspacing="0" cellpadding="0" class="pdf-table-two">
+        <tbody>
+            <tr class="pdf-table-tr-12">
+                <td>
+                    <p class="table_td_p">
+                        <span class="span_bold">项号</span>
+                    </p>
+                </td>
+                <td colspan="3">
+                    <p class="table_td_p">
+                        <span class="span_bold">商品编号</span>
+                        <span style="width:75.9pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:116.7pt"></span>
+                        <span class="span_bold">商品名称及规格型号</span>
+                    </p>
+                </td>
+                <td>
+                    <p class="table_td_p">
+                        <span class="span_bold">数量及单位</span>
+                    </p>
+                </td>
+                <td colspan="2">
+                    <p class="table_td_p">
+                        <span class="span_bold">单价/总价/币制</span>
+                    </p>
+                </td>
+                <td colspan="3">
+                    <p class="table_td_p">
+                        <span class="span_bold">原产国(地区)</span>
+                    </p>
+                </td>
+                <td colspan="4">
+                    <p class="table_td_p">
+                        <span class="span_bold">最终目的国(地区)</span>
+                        <span style="width:47.15pt; text-indent:0pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:111.9pt"></span>
+                        <span class="span_bold">境内货源地</span>
+                    </p>
+                </td>
+                <td style="border-right:1.5pt solid #000000">
+                    <p class="table_td_p">
+                        <span class="span_bold">征免</span>
+                    </p>
+                </td>
+            </tr>
+
+@{{/*            @for ($i = 6 + $x*14; $i < 20+ $x*14; $i++)*/}}
+            @{{range $index,$pro := .Pros }}
+            <tr class="pdf-table-tr-30-two">
+                <td class="width_22">
+                    @{{if $pro }}
+                    <p class="table_list_p">
+                        <span class="table_list_span_9" data-index="@{{ $pro.GNo  }}" data-id="g_no">@{{ $pro.GNo }}</span>
+                    </p>
+                    <p class="table_list_p">
+                        <span class="table_list_span_9" data-index="@{{ $pro.GNo  }}" data-id="contr_item">(@{{ $pro.ContrItem }})</span>
+                    </p>
+                    @{{end}}
+                </td>
+                <td colspan="3">
+                    @{{if $pro }}
+                    <p class="goods_number">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="code_t_s">@{{ $pro.CodeTS }}</span>
+                        <span data-index="@{{ $pro.GNo  }}" data-id="g_name"> @{{ $pro.GName }}</span>
+                    </p>
+                    <p class="goods_name">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="g_model">@{{ $pro.GModel }}</span>
+                    </p>
+                    @{{end}}
+                </td>
+                <td>
+                    @{{if $pro }}
+                    <p class="unit_number">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="g_qty">@{{$pro.GQtyString }}</span>
+                        <span data-index="@{{ $pro.GNo  }}" data-id="g_unit_name">@{{$pro.GUnitName }}</span>
+                    </p>
+                    <p class="unit_number">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="first_qty">@{{$pro.FirstQtyString }}</span>
+                        <span data-index="@{{ $pro.GNo  }}" data-id="first_unit_name">@{{$pro.FirstUnitName }}</span>
+                    </p>
+                    <p class="unit_number">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="second_qty">@{{$pro.SecondQtyString }}</span>
+                        <span data-index="@{{ $pro.GNo  }}" data-id="second_unit_name">@{{$pro.SecondUnitName }}</span>
+                    </p>
+                    @{{end}}
+                </td>
+                <td colspan="2">
+                    @{{if $pro }}
+                    <p class="unit_price">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="decl_price">@{{$pro.DeclPriceString }}</span>
+                    </p>
+                    <p class="unit_price">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="decl_total">@{{$pro.DeclTotalString }}</span>
+                    </p>
+                    <p class="unit_price">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="trade_curr_name">@{{$pro.TradeCurrName }}</span>
+                    </p>
+                    @{{end}}
+                </td>
+                <td colspan="3">
+                    @{{if $pro }}
+                    <p class="unit_price">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="destination_country_name">@{{$pro.DestinationCountryName }}</span>
+                    </p>
+                    <p class="unit_price">
+                        <span data-index="@{{ $pro.GNo  }}" data-id="destination_country">(@{{$pro.DestinationCountry }})</span>
+                    </p>
+                    @{{end}}
+                </td>
+                <td colspan="4">
+                    @{{if $pro }}
+                    <div class="destination">
+                        <div class="destination_end">
+                            <p class="unit_number">
+                                <span data-index="@{{ $pro.GNo  }}" data-id="origin_country_name">@{{$pro.OriginCountryName }}</span>
+                            </p>
+                            <p class="unit_number">
+                                <span data-index="@{{ $pro.GNo  }}" data-id="origin_country">(@{{$pro.OriginCountry }})</span>
+                            </p>
+                        </div>
+                        <div class="destination_domestic">
+                            <p>(
+                                <span data-index="@{{ $pro.GNo  }}" data-id="district_code">@{{$pro.DistrictCode }}</span>
+                                /
+                                <span data-index="@{{ $pro.GNo  }}" data-id="dest_code">@{{$pro.DestCode }}</span>
+                                )
+                                <span data-index="@{{ $pro.GNo  }}" data-id="district_code_name">@{{$pro.DistrictCodeName }}</span>
+                                /
+                                <span data-index="@{{ $pro.GNo  }}" data-id="dest_code_name">@{{$pro.DestCodeName }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    @{{end}}
+                </td>
+                <td style="border-right:1.5pt solid #000000">
+                    @{{if $pro }}
+                    <div class="exempted">
+                        <p data-index="@{{ $pro.GNo  }}" data-id="duty_mode_name">@{{$pro.DutyModeName }}</p>
+                        <span data-index="@{{ $pro.GNo  }}" data-id="duty_mode">(@{{$pro.DutyMode }})</span>
+                    </div>
+                    @{{end}}
+                </td>
+
+                </tr>
+                @{{end}}
+
+                <tr style="height:0pt">
+                    <td style="width:21.75pt; border:none"></td>
+                    <td style="width:196.85pt; border:none"></td>
+                    <td style="width:45.75pt; border:none"></td>
+                    <td style="width:24.9pt; border:none"></td>
+                    <td style="width:57.65pt; border:none"></td>
+                    <td style="width:37.85pt; border:none"></td>
+                    <td style="width:41.7pt; border:none"></td>
+                    <td style="width:40.8pt; border:none"></td>
+                    <td style="width:12.5pt; border:none"></td>
+                    <td style="width:46.5pt; border:none"></td>
+                    <td style="width:8.25pt; border:none"></td>
+                    <td style="width:37.55pt; border:none"></td>
+                    <td style="width:28.55pt; border:none"></td>
+                    <td style="width:63.8pt; border:none"></td>
+                    <td style="width:63.75pt; border:none"></td>
+                    <td style="width:40.8pt; border:none"></td>
+                </tr>
+        </tbody>
+    </table>
+    @{{end}}
+
+    @{{end}}
+</div>
+</div>
+</script>

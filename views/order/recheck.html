@@ -1,18 +1,19 @@
 <div class="custom-order_form">
     <div class="custom-order_form_content">
-        <div class="custom-order_form_top">
-            @{{if eq  .m.StatusString  "待复核"  "复核中" }}
-                @{{ if canArray  .actions .m.ImpexpMarkcd  "canRecheckPass"}}
-                <button class="layui-btn custom-create_btn" id="order_review_pass" type="button">
-                    <i class="iconfont iconcheckcircle"></i>通过
-                </button>
-                @{{end}}
-                @{{ if canArray  .actions .m.ImpexpMarkcd  "canRecheckReject"}}
-                <button class="layui-btn custom-create_btn" id="order_reject" type="button">
-                    <i class="iconfont iconreplyall"></i>驳回
-                </button>
-                @{{end}}
+        <div class="custom-order_form_top" id="order_button"></div>
+        <script type="text/html" id="order_button_template">
+            {{# if( d.jq.inArray(d.statusString,[ "待复核" , "复核中"])>=0){  }}
+            @{{ if canArray  .actions .m.IEFlag  "canRecheckPass"}}
+            <button class="layui-btn custom-create_btn" id="order_review_pass" type="button">
+                <i class="iconfont iconcheckcircle"></i>通过
+            </button>
             @{{end}}
+            @{{ if canArray  .actions .m.IEFlag  "canRecheckReject"}}
+            <button class="layui-btn custom-create_btn" id="order_reject" type="button">
+                <i class="iconfont iconreplyall"></i>驳回
+            </button>
+            @{{end}}
+           {{# } }}
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" data-id="@{{ .m.Id }}"
                     onclick="layui.admin.annotation_jilu_click(this)"
                     type="button">
@@ -24,14 +25,30 @@
             </button>
             <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note"
                     type="button">
+                <i class="iconfont icon-tab"></i>附注
+                <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
+            </button>
+            <button class="layui-btn layui-btn-primary custom-create_btn_primary" id="order_note"
+                    type="button">
                 <i class="iconfont icontab"></i>附注
                 <span class="layui-badge-dot" id="order_note_dot" style="display: none;"></span>
             </button>
-        </div>
-        @{{template "/annotation/recheck/declaration.html" .}}
+        </script>
+        <div id="order_i_declaration" class="order_i_e_declaration"></div>
     </div>
 </div>
 
-@{{template "/annotation/create/remark_note.html" .}}
+@{{template "order/create/print.html" .}}
+@{{template "order/create/remark_note.html" .}}
+@{{template "order/create/order_enclosure.html" .}}
 @{{template "/common/order_annotation/take.html" .}}
+@{{template "order/create/order_init.html" .}}
+@{{template "order/create/print_edit_contract.html" .}}
+@{{template "order/create/print_edit_invoice.html" .}}
+@{{template "order/create/print_edit_driver.html" .}}
+@{{template "order/create/print_save_contract.html" .}}
+@{{template "order/create/print_save_invoice.html" .}}
+@{{template "order/create/print_save_driver.html" .}}
 @{{template "/common/order_annotation/reject.html" .}}
+@{{template "order/create/order_application_change.html" .}}
+@{{template "order/create/order_i_declaration.html" .}}
