@@ -6,12 +6,14 @@
     }).use(['index', 'AutoComplete', 'laydate', 'upload'], async () => {
         const {form, admin, table, $, laydate, upload, laytpl} = layui;
         /**根据屏幕等比例缩小**/
-        admin.sideFlexible_window()
+        admin.sideFlexible_window();
         let OrderContainers = @{{.m.OrderContainers}} || [] /**集装箱**/
             , DecUsersData = @{{.m.DecUsers}} ? JSON.parse(@{{.m.DecUsers}}) : [] /**使用人**/
             , OrderDocuments = @{{.m.OrderDocuments}} || [] /**随附单证**/
             , order_id = parseInt(@{{.m.Id}}) //id
             , ieflag = "@{{.m.IEFlag}}" || "@{{.IEFlag}}" //进出口标志
+            , iEFlagName = "@{{.IEFlagName}}"  //进出口标志名称
+            , statusString = "@{{.m.StatusString}}" || null //状态
             , EntQualifData = @{{.m.EntQualifTypes}} ? JSON.parse(@{{.m.EntQualifTypes}}) : [] /**企业资质**/
             , OrderItemsData = @{{.m.OrderItems}} || [] /**表体**/
             , OrderItemGoodsAttr = [] /**表体货物属性**/
@@ -44,13 +46,16 @@
             , DecRequestCertsData = @{{.m.DecRequestCerts}} ? JSON.parse(@{{.m.DecRequestCerts}}) : []//检验检疫申报要素
             , order_note_data /**附注数据**/
             , DeclaratioMaterialCode = @{{.m.DeclaratioMaterialCode}}   /**企业承诺**/
-            , save_btn = false //是否保存数据
+            , isSaved = false //是否保存数据
             , orderItemIndex = null // 表体当前数据下标
             , isOrderItemInsert = false; //插入数据标志
 
         OrderItemsData.sort(function (a, b) {  // 排序表体
             return a.GNo - b.GNo;
         });
+
+        // 加载按钮
+        getBtnTem();
 
         // 基础参数版本
         await admin.getClearanceData();
@@ -1749,7 +1754,7 @@
 
             declaration_index = orderItemIndex - 1;
             // $('#order_pros_form input').removeClass('is_check_fail');
-            //if ("@{{.m.StatusSTring}}" == '复核不通过') {
+            //if (statusString == '复核不通过') {
             // if (order_i_edit_data.reject_logs.length > 0) {
             //   if (order_i_edit_data.reject_logs[order_i_edit_data.reject_logs.length - 1].recheck_error_input_ids) {
             //     for (let item of order_i_edit_data.reject_logs[order_i_edit_data.reject_logs.length -
@@ -2738,7 +2743,7 @@
                     }
                 }
             }
-        })
+        });
 
         /**报关整合申报保存**/
         form.on('submit(order_save)', async (data) => {
@@ -2831,7 +2836,7 @@
             }
             data.field.PromiseItmes = JSON.stringify(promiseItmes)
             // 业务事项
-            data.field.Type = data.field['Type[1]']
+            data.field.Type = data.field['Type[1]'];
             // 原箱运输
             if (!(data.field['OrigBoxFlag'])) {
                 data.field.OrigBoxFlag = 0
@@ -2844,24 +2849,25 @@
             }
 
             if (!order_id) {
-                const result = await admin.post(`/order/store/` + ieflag, data.field)
+                const result = await admin.post(`/order/store/` + ieflag, data.field);
                 if (result.status) {
                     setTimeout(() => {
-                        admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
+                        isSaved = true;
+                        admin.reloadFrame(iEFlagName + '报关整合申报iframe');
                         window.location.href = '/order/edit/' + result.obj.Id
                     }, 150)
                 }
             } else {
-                const result = await admin.patch(`/order/update/${order_id}`, data.field)
+                const result = await admin.patch(`/order/update/${order_id}`, data.field);
                 if (result.status) {
                     setTimeout(() => {
-                        admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe')
-                        window.location.reload()
+                        isSaved = true;
+                        admin.reloadFrame(iEFlagName + '报关整合申报iframe');
                     }, 150)
                 }
             }
             layer.closeAll('loading')
-        })
+        });
 
         /**打印**/
         $('body').on('click', '#order_print', async function () {
@@ -3173,9 +3179,8 @@
 
             let result = await admin.get(`/order/audit/` + order_id);
             if (result.status) {
-                admin.reloadFrame("@{{.IEFlagName}}" + '报关整合申报iframe');
                 setTimeout(() => {
-                    window.location.reload()
+                    admin.reloadFrame(iEFlagName + '报关整合申报iframe');
                 }, 150)
             }
 
@@ -3183,36 +3188,7 @@
         });
 
         /**派单**/
-        admin.distribute('#order_dispatch', order_id, "@{{.IEFlagName}}"+ '货物整合申报iframe',"order")
-
-        // /**派单**/
-        // let distribute_index;
-        // $("body").on("click", "#order_dispatch", async function () {
-        //     if (!order_id) {
-        //         return layer.msg("请先保存订单！")
-        //     }
-        //     distribute_index = layer.open({
-        //         type: 1,
-        //         title: '派单',
-        //         shadeClose: true,
-        //         area: admin.screen() < 2 ? ['80%', '300px'] : ['650px', '340px'],
-        //         content: $('#distribute_template').html()
-        //     });
-        //     const user_id = $(this).data("user");
-        //     $("select[name='user_id']").find(`option[value=${user_id}]`).prop("selected", true);
-        //     form.render();
-        // });
-        //
-        // $("body").on("input", "#remark_distribute", function () {
-        //     $("#remark_distribute_number span").text($(this).val().length);
-        // });
-        //
-        // /**派单保存**/
-        // form.on('submit(distribute_submit)', async (data) => {
-        //     await admin.post(`/order/i/${order_id}/distribute`, data.field);
-        //     layer.close(distribute_index);
-        // });
-
+        admin.distribute('#order_dispatch', order_id, iEFlagName + '报关整合申报iframe', "order");
         /**附件**/
         $('body').on('click', '#order_enclosure', function () {
             if (!order_id) {
@@ -3660,11 +3636,11 @@
                 area: admin.screen() < 2 ? ['80%', '300px'] : ['600px', '500px'],
                 content: `<div id="order_take_list_content">${$('#order_take_list').html()}</div>`,
             })
-        })
+        });
 
         /**申请复核**/
         form.on('submit(order_application_review)', async (data) => {
-            if (!save_order()) {
+            if (!isSaved) {
                 return layer.msg('请先保存数据')
             }
             if (OrderItemsData.length === 0) {
@@ -3676,11 +3652,12 @@
                 }
             }
 
-            const result = await admin.get(`/order/for_recheck/${annotation_id}`, 'show')
+            const result = await admin.get(`/order/for_recheck/${order_id}`, 'show');
             if (result.status) {
-                admin.reloadFrame("@{{.IEFlagName}}" + '货物整合申报iframe')
                 setTimeout(() => {
-                    window.location.reload()
+                    admin.reloadFrame(iEFlagName + '报关整合申报iframe');
+                    statusString = "待复核";
+                    getBtnTem();
                 }, 150)
             }
 
@@ -4006,18 +3983,9 @@
             }
         }
 
-        function save_order() {
-            if (save_btn) {
-                return true
-            } else {
-                layer.msg('请先保存数据')
-                return false
-            }
-        }
-
         //判断是否是代客下单
         function isCreate() {
-            return !@{{.m.StatusString}} || $.inArray("@{{.m.StatusString}}", ['待审核', '审核中', '审核通过', '审核不通过']) >= 0
+            return !statusString || $.inArray(statusString, ['待审核', '审核中', '审核通过', '审核不通过']) >= 0
         }
 
         // 置空集装箱/随附单证数据
@@ -4034,6 +4002,15 @@
             }
 
             obj.index = null
+        }
+
+        function getBtnTem() {  // 按钮模板渲染
+            laytpl($("#order_button_template").html()).render({
+                statusString: statusString,
+                jq: $,
+            }, function (html) {
+                $("#order_button").html(html)
+            });
         }
 
 

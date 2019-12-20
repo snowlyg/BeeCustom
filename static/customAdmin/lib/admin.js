@@ -553,7 +553,6 @@ layui.define('view', function (exports) {
       //进口成交方式是C&F/出口成交方式是C&I，则不允许录入运费，而允许录入保费；否则，运费和保费都允许录入
       transModeControl: function (cusIEFlag, isCreate) {
         if(!isCreate){
-          console.log(!isCreate);
           $('#TrafMode').attr('lay-verify', 'required');
           $('#TrafModeName').attr('lay-verify', 'required');
           $('#TrafModeName').addClass('required');
@@ -781,7 +780,6 @@ layui.define('view', function (exports) {
             next = focusable.eq(focusable.index(this) + 1)
             // 下个元素存在
             if (next.length) {
-              // console.log(this.id +" "+ next[0].id);
               // var nid = next[0].id;
               // $("#" + nid).css("background-color", "#b3d7f4");
               // $("#" + this.id).css("background-color", "");
@@ -1205,7 +1203,6 @@ layui.define('view', function (exports) {
           return
         }
         for (let item in data[0]) {
-          console.log($(`#${item}`))
           $(`#${item}`).val(data[0][item])
         }
         layui.layer.close(admin.dec_users_commodity_index)
@@ -1236,7 +1233,6 @@ layui.define('view', function (exports) {
             setTimeout(() => {
               if (clickEnum === '#order_dispatch') {
                 admin.reloadFrame(parent_iframe_name);
-                admin.reloadFrame();
                 parent.layui.admin.closeThisTabs()
               } else {
                 window.location.reload()
@@ -1702,7 +1698,6 @@ layui.define('view', function (exports) {
               $('#selectDeclPrice_ann').focus() //默认光标定位到“修改单价”按钮上
               $('body').on('click', '#selectDeclPrice_ann',
                 function () {
-                  console.log(1)
                   admin.calculationDeclPrice_ann()
                 })
               $('body').on('keydown', '#selectDeclPrice_ann',
@@ -3167,7 +3162,6 @@ layui.define('view', function (exports) {
       ,
       data_item (index, item) {
         const jsonData = JSON.stringify(item)
-        console.log(jsonData)
         return `<a class="seel_flex_edit_btn" data-index="${index}" data-item="${jsonData}">编辑</a>`
       }
       ,
@@ -3738,7 +3732,6 @@ layui.define('view', function (exports) {
 
           order_driver_data_index += 1
         }
-        console.log(order_driver_data_index)
         layui.table.render({
           elem: elem,
           toolbar: true,
