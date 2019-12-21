@@ -14,7 +14,6 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
-	"github.com/astaxie/beego"
 )
 
 type BaseOrderController struct {
@@ -320,7 +319,7 @@ func (c *BaseOrderController) bForRecheck(id int64) {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "获取数据失败", m)
 	}
-	if err = UpdateOrderStatus(m, "待复核", false); err != nil {
+	if err = UpdateOrderStatus(m, "待复核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	if err := models.OrderUpdateStatus(m); err != nil {
@@ -465,165 +464,44 @@ func (c *BaseOrderController) bPushXml(id int64) {
 	if err != nil || m == nil {
 		c.pageError("数据无效，请刷新后重试")
 	} else {
-		/*清单报文对象*/
-		signature := &xmlTemplate.Signature{
-			Xmlns: "http://www.w3.org/2001/XMLSchema-instance",
-			SignedInfo: xmlTemplate.SignedInfo{
-				CanonicalizationMethod: xmlTemplate.CanonicalizationMethod{
-					Algorithm: "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
-				},
-				SignatureMethod: xmlTemplate.SignatureMethod{
-					Algorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-md5",
-				},
-				Reference: xmlTemplate.Reference{
-					URI: "String",
-					DigestMethod: xmlTemplate.DigestMethod{
-						Algorithm: "http://www.w3.org/2000/09/xmldsig#sha1",
-					},
-				},
-			},
-		}
-		handBook, _ := models.HandBookOne(m.HandBookId, "")
-		var sysId string
-		var receiverId string
-		var path string
-		handBookType1, _ := enums.GetSectionWithString("手册", "hand_book_type")
-		handBookType2, _ := enums.GetSectionWithString("账册", "hand_book_type")
-		if handBook == nil {
-			c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
-		} else {
-			if handBook.Type == handBookType1 {
-				receiverId = beego.AppConfig.String("OrderReceiverIdC")
-				sysId = beego.AppConfig.String("OrderSysIdC")
-				path = beego.AppConfig.String("order_xml_path_c")
-			} else if handBook.Type == handBookType2 {
-				receiverId = beego.AppConfig.String("OrderReceiverIdE")
-				sysId = beego.AppConfig.String("OrderSysIdE")
-				path = beego.AppConfig.String("order_xml_path_e")
-			} else {
-				c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
-			}
+		/*报文对象*/
+		decMessage := &xmlTemplate.DecMessage{
+			Version: "3.1",
+			Xmlns:   "http://www.chinaport.gov.cn/dec",
 		}
 
+		decHead := xmlTemplate.DecHead{}
+		decLists := xmlTemplate.DecLists{}
+		decLicenseDocus := xmlTemplate.DecLicenseDocus{}
+		decContainers := xmlTemplate.DecContainers{}
+		decSign := xmlTemplate.DecSign{}
+		decFreeTxt := xmlTemplate.DecFreeTxt{}
+		decRequestCerts := xmlTemplate.DecRequestCerts{}
+		decOtherPacks := xmlTemplate.DecOtherPacks{}
+		decCopLimits := xmlTemplate.DecCopLimits{}
+		decUsers := xmlTemplate.DecUsers{}
+		decCopPromises := xmlTemplate.DecCopPromises{}
+		decCopPromise := xmlTemplate.DecCopPromise{}
+		decCopPromises.DecCopPromise = decCopPromise
+
+		decMessage.DecHead = decHead
+		decMessage.DecLists = decLists
+		decMessage.DecLicenseDocus = decLicenseDocus
+		decMessage.DecContainers = decContainers
+		decMessage.DecSign = decSign
+		decMessage.DecFreeTxt = decFreeTxt
+		decMessage.DecRequestCerts = decRequestCerts
+		decMessage.DecOtherPacks = decOtherPacks
+		decMessage.DecCopLimits = decCopLimits
+		decMessage.DecUsers = decUsers
+		decMessage.DecCopPromises = decCopPromises
+		var path string
 		pathTemp := "./static/generate/order/" + strconv.FormatInt(id, 10) + "/temp/"
 		// 报文名称
 		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.ClientSeqNo
 		fileName := mName + ".xml"
 
-		signature.Object.Package.EnvelopInfo.FileName = fileName
-		signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.String("OrderVersion")
-		signature.Object.Package.EnvelopInfo.BusinessId = beego.AppConfig.String("OrderBusinessId")
-		signature.Object.Package.EnvelopInfo.MessageType = beego.AppConfig.String("OrderMessageType")
-		signature.Object.Package.EnvelopInfo.SenderId = beego.AppConfig.String("OrderSenderId")
-		signature.Object.Package.EnvelopInfo.ReceiverId = receiverId
-		signature.Object.Package.EnvelopInfo.MessageId = m.ClientSeqNo
-		signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
-		signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" // 0:暂存，1:申报
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.String("AgentCode")
-
-		invtHeadType := xmlTemplate.InvtHeadType{
-			SeqNo: m.SeqNo,
-			//BondInvtNo:                   m.BondInvtNo,
-			//ChgTmsCntstring:              m.ChgTmsCnt,
-			//PutrecNostring:               m.PutrecNo,
-			//InvtTypestring:               m.InvtType,
-			//ClientSeqNostring:        m.ClientSeqNo,
-			//BizopEtpsnostring:            m.BizopEtpsno,
-			//BizopEtpsSccdstring:          m.BizopEtpsSccd,
-			//BizopEtpsNmstring:            m.BizopEtpsNm,
-			//RcvgdEtpsnostring:            m.RcvgdEtpsno,
-			//RvsngdEtpsSccdstring:         m.RvsngdEtpsSccd,
-			//RcvgdEtpsNmstring:            m.RcvgdEtpsNm,
-			//DclEtpsnostring:              m.DclEtpsno,
-			//DclEtpsSccdstring:            m.DclEtpsSccd,
-			//DclEtpsNmstring:              m.DclEtpsNm,
-			//InputCodestring:              m.InputCode,
-			//InputCreditCodestring:        m.InputCreditCode,
-			//InputNamestring:              m.InputName,
-			//RltInvtNostring:              m.RltInvtNo,
-			//RltPutrecNostring:            m.RltPutrecNo,
-			//CorrEntryDclEtpsNostring:     m.CorrEntryDclEtpsNo,
-			//CorrEntryDclEtpsSccdstring:   m.CorrEntryDclEtpsSccd,
-			//CorrEntryDclEtpsNmstring:     m.CorrEntryDclEtpsNm,
-			//RltEntryBizopEtpsnostring:    m.RltEntryBizopEtpsno,
-			//RltEntryBizopEtpsSccdstring:  m.RltEntryBizopEtpsSccd,
-			//RltEntryBizopEtpsNmstring:    m.RltEntryBizopEtpsNm,
-			//RltEntryRcvgdEtpsnostring:    m.RltEntryRcvgdEtpsno,
-			//RltEntryRvsngdEtpsSccdstring: m.RltEntryRvsngdEtpsSccd,
-			//RltEntryRcvgdEtpsNmstring:    m.RltEntryRcvgdEtpsNm,
-			//RltEntryDclEtpsnostring:      m.RltEntryDclEtpsno,
-			//RltEntryDclEtpsSccdstring:    m.RltEntryDclEtpsSccd,
-			//RltEntryDclEtpsNmstring:      m.RltEntryDclEtpsNm,
-			//ImpexpPortcdstring:           m.ImpexpPortcd,
-			//DclPlcCuscdstring:            m.DclPlcCuscd,
-			//IEFlagstring:           m.IEFlag,
-			//MtpckEndprdMarkcdstring:      m.MtpckEndprdMarkcd,
-			//SupvModecdstring:             m.SupvModecd,
-			//TrspModecdstring:             m.TrspModecd,
-			//ApplyNostring:                m.ApplyNo,
-			//ListTypestring:               m.ListType,
-			//DclcusFlagstring:             m.DclcusFlag,
-			//DclcusTypecdstring:           m.DclcusTypecd,
-			//IcCardNostring:               beego.AppConfig.String("ICCode"),
-			//DecTypestring:                m.DecType,
-			//Rmkstring:                    m.Rmk,
-			//StshipTrsarvNatcdstring:      m.StshipTrsarvNatcd,
-			//EntryNostring:                m.EntryNo,
-			//RltEntryNostring:             m.RltEntryNo,
-			//DclTypecdstring:              m.DclTypecd,
-			//GenDecFlagstring:             m.GenDecFlag,
-		}
-
-		invtListTypes := []xmlTemplate.InvtListType{}
-		//for _, v := range m.OrderItems {
-		//	invtListType := xmlTemplate.InvtListType{
-		//		SeqNo:            v.SeqNo,
-		//		GdsSeqno:         strconv.Itoa(v.GdsSeqno),
-		//		PutrecSeqno:      strconv.Itoa(v.PutrecSeqno),
-		//		GdsMtno:          v.GdsMtno,
-		//		Gdecd:            v.Gdecd,
-		//		GdsNm:            v.GdsNm,
-		//		GdsSpcfModelDesc: v.GdsSpcfModelDesc,
-		//		DclUnitcd:        v.DclUnitcd,
-		//		LawfUnitcd:       v.LawfUnitcd,
-		//		SecdLawfUnitcd:   v.SecdLawfUnitcd,
-		//		Natcd:            v.Natcd,
-		//		DclUprcAmt:       strconv.FormatFloat(v.DclUprcAmt, 'f', 4, 64),
-		//		DclTotalAmt:      strconv.FormatFloat(v.DclTotalAmt, 'f', 2, 64),
-		//		UsdStatTotalAmt:  strconv.FormatFloat(v.UsdStatTotalAmt, 'f', 5, 64),
-		//		DclCurrcd:        v.DclCurrcd,
-		//		LawfQty:          strconv.FormatFloat(v.LawfQty, 'f', 5, 64),
-		//		SecdLawfQty:      strconv.FormatFloat(v.SecdLawfQty, 'f', 5, 64),
-		//		WtSfVal:          strconv.FormatFloat(v.WtSfVal, 'f', 5, 64),
-		//		FstSfVal:         strconv.FormatFloat(v.FstSfVal, 'f', 5, 64),
-		//		SecdSfVal:        strconv.FormatFloat(v.SecdSfVal, 'f', 5, 64),
-		//		DclQty:           strconv.FormatFloat(v.DclQty, 'f', 5, 64),
-		//		GrossWt:          strconv.FormatFloat(v.GrossWt, 'f', 5, 64),
-		//		NetWt:            strconv.FormatFloat(v.NetWt, 'f', 5, 64),
-		//		UseCd:            v.UseCd,
-		//		LvyrlfModecd:     v.LvyrlfModecd,
-		//		UcnsVerno:        v.UcnsVerno,
-		//		ClyMarkcd:        v.ClyMarkcd,
-		//		EntryGdsSeqno:    strconv.Itoa(v.EntryGdsSeqno),
-		//		ApplyTbSeqno:     strconv.Itoa(v.ApplyTbSeqno),
-		//		DestinationNatcd: v.DestinationNatcd,
-		//		ModfMarkcd:       v.ModfMarkcd,
-		//		Rmk:              v.Rmk,
-		//	}
-		//
-		//	invtListTypes = append(invtListTypes, invtListType)
-		//}
-
-		invtDecHeadType := xmlTemplate.InvtDecHeadType{}
-		invtDecListType := []xmlTemplate.InvtDecListType{}
-
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.InvtHeadType = invtHeadType
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.InvtListType = invtListTypes
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.InvtDecHeadType = invtDecHeadType
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.InvtDecListType = invtDecListType
-
-		output, err := xml.MarshalIndent(signature, "", "")
+		output, err := xml.MarshalIndent(decMessage, "", "")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)

@@ -6,7 +6,7 @@
                 <div class="custom-order_form_top" id="order_button"></div>
                 <script type="text/html" id="order_button_template">
                     <button type="button" id="order_save_reload_submit" lay-submit lay-filter="order_save_reload_submit" style="display: none;"></button>
-                {{# if( !d.statusString || d.jq.inArray(d.statusString,[ "待制单" , "制单中"])>=0){  }}
+                {{# if( !d.statusString || d.jq.inArray(d.statusString,[ "待制单" , "制单中","复核不通过"])>=0){  }}
                 <button class="layui-btn custom-create_btn" id="order_save" type="button" lay-submit
                         lay-filter="order_save">
                     <i class="iconfont icon-save"></i>保存
@@ -35,14 +35,14 @@
                 @{{ end }}
                 {{# }else if(d.jq.inArray(d.statusString,["制单中"])>=0){   }}
                 @{{ if canArray  .actions .m.IEFlag "canForRecheck"}}
-                <button class="layui-btn custom-create_btn" id="annotaiton_for_recheck" type="button" lay-submit
+                <button class="layui-btn custom-create_btn" id="order_for_recheck" type="button" lay-submit
                         lay-filter="order_application_review">
                     <i class="iconfont iconaddcircle"></i><span>申请复核</span>
                 </button>
                 @{{ end }}
                 {{# }else if(d.jq.inArray(d.statusString,[ "复核不通过"])>=0){}}
                 @{{ if canArray  .actions .m.IEFlag "canReForRecheck"}}
-                <button class="layui-btn custom-create_btn" id="annotaiton_refor_recheck" type="button" lay-submit
+                <button class="layui-btn custom-create_btn" id="order_refor_recheck" type="button" lay-submit
                         lay-filter="order_application_review">
                     <i class="iconfont iconaddcircle"></i><span>重新申请复核</span>
                 </button>

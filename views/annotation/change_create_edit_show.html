@@ -31,7 +31,7 @@
                 @{{ end }}
         @{{ else if eq .m.StatusString "复核不通过"}}
                 @{{ if canArray  .actions .m.ImpexpMarkcd "canReForRecheck"}}
-                <button class="layui-btn custom-create_btn" id="annotaiton_refor_recheck" type="button" lay-submit
+                <button class="layui-btn custom-create_btn" id="annotation_refor_recheck" type="button" lay-submit
                         lay-filter="order_application_review">
                     <i class="iconfont iconaddcircle"></i><span>重新申请复核</span>
                 </button>
