@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+    <title>发票</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <br/>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        <!--
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ft10 {
+            font-size: 13px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft11 {
+            font-size: 28px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft12 {
+            font-size: 22px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft13 {
+            font-size: 13px;
+            line-height: 17px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        -->
+    </style>
+</head>
+<body vlink="blue" link="blue">
+<div style="position: absolute;top: 0;left: 0;width: 100%;height: 1360px;">
+    @for ($i = 0; $i < ceil(count($pros)/20); $i++)
+        <div id="page1-div" style="position:relative;width:100%;height:1360px;">
+            <img style="width:100%;height:1360px;" src="{{ asset('/static/pdf/pdf_invoice/target001.png') }}"
+                 alt="background image"/>
+            <p style="position:absolute;top: 343px;left: 709px;white-space:nowrap;" class="ft10">单价</p>
+            <p style="position:absolute;top: 362px;left: 696px;white-space:nowrap;" class="ft10">Unit Price</p>
+            <p style="position:absolute;top: 343px;left: 71px;white-space:nowrap;" class="ft10">标记号码</p>
+            <p style="position:absolute;top: 362px;left: 66px;white-space:nowrap;" class="ft10">Mark &amp; No</p>
+            <p style="position:absolute;top: 343px;left: 560px;white-space:nowrap;" class="ft10">数量</p>
+            <p style="position:absolute;top: 362px;left: 549px;white-space:nowrap;" class="ft10">Quantiy</p>
+            <p style="position:absolute;top: 343px;left: 845px;white-space:nowrap;" class="ft13">总金额<br>Amount</p>
+            <p style="position:absolute;top: 343px;left: 242px;white-space:nowrap;" class="ft10">货物名称</p>
+            <p style="position:absolute;top: 362px;left: 209px;white-space:nowrap;" class="ft10">Name Of Commodity</p>
+            <p style="position:absolute;top: 343px;left: 414px;white-space:nowrap;" class="ft10">产地</p>
+            <p style="position:absolute;top: 362px;left: 405px;white-space:nowrap;" class="ft10">Destination</p>
+            @php
+                $index=0 ;
+            @endphp
+
+            @for ($x = $i*20; $x < ($i+1)*20 ; $x++)
+                @if($x<=count($pros)-1)
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 616px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_unit_name']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 855px;width: 90px;word-break:break-all;" class="ft10">{{$pros[$x]['decl_total_string']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 96px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_no']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 742px;width: 58px;word-break:break-all;" class="ft10">{{$pros[$x]['decl_price_string']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 512px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_qty_string']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 155px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_name']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 421px;white-space:nowrap;" class="ft10">{{$pros[$x]['origin_country_name']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 35}}px;left: 655px;width: 90px;word-break:break-all;" class="ft10">{{$pros[$x]['trade_curr_name']}}</p>
+                    @php
+                         $index++ ;
+                    @endphp
+                @endif
+                @if($foreign_company_chapter)
+                <p style="position:absolute;top: 1090px;right: 20%;white-space:nowrap;" class="ft11">
+                    <img height="150" src="{{'http::'.$foreign_company_chapter}}" />
+                </p>
+                @endif  
+            @endfor
+
+            <p style="position:absolute;top: 301px;left: 647px;white-space:nowrap;" class="ft13">日期<br>Date:</p>
+            <p style="position:absolute;top: 316px;left: 796px;white-space:nowrap;" class="ft10">{{ $order->apl_date?$order->apl_date->toDateString():'' }}</p>
+            <p style="position:absolute;top: 250px;left: 647px;white-space:nowrap;" class="ft13">发票编号<br>Invoice No:</p>
+            <p style="position:absolute;top: 260px;left: 808px;white-space:nowrap;" class="ft10">发票号</p>
+            <p style="position:absolute;top: 250px;left:44px;white-space:nowrap;" class="ft13">收&nbsp;货&nbsp;方<br>Sold to Masscrs:
+            </p>
+            <p style="position:absolute;top: 301px;left:44px;white-space:nowrap;" class="ft13">合同号:<br>NO:</p>
+            <p style="position:absolute;top:135px;left: 402px;white-space:nowrap;" class="ft11">发 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; 票</p>
+            <p style="position:absolute;top: 183px;left: 438px;white-space:nowrap;" class="ft12">INVOICE</p>
+            <p style="position:absolute;top: 80px;left: 325px;white-space:nowrap;" class="ft11">{{ $order->foreign_company_name }}</p>
+            <p style="position:absolute;top: 260px;left: 281px;white-space:nowrap;" class="ft10">{{ $order->trade_name }}</p>
+            <p style="position:absolute;top: 316px;left: 333px;white-space:nowrap;" class="ft10">{{ $order->contr_no }}</p>
+            <p style="position:absolute;top: 1202px;left: 817px;white-space:nowrap;" class="ft10">{{$decl_total}}</p>
+            <p style="position:absolute;top: 1186px;left: 257px;white-space:nowrap;" class="ft10">合计</p>
+            <p style="position:absolute;top: 1207px;left: 237px;white-space:nowrap;" class="ft10">TOTALLY：</p>
+            <p style="position:absolute;top: 1202px;left: 536px;width: 110px;word-break:break-all;" class="ft10">{{$trans_mode_name}}&nbsp;{{$district_code_name}}</p>
+            <p style="position:absolute;top: 1202px;left: 695px;width: 110px;word-break:break-all;" class="ft10">{{optional($order->pros()->first())->trade_curr_name}}</p>
+        </div>
+    @endfor
+</div>
+</body>
+</html>

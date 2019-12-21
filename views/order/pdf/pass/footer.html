@@ -1,0 +1,11 @@
+@extends('layouts.app')
+
+@section('content')
+    <div style="position: relative;">
+        <span style="position: absolute;left: 0;top: 8px;">打印时间：{{ date('Y年m月d日 H:i:s',time()) }}</span>
+        <div style="text-align: center;margin-top: 5px;">
+            <span>第{{request('page')}}页 / 共{{request('topage')}}页</span>
+        </div>
+    </div>
+
+@stop

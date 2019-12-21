@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+
+<head>
+    <title>订购合同</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <br />
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        < !-- p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ft10 {
+            font-size: 13px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft11 {
+            font-size: 13px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft12 {
+            font-size: 22px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft13 {
+            font-size: 11px;
+            line-height: 15px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft14 {
+            font-size: 13px;
+            line-height: 17px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        -->
+    </style>
+</head>
+
+<body vlink="blue" link="blue">
+    <div style="position: absolute;top: 0;left: 0;width: 100%;height: 1360px;">
+        @for ($i = 0; $i < ceil(count($pros)/10); $i++) <div id="page1-div" style="position:relative;width:100%;height:1360px;">
+            <img style="width:100%;height:1360px;" src="{{ asset('/static/pdf/pdf_contract_i/target001.png') }}" alt="background image" />
+            <p style="position:absolute;top: 392px;left: 837px;white-space:nowrap;" class="ft10">(4) 总 &nbsp; &nbsp;
+                &nbsp;价</p>
+            <p style="position:absolute;top: 424px;left: 835px;white-space:nowrap;" class="ft10">Total Amount</p>
+            <p style="position:absolute;top: 392px;left: 576px;white-space:nowrap;" class="ft10">(2) &nbsp;数 &nbsp; &nbsp;量</p>
+            <p style="position:absolute;top: 424px;left: 586px;white-space:nowrap;" class="ft10">Quantity</p>
+            <p style="position:absolute;top: 392px;left: 695px;white-space:nowrap;" class="ft10">(3) &nbsp;单 &nbsp; &nbsp;
+                &nbsp;价</p>
+
+            <p style="position:absolute;top: 424px;left: 700px;white-space:nowrap;" class="ft10">Unit &nbsp;Price</p>
+            <p style="position:absolute;top: 392px;left: 125px;white-space:nowrap;" class="ft10">(1)
+                &nbsp;货物名称、规格、生产国别、制造工厂、包装及唛头</p>
+            <p style="position:absolute;top: 408px;left: 154px;white-space:nowrap;" class="ft10">Name of Commodity, and
+                Specification,Country of</p>
+            <p style="position:absolute;top: 424px;left: 232px;white-space:nowrap;" class="ft10">Qrigi,Manufacturers.</p>
+            @php
+
+            $index=0 ;
+            @endphp
+
+            @for ($x = $i*10; $x < ($i+1)*10 ; $x++) @if($x<=count($pros)-1) <p style="position:absolute;top: {{452 + $index * 35}}px;left:44px;white-space:nowrap;" class="ft11">{{$pros[$x]['g_no']}}</p>
+                <p style="position:absolute;top: {{452 + $index * 35}}px;left: 486px;width: 60px;word-break:break-all;" class="ft11">{{$pros[$x]['origin_country_name']}}</p>
+                <p style="position:absolute;top: {{452 + $index * 35}}px;left: 564px;white-space:nowrap;" class="ft11">{{$pros[$x]['g_qty_string']}}</p>
+                <p style="position:absolute;top: {{452 + $index * 35}}px;left: 710px;white-space:nowrap;" class="ft11">{{$pros[$x]['decl_price_string']}}</p>
+                <p style="position:absolute;top: {{452 + $index * 35}}px;left: 849px;white-space:nowrap;" class="ft11">{{$pros[$x]['decl_total_string']}}</p>
+                <p style="position:absolute;top: {{452 + $index * 35}}px;left: 640px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_unit_name']}}</p>
+                <p style="position:absolute;top: {{445 + $index * 35}}px;left:77px;width: 370px;" class="ft13">{{$pros[$x]['g_name'].'/'.$pros[$x]['g_model']}}</p>
+
+                @php
+                $index++ ;
+                @endphp
+                @endif
+                @endfor
+
+                <p style="position:absolute;top:114px;left:139px;white-space:nowrap" class="ft12">订 &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; 购 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;合
+                    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;同</p>
+                <p style="position:absolute;top: 240px;left: 127px;white-space:nowrap;" class="ft10">{{ $order->trade_name }}</p>
+                <p style="position:absolute;top: 195px;left: 589px;white-space:nowrap;" class="ft14">签约地点:<br>Signed at:</p>
+                <p style="position:absolute;top: 205px;left: 675px;white-space:nowrap;" class="ft14">企业本厂</p>
+                <p style="position:absolute;top:153px;left:139px;white-space:nowrap" class="ft12">PURCHASE &nbsp;
+                    &nbsp;CONTRACT</p>
+                <p style="position:absolute;top: 107px;left: 589px;white-space:nowrap;" class="ft14">合同号码:<br>Contract No.</p>
+                <p style="position:absolute;top: 160px;left: 675px;white-space:nowrap;" class="ft10">{{ $contact_sign_date }}</p>
+                <p style="position:absolute;top: 238px;left: 74px;white-space:nowrap;" class="ft14">买方:<br>Buyers:</p>
+                <p style="position:absolute;top: 283px;left: 74px;white-space:nowrap;" class="ft14">卖方:<br>Sellers:</p>
+                <p style="position:absolute;top: 151px;left: 589px;white-space:nowrap;" class="ft14">签约日期:<br>Date:</p>
+                <p style="position:absolute;top: 328px;left:44px;white-space:nowrap;letter-spacing: 2.5px;" class="ft14">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                    经买卖双方确认根据下列条款订立本合同:<br>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; The undersigned Sller and Buyers have confirmed this
+                    contract in accordance with the terms and<br>conditions stipulated below:</p>
+                <p style="position:absolute;top: 287px;left: 127px;white-space:nowrap;" class="ft11">{{ $order->foreign_company_name }}</p>
+                <p style="position:absolute;top: 115px;left: 675px;white-space:nowrap;" class="ft11">{{ $order->contr_no }}</p>
+                <p style="position:absolute;top: 200px;left: 675px;white-space:nowrap;" class="ft11"></p>
+                <p style="position:absolute;top: 870px;left:49px;white-space:nowrap;" class="ft10">
+                    每件货物上标志毛重、净重、编号、尺码、目的口岸、原产地并刷明下列唛头:</p>
+
+                <p style="position:absolute;top: 892px;left:46px;width: 460px;" class="ft10">Each package shall be
+                    stencilled
+                    with gross weights package number.measurement.port of
+                    destination. country of origin Shipping Marks:</p>
+
+
+                <p style="position:absolute;top: 1014px;left: 829px;white-space:nowrap;" class="ft10">{{$district_code_name}}</p>
+                <p style="position:absolute;top: 1082px;left:44px;white-space:nowrap;" class="ft14">(8) 付款条件<br>Terms of Payment:
+                </p>
+                <p style="position:absolute;top: 898px;left: 652px;white-space:nowrap;" class="ft10">{{$trans_mode_name}}</p>
+                <p style="position:absolute;top: 1006px;left:44px;white-space:nowrap;" class="ft14">(5) 装 运 期:<br>Time of
+                    Delivery:
+                </p>
+                <p style="position:absolute;top: 898px;left: 682px;white-space:nowrap;" class="ft10">{{$district_code_name}}</p>
+                <p style="position:absolute;top: 866px;left: 855px;white-space:nowrap;" class="ft10">{{optional($order->pros->first())->trade_curr_name}}</p>
+                <p style="position:absolute;top: 1144px;left: 344px;white-space:nowrap;" class="ft10">{{$contact_safe}}</p>
+                <p style="position:absolute;top: 1097px;left: 228px;white-space:nowrap;" class="ft10">电汇（TT）（ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; √ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ）</p>
+                <p style="position:absolute;top: 1097px;left: 473px;white-space:nowrap;" class="ft10">信用证（LC）（ &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                    &nbsp;）</p>
+                <p style="position:absolute;top: 1014px;left: 241px;white-space:nowrap;" class="ft10">{{ $contact_sign_date }}</p>
+                <p style="position:absolute;top: 1014px;left: 473px;white-space:nowrap;" class="ft10">{{ $order->desp_port_name }}</p>
+                <p style="position:absolute;top: 1006px;left: 650px;white-space:nowrap;" class="ft14">(7) 目 的 港:<br>Port of&nbsp;Destination:
+                </p>
+                <p style="position:absolute;top: 945px;left: 580px;white-space:nowrap;" class="ft10">允许溢短装 &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                    &nbsp;1%more or less allowed</p>
+                <p style="position:absolute;top: 1132px;left:44px;white-space:nowrap;" class="ft14">(9) 保险:<br>Insurance:</p>
+                <p style="position:absolute;top: 1190px;left: 572px;white-space:nowrap;" class="ft14">卖 方 签 名<br>The Sallers</p>
+                <p style="position:absolute;top: 1228px;left: 541px;white-space:nowrap;" class="ft10">(Authorized signiture)</p>
+                <p style="position:absolute;top: 1190px;left: 140px;white-space:nowrap;" class="ft10">买 方 签 名</p>
+                <p style="position:absolute;top: 1210px;left: 139px;white-space:nowrap;" class="ft10">The Buyers</p>
+                <p style="position:absolute;top: 1228px;left: 105px;white-space:nowrap;" class="ft10">(Authorized signiture)</p>
+                <p style="position:absolute;top: 1006px;left: 370px;white-space:nowrap;" class="ft14">(6) 装 货 港:<br>Port &nbsp;Loading:
+                </p>
+                <p style="position:absolute;top: 896px;left: 847px;white-space:nowrap;" class="ft11">{{$decl_total}}</p>
+                @if($seal_contact)
+                <p style="position:absolute;top: 1140px;left: 180px;white-space:nowrap;" class="ft11">
+                    <img  height="150" src="{{'http::'.$seal_contact}}" />
+                </p>
+                @endif
+
+                @if($foreign_company_chapter)
+                <p style="position:absolute;top: 1140px;left: 602px;white-space:nowrap;" class="ft11">
+                    <img  height="150" src="{{'http::'.$foreign_company_chapter}}" />
+                </p>
+                @endif
+    </div>
+    @endfor
+    </div>
+</body>
+
+</html>

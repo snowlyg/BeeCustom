@@ -1,0 +1,111 @@
+
+@extends('layouts.app')
+
+@section('content')
+    <style>
+        .pdf {
+            font-family: 宋体;
+            height: 18cm;
+        }
+
+        .c39 p {
+            font-size: 1.5em;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .one span, .two span, .three span, .four span {
+            font-weight: bold;
+        }
+
+        .height_10 {
+            height: 0.37cm;
+        }
+
+
+        .table_td_p .span_bold {
+            font-weight: bold;
+            color: #333333;
+        }
+
+        .table_td_p .span {
+            color: #333333;
+        }
+
+        .goods_number span, .goods_name span, .unit_number span, .unit_price span {
+            font-size: 9pt
+        }
+
+
+        .table_bottom_float_right p {
+            font-size: 9pt;
+            font-weight: bold;
+            margin-top: 8pt;
+        }
+
+        .pdf_content{
+            width: 96%;
+            height: 1100px;
+            border: 2px solid #000;
+            line-height: 30px;
+            padding: 2%;
+            font-size: 20px;
+            position: relative;
+        }
+        .pdf_title{
+            text-align: center;
+            font-size:30px;
+            font-weight: bold;
+            line-height: 80px;
+        }
+        .text_index{
+            text-indent: 2em;
+        }
+        .text_message{
+            position: absolute;
+            width: 96%;
+            top: 70px;
+            left: 2%;
+        }
+        .text_post{
+            position: absolute;
+            width: 96%;
+            top: 200px;
+            left: 2%;
+        }
+        .text_content{
+            position: absolute;
+            width: 96%;
+            top: 240px;
+            left: 2%;
+        }
+        .text_company{
+            position: absolute;
+            width: 40%;
+            text-align: left;
+            bottom: 240px;
+            right: 2%;
+        }
+        .text_date{
+            position: absolute;
+            width: 40%;
+            text-align: left;
+            bottom: 200px;
+            right: 2%;
+        }
+    </style>
+    <div class="pdf">
+        <div class="pdf_title">
+            {{ get_i_e_flag_cn() }}审结通知书
+        </div>
+        <div class="height_10"></div>
+        <div class="pdf_content">
+            <p>广东东华报关服务有限公司</p>
+            <p class="text_index text_message">你单位申报的货物（预录编号{{ $order->entry_id }}）,于 {{ $return_J_date }}业经审核，请即向{{ $order->custom_master_name }}海关部门交单办理海关手续。</p>
+            <p class="text_post">特此通知</p>
+            <p class="text_index text_content">{{ $return_J_content }}</p>
+            <p class="text_company">{{ $order->custom_master_name }}海关审单中心</p>
+            <p class="text_date">{{ $return_J_date }}</p>
+        </div>
+    </div>
+@stop

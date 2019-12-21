@@ -54,11 +54,11 @@
         return layer.msg('有错误内容，无法通过！');
       }
       layer.load(2);
-      const result = await admin.post(`/order/recheck_pass/${order_id}`, data.field, true);
+      const result = await admin.post(`/order/recheck_pass/${order_id}`, data.field);
       if (result.status) {
         layer.closeAll('loading');
         setTimeout(() => {
-          layui.admin.reloadFrame(iEFlagName + '进口核注清单iframe');
+          layui.admin.reloadFrame(iEFlagName + '报关整合申报iframe');
             // 加载按钮
             admin.getBtnTem("#order_button_template","#order_button",{
                 statusString: statusString,

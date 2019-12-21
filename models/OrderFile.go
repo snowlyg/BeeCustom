@@ -76,7 +76,7 @@ func OrderFileOneByTypeAndOrderId(m *OrderFile) error {
 	o := orm.NewOrm()
 	if err := o.QueryTable(OrderFileTBName()).
 		Filter("order_id", m.Order.Id).
-		Filter("type", m.EdocCode).
+		Filter("edoc_code", m.EdocCode).
 		One(m); err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func OrderFileSaveOrUpdate(m *OrderFile) error {
 			return err
 		}
 	} else {
-		if _, err := o.Update(m, "url"); err != nil {
+		if _, err := o.Update(m, "EdocCopUrl"); err != nil {
 			utils.LogDebug(fmt.Sprintf("OrderFileSave:%v", err))
 			return err
 		}

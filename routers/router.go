@@ -289,6 +289,7 @@ func init() {
 	beego.Router("/pdf/order_recheck_pdf/?:id", &controllers.PdfController{}, "Get:OrderRecheckPdf")
 	// 货物打印
 	beego.Router("/pdf/order_pdf/?:id", &controllers.PdfController{}, "Get:OrderPdf")
+	beego.Router("/pdf/order_pdf_header/?:id", &controllers.PdfController{}, "Get:OrderPdfHeader")
 
 	beego.Router("/home/404", &controllers.HomeController{}, "*:Page404")
 	beego.Router("/home/error/?:error", &controllers.HomeController{}, "*:Error")

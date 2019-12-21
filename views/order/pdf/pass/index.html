@@ -1,0 +1,476 @@
+
+@extends('layouts.app')
+
+@section('content')
+    <style>
+        .pdf {
+            font-family: 宋体;
+            position: relative;
+            overflow: hidden;
+            height: 33.7cm;
+            margin-top: 1cm;
+        }
+        .pdf p {
+            font-size: 1.5em;
+            letter-spacing: 2px;
+        }
+        .one span, .two span, .three span, .four span {
+            font-weight: bold;
+        }
+        .height_10 {
+            height: 0.37cm;
+        }
+        .goods_number span, .goods_name span, .unit_number span, .unit_price span {
+            font-size: 9pt
+        }
+        .table_bottom_float_right p {
+            font-size: 9pt;
+            font-weight: bold;
+            margin-top: 8pt;
+        }
+        .title{
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .text_index{
+            text-indent: 2em;
+            padding-left: 2em;
+            margin: 10px 0;
+        }
+        .foot_name{
+            text-align: center;
+            margin-top: 0;
+            width: 40%;
+            float: right;
+            clear: both;
+        }
+        .max_foot_name{
+            text-align: right;
+            margin-top: 0;
+            width: auto;
+            float: none;
+            clear: both;
+        }
+        .foot_date{
+            text-align: center;
+            width: 40%;
+            float: right;
+            clear: both;
+        }
+        .c39 p {
+            font-size: 1.5em;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .title {
+            font-size: 2.1em;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+        }
+
+        .one span, .two span, .three span, .four span {
+            font-weight: bold;
+        }
+
+        .one {
+            display: block;
+            width: 25%;
+            float: left;
+        }
+
+        .two {
+            display: block;
+            width: 25%;
+            float: left;
+        }
+
+        .three {
+            display: block;
+            width: 40%;
+            float: right;
+        }
+        .three img{
+            width: 100%;
+        }
+
+        .clear{
+            clear: both;
+        }
+
+        .table_td_p .span_bold {
+            font-weight: bold;
+            color: #333333;
+        }
+
+        .table_td_p .span {
+            color: #333333;
+        }
+
+        .goods_number span, .goods_name span, .unit_number span, .unit_price span {
+            font-size: 9pt
+        }
+        .pdf_table{
+            border: 2px solid #000000;
+            margin-top: 10px;
+        }
+        .pdf_table_th{
+            border-right: 1px solid #000000;
+            display: inline-block;
+            font-size: 14px;
+            float: left;
+            padding: 0 4px;
+            height: 30px;
+            overflow: hidden;
+        }
+        .pdf_table_td{
+            display: inline-block;
+            font-size: 14px;
+            float: left;
+            padding: 0 4px;
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+        }
+        .pdf_table_td p{
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .bottom_border{
+            border-bottom: 1px solid #000000;
+        }
+        .bottom_td_border{
+            border-bottom: 1px dotted #000000;
+        }
+        .pdf_table_th p{
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .pdf_table_th span{
+            font-size: 14px;
+        }
+        .pdf_width_30{
+            width: 30%;
+        }
+        .pdf_width_20{
+            width: 20%;
+        }
+        .pdf_width_25{
+            width: 25%;
+        }
+        .pdf_width_15{
+            width: 15%;
+        }
+        .pdf_width_35{
+            width: 35%;
+        }
+        .pdf_width_10{
+            width: 10%;
+        }
+        .pdf_width_40{
+            width: 40%;
+        }
+        .pdf_width_50{
+            width: 50%;
+        }
+        .pdf_width_100{
+            width: 100%;
+        }
+        .none_right{
+            border-right: none;
+        }
+        .center{
+            text-align: center;
+        }
+        .unit_number{
+            margin-top: 1px;
+            line-height: 8px;
+            font-size: 12px;
+            margin-left: -10%;
+            transform: scale(0.8,0.8);
+            -ms-transform: scale(0.8,0.8); /* IE 9 */
+            -webkit-transform: scale(0.8,0.8); /* Safari and Chrome */
+        }
+        .pdf_table_td_p_two{
+            line-height: 14px;
+            font-size: 12px;
+            font-weight: normal!important;
+        }
+        .chapter_secred{
+            position: absolute;
+            right: 20px;
+            bottom: 33px;
+        }
+        /*.chapter_secred img{
+            transform: rotate(-10deg);
+            -ms-transform: rotate(-10deg);
+            -moz-transform: rotate(-10deg);
+            -webkit-transform: rotate(-10deg);
+            -o-transform: rotate(-10deg);
+        }*/
+    </style>
+    @for ($k = 0; $k < ceil(count($pros)/20); $k++)
+        @php
+        $start = $k*20;
+        @endphp
+
+        <div class="pdf">
+        <div class="height_10"></div>
+        <h2 class="title">
+            通关无纸化{{ get_i_e_flag_cn() }}放行通知书
+        </h2>
+        <p>广东东华报关服务有限公司</p>
+        <p class="text_index">你公司以通关无纸化方式向海关发送下列电子报关单数据业经海关审核放行，请携带本通知书及 相关单证至港区办理装货/提货手续。</p>
+        <p class="foot_name">{{ $order->custom_master_name }}海关审单中心</p>
+        <p class="foot_date">{{ $return_J_date }}</p>
+        <div class="clear"></div>
+
+        <div class="pdf-header">
+            <div class="height_10"></div>
+            <div class="pdf-number">
+                <div class="one">
+                    <span>预录入编号：</span>
+                    {{ $order->pre_entry_id }}
+                </div>
+                <div class="two">
+                    <span>海关编号：</span>
+                    {{ $order->is_other ? '异地报关': $order->entry_id }}
+                </div>
+                <div class="three">
+                    <img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($order->entry_id, "C39", 1.0,30,array(1,1,1), true)  }}"alt="barcode"/>
+                    <p>*{{ $order->entry_id }}*</p>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="pdf_table">
+            <div class="pdf_table_th pdf_width_40">
+                <p>进口关别<span>(({{ $order->i_e_port ?:'无' }}))</span></p>
+                <span>{{ $order->i_e_port_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_20">
+                <p>备案号</p>
+                <span>{{ $order->i_e_port_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_20">
+                <p>进口日期</p>
+                <span>{{ $order->i_e_port_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15 none_right">
+                <p>申报日期</p>
+                <span>{{ $order->i_e_port_name ?:'无' }}</span>
+            </div>
+            <div class="clear bottom_border"></div>
+
+            <div class="pdf_table_th pdf_width_40">
+                <p>收发货人</p>
+                <span>{{ $order->owner_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15">
+                <p>运输方式<span>({{ $order->traf_mode ?:'无' }})</span></p>
+                <span>{{ $order->traf_mode_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_20">
+                <p>运输工具名称</p>
+                <span>{{ $order->traf_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15 none_right">
+                <p>提运单号</p>
+                <span>{{ $order->bill_no ?:'无' }}</span>
+            </div>
+            <div class="clear bottom_border"></div>
+
+
+            <div class="pdf_table_th pdf_width_40">
+                <p>消费使用单位<span>({{ $order->owner_code_scc ?:'无' }})</span></p>
+                <span>{{ $order->owner_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_20">
+                <p>监管方式<span>({{ $order->trade_mode ?:'无' }})</span></p>
+                <span>{{ $order->trade_mode_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_20">
+                <p>征免性质<span>({{ $order->cut_mode ?:'无' }})</span></p>
+                <span>{{ $order->cut_mode_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15 none_right">
+                <p>征税比例</p>
+                <span style="color: #f00"></span>
+            </div>
+            <div class="clear bottom_border"></div>
+
+            <div class="pdf_table_th pdf_width_30">
+                <p>许可证号</p>
+                <span>{{ $order->license_no ?:'' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_20">
+                <p>启运国(地区)<span>({{ $order->trade_country ?:'无' }})</span></p>
+                <span>{{ $order->trade_country_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_25">
+                <p>经停港(地区)<span>({{ $order->distinate_port ?:'无' }})</span></p>
+                <span>{{ $order->distinate_port_name ?:'无' }}</span>
+            </div>
+
+            <div class="pdf_table_th pdf_width_20 none_right">
+                <p>境内目的地<span>({{ $order->district_code ?:'无' }})</span></p>
+                <span>{{ $order->district_code_name ?:'无' }}</span>
+            </div>
+            <div class="clear bottom_border"></div>
+
+
+            <div class="pdf_table_th pdf_width_30">
+                <p>批准文号</p>
+                <span style="color: red;"></span>
+            </div>
+            <div class="pdf_table_th pdf_width_15">
+                <p>成交方式<span>({{ $order->trans_mode ?:'无' }})</span></p>
+                <span>{{ $order->trans_mode_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15">
+                <p>运费<span>({{ $order->fee_mark ?:'无' }})</span>
+                </p>
+                <span>{{ $order->fee_mark_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15">
+                <p>保费<span>({{ $order->insur_mark ?:'无' }})</span></p>
+                <span>{{ $order->insur_mark_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15 none_right">
+                <p>杂费<span>({{ $order->other_mark ?:'无' }})</span></p>
+                <span>{{ $order->other_mark_name ?:'无' }}</span>
+            </div>
+            <div class="clear bottom_border"></div>
+
+
+            <div class="pdf_table_th pdf_width_30">
+                <p>合同协议号</p>
+                <span>{{ $order->contr_no ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15">
+                <p>件数</p>
+                <span>{{ $order->pack_no ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15">
+                <p>包装种类</p>
+                <span>{{ $order->wrap_type_name ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15">
+                <p>毛重(千克)</p>
+                <span>{{ $order->gross_wet_string ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15 none_right">
+                <p>净重（千克）</p>
+                <span>{{ $order->net_wt_string ?:'无' }}</span>
+            </div>
+            <div class="clear bottom_border"></div>
+
+
+            <div class="pdf_table_th pdf_width_30">
+                <p>集装箱号</p>
+                <span>{{ $container_container_ids ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_50">
+                <p>随附单证</p>
+                <span>{{ $docment_docu_code_names ?:'无' }}</span>
+            </div>
+            <div class="pdf_table_th pdf_width_15 none_right">
+                <p>生产厂家</p>
+                <span style="color: red;"></span>
+            </div>
+            <div class="clear bottom_border"></div>
+
+
+            <div class="pdf_table_td pdf_width_10 center">
+                <p>序号</p>
+            </div>
+            <div class="pdf_table_td pdf_width_30">
+                <p>商品名称、规格型号</p>
+            </div>
+            <div class="pdf_table_td pdf_width_15">
+                <p>数量及单位</p>
+            </div>
+            <div class="pdf_table_td pdf_width_15">
+                <p>原产国（地区）</p>
+            </div>
+            <div class="pdf_table_td pdf_width_10">
+                <p>单价 </p>
+            </div>
+            <div class="pdf_table_td pdf_width_10">
+                <p>币值</p>
+            </div>
+            <div class="clear bottom_border"></div>
+
+            @for ($i = 0; $i < 20; $i++)
+                <div class="pdf_table_td pdf_width_10 center">
+                    @if(array_key_exists($i+$start,$pros))
+                        <span class="pdf_table_span">{{ $pros[$i+$start]['g_no']?:'无' }}</span>
+                        <span class="pdf_table_span">({{ $pros[$i+$start]['contr_item']?:'无' }})</span>
+                    @endif
+                </div>
+                <div class="pdf_table_td pdf_width_30">
+                    @if(array_key_exists($i+$start,$pros))
+                    <span>{{ $pros[$i+$start]['g_model']?:'无' }}</span>
+                    @endif
+                </div>
+                <div class="pdf_table_td pdf_width_15">
+                    @if(array_key_exists($i+$start,$pros))
+                        <p class="unit_number">
+                            <span>{{$pros[$i]['g_qty_string']?:'无' }}{{$pros[$i]['g_unit_name']?:'无' }}</span>
+                        </p>
+                        <p class="unit_number">
+                            <span>{{$pros[$i]['first_qty_string']?:'无' }}{{$pros[$i]['first_unit_name']?:'无' }}</span>
+                        </p>
+                        <p class="unit_number">
+                            <span>{{$pros[$i]['second_qty_string']?:'无' }}{{$pros[$i]['second_unit_name']?:'无' }}</span>
+                        </p>
+                    @endif
+                </div>
+                <div class="pdf_table_td pdf_width_15">
+                    @if(array_key_exists($i+$start,$pros))
+                        <p class="pdf_table_td_p_two">
+                            <span>{{$pros[$i+$start]['origin_country_name']?:'无' }}</span>
+                            <span>({{$pros[$i+$start]['origin_country']?:'无' }})</span>
+                        </p>
+                        <p class="pdf_table_td_p_two">
+                            <span>目的国:{{$pros[$i+$start]['destination_country_name']?:'无' }}</span>
+                        </p>
+                    @endif
+                </div>
+                <div class="pdf_table_td  pdf_width_10">
+                    @if(array_key_exists($i+$start,$pros))
+                        <span>{{$pros[$i]['decl_price_string']?:'无' }}</span>
+                    @endif
+                </div>
+                <div class="pdf_table_td  pdf_width_10">
+                    @if(array_key_exists($i+$start,$pros))
+                        <p class="pdf_table_td_p_two">
+                            <span>{{$pros[$i+$start]['trade_curr']?:'无' }}</span>
+                        </p>
+                        <p class="pdf_table_td_p_two">
+                            <span>({{$pros[$i+$start]['trade_curr_name']?:'无' }})</span>
+                        </p>
+                    @endif
+                </div>
+                <div class="clear bottom_td_border"></div>
+            @endfor
+        </div>
+        <div class="height_10"></div>
+        <div class="clear bottom_td_border"></div>
+        <div class="height_10"></div>
+        <p class="text_index">
+            兹申明,以上通知由我公司根据海关电子回执打印,保证准确无讹。
+        </p>
+        <p class="foot_name max_foot_name">广东东华报关服务有限公司(签印)</p>
+        <p class="foot_date">{{ $return_J_date }}</p>
+        <div class="clear"></div>
+        <div class="chapter_secred">
+            @if($chapter)
+                <img height="150" src="{{'http::'.$chapter}}" class="chapter_secred_img"/>
+            @endif
+        </div>
+    </div>
+    @endfor
+@stop

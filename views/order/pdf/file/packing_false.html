@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+    <title>装箱单</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <br/>
+    <style type="text/css">
+        <!--
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ft10 {
+            font-size: 11px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft11 {
+            font-size: 28px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft12 {
+            font-size: 28px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        .ft13 {
+            font-size: 11px;
+            line-height: 15px;
+            font-family: Times;
+            color: #000000;
+        }
+
+        -->
+    </style>
+</head>
+<body vlink="blue" link="blue">
+<div style="position: absolute;top: 0;left: 0;width: 100%;height: 1362px;">
+    @for ($i = 0; $i < ceil(count($pros)/14); $i++)
+        <div id="page1-div" style="position:relative;width:100%;height:1362px;">
+            <img style="width:100%;height:1362px;" src="{{ asset('/static/pdf/pdf_packing_i/target001.png') }}"
+                 alt="background image"/>
+            <p style="position:absolute;top: 338px;left: 74px;white-space:nowrap;" class="ft10">箱号</p>
+            <p style="position:absolute;top: 357px;left: 68px;white-space:nowrap;" class="ft10">Ctn.No.</p>
+            <p style="position:absolute;top: 338px;left: 195px;white-space:nowrap;" class="ft10">货物名称及规格</p>
+            <p style="position:absolute;top: 357px;left: 184px;white-space:nowrap;" class="ft10">Name Of Commodity</p>
+            <p style="position:absolute;top: 338px;left: 376px;white-space:nowrap;" class="ft10">总箱数</p>
+            <p style="position:absolute;top: 357px;left: 374px;white-space:nowrap;" class="ft10">Ge.Crate</p>
+            <p style="position:absolute;top: 338px;left: 613px;white-space:nowrap;" class="ft10">数量</p>
+            <p style="position:absolute;top: 357px;left: 606px;white-space:nowrap;" class="ft10">Quantity</p>
+            <p style="position:absolute;top: 338px;left: 854px;white-space:nowrap;" class="ft10">净 &nbsp; &nbsp;重</p>
+            <p style="position:absolute;top: 357px;left: 845px;white-space:nowrap;" class="ft10">Net Weight</p>
+            <p style="position:absolute;top: 338px;left: 492px;white-space:nowrap;" class="ft10">产地</p>
+            <p style="position:absolute;top: 357px;left: 488px;white-space:nowrap;" class="ft10">Origin</p>
+            <p style="position:absolute;top: 338px;left: 734px;white-space:nowrap;" class="ft10">毛 &nbsp; &nbsp;重</p>
+            <p style="position:absolute;top: 357px;left: 721px;white-space:nowrap;" class="ft10">Gross Weight</p>
+
+            @php
+                $index=0 ;
+            @endphp
+
+            @for ($x = $i*14; $x < ($i+1)*14 ; $x++)
+                @if($x<=count($pros)-1)
+                    <p style="position:absolute;top: {{390 + $index * 42}}px;left: 88px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_no']}}</p>
+                    <p style="position:absolute;top: {{380 + $index * 42}}px;left: 128px;width: 210px;" class="ft10">{{$pros[$x]['g_name']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 42}}px;left: 577px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_qty_string']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 42}}px;left: 650px;white-space:nowrap;" class="ft10">{{$pros[$x]['g_unit_name']}}</p>
+                    <p style="position:absolute;top: {{390 + $index * 42}}px;left: 490px;white-space:nowrap;" class="ft10">{{$pros[$x]['origin_country_name']}}</p>
+                    @if($index == 0 && $i==0)
+                        <p style="position:absolute;top: {{390 + $index * 42}}px;left: 731px;white-space:nowrap;" class="ft10">{{$order->gross_wet_string}}</p>
+                        <p style="position:absolute;top: {{390 + $index * 42}}px;left: 851px;white-space:nowrap;" class="ft10">{{$order->net_wt_string}}</p>
+                        <p style="position:absolute;top: {{390 + $index * 42}}px;left: 390px;white-space:nowrap;" class="ft10">{{$order->pack_no}}</p>
+                    @endif
+
+                    @php
+                        $index++ ;
+                    @endphp
+                @endif
+            @endfor
+
+            <p style="position:absolute;top:120px;left: 398px;white-space:nowrap;" class="ft11"><b>装&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单</b>
+            </p>
+            <p style="position:absolute;top:158px;left: 395px;white-space:nowrap;" class="ft12">PACKING LIST</p>
+            <p style="position:absolute;top: 244px;left:44px;white-space:nowrap;" class="ft13">客户<br>To Messrs：</p>
+            <p style="position:absolute;top: 295px;left:44px;white-space:nowrap;" class="ft13">船名<br>Shipped by：</p>
+            <p style="position:absolute;top: 295px;left: 658px;white-space:nowrap;" class="ft13">日期<br>Date：</p>
+            <p style="position:absolute;top: 244px;left: 658px;white-space:nowrap;" class="ft13">发票编号<br>Invoice No：</p>
+            <p style="position:absolute;top: 255px;left: 293px;white-space:nowrap;" class="ft10">{{$order->trade_name}}</p>
+            <p style="position:absolute;top: 296px;left: 328px;white-space:nowrap;" class="ft13">由<br>From</p>
+            <p style="position:absolute;top: 296px;left: 486px;white-space:nowrap;" class="ft13">至<br>to</p>
+            <p style="position:absolute;top: 310px;left: 796px;white-space:nowrap;" class="ft10">{{ $order->apl_date->toDateString() }}</p>
+            <p style="position:absolute;top: 255px;left: 804px;white-space:nowrap;" class="ft10"></p>
+            <p style="position:absolute;top: 306px;left: 170px;white-space:nowrap;" class="ft10">{{ $order->voy_no }}</p>
+            <p style="position:absolute;top: 306px;left: 548px;white-space:nowrap;" class="ft10">{{ $dest_code_name }}</p>
+            <p style="position:absolute;top: 306px;left: 400px;white-space:nowrap;" class="ft10">{{ $order->trade_country_name }}</p>
+            <p style="position:absolute;top:83px;width: 100%;text-align: center;" class="ft12">{{$order->foreign_company_name}}</p>
+            <p style="position:absolute;top: 1230px;left: 387px;white-space:nowrap;" class="ft10">{{ $order->pack_no }}</p>
+            <p style="position:absolute;top: 1220px;left: 233px;white-space:nowrap;" class="ft10">合计</p>
+            <p style="position:absolute;top: 1235px;left: 216px;white-space:nowrap;" class="ft10">TOTALLY：</p>
+            <p style="position:absolute;top: 1230px;left: 851px;white-space:nowrap;" class="ft10">{{$order->net_wt_string}}</p>
+            <p style="position:absolute;top: 1230px;left: 731px;white-space:nowrap;" class="ft10">{{$order->gross_wet_string}}</p>
+        </div>
+    @endfor
+</div>
+</body>
+</html>

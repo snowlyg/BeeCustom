@@ -1,0 +1,114 @@
+<style>
+    .pdf-header {
+        font-family: 宋体;
+        /*min-height: 18cm;*/
+    }
+
+    .pdf-top {
+        position: relative;
+    }
+
+    .logo {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .c39 {
+        position: absolute;
+        top: 0;
+        right: 85px;
+    }
+
+    .c39 p {
+        font-size: 1.5em;
+        text-align: center;
+        letter-spacing: 2px;
+    }
+
+    .qrcode {
+        position: absolute;
+        top: 0;
+        right: 0px;
+    }
+
+    .title {
+        font-size: 2.1em;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+    }
+
+    .height_15 {
+        height: 15px;
+    }
+
+    .one span, .two span, .three span, .four span {
+        font-weight: bold;
+    }
+
+    .one {
+        display: inline-block;
+        width: 300px;
+    }
+
+    .two {
+        display: inline-block;
+        width: 300px;
+    }
+
+    .three {
+        display: inline-block;
+        width: 550px;
+    }
+
+    .four {
+        display: inline-block;
+    }
+
+    .height_30 {
+        height: 30px;
+    }
+</style>
+<div class="pdf-header">
+    <div class="pdf-top">
+        <div class="logo">
+            <img src="/static/images/declaration_logo.png" width="70">
+        </div>
+        <div class="height_15"></div>
+        <p class="title">中华人民共和国海关@{{.m.IEFlagName}}货物报关单@{{if .IsRecheck }}（核对单）@{{end}}</p>
+        @{{if not .IsRecheck }}
+        <div class="qrcode">
+            @{{ if  .m.EntryId }}
+@{{/*            {!! DNS2D::getBarcodeSVG($order->entry_id, "QRCODE", 3.2,3.2) !!}*/}}
+        </div>
+        <div class="c39">
+@{{/*            <img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($order->entry_id, "C39", 1.0,30,array(1,1,1), true)  }}"alt="barcode"/>*/}}
+            <p>*@{{ .m.EntryId }}*</p>
+            @{{end}}
+        </div>
+        @{{end}}
+    </div>
+    <div class="height_30"></div>
+    <div class="pdf-number">
+        <div class="one">
+            <span>预录入编号：</span>
+            @{{ .m.PreEntryId }}
+        </div>
+        <div class="two">
+            <span>海关编号：</span>
+            @{{ if  .m.IsOther }}
+        异地报关
+        @{{ else if  .m.EntryId }}
+        @{{ .m.EntryId }}
+        @{{ end }}
+        </div>
+        <div class="three">
+            <span>(@{{ .m.CustomMasterName }})</span>
+        </div>
+        <div class="four">
+            <span>页码/页数：</span>
+            @{{ .page }}/@{{ .topage }}
+        </div>
+    </div>
+</div>

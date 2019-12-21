@@ -10,7 +10,16 @@ import (
 	"github.com/astaxie/beego"
 )
 
-func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) (string, error) {
+type PdfData struct {
+	Id              int64
+	EtpsInnerInvtNo string
+	Url             string
+	Action          string
+	ModelName       string
+	MarginTop       uint
+}
+
+func NewPDFGenerator(pdfData *PdfData) (string, error) {
 
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
@@ -22,7 +31,8 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) (string, err
 	// Set global options
 	pdfg.Dpi.Set(300)
 	pdfg.Orientation.Set(wkhtmltopdf.OrientationLandscape)
-	pdfg.Grayscale.Set(false) // 彩色 false， 灰色 true
+	pdfg.Grayscale.Set(false)             // 彩色 false， 灰色 true
+	pdfg.MarginTop.Set(pdfData.MarginTop) // 上边距
 
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
@@ -32,12 +42,20 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) (string, err
 	password := beego.AppConfig.String("pdf_password")
 
 	// Create a new input page from an URL
-	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/pdf/" + url + "/" + strconv.FormatInt(Id, 10))
+	formatInt := strconv.FormatInt(pdfData.Id, 10)
+	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/pdf/" + pdfData.Url + "/" + formatInt)
 
 	// Set options for this page
-	page.FooterCenter.Set("第[page]页 共[topage]页")
-	page.FooterFontSize.Set(12)
-	page.Zoom.Set(0.95)
+	if pdfData.ModelName == "annotation" {
+		page.FooterCenter.Set("第[page]页 共[topage]页")
+		page.FooterFontSize.Set(12)
+	}
+
+	if pdfData.ModelName == "order" {
+		page.HeaderHTML.Set(httpaddr + ":" + httpport + "/pdf/order_pdf_header/" + formatInt)
+	}
+
+	// page.Zoom.Set(0.95)
 	page.DisableJavascript.Set(false)
 	page.DebugJavascript.Set(true)
 	page.MinimumFontSize.Set(12)
@@ -55,14 +73,14 @@ func NewPDFGenerator(Id int64, etpsInnerInvtNo, url, action string) (string, err
 		return "", err
 	}
 
-	path := "./static/generate/annotation/" + strconv.FormatInt(Id, 10) + "/" + action
+	path := "./static/generate/" + pdfData.ModelName + "/" + formatInt + "/" + pdfData.Action
 	if err := file.CreateFile(path); err != nil {
 		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
 		return "", err
 	}
 
 	// Write buffer contents to file on disk
-	fileFullPath := path + "/" + etpsInnerInvtNo + ".pdf"
+	fileFullPath := path + "/" + pdfData.EtpsInnerInvtNo + ".pdf"
 	err = pdfg.WriteFile(fileFullPath)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("  pdfg.WriteFile error:%v", err))
