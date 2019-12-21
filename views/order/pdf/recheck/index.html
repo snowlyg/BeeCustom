@@ -286,28 +286,21 @@
     .is_success {
         background-color: #f7fff7;
         color: #16b615;
-        font-family: "iconfont" !important;
         font-style: normal;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
 
-    .is_success:after {
-        content: '\e69c';
-    }
+
 
     .is_error {
         background-color: #FF3940;
         color: #FFFFFF;
-        font-family: "iconfont" !important;
         font-style: normal;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
 
-    .is_error:after {
-        content: '\eb1f';
-    }
 
     .chapter_img {
         position: absolute;
@@ -339,10 +332,10 @@
         for (var ii in v) {  //遍历数组
           for (var vii in v[ii]) {  //遍历数组
             var ids = document.querySelectorAll(`span[data-index="${i}"][data-id=${v[ii][vii]}]`)
-            for (var i = 0; i < ids.length; i++) {
-              var text = ids[i].innerText
+            for (var iii = 0; iii < ids.length; iii++) {
+              var text = ids[iii].innerText
               if (text) {
-                ids[i].classList.add('is_error')
+                ids[iii].classList.add('is_error')
               }
             }
           }

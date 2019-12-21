@@ -4,24 +4,24 @@
                 <img src="/static/images/declaration_logo.png" width="50">
             </div>
             <div class="height_15"></div>
-            <p class="title">中华人民共和国海关@{{.IEFlagName}}货物报关单</p>
+            <p class="title">中华人民共和国海关@{{.m.IEFlagName}}货物报关单</p>
         </div>
         <div class="height_30"></div>
         <div class="pdf-number">
             <div class="one">
-                <span>预录入编号：</span>
-                @{{ .PreEntryId }}
+                <span data-id="PreEntryId" >预录入编号：</span>
+                @{{ .m.PreEntryId }}
             </div>
             <div class="two">
-                <span>海关编号：</span>
-                @{{ if  .IsOther }}
+                <span data-id="EntryId">海关编号：</span>
+                @{{ if  .m.IsOther }}
                     异地报关
                 @{{ else  }}
-                 @{{ .EntryId }}
+                 @{{.m.EntryId }}
                 @{{ end }}
             </div>
             <div class="three">
-                <span>(@{{ .CustomMasterName }})</span>
+                <span data-id="CustomMasterName">(@{{ .m.CustomMasterName }})</span>
             </div>
 
         </div>
