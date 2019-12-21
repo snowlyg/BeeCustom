@@ -331,17 +331,23 @@
   }
   if (order.StatusString == '复核不通过') {
     if (order.RecheckErrorInputIds) {
-      for (var i = 0; i < order.RecheckErrorInputIds.length; i++) {
-        if (order.RecheckErrorInputIds[i].index) {
-          for (var j = 0; j < order.RecheckErrorInputIds[i].id.length; j++) {
-            document.querySelector('#' + order.RecheckErrorInputIds[i].id[j] +
-              order.RecheckErrorInputIds[i].index).classList.add('is_error')
+      order.RecheckErrorInputIds.forEach(function (v, i) {
+        document.querySelector(`span[data-id=${v}]`).classList.add('is_error')
+      })
+
+      order.ItemRecheckErrorInputIds.forEach(function (v, i) {
+        for (var ii in v) {  //遍历数组
+          for (var vii in v[ii]) {  //遍历数组
+            var ids = document.querySelectorAll(`span[data-index="${i}"][data-id=${v[ii][vii]}]`)
+            for (var i = 0; i < ids.length; i++) {
+              var text = ids[i].innerText
+              if (text) {
+                ids[i].classList.add('is_error')
+              }
+            }
           }
-        } else {
-          document.querySelector('#' + order.RecheckErrorInputIds[i].id).
-            classList.add('is_error')
         }
-      }
+      })
     }
   }
 </script>
