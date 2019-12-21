@@ -1,348 +1,347 @@
 <style>
-        .pdf {
-            font-family: 宋体;
-            height: 18cm;
-        }
+    .pdf {
+        font-family: 宋体;
+        height: 18cm;
+    }
 
-        .c39 p {
-            font-size: 1.5em;
-            text-align: center;
-            letter-spacing: 2px;
-        }
+    .c39 p {
+        font-size: 1.5em;
+        text-align: center;
+        letter-spacing: 2px;
+    }
 
-        .one span, .two span, .three span, .four span {
-            font-weight: bold;
-        }
+    .one span, .two span, .three span, .four span {
+        font-weight: bold;
+    }
 
-        .height_10 {
-            height: 0.37cm;
-        }
+    .height_10 {
+        height: 0.37cm;
+    }
 
-        .pdf-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+    .pdf-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-        .pdf-table-two {
-            border-collapse: collapse;
-            width: 100%;
-            height: 21.06cm;
-        }
+    .pdf-table-two {
+        border-collapse: collapse;
+        width: 100%;
+        height: 21.06cm;
+    }
 
-        .pdf-table-tr-22 {
-            height: 22.5pt
-        }
+    .pdf-table-tr-22 {
+        height: 22.5pt
+    }
 
-        .table_td_one_top {
-            border-left: 1.5pt solid #000000;
-            border-right: 0.75pt solid #000000;
-            border-top: 1.5pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .table_td_one_top {
+        border-left: 1.5pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 1.5pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .table_td_two_top {
-            border-left: 0.75pt solid #000000;
-            border-right: 0.75pt solid #000000;
-            border-top: 1.5pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .table_td_two_top {
+        border-left: 0.75pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 1.5pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .table_td_three_top {
-            border-left: 0.75pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 1.5pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .table_td_three_top {
+        border-left: 0.75pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 1.5pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .table_td_one_center {
-            border-left: 1.5pt solid #000000;
-            border-right: 0.75pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .table_td_one_center {
+        border-left: 1.5pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .table_td_two_center {
-            border-left: 0.75pt solid #000000;
-            border-right: 0.75pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .table_td_two_center {
+        border-left: 0.75pt solid #000000;
+        border-right: 0.75pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .table_td_three_center {
-            border-left: 0.75pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .table_td_three_center {
+        border-left: 0.75pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .table_td_all {
-            border-left: 1.5pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .table_td_all {
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .pdf-table-tr-45 {
-            height: 45pt;
-            border-left: 1.5pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .pdf-table-tr-45 {
+        height: 45pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .pdf-table-tr-12 {
-            height: 12.75pt;
-            border-left: 1.5pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-            word-break: break-all;
-            page-break-before: always;
-            page-break-after: always;
-            page-break-inside: avoid;
-        }
+    .pdf-table-tr-12 {
+        height: 12.75pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+        word-break: break-all;
+        page-break-before: always;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
 
-        .pdf-table-tr-30-one {
-            height: 41.5pt;
-            border-left: 1.5pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .pdf-table-tr-30-one {
+        height: 41.5pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .pdf-table-tr-30-two {
-            height: 41pt;
-            border-left: 1.5pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .pdf-table-tr-30-two {
+        height: 41pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .pdf-table-tr-21 {
-            height: 26pt;
-            border-left: 1.5pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 0.75pt solid #000000;
-        }
+    .pdf-table-tr-21 {
+        height: 26pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 0.75pt solid #000000;
+    }
 
-        .pdf-table-tr-52 {
-            height: 48pt;
-            border-left: 1.5pt solid #000000;
-            border-right: 1.5pt solid #000000;
-            border-top: 0.75pt solid #000000;
-            border-bottom: 1.5pt solid #000000;
-        }
+    .pdf-table-tr-52 {
+        height: 48pt;
+        border-left: 1.5pt solid #000000;
+        border-right: 1.5pt solid #000000;
+        border-top: 0.75pt solid #000000;
+        border-bottom: 1.5pt solid #000000;
+    }
 
-        .table_td_p {
-            line-height: 11.55pt;
-            margin: 3pt 3pt 3pt 3.75pt;
-        }
+    .table_td_p {
+        line-height: 11.55pt;
+        margin: 3pt 3pt 3pt 3.75pt;
+    }
 
-        .table_td_p .span_bold {
-            font-weight: bold;
-            color: #333333;
-        }
+    .table_td_p .span_bold {
+        font-weight: bold;
+        color: #333333;
+    }
 
-        .table_td_p .span {
-            color: #333333;
-        }
+    .table_td_p .span {
+        color: #333333;
+    }
 
-        .table_list_p {
-            line-height: 9.9pt;
-            margin: 0pt 0pt 0pt 5.75pt;
-        }
+    .table_list_p {
+        line-height: 9.9pt;
+        margin: 0pt 0pt 0pt 5.75pt;
+    }
 
-        .table_list_span_9 {
-            font-size: 9pt;
-        }
+    .table_list_span_9 {
+        font-size: 9pt;
+    }
 
-        .width_22 {
-            width: 25pt;
-        }
+    .width_22 {
+        width: 25pt;
+    }
 
-        .goods_number span, .goods_name span, .unit_number span, .unit_price span {
-            font-size: 9pt
-        }
+    .goods_number span, .goods_name span, .unit_number span, .unit_price span {
+        font-size: 9pt
+    }
 
-        .goods_number {
-            line-height: 10.2pt;
-            margin: 0pt 0pt 0pt 2.75pt;
-        }
+    .goods_number {
+        line-height: 10.2pt;
+        margin: 0pt 0pt 0pt 2.75pt;
+    }
 
-        .goods_name {
-            line-height: 11pt;
-            margin: 0pt 0pt 0pt 62pt;
-        }
+    .goods_name {
+        line-height: 11pt;
+        margin: 0pt 0pt 0pt 62pt;
+    }
 
-        .unit_number {
-            line-height: 10.7pt;
-            white-space: nowrap;
-        }
+    .unit_number {
+        line-height: 10.7pt;
+        white-space: nowrap;
+    }
 
-        .unit_price {
-            line-height: 10.5pt;
-            text-align: right;
-        }
+    .unit_price {
+        line-height: 10.5pt;
+        text-align: right;
+    }
 
-        .destination {
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: horizontal;
-            -webkit-box-direction: normal;
-            -ms-flex-flow: row nowrap;
-            flex-flow: row nowrap;
-            -webkit-box-pack: justify;
-            -ms-flex-pack: justify;
-            justify-content: space-between;
-            page-break-inside: avoid !important;
-            width: 210pt;
-        }
+    .destination {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+        flex-flow: row nowrap;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        page-break-inside: avoid !important;
+        width: 210pt;
+    }
 
-        .destination_end {
-            width: 80pt;
-            text-align: right;
-        }
+    .destination_end {
+        width: 80pt;
+        text-align: right;
+    }
 
-        .destination_domestic {
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-            width: 160pt;
-        }
+    .destination_domestic {
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+        width: 160pt;
+    }
 
-        .exempted {
-            font-size: 9pt;
-            line-height: 86%;
-            margin: 0.45pt 7.05pt 0pt 14.95pt;
-            padding-left: 4.5pt;
-            text-indent: -4.5pt;
-        }
+    .exempted {
+        font-size: 9pt;
+        line-height: 86%;
+        margin: 0.45pt 7.05pt 0pt 14.95pt;
+        padding-left: 4.5pt;
+        text-indent: -4.5pt;
+    }
 
-        .confirm {
-            margin: 4.7pt 0pt 0pt 72.45pt;
-        }
+    .confirm {
+        margin: 4.7pt 0pt 0pt 72.45pt;
+    }
 
-        .confirm_title {
-            color: #333333;
-            font-family: 宋体;
-            font-size: 7.5pt;
-            font-weight: bold
-        }
+    .confirm_title {
+        color: #333333;
+        font-family: 宋体;
+        font-size: 7.5pt;
+        font-weight: bold
+    }
 
-        .width_60 {
-            width: 60.5pt;
-            display: inline-block;
-        }
+    .width_60 {
+        width: 60.5pt;
+        display: inline-block;
+    }
 
-        .width_45 {
-            width: 45pt;
-            display: inline-block;
-        }
+    .width_45 {
+        width: 45pt;
+        display: inline-block;
+    }
 
-        .table_bottom {
-            margin: 6.8pt 0pt 0pt 8.25pt;
-        }
+    .table_bottom {
+        margin: 6.8pt 0pt 0pt 8.25pt;
+    }
 
-        .table_bottom_i {
-            margin: 0pt 0pt 0pt 8.25pt;
-        }
+    .table_bottom_i {
+        margin: 0pt 0pt 0pt 8.25pt;
+    }
 
-        .table_bottom_float_left {
-            float: left;
-        }
+    .table_bottom_float_left {
+        float: left;
+    }
 
-        .table_bottom_float_right {
-            float: right;
-            text-align: right;
-            margin-right: 6pt;
-        }
+    .table_bottom_float_right {
+        float: right;
+        text-align: right;
+        margin-right: 6pt;
+    }
 
-        .table_bottom_float_right p {
-            font-size: 9pt;
-            font-weight: bold;
-            margin-top: 8pt;
-        }
+    .table_bottom_float_right p {
+        font-size: 9pt;
+        font-weight: bold;
+        margin-top: 8pt;
+    }
 
-        .stamped {
-            border-left: 0.75pt solid #000000;
-            vertical-align: top;
-        }
+    .stamped {
+        border-left: 0.75pt solid #000000;
+        vertical-align: top;
+    }
 
-        .stamped_p {
-            margin: 0pt 0pt 0pt 8.1pt;
-        }
+    .stamped_p {
+        margin: 0pt 0pt 0pt 8.1pt;
+    }
 
-        @font-face {
-            font-family: 'iconfont';
-            src: url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.eot');
-            src: url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.eot?#iefix') format('embedded-opentype'),
-            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.woff2') format('woff2'),
-            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.woff') format('woff'),
-            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.ttf') format('truetype'),
-            url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.svg#iconfont') format('svg');
-        }
+    @font-face {
+        font-family: 'iconfont';
+        src: url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.eot');
+        src: url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.eot?#iefix') format('embedded-opentype'),
+        url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.woff2') format('woff2'),
+        url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.woff') format('woff'),
+        url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.ttf') format('truetype'),
+        url('http://at.alicdn.com/t/font_1071313_412d4oyr6zu.svg#iconfont') format('svg');
+    }
 
-        .is_success {
-            background-color: #f7fff7;
-            color: #16b615;
-            font-family: "iconfont" !important;
-            font-style: normal;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+    .is_success {
+        background-color: #f7fff7;
+        color: #16b615;
+        font-family: "iconfont" !important;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-        .is_success:after {
-            content: '\e69c';
-        }
+    .is_success:after {
+        content: '\e69c';
+    }
 
-        .is_error {
-            background-color: #FF3940;
-            color: #FFFFFF;
-            font-family: "iconfont" !important;
-            font-style: normal;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+    .is_error {
+        background-color: #FF3940;
+        color: #FFFFFF;
+        font-family: "iconfont" !important;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-        .is_error:after {
-            content: '\eb1f';
-        }
-        .chapter_img{
-            position: absolute;
-            top: 5px;
-            right: 10px;
-        }
-    </style>
+    .is_error:after {
+        content: '\eb1f';
+    }
+
+    .chapter_img {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+    }
+</style>
 
 @{{template "/order/pdf/common/recheck_delaration_body.html" .}}
 
-    <script>
-        var order = JSON.parse(document.querySelector('#order').value);
-        if (order.order_status_string == '复核通过' || order.order_status_string == '待暂存') {
-            var ids = document.querySelectorAll('span[id]');
-            for (var i = 0; i < ids.length; i++) {
-                var text = ids[i].innerText;
-                if (text) {
-                    ids[i].classList.add("is_success");
-                }
-            }
+<script>
+  var order = @{{.m}}
+  if (order.StatusString == '复核通过' || order.StatusString == '待暂存') {
+    var ids = document.querySelectorAll('span[data-id]')
+    for (var i = 0; i < ids.length; i++) {
+      var text = ids[i].innerText
+      if (text) {
+        ids[i].classList.add('is_success')
+      }
+    }
+  }
+  if (order.StatusString == '复核不通过') {
+    if (order.RecheckErrorInputIds) {
+      for (var i = 0; i < order.RecheckErrorInputIds.length; i++) {
+        if (order.RecheckErrorInputIds[i].index) {
+          for (var j = 0; j < order.RecheckErrorInputIds[i].id.length; j++) {
+            document.querySelector('#' + order.RecheckErrorInputIds[i].id[j] +
+              order.RecheckErrorInputIds[i].index).classList.add('is_error')
+          }
+        } else {
+          document.querySelector('#' + order.RecheckErrorInputIds[i].id).
+            classList.add('is_error')
         }
-        if (order.order_status_string == '复核不通过') {
-            if (order.reject_logs.length > 0) {
-                if (order.reject_logs[0].recheck_error_input_ids) {
-                    if (order.reject_logs[0].recheck_error_input_ids.length > 0) {
-                        for (var i = 0; i < order.reject_logs[0].recheck_error_input_ids.length; i++) {
-                            if (order.reject_logs[0].recheck_error_input_ids[i].index) {
-                                for (var j = 0; j < order.reject_logs[0].recheck_error_input_ids[i].id.length; j++) {
-                                    document.querySelector('#' + order.reject_logs[0].recheck_error_input_ids[i].id[j] + order.reject_logs[0].recheck_error_input_ids[i].index).classList.add("is_error");
-                                }
-                            } else {
-                                document.querySelector('#' + order.reject_logs[0].recheck_error_input_ids[i].id).classList.add("is_error");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+      }
+    }
+  }
+</script>

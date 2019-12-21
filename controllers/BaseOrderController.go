@@ -403,7 +403,7 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 	// 生成 pdf 凭证
-	pdfData := enums.PdfData{m.Id, m.ClientSeqNo, "order_recheck_pdf", action, "order", 30}
+	pdfData := enums.PdfData{m.Id, m.ClientSeqNo, "order_recheck_pdf", action, "order", "order_recheck_pdf_header", 30}
 	if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
@@ -448,8 +448,8 @@ func (c *BaseOrderController) bPrint(id int64) {
 		c.pageError("数据无效，请刷新后重试")
 	}
 	if m != nil {
-		// 生成 pdf 凭证
-		pdfData := enums.PdfData{m.Id, m.ClientSeqNo, "order_pdf", "report", "order", 30}
+		// 生成
+		pdfData := enums.PdfData{m.Id, m.ClientSeqNo, "order_pdf", "report", "order", "order_pdf_header", 30}
 		if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		} else {

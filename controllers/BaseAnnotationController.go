@@ -470,7 +470,7 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString, action, acti
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 	// 生成 pdf 凭证
-	pdfData := enums.PdfData{m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf", action, "annotation", 10}
+	pdfData := enums.PdfData{m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf", action, "annotation", "", 10}
 	if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
@@ -517,7 +517,7 @@ func (c *BaseAnnotationController) bPrint(id int64) {
 	}
 	if m != nil {
 		// 生成 pdf 凭证
-		pdfData := enums.PdfData{m.Id, m.EtpsInnerInvtNo, "annotation_pdf", "report", "annotation", 10}
+		pdfData := enums.PdfData{m.Id, m.EtpsInnerInvtNo, "annotation_pdf", "report", "annotation", "", 10}
 		if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		} else {

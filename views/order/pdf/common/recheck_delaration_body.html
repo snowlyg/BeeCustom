@@ -6,34 +6,34 @@
             <td colspan="2" class="table_td_one_top">
                 <p class="table_td_p">
                     <span class="span_bold">境内发货人 </span>
-                    <span data-id="trade_co_scc" data-id="trade_co_scc">(@{{ .m.TradeCoScc  }})</span>
+                    <span data-id="TradeCoScc" >(@{{ .m.TradeCoScc  }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="trade_name">@{{ .m.TradeName  }}</span></p>
+                <p class="table_td_p"><span data-id="TradeName">@{{ .m.TradeName  }}</span></p>
             </td>
             <td colspan="3" class="table_td_two_top">
                 <p class="table_td_p">
                     <span class="span_bold">出境关别</span>
-                    <span data-id="i_e_port">(@{{ .m.IEPort  }})</span>
+                    <span data-id="IEPort">(@{{ .m.IEPort  }})</span>
                 </p>
-                <p class="table_td_p" data-id="i_e_port_name"><span>@{{ .m.IEPortName  }}</span></p>
+                <p class="table_td_p" data-id="IEPortName"><span>@{{ .m.IEPortName  }}</span></p>
             </td>
             <td colspan="4" class="table_td_two_top">
                 <p class="table_td_p">
                     <span class="span_bold">出口日期</span>
                 </p>
-                <p class="table_td_p"><span data-id="i_e_date">@{{ .m.IEDate  }}</span></p>
+                <p class="table_td_p"><span data-id="IEDate">@{{ .m.IEDate  }}</span></p>
             </td>
             <td colspan="4" class="table_td_two_top">
                 <p class="table_td_p">
                     <span class="span_bold">申报日期</span>
                 </p>
-                <p class="table_td_p"><span data-id="apl_date">@{{ .m.AplDate  }}</span></p>
+                <p class="table_td_p"><span data-id="AplDate">@{{ .m.AplDate  }}</span></p>
             </td>
             <td colspan="3" class="table_td_three_top">
                 <p class="table_td_p">
                     <span class="span_bold">备案号</span>
                 </p>
-                <p class="table_td_p"><span data-id="manual_no">@{{ .m.ManualNo  }}</span></p>
+                <p class="table_td_p"><span data-id="ManualNo">@{{ .m.ManualNo  }}</span></p>
             </td>
         </tr>
         <tr class="pdf-table-tr-22">
@@ -42,21 +42,21 @@
                     <span class="span_bold">境外收货人</span>
                 </p>
                 <p class="table_td_p"><span
-                            data-id="overseas_consignee_ename">@{{ .m.OverseasConsigneeEname  }}</span></p>
+                            data-id="OverseasConsigneeEname">@{{ .m.OverseasConsigneeEname  }}</span></p>
             </td>
             <td colspan="3" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">运输方式</span>
-                    <span data-id="traf_mode">(@{{ .m.TrafMode  }})</span>
+                    <span data-id="TrafMode">(@{{ .m.TrafMode  }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="traf_mode_name">@{{ .m.TrafModeName  }}</span></p>
+                <p class="table_td_p"><span data-id="TrafModeName">@{{ .m.TrafModeName  }}</span></p>
             </td>
             <td colspan="4" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">运输工具名称及航次号</span>
                 </p>
-                <p class="table_td_p"><span data-id="traf_name">@{{ .m.TrafName  }}</span>/<span
-                            data-id="voy_no"
+                <p class="table_td_p"><span data-id="TrafName">@{{ .m.TrafName  }}</span>/<span
+                            data-id="VoyNo"
                             class="create_span">@{{ .m.VoyNo  }}</span>
                 </p>
             </td>
@@ -64,36 +64,36 @@
                 <p class="table_td_p">
                     <span class="span_bold">提运单号</span>
                 </p>
-                <p class="table_td_p"><span data-id="bill_no">@{{ .m.BillNo  }}</span></p>
+                <p class="table_td_p"><span data-id="BillNo">@{{ .m.BillNo  }}</span></p>
             </td>
         </tr>
         <tr class="pdf-table-tr-22">
             <td colspan="2" class="table_td_one_center">
                 <p class="table_td_p">
                     <span class="span_bold">生产销售单位</span>
-                    <span data-id="owner_code_scc">(@{{ .m.OwnerCodeScc  }})</span>
+                    <span data-id="OwnerCodeScc">(@{{ .m.OwnerCodeScc  }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="owner_name">@{{ .m.OwnerName  }}</span></p>
+                <p class="table_td_p"><span data-id="OwnerName">@{{ .m.OwnerName  }}</span></p>
             </td>
             <td colspan="3" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">监管方式</span>
-                    <span data-id="trade_mode">(@{{ .m.TradeMode  }})</span>
+                    <span data-id="TradeMode">(@{{ .m.TradeMode  }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="trade_mode_name">@{{ .m.TradeModeName  }}</span></p>
+                <p class="table_td_p"><span data-id="TradeModeName">@{{ .m.TradeModeName  }}</span></p>
             </td>
             <td colspan="4" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">征免性质</span>
-                    <span data-id="cut_mode">(@{{ .m.CutMode  }})</span>
+                    <span data-id="CutMode">(@{{ .m.CutMode  }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="cut_mode_name">@{{ .m.CutModeName  }}</span></p>
+                <p class="table_td_p"><span data-id="CutModeName">@{{ .m.CutModeName  }}</span></p>
             </td>
             <td colspan="7" class="table_td_three_center">
                 <p class="table_td_p">
                     <span class="span_bold">许可证号</span>
                 </p>
-                <p class="table_td_p"><span data-id="license_no">@{{ .m.LicenseNo }}</span></p>
+                <p class="table_td_p"><span data-id="LicenseNo">@{{ .m.LicenseNo }}</span></p>
             </td>
         </tr>
         <tr class="pdf-table-tr-22">
@@ -101,69 +101,69 @@
                 <p class="table_td_p">
                     <span class="span_bold">合同协议号</span>
                 </p>
-                <p class="table_td_p"><span data-id="contr_no">@{{ .m.ContrNo }}</span></p>
+                <p class="table_td_p"><span data-id="ContrNo">@{{ .m.ContrNo }}</span></p>
             </td>
             <td colspan="3" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">贸易国（地区）</span>
-                    <span data-id="trade_area_code">(@{{ .m.TradeAreaCode }})</span>
+                    <span data-id="TradeAreaCode">(@{{ .m.TradeAreaCode }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="trade_area_name">@{{ .m.TradeAreaName }}</span></p>
+                <p class="table_td_p"><span data-id="TradeAreaName">@{{ .m.TradeAreaName }}</span></p>
             </td>
             <td colspan="4" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">运抵国（地区）</span>
-                    <span data-id="trade_country_name">(@{{ .m.TradeCountry }})</span>
+                    <span data-id="TradeCountryName">(@{{ .m.TradeCountry }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="trade_country_name">@{{ .m.TradeCountryName }}</span></p>
+                <p class="table_td_p"><span data-id="TradeCountryName">@{{ .m.TradeCountryName }}</span></p>
             </td>
             <td colspan="4" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">指运港</span>
-                    <span data-id="distinate_port">(@{{ .m.DistinatePort }})</span>
+                    <span data-id="DistinatePort">(@{{ .m.DistinatePort }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="distinate_port_name">@{{ .m.DistinatePortName }}</span></p>
+                <p class="table_td_p"><span data-id="DistinatePortName">@{{ .m.DistinatePortName }}</span></p>
             </td>
             <td colspan="3" class="table_td_three_center">
                 <p class="table_td_p">
                     <span class="span_bold">离境口岸</span>
-                    <span data-id="enty_port_code">(@{{ .m.EntyPortCode }})</span>
+                    <span data-id="EntyPortCode">(@{{ .m.EntyPortCode }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="enty_port_name">@{{ .m.EntyPortName }}</span></p>
+                <p class="table_td_p"><span data-id="EntyPortName">@{{ .m.EntyPortName }}</span></p>
             </td>
         </tr>
         <tr class="pdf-table-tr-22">
             <td colspan="2" class="table_td_one_center">
                 <p class="table_td_p">
                     <span class="span_bold">包装种类</span>
-                    <span data-id="wrap_type">(@{{ .m.WrapType }})</span>
+                    <span data-id="WrapType">(@{{ .m.WrapType }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="wrap_type_name">@{{ .m.WrapTypeName }}</span></p>
+                <p class="table_td_p"><span data-id="WrapTypeName">@{{ .m.WrapTypeName }}</span></p>
             </td>
             <td class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">件数</span>
                 </p>
-                <p class="table_td_p"><span data-id="pack_no">@{{ .m.PackNo }}</span></p>
+                <p class="table_td_p"><span data-id="PackNo">@{{ .m.PackNo }}</span></p>
             </td>
             <td colspan="2" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">毛重(千克)</span>
                 </p>
-                <p class="table_td_p"><span data-id="gross_wet">@{{ .m.GrossWet }}</span></p>
+                <p class="table_td_p"><span data-id="GrossWet">@{{ .m.GrossWet }}</span></p>
             </td>
             <td colspan="2" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">净重(千克)</span>
                 </p>
-                <p class="table_td_p"><span data-id="net_wt">@{{ .m.NetWt }}</span></p>
+                <p class="table_td_p"><span data-id="NetWt">@{{ .m.NetWt }}</span></p>
             </td>
             <td colspan="2" class="table_td_two_center">
                 <p class="table_td_p">
                     <span class="span_bold">成交方式</span>
-                    <span data-id="trans_mode">(@{{ .m.TransMode }})</span>
+                    <span data-id="TransMode">(@{{ .m.TransMode }})</span>
                 </p>
-                <p class="table_td_p"><span data-id="trans_mode_name">@{{ .m.TransModeName }}</span></p>
+                <p class="table_td_p"><span data-id="TransModeName">@{{ .m.TransModeName }}</span></p>
             </td>
             <td colspan="3" class="table_td_two_center">
                 <p class="table_td_p">
@@ -171,9 +171,9 @@
                 </p>
                 <p class="table_td_p">
                     @{{ if .m.FeeMarkName  }}
-                <span class="create_span" data-id="fee_mark_name">@{{ .m.FeeMarkName  }}</span>/ <span
-                        class="create_span" data-id="fee_curr_name"> @{{ .m.FeeCurrName  }}</span>/ <span
-                        class="create_span" data-id="fee_rate"> @{{ .m.FeeRate  }}</span>
+                <span class="create_span" data-id="FeeMarkName">@{{ .m.FeeMarkName  }}</span>/ <span
+                        class="create_span" data-id="FeeCurrName"> @{{ .m.FeeCurrName  }}</span>/ <span
+                        class="create_span" data-id="FeeRate"> @{{ .m.FeeRate  }}</span>
                 @{{end}}
                 </p>
             </td>
@@ -183,9 +183,9 @@
                 </p>
                 <p class="table_td_p">
                     @{{if .m.InsurMarkName }}
-                <span class="create_span" data-id="insur_mark_name">@{{ .m.InsurMarkName  }}</span>/<span
-                        class="create_span" data-id="insur_curr_name"> @{{ .m.InsurCurrName  }}</span>/ <span
-                        class="create_span" data-id="insur_rate"> @{{ .m.InsurRate  }}</span>
+                <span class="create_span" data-id="InsurMarkName">@{{ .m.InsurMarkName  }}</span>/<span
+                        class="create_span" data-id="InsurCurrName"> @{{ .m.InsurCurrName  }}</span>/ <span
+                        class="create_span" data-id="InsurRate"> @{{ .m.InsurRate  }}</span>
                 @{{end}}
                 </p>
             </td>
@@ -208,7 +208,7 @@
                     <span class="span_bold">随附单证及编号</span>
                 </p>
                 <p class="table_td_p">
-                                    <span data-id="documents">
+                                    <span data-id="OrderDocumentsData">
                                         @{{.m.OrderDocumentsData }}
 @{{/*                                    @{{ if !.m.OrderDocuments }}*/}}
 @{{/*                                       随附单证0*/}}
@@ -229,15 +229,15 @@
                 </p>
                 <div class="table_td_p">
                     <p>
-                        备注:<span class="create_span" data-id="note_s">@{{ .m.NoteS }}</span> <span
-                                class="create_span" data-id="mark_no">@{{ .m.MarkNo }}</span>
+                        备注:<span class="create_span" data-id="NoteS">@{{ .m.NoteS }}</span> <span
+                                class="create_span" data-id="MarkNo">@{{ .m.MarkNo }}</span>
                         集装箱标箱数及号码：
-                        <span class="create_span" data-id="containers">  @{{.m.OrderContatinersData }}</span>
+                        <span class="create_span" data-id="OrderContatinersData">  @{{.m.OrderContatinersData }}</span>
                         @{{if .m.RelId }}
-                    <span id="containers" data-id="rel_id">关联报关单：@{{ .m.RelId }}</span>
+                    <span id="containers" data-id="RelId">关联报关单：@{{ .m.RelId }}</span>
                     @{{end}}
                         @{{if .m.RelManNo }}
-                    <span id="containers" data-id="rel_man_no">关联报备案：@{{ .m.RelManNo }}</span>
+                    <span id="containers" data-id="RelManNo">关联报备案：@{{ .m.RelManNo }}</span>
                     @{{end}}
                     </p>
                 </div>
@@ -297,66 +297,66 @@
             <td class="width_22">
                 <p class="table_list_p">
                             <span class="table_list_span_9" data-index=@{{ $v.GNo  }}
-                                  data-id="g_no">@{{ $v.GNo }}</span>
+                                  data-id="GNo">@{{ $v.GNo }}</span>
                 </p>
                 <p class="table_list_p">
                             <span class="table_list_span_9" data-index=@{{ $v.GNo  }}
-                                  data-id="contr_item">(@{{ $v.ContrItem }})</span>
+                                  data-id="ContrItem">(@{{ $v.ContrItem }})</span>
                 </p>
             </td>
             <td colspan="3">
                 <p class="goods_number">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="code_t_s">@{{ $v.CodeTS }} @{{ $v.GName }}</span>
+                                  data-id="CodeTS">@{{ $v.CodeTS }} @{{ $v.GName }}</span>
                 </p>
                 <p class="goods_name">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="g_model">@{{ $v.GModel }}</span>
+                                  data-id="GModel">@{{ $v.GModel }}</span>
                 </p>
             </td>
             <td>
                 <p class="unit_number">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="g_qty">@{{$v.GQty}}</span>
+                                  data-id="GQty">@{{$v.GQty}}</span>
                     <span data-index=@{{ $v.GNo  }}
-                                  data-id="g_unit_name">@{{$v.GUnitName }}</span>
+                                  data-id="GUnitName">@{{$v.GUnitName }}</span>
                 </p>
                 <p class="unit_number">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="first_qty">@{{$v.FirstQty }}</span>
+                                  data-id="FirstQty">@{{$v.FirstQty }}</span>
                     <span data-index=@{{ $v.GNo  }}
-                                  data-id="first_unit_name">@{{$v.FirstUnitName }}</span>
+                                  data-id="FirstUnitName">@{{$v.FirstUnitName }}</span>
                 </p>
                 <p class="unit_number">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="second_qty">@{{$v.SecondUnit }}</span>
+                                  data-id="SecondQty">@{{$v.SecondUnit }}</span>
                     <span data-index=@{{ $v.GNo  }}
-                                  data-id="second_unit_name">@{{$v.SecondUnitName }}</span>
+                                  data-id="SecondUnitName">@{{$v.SecondUnitName }}</span>
                 </p>
             </td>
             <td colspan="2">
                 <p class="unit_price">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="decl_price">@{{$v.DeclPrice }}</span>
+                                  data-id="DeclPrice">@{{$v.DeclPrice }}</span>
                 </p>
                 <p class="unit_price">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="decl_total">@{{$v.DeclTotal }}</span>
+                                  data-id="DeclTotal">@{{$v.DeclTotal }}</span>
                 </p>
                 <p class="unit_price">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="trade_curr_name">@{{$v.TradeCurrName }}</span>
+                                  data-id="TradeCurrName">@{{$v.TradeCurrName }}</span>
                 </p>
 
             </td>
             <td colspan="3">
                 <p class="unit_price">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="destination_country_name">@{{$v.DestinationCountryName }}</span>
+                                  data-id="DestinationCountryName">@{{$v.DestinationCountryName }}</span>
                 </p>
                 <p class="unit_price">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="destination_country">(@{{$v.DestinationCountry }})</span>
+                                  data-id="DestinationCountry">(@{{$v.DestinationCountry }})</span>
                 </p>
             </td>
             <td colspan="4">
@@ -364,26 +364,26 @@
                     <div class="destination_end">
                         <p class="unit_number">
                                     <span data-index=@{{ $v.GNo  }}
-                                          data-id="origin_country_name">@{{$v.OriginCountryName }}</span>
+                                          data-id="OriginCountryName">@{{$v.OriginCountryName }}</span>
                         </p>
                         <p class="unit_number">
                                     <span data-index=@{{ $v.GNo  }}
-                                          data-id="origin_country">(@{{$v.OriginCountry }})</span>
+                                          data-id="OriginCountry">(@{{$v.OriginCountry }})</span>
                         </p>
                     </div>
                     <div class="destination_domestic">
                         <p>(
                             <span data-index=@{{ $v.GNo  }}
-                                          data-id="district_code">@{{$v.DistrictCode }}</span>
+                                          data-id="DistrictCode">@{{$v.DistrictCode }}</span>
                             /
                             <span data-index=@{{ $v.GNo  }}
-                                          data-id="dest_code">@{{$v.DestCode }}</span>
+                                          data-id="DestCode">@{{$v.DestCode }}</span>
                             )
                             <span data-index=@{{ $v.GNo  }}
-                                          data-id="district_code_name">@{{$v.DistrictCodeName }}</span>
+                                          data-id="DistrictCodeName">@{{$v.DistrictCodeName }}</span>
                             /
                             <span data-index=@{{ $v.GNo  }}
-                                          data-id="dest_code_name">@{{$v.DestCodeName }}</span>
+                                          data-id="DestCodeName">@{{$v.DestCodeName }}</span>
                         </p>
                     </div>
                 </div>
@@ -391,16 +391,16 @@
             <td>
                 <div class="exempted">
                     <p data-index=@{{ $v.GNo  }}
-                       data-id="duty_mode_name">@{{$v.DutyModeName }}</p>
+                       data-id="DutyModeName">@{{$v.DutyModeName }}</p>
                     <span data-index=@{{ $v.GNo  }}
-                                  data-id="duty_mode">(@{{$v.DutyMode }})</span>
+                                  data-id="DutyMode">(@{{$v.DutyMode }})</span>
                 </div>
             </td>
 
             <td>
                 <p class="exempted">
                             <span data-index=@{{ $v.GNo  }}
-                                  data-id="exg_version">@{{ $v.ExgVersion }}</span>
+                                  data-id="ExgVersion">@{{ $v.ExgVersion }}</span>
                 </p>
             </td>
         </tr>
@@ -410,25 +410,25 @@
             <td colspan="16">
                 <p class="confirm">
                     <span class="confirm_title">特殊关系确认：</span>
-                    <span class="table_list_span_9" data-id="promise_itmes0">
+                    <span class="table_list_span_9" data-id="PromiseItmes0">
                                 @{{.m.PromiseItmes0}}
                                         </span>
                     <span class="width_60"></span>
                     <span class="width_60"></span>
                     <span class="confirm_title">价格影响确认：</span>
-                    <span class="table_list_span_9" data-id="promise_itmes1">
+                    <span class="table_list_span_9" data-id="PromiseItmes1">
                                            @{{.m.PromiseItmes1}}
                                         </span>
                     <span class="width_60"></span>
                     <span class="width_60"></span>
                     <span class="confirm_title">支付特许权使用费确认：</span>
-                    <span class="table_list_span_9" data-id="promise_itmes2">
+                    <span class="table_list_span_9" data-id="PromiseItmes2">
                                                  @{{.m.PromiseItmes2}}
                                         </span>
                     <span class="width_60"></span>
                     <span class="width_60"></span>
                     <span class="confirm_title">自报自缴：</span>
-                    <span class="table_list_span_9" data-id="type1">
+                    <span class="table_list_span_9" data-id="Type1">
                                           @{{.m.Type}}
                                         </span>
                 </p>
@@ -439,22 +439,22 @@
                 <div class="table_bottom_float_left">
                     <p class="table_bottom">
                         <span class="confirm_title">报关人员</span>
-                        <span class="table_list_span_9" data-id="oper_name">@{{ .m.OperName }}</span>
+                        <span class="table_list_span_9" data-id="OperName">@{{ .m.OperName }}</span>
                         <span class="width_45"></span>
                         <span class="confirm_title">报关人员证号</span>
                         <span class="table_list_span_9"></span>
                         <span class="width_45"></span>
                         <span class="confirm_title">电话</span>
                         <span class="table_list_span_9"
-                              data-id="agent_tel"></span>
+                              data-id="AgentTel"></span>
                     </p>
                     <p>
                         <span>&nbsp;</span>
                     </p>
                     <p class="table_bottom_i">
                         <span class="confirm_title">申报单位</span>
-                        <span class="table_list_span_9" data-id="agent_code_scc">(@{{ .m.AgentCodeScc }})</span>
-                        <span class="table_list_span_9" data-id="agent_name">@{{ .m.AgentName }}</span>
+                        <span class="table_list_span_9" data-id="AgentCodeScc">(@{{ .m.AgentCodeScc }})</span>
+                        <span class="table_list_span_9" data-id="AgentName">@{{ .m.AgentName }}</span>
                     </p>
                 </div>
                 <div class="table_bottom_float_right">
@@ -550,68 +550,68 @@
         <td class="width_22">
             <p class="table_list_p">
                             <span class="table_list_span_9" data-index=@{{ $value.GNo  }}
-                                  data-id="g_no">@{{ $value.GNo }}</span>
+                                  data-id="GNo">@{{ $value.GNo }}</span>
             </p>
             <p class="table_list_p">
                             <span class="table_list_span_9" data-index=@{{ $value.GNo  }}
-                                  data-id="contr_item">(@{{ $value.ContrItem }})</span>
+                                  data-id="ContrItem">(@{{ $value.ContrItem }})</span>
             </p>
         </td>
         <td colspan="3">
             <p class="goods_number">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="code_t_s">@{{ $value.CodeTS }}</span>
+                                  data-id="CodeTS">@{{ $value.CodeTS }}</span>
                 <span data-index=@{{ $value.GNo  }}
-                                  data-id="g_name"> @{{ $value.GName }}</span>
+                                  data-id="GName"> @{{ $value.GName }}</span>
             </p>
             <p class="goods_name">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="g_model">@{{ $value.GModel }}</span>
+                                  data-id="GModel">@{{ $value.GModel }}</span>
             </p>
         </td>
 
         <td>
             <p class="unit_number">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="g_qty">@{{$value.GQty }}</span>
+                                  data-id="GQty">@{{$value.GQty }}</span>
                 <span data-index=@{{ $value.GNo  }}
-                                  data-id="g_unit_name">@{{$value.GUnitName }}</span>
+                                  data-id="GUnitName">@{{$value.GUnitName }}</span>
             </p>
             <p class="unit_number">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="first_qty">@{{$value.FirstQty }}</span>
+                                  data-id="FirstQty">@{{$value.FirstQty }}</span>
                 <span data-index=@{{ $value.GNo  }}
-                                  data-id="first_unit_name">@{{$value.FirstUnitName }}</span>
+                                  data-id="FirstUnitName">@{{$value.FirstUnitName }}</span>
             </p>
             <p class="unit_number">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="second_qty">@{{$value.SecondQty }}</span>
+                                  data-id="SecondQty">@{{$value.SecondQty }}</span>
                 <span data-index=@{{ $value.GNo  }}
-                                  data-id="second_unit_name">@{{$value.SecondUnitName }}</span>
+                                  data-id="SecondUnitName">@{{$value.SecondUnitName }}</span>
             </p>
         </td>
         <td colspan="2">
             <p class="unit_price">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="decl_price">@{{$value.DeclPrice }}</span>
+                                  data-id="DeclPrice">@{{$value.DeclPrice }}</span>
             </p>
             <p class="unit_price">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="decl_total">@{{$value.DeclTotal }}</span>
+                                  data-id="DeclTotal">@{{$value.DeclTotal }}</span>
             </p>
             <p class="unit_price">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="trade_curr_name">@{{$value.TradeCurrName }}</span>
+                                  data-id="TradeCurrName">@{{$value.TradeCurrName }}</span>
             </p>
         </td>
         <td colspan="3">
             <p class="unit_price">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="destination_country_name">@{{$value.DestinationCountryName }}</span>
+                                  data-id="DestinationCountryName">@{{$value.DestinationCountryName }}</span>
             </p>
             <p class="unit_price">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="destination_country">(@{{$value.DestinationCountry }})</span>
+                                  data-id="DestinationCountry">(@{{$value.DestinationCountry }})</span>
             </p>
         </td>
         <td colspan="4">
@@ -619,26 +619,26 @@
                 <div class="destination_end">
                     <p class="unit_number">
                                     <span data-index=@{{ $value.GNo  }}
-                                          data-id="origin_country_name">@{{$value.OriginCountryName }}</span>
+                                          data-id="OriginCountryName">@{{$value.OriginCountryName }}</span>
                     </p>
                     <p class="unit_number">
                                     <span data-index=@{{ $value.GNo  }}
-                                          data-id="origin_country">(@{{$value.OriginCountry }})</span>
+                                          data-id="OriginCountry">(@{{$value.OriginCountry }})</span>
                     </p>
                 </div>
                 <div class="destination_domestic">
                     <p>(
                         <span data-index=@{{ $value.GNo  }}
-                                          data-id="district_code">@{{$value.DistrictCode }}</span>
+                                          data-id="DistrictCode">@{{$value.DistrictCode }}</span>
                         /
                         <span data-index=@{{ $value.GNo  }}
-                                          data-id="dest_code">@{{$value.DestCode }}</span>
+                                          data-id="DestCode">@{{$value.DestCode }}</span>
                         )
                         <span data-index=@{{ $value.GNo  }}
-                                          data-id="district_code_name">@{{$value.DistrictCodeName }}</span>
+                                          data-id="DistrictCodeName">@{{$value.DistrictCodeName }}</span>
                         /
                         <span data-index=@{{ $value.GNo  }}
-                                          data-id="dest_code_name">@{{$value.DestCodeName }}</span>
+                                          data-id="DestCodeName">@{{$value.DestCodeName }}</span>
                     </p>
                 </div>
             </div>
@@ -647,15 +647,15 @@
         <td>
             <div class="exempted">
                 <p data-index=@{{ $value.GNo  }}
-                   data-id="duty_mode_name">@{{$value.DutyModeName }}</p>
+                   data-id="DutyModeName">@{{$value.DutyModeName }}</p>
                 <span data-index=@{{ $value.GNo  }}
-                                  data-id="duty_mode">(@{{$value.DutyMode }})</span>
+                                  data-id="DutyMode">(@{{$value.DutyMode }})</span>
             </div>
         </td>
         <td>
             <p class="exempted">
                             <span data-index=@{{ $value.GNo  }}
-                                  data-id="exg_version">@{{ $value.ExgVersion }}</span>
+                                  data-id="ExgVersion">@{{ $value.ExgVersion }}</span>
             </p>
         </td>
 

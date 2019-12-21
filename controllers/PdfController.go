@@ -46,6 +46,18 @@ func (c *PdfController) OrderPdfHeader() {
 	topage, _ := c.GetInt64("topage")
 	order := models.TransformOrder(id, "", false)
 	c.Data["m"] = order
+	c.Data["IsRecheck"] = false
+	c.Data["topage"] = topage
+	c.Data["page"] = page
+	c.setTpl("order/pdf/header/header.html", "shared/layout_app.html")
+}
+
+func (c *PdfController) OrderRecheckPdfHeader() {
+	id, _ := c.GetInt64(":id")
+	page, _ := c.GetInt64("page")
+	topage, _ := c.GetInt64("topage")
+	order := models.TransformOrder(id, "", false)
+	c.Data["m"] = order
 	c.Data["IsRecheck"] = true
 	c.Data["topage"] = topage
 	c.Data["page"] = page

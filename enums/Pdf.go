@@ -16,6 +16,7 @@ type PdfData struct {
 	Url             string
 	Action          string
 	ModelName       string
+	Header          string
 	MarginTop       uint
 }
 
@@ -52,7 +53,7 @@ func NewPDFGenerator(pdfData *PdfData) (string, error) {
 	}
 
 	if pdfData.ModelName == "order" {
-		page.HeaderHTML.Set(httpaddr + ":" + httpport + "/pdf/order_pdf_header/" + formatInt)
+		page.HeaderHTML.Set(httpaddr + ":" + httpport + "/pdf/" + pdfData.Header + "/" + formatInt)
 	}
 
 	// page.Zoom.Set(0.95)
