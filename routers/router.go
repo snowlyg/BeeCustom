@@ -281,10 +281,15 @@ func init() {
 	beego.Router("/home/logout", &controllers.HomeController{}, "*:Logout")
 	beego.Router("/home/datareset", &controllers.HomeController{}, "Get:DataReset")
 
-	// 复核凭证 使用超级管理员
+	// 清单复核凭证 使用超级管理员
 	beego.Router("/pdf/annotation_recheck_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationRecheckPdf")
 	// 清单打印
 	beego.Router("/pdf/annotation_pdf/?:id", &controllers.PdfController{}, "Get:AnnotationPdf")
+	// 货物复核凭证 使用超级管理员
+	beego.Router("/pdf/order_recheck_pdf/?:id", &controllers.PdfController{}, "Get:OrderRecheckPdf")
+	// 货物打印
+	beego.Router("/pdf/order_pdf/?:id", &controllers.PdfController{}, "Get:OrderPdf")
+
 	beego.Router("/home/404", &controllers.HomeController{}, "*:Page404")
 	beego.Router("/home/error/?:error", &controllers.HomeController{}, "*:Error")
 	beego.Router("/", &controllers.HomeController{}, "*:Index")

@@ -25,3 +25,19 @@ func (c *PdfController) AnnotationPdf() {
 	c.Data["Now"] = time.Now()
 	c.setTpl("annotation/pdf/index.html", "shared/layout_app.html")
 }
+
+func (c *PdfController) OrderRecheckPdf() {
+	id, _ := c.GetInt64(":id")
+	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
+	c.Data["M"] = order
+	c.Data["Now"] = time.Now()
+	c.setTpl("order/pdf/recheck.html", "shared/layout_app.html")
+}
+
+func (c *PdfController) OrderPdf() {
+	id, _ := c.GetInt64(":id")
+	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
+	c.Data["M"] = order
+	c.Data["Now"] = time.Now()
+	c.setTpl("order/pdf/index.html", "shared/layout_app.html")
+}
