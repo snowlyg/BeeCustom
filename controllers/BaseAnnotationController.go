@@ -709,7 +709,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = file.WriteFile(pathTemp+fileName, output)
+		err = file.AppendFile(pathTemp+fileName, output)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)

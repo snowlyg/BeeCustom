@@ -69,6 +69,22 @@ func WriteFile(filename string, output []byte) error {
 	return ioutil.WriteFile(filename, output, 0666)
 }
 
+// AppendFile writes the contents of the output buffer to a file
+func AppendFile(filename string, output []byte) error {
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	if _, err = f.Write(output); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //压缩文件
 //files 文件数组，可以是不同dir下的文件或者文件夹
 //dest 压缩文件存放地址

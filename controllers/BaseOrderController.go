@@ -14,6 +14,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
+	"github.com/astaxie/beego"
 )
 
 type BaseOrderController struct {
@@ -495,7 +496,8 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		decMessage.DecCopLimits = decCopLimits
 		decMessage.DecUsers = decUsers
 		decMessage.DecCopPromises = decCopPromises
-		var path string
+
+		path := beego.AppConfig.String("order_xml_path")
 		pathTemp := "./static/generate/order/" + strconv.FormatInt(id, 10) + "/temp/"
 		// 报文名称
 		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.ClientSeqNo
@@ -518,7 +520,7 @@ func (c *BaseOrderController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = file.WriteFile(pathTemp+fileName, output)
+		err = file.AppendFile(pathTemp+fileName, output)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)

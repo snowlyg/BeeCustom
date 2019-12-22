@@ -55,6 +55,12 @@ annotation_return_path_e = "C:/ImpPath/Nems/InBox/"
 annotation_send_xml_path_e = "C:/ImpPath/Nems/SentBox/"
 annotation_history_path_e = "C:/ImpPath/Nems/History/"
 
+#货物报文发送路径
+order_xml_path = "C:/ImpPath/Deccus001/OutBox/"
+order_return_path = "C:/ImpPath/Deccus001/InBox/"
+order_send_xml_path = "C:/ImpPath/Deccus001/SentBox/"
+order_history_path = "C:/ImpPath/Deccus001/History/"
+
 
 #pdf 打印链接认证
 pdf_username="bee_custom_pdf"
