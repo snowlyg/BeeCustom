@@ -1,7 +1,7 @@
 ## BeeCustom
 
 # 简介
-BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `Layui` 进行开发，功能已经贴近海关的单一窗口。
+BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `Layui` 进行开发，功能参考海关的单一窗口。
 
 # 后端框架
 1. 基于 `Beego` ，使用官方的 orm、cache、session、logs 等模块，感谢原作者提供了如此简单易用的框架;
@@ -104,7 +104,7 @@ sessionon = true
 [BeeCustom](http://112.74.61.105:8089)
 账号/密码:admin/123456
 
-# 参考项目
- - [lhtzbj12/sdrms](https://gitee.com/lhtzbj12/sdrms/tree/master)
+#问题记录
+[待处理BUG](BUG.md)
  
 
