@@ -48,7 +48,7 @@ func (c *WebHookController) Get() {
 			utils.LogDebug("tar BeeCustom.tar.gz success")
 		}
 
-		if !file.IsExist("/root/back/BeeCustom") {
+		if file.IsExist("/root/back/BeeCustom") {
 			utils.LogDebug("/root/back/BeeCustom not exist")
 		} else if file.IsExist("/root/back/BeeCustom.tar.gz") {
 			utils.LogDebug("/root/back/BeeCustom.tar.gz exist")
