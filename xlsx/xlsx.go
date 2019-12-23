@@ -18,7 +18,7 @@ type BaseImportParam struct {
 	ExcelName    string
 }
 
-//导入基础参数 rows 文件内容
+// 导入基础参数 rows 文件内容
 func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 
 	f, err := excelize.OpenFile(fileNamePath)
