@@ -43,5 +43,6 @@ func (c *WebHookController) Get() {
 		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
 
+	c.Data["json"] = "ok"
 	c.ServeJSON()
 }
