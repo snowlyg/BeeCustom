@@ -157,6 +157,7 @@ func (c *SettingController) TransformSettingList(ms []*models.Setting) []*map[st
 		dataList["Key"] = v.Key
 		dataList["Value"] = valueEnd
 		dataList["Rmk"] = v.Rmk
+		dataList["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
 		dataLists = append(dataLists, &dataList)
 	}
 	return dataLists
