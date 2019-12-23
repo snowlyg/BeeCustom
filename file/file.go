@@ -13,7 +13,7 @@ import (
 	uuid "github.com/iris-contrib/go.uuid"
 )
 
-//调用os.MkdirAll递归创建文件夹
+// 调用os.MkdirAll递归创建文件夹
 func CreateFile(filePath string) error {
 	if !IsExist(filePath) {
 		err := os.MkdirAll(filePath, os.ModePerm)
@@ -22,9 +22,9 @@ func CreateFile(filePath string) error {
 	return nil
 }
 
-// 判断所给路径文件/文件夹是否存在(返回true是存在)
+//  判断所给路径文件/文件夹是否存在(返回true是存在)
 func IsExist(path string) bool {
-	_, err := os.Stat(path) //os.Stat获取文件信息
+	_, err := os.Stat(path) // os.Stat获取文件信息
 	if err != nil {
 		if os.IsExist(err) {
 			return true
@@ -34,7 +34,7 @@ func IsExist(path string) bool {
 	return true
 }
 
-//获取上传文件唯一地址
+// 获取上传文件唯一地址
 func GetUploadFileUPath(f multipart.File, h *multipart.FileHeader, fileType string) (string, error) {
 
 	if f != nil {
@@ -64,12 +64,12 @@ func GetUploadFileUPath(f multipart.File, h *multipart.FileHeader, fileType stri
 
 }
 
-// WriteFile writes the contents of the output buffer to a file
+//  WriteFile writes the contents of the output buffer to a file
 func WriteFile(filename string, output []byte) error {
 	return ioutil.WriteFile(filename, output, 0666)
 }
 
-// AppendFile writes the contents of the output buffer to a file
+//  AppendFile writes the contents of the output buffer to a file
 func AppendFile(filename string, output []byte) error {
 	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
@@ -85,9 +85,9 @@ func AppendFile(filename string, output []byte) error {
 	return nil
 }
 
-//压缩文件
-//files 文件数组，可以是不同dir下的文件或者文件夹
-//dest 压缩文件存放地址
+// 压缩文件
+// files 文件数组，可以是不同dir下的文件或者文件夹
+// dest 压缩文件存放地址
 func Compress(files []*os.File, dest string) error {
 	d, _ := os.Create(dest)
 	defer d.Close()
