@@ -43,7 +43,7 @@ func (c *WebHookController) Get() {
 			utils.LogDebug("/root/back/BeeCustom.tar.gz not exist")
 		} else {
 			enums.Cmd("cd", "", []string{"/root/back"})
-			enums.Cmd("tar", "", []string{"-zxvf", "/root/back/BeeCustom.tar.gz", "BeeCustom"})
+			enums.Cmd("tar", "", []string{"-zxvf", "BeeCustom.tar.gz", "BeeCustom"})
 			// enums.Cmd("rm", "y", []string{"/root/back/BeeCustom.tar.gz"})
 			utils.LogDebug("tar BeeCustom.tar.gz success")
 		}
