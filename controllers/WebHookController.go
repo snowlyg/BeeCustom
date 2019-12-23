@@ -44,7 +44,7 @@ func (c *WebHookController) Get() {
 		} else {
 			enums.Cmd("cd", "", []string{"/root/back"})
 			enums.Cmd("tar", "", []string{"-zxvf", "/root/back/BeeCustom.tar.gz"})
-			// enums.Cmd("rm", "y", []string{"/root/back/BeeCustom.tar.gz"})
+			enums.Cmd("rm", "y", []string{"/root/back/BeeCustom.tar.gz"})
 			utils.LogDebug("tar BeeCustom.tar.gz success")
 		}
 
