@@ -9,9 +9,7 @@ BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `La
 # 前端框架
 1. 基于 Layui
 
-
 # 安装方法
-
 本系统基于 `beego` 开发，默认使用 `mysql` 数据库，缓存 `redis` 
 
 1. 安装 `golang` 环境
@@ -70,56 +68,16 @@ gulp
 ```
 
 # 使用组件
-1.pdf 生成pdf
-[go-wkhtmltopdf](https://github.com/SebastiaanKlippert/go-wkhtmltopdf)
-```
-go get github.com/SebastiaanKlippert/go-wkhtmltopdf
-
-WKHTMLTOPDF_PATH 系统变量
-
-```
-
-2.excel
-[360EntSecGroup-Skylar/excelize](https://github.com/360EntSecGroup-Skylar/excelize)
-```
-go get github.com/360EntSecGroup-Skylar/excelize
-
-```
-
-3.encoding/xml
-[encoding/xml](https://studygolang.com/static/pkgdoc/pkg/encoding_xml.htm)
-
-
-4.encoding/xml
-[encoding/xml](https://studygolang.com/static/pkgdoc/pkg/encoding_xml.htm)
-
+[组件列表](PLUGS.md)
 
 # 问题
- `beego` 升级到v1.10.1后，启动本项目时报错
- ```
- cannot find package "github.com/gomodule/redigo/redis"
- ```
- 解决方法很简单，只需要在终端运行下面命令，下载需要的包即可
- 
- ```
- go get github.com/gomodule/redigo/redis
- ```
+[问题汇总](ERRORS.md)
 
-启动报错 `beego runtime error: invalid memory address or nil pointer dereference`
-没有开启 session 
-```
-beego.BConfig.WebConfig.Session.SessionOn = true
-```
-或者在 `app.conf` 添加
-```
-sessionon = true
-```
+#问题记录
+[待处理BUG](BUG.md)
 
 #演示地址
 [BeeCustom](http://112.74.61.105:8089)
 账号/密码:admin/123456
-
-#问题记录
-[待处理BUG](BUG.md)
  
 
