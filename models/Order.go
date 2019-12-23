@@ -173,6 +173,7 @@ type Order struct {
 	OrderItems      []*OrderItem      `orm:"reverse(many)"` // 设置一对多关系
 	OrderContainers []*OrderContainer `orm:"reverse(many)"` // 设置一对多关系
 	OrderDocuments  []*OrderDocument  `orm:"reverse(many)"` // 设置一对多关系
+	OrderFiles      []*OrderFile      `orm:"reverse(many)"` // 设置一对多关系
 	OrderRecords    []*OrderRecord    `orm:"reverse(many)"` // 设置一对多关系
 
 }

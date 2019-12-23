@@ -503,7 +503,7 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		decHead.NoteS = gName
 
 		decLists := xmlTemplate.DecLists{}
-		decListsl := []xmlTemplate.DecList{}
+		var decListsl []xmlTemplate.DecList
 		for _, dl := range m.OrderItems {
 			decList := xmlTemplate.DecList{}
 			enums.SetObjValueFromObj(&decList, dl) // 设置数据到 xml 结构体
@@ -541,40 +541,69 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		decLists.DecList = decListsl
 
 		decLicenseDocus := xmlTemplate.DecLicenseDocus{}
-		licenseDocu := xmlTemplate.LicenseDocu{}
-		decLicenseDocus.LicenseDocu = licenseDocu
+		var licenseDocusl []xmlTemplate.LicenseDocu
+		for _, odec := range m.OrderDocuments {
+			decLicenseDocu := xmlTemplate.LicenseDocu{}
+			enums.SetObjValueFromObj(&decLicenseDocu, odec) // 设置数据到 xml 结构体
+			licenseDocusl = append(licenseDocusl, decLicenseDocu)
+		}
+		decLicenseDocus.LicenseDocu = licenseDocusl
 
 		decContainers := xmlTemplate.DecContainers{}
-		decContainer := xmlTemplate.DecContainer{}
-		decContainers.DecContainer = decContainer
+		var decContainersl []xmlTemplate.DecContainer
+		for _, oc := range m.OrderContainers {
+			decContainer := xmlTemplate.DecContainer{}
+			enums.SetObjValueFromObj(&decContainer, oc) // 设置数据到 xml 结构体
+			decContainersl = append(decContainersl, decContainer)
+		}
+		decContainers.DecContainer = decContainersl
 
 		decSign := xmlTemplate.DecSign{}
-
 		decFreeTxt := xmlTemplate.DecFreeTxt{}
 
-		ecoRelation := xmlTemplate.EcoRelation{}
+		var ecoRelations []xmlTemplate.EcoRelation
 
 		decRequestCerts := xmlTemplate.DecRequestCerts{}
-		decRequestCert := xmlTemplate.DecRequestCert{}
-		decRequestCerts.DecRequestCert = decRequestCert
+		var decRequestCertsl []xmlTemplate.DecRequestCert
+		for _, odrc := range m.DecRequestCerts {
+			decRequestCert := xmlTemplate.DecRequestCert{}
+			enums.SetObjValueFromObj(&decRequestCert, odrc) // 设置数据到 xml 结构体
+			decRequestCertsl = append(decRequestCertsl, decRequestCert)
+		}
+		decRequestCerts.DecRequestCert = decRequestCertsl
 
 		decOtherPacks := xmlTemplate.DecOtherPacks{}
-		decOtherPack := xmlTemplate.DecOtherPack{}
-		decOtherPacks.DecOtherPack = decOtherPack
+		var decOtherPacksl []xmlTemplate.DecOtherPack
+		for _, odop := range m.DecOtherPacks {
+			decOtherPack := xmlTemplate.DecOtherPack{}
+			enums.SetObjValueFromObj(&decOtherPack, odop) // 设置数据到 xml 结构体
+			decOtherPacksl = append(decOtherPacksl, decOtherPack)
+		}
+		decOtherPacks.DecOtherPack = decOtherPacksl
 
 		decCopLimits := xmlTemplate.DecCopLimits{}
-		decCopLimit := xmlTemplate.DecCopLimit{}
-		decCopLimits.DecCopLimit = decCopLimit
+		var decCopLimitsl []xmlTemplate.DecCopLimit
+		decCopLimits.DecCopLimit = decCopLimitsl
 
 		decUsers := xmlTemplate.DecUsers{}
-		decUser := xmlTemplate.DecUser{}
-		decUsers.DecUser = decUser
+		var decUsersl []xmlTemplate.DecUser
+		for _, odu := range m.DecUsers {
+			decUser := xmlTemplate.DecUser{}
+			enums.SetObjValueFromObj(&decUser, odu) // 设置数据到 xml 结构体
+			decUsersl = append(decUsersl, decUser)
+		}
+		decUsers.DecUser = decUsersl
 
 		decCopPromises := xmlTemplate.DecCopPromises{}
 		decCopPromise := xmlTemplate.DecCopPromise{}
 		decCopPromises.DecCopPromise = decCopPromise
 
-		edocRealation := xmlTemplate.EdocRealation{}
+		var edocRealations []xmlTemplate.EdocRealation
+		for _, odr := range m.OrderFiles {
+			edocRealation := xmlTemplate.EdocRealation{}
+			enums.SetObjValueFromObj(&edocRealation, odr) // 设置数据到 xml 结构体
+			edocRealations = append(edocRealations, edocRealation)
+		}
 
 		decMessage.DecHead = decHead
 		decMessage.DecLists = decLists
@@ -582,13 +611,13 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		decMessage.DecContainers = decContainers
 		decMessage.DecSign = decSign
 		decMessage.DecFreeTxt = decFreeTxt
-		decMessage.EcoRelation = ecoRelation
+		decMessage.EcoRelation = ecoRelations
 		decMessage.DecRequestCerts = decRequestCerts
 		decMessage.DecOtherPacks = decOtherPacks
 		decMessage.DecCopLimits = decCopLimits
 		decMessage.DecUsers = decUsers
 		decMessage.DecCopPromises = decCopPromises
-		decMessage.EdocRealation = edocRealation
+		decMessage.EdocRealation = edocRealations
 
 		path, _ := models.GetSettingValueByKey("order_xml_path")
 		pathTemp := "./static/generate/order/" + strconv.FormatInt(id, 10) + "/temp/"
