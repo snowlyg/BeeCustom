@@ -620,102 +620,31 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode, _ = models.GetSettingValueByKey("AgentCode")
 
-		iCCode, _ := models.GetSettingValueByKey("ICCode")
-		invtHeadType := xmlTemplate.InvtHeadType{
-			SeqNo:                        m.SeqNo,
-			BondInvtNo:                   m.BondInvtNo,
-			ChgTmsCntstring:              m.ChgTmsCnt,
-			PutrecNostring:               m.PutrecNo,
-			InvtTypestring:               m.InvtType,
-			EtpsInnerInvtNostring:        m.EtpsInnerInvtNo,
-			BizopEtpsnostring:            m.BizopEtpsno,
-			BizopEtpsSccdstring:          m.BizopEtpsSccd,
-			BizopEtpsNmstring:            m.BizopEtpsNm,
-			RcvgdEtpsnostring:            m.RcvgdEtpsno,
-			RvsngdEtpsSccdstring:         m.RvsngdEtpsSccd,
-			RcvgdEtpsNmstring:            m.RcvgdEtpsNm,
-			DclEtpsnostring:              m.DclEtpsno,
-			DclEtpsSccdstring:            m.DclEtpsSccd,
-			DclEtpsNmstring:              m.DclEtpsNm,
-			InputCodestring:              m.InputCode,
-			InputCreditCodestring:        m.InputCreditCode,
-			InputNamestring:              m.InputName,
-			RltInvtNostring:              m.RltInvtNo,
-			RltPutrecNostring:            m.RltPutrecNo,
-			CorrEntryDclEtpsNostring:     m.CorrEntryDclEtpsNo,
-			CorrEntryDclEtpsSccdstring:   m.CorrEntryDclEtpsSccd,
-			CorrEntryDclEtpsNmstring:     m.CorrEntryDclEtpsNm,
-			RltEntryBizopEtpsnostring:    m.RltEntryBizopEtpsno,
-			RltEntryBizopEtpsSccdstring:  m.RltEntryBizopEtpsSccd,
-			RltEntryBizopEtpsNmstring:    m.RltEntryBizopEtpsNm,
-			RltEntryRcvgdEtpsnostring:    m.RltEntryRcvgdEtpsno,
-			RltEntryRvsngdEtpsSccdstring: m.RltEntryRvsngdEtpsSccd,
-			RltEntryRcvgdEtpsNmstring:    m.RltEntryRcvgdEtpsNm,
-			RltEntryDclEtpsnostring:      m.RltEntryDclEtpsno,
-			RltEntryDclEtpsSccdstring:    m.RltEntryDclEtpsSccd,
-			RltEntryDclEtpsNmstring:      m.RltEntryDclEtpsNm,
-			ImpexpPortcdstring:           m.ImpexpPortcd,
-			DclPlcCuscdstring:            m.DclPlcCuscd,
-			ImpexpMarkcdstring:           m.ImpexpMarkcd,
-			MtpckEndprdMarkcdstring:      m.MtpckEndprdMarkcd,
-			SupvModecdstring:             m.SupvModecd,
-			TrspModecdstring:             m.TrspModecd,
-			ApplyNostring:                m.ApplyNo,
-			ListTypestring:               m.ListType,
-			DclcusFlagstring:             m.DclcusFlag,
-			DclcusTypecdstring:           m.DclcusTypecd,
-			IcCardNostring:               iCCode,
-			DecTypestring:                m.DecType,
-			Rmkstring:                    m.Rmk,
-			StshipTrsarvNatcdstring:      m.StshipTrsarvNatcd,
-			EntryNostring:                m.EntryNo,
-			RltEntryNostring:             m.RltEntryNo,
-			DclTypecdstring:              m.DclTypecd,
-			GenDecFlagstring:             m.GenDecFlag,
-		}
+		invtHeadType := xmlTemplate.InvtHeadType{}
+		enums.SetObjValueFromObj(&invtHeadType, m) // 设置数据到 xml 结构体
 
-		invtListTypes := []xmlTemplate.InvtListType{}
+		iCCode, _ := models.GetSettingValueByKey("ICCode")
+		invtHeadType.IcCardNo = iCCode
+
+		rmk := xmlTemplate.Cdata{Value: m.Rmk}
+		invtHeadType.Rmk = rmk
+
+		var invtListTypes []xmlTemplate.InvtListType
 		for _, v := range m.AnnotationItems {
-			invtListType := xmlTemplate.InvtListType{
-				SeqNo:            v.SeqNo,
-				GdsSeqno:         strconv.Itoa(v.GdsSeqno),
-				PutrecSeqno:      strconv.Itoa(v.PutrecSeqno),
-				GdsMtno:          v.GdsMtno,
-				Gdecd:            v.Gdecd,
-				GdsNm:            v.GdsNm,
-				GdsSpcfModelDesc: v.GdsSpcfModelDesc,
-				DclUnitcd:        v.DclUnitcd,
-				LawfUnitcd:       v.LawfUnitcd,
-				SecdLawfUnitcd:   v.SecdLawfUnitcd,
-				Natcd:            v.Natcd,
-				DclUprcAmt:       strconv.FormatFloat(v.DclUprcAmt, 'f', 4, 64),
-				DclTotalAmt:      strconv.FormatFloat(v.DclTotalAmt, 'f', 2, 64),
-				UsdStatTotalAmt:  strconv.FormatFloat(v.UsdStatTotalAmt, 'f', 5, 64),
-				DclCurrcd:        v.DclCurrcd,
-				LawfQty:          strconv.FormatFloat(v.LawfQty, 'f', 5, 64),
-				SecdLawfQty:      strconv.FormatFloat(v.SecdLawfQty, 'f', 5, 64),
-				WtSfVal:          strconv.FormatFloat(v.WtSfVal, 'f', 5, 64),
-				FstSfVal:         strconv.FormatFloat(v.FstSfVal, 'f', 5, 64),
-				SecdSfVal:        strconv.FormatFloat(v.SecdSfVal, 'f', 5, 64),
-				DclQty:           strconv.FormatFloat(v.DclQty, 'f', 5, 64),
-				GrossWt:          strconv.FormatFloat(v.GrossWt, 'f', 5, 64),
-				NetWt:            strconv.FormatFloat(v.NetWt, 'f', 5, 64),
-				UseCd:            v.UseCd,
-				LvyrlfModecd:     v.LvyrlfModecd,
-				UcnsVerno:        v.UcnsVerno,
-				ClyMarkcd:        v.ClyMarkcd,
-				EntryGdsSeqno:    strconv.Itoa(v.EntryGdsSeqno),
-				ApplyTbSeqno:     strconv.Itoa(v.ApplyTbSeqno),
-				DestinationNatcd: v.DestinationNatcd,
-				ModfMarkcd:       v.ModfMarkcd,
-				Rmk:              v.Rmk,
-			}
+			invtListType := xmlTemplate.InvtListType{}
+			enums.SetObjValueFromObj(&invtListType, v) // 设置数据到 xml 结构体
+
+			gdsNm := xmlTemplate.Cdata{Value: v.GdsNm}
+			invtListType.GdsNm = gdsNm
+
+			rmk := xmlTemplate.Cdata{Value: v.Rmk}
+			invtListType.Rmk = rmk
 
 			invtListTypes = append(invtListTypes, invtListType)
 		}
 
 		invtDecHeadType := xmlTemplate.InvtDecHeadType{}
-		invtDecListType := []xmlTemplate.InvtDecListType{}
+		var invtDecListType []xmlTemplate.InvtDecListType
 
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.InvtHeadType = invtHeadType
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.InvtListType = invtListTypes

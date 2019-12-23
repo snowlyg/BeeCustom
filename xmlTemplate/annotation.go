@@ -47,57 +47,57 @@ type PocketInfo struct {
 }
 
 type InvtHeadType struct {
-	SeqNo                        string `xml:"SeqNo"`
-	BondInvtNo                   string `xml:"BondInvtNo"`
-	ChgTmsCntstring              string `xml:"ChgTmsCnt"`
-	PutrecNostring               string `xml:"PutrecNo"`
-	InvtTypestring               string `xml:"InvtType"`
-	EtpsInnerInvtNostring        string `xml:"EtpsInnerInvtNo"`
-	BizopEtpsnostring            string `xml:"BizopEtpsno"`
-	BizopEtpsSccdstring          string `xml:"BizopEtpsSccd"`
-	BizopEtpsNmstring            string `xml:"BizopEtpsNm"`
-	RcvgdEtpsnostring            string `xml:"RcvgdEtpsno"`
-	RvsngdEtpsSccdstring         string `xml:"RvsngdEtpsSccd"`
-	RcvgdEtpsNmstring            string `xml:"RcvgdEtpsNm"`
-	DclEtpsnostring              string `xml:"DclEtpsno"`
-	DclEtpsSccdstring            string `xml:"DclEtpsSccd"`
-	DclEtpsNmstring              string `xml:"DclEtpsNm"`
-	InputCodestring              string `xml:"InputCode"`
-	InputCreditCodestring        string `xml:"InputCreditCode"`
-	InputNamestring              string `xml:"InputName"`
-	InputTimestring              string `xml:"InputTime"`
-	RltInvtNostring              string `xml:"RltInvtNo"`
-	RltPutrecNostring            string `xml:"RltPutrecNo"`
-	CorrEntryDclEtpsNostring     string `xml:"CorrEntryDclEtpsNo"`
-	CorrEntryDclEtpsSccdstring   string `xml:"CorrEntryDclEtpsSccd"`
-	CorrEntryDclEtpsNmstring     string `xml:"CorrEntryDclEtpsNm"`
-	RltEntryBizopEtpsnostring    string `xml:"RltEntryBizopEtpsno"`
-	RltEntryBizopEtpsSccdstring  string `xml:"RltEntryBizopEtpsSccd"`
-	RltEntryBizopEtpsNmstring    string `xml:"RltEntryBizopEtpsNm"`
-	RltEntryRcvgdEtpsnostring    string `xml:"RltEntryRcvgdEtpsno"`
-	RltEntryRvsngdEtpsSccdstring string `xml:"RltEntryRvsngdEtpsSccd"`
-	RltEntryRcvgdEtpsNmstring    string `xml:"RltEntryRcvgdEtpsNm"`
-	RltEntryDclEtpsnostring      string `xml:"RltEntryDclEtpsno"`
-	RltEntryDclEtpsSccdstring    string `xml:"RltEntryDclEtpsSccd"`
-	RltEntryDclEtpsNmstring      string `xml:"RltEntryDclEtpsNm"`
-	ImpexpPortcdstring           string `xml:"ImpexpPortcd"`
-	DclPlcCuscdstring            string `xml:"DclPlcCuscd"`
-	ImpexpMarkcdstring           string `xml:"ImpexpMarkcd"`
-	MtpckEndprdMarkcdstring      string `xml:"MtpckEndprdMarkcd"`
-	SupvModecdstring             string `xml:"SupvModecd"`
-	TrspModecdstring             string `xml:"TrspModecd"`
-	ApplyNostring                string `xml:"ApplyNo"`
-	ListTypestring               string `xml:"ListType"`
-	DclcusFlagstring             string `xml:"DclcusFlag"`
-	DclcusTypecdstring           string `xml:"DclcusTypecd"`
-	IcCardNostring               string `xml:"IcCardNo"`
-	DecTypestring                string `xml:"DecType"`
-	Rmkstring                    string `xml:"Rmk"`
-	StshipTrsarvNatcdstring      string `xml:"StshipTrsarvNatcd"`
-	EntryNostring                string `xml:"EntryNo"`
-	RltEntryNostring             string `xml:"RltEntryNo"`
-	DclTypecdstring              string `xml:"DclTypecd"`
-	GenDecFlagstring             string `xml:"GenDecFlag"`
+	SeqNo                  string `xml:"SeqNo"`
+	BondInvtNo             string `xml:"BondInvtNo"`
+	ChgTmsCnt              string `xml:"ChgTmsCnt"`
+	PutrecNo               string `xml:"PutrecNo"`
+	InvtType               string `xml:"InvtType"`
+	EtpsInnerInvtNo        string `xml:"EtpsInnerInvtNo"`
+	BizopEtpsno            string `xml:"BizopEtpsno"`
+	BizopEtpsSccd          string `xml:"BizopEtpsSccd"`
+	BizopEtpsNm            string `xml:"BizopEtpsNm"`
+	RcvgdEtpsno            string `xml:"RcvgdEtpsno"`
+	RvsngdEtpsSccd         string `xml:"RvsngdEtpsSccd"`
+	RcvgdEtpsNm            string `xml:"RcvgdEtpsNm"`
+	DclEtpsno              string `xml:"DclEtpsno"`
+	DclEtpsSccd            string `xml:"DclEtpsSccd"`
+	DclEtpsNm              string `xml:"DclEtpsNm"`
+	InputCode              string `xml:"InputCode"`
+	InputCreditCode        string `xml:"InputCreditCode"`
+	InputName              string `xml:"InputName"`
+	InputTime              string `xml:"InputTime"`
+	RltInvtNo              string `xml:"RltInvtNo"`
+	RltPutrecNo            string `xml:"RltPutrecNo"`
+	CorrEntryDclEtpsNo     string `xml:"CorrEntryDclEtpsNo"`
+	CorrEntryDclEtpsSccd   string `xml:"CorrEntryDclEtpsSccd"`
+	CorrEntryDclEtpsNm     string `xml:"CorrEntryDclEtpsNm"`
+	RltEntryBizopEtpsno    string `xml:"RltEntryBizopEtpsno"`
+	RltEntryBizopEtpsSccd  string `xml:"RltEntryBizopEtpsSccd"`
+	RltEntryBizopEtpsNm    string `xml:"RltEntryBizopEtpsNm"`
+	RltEntryRcvgdEtpsno    string `xml:"RltEntryRcvgdEtpsno"`
+	RltEntryRvsngdEtpsSccd string `xml:"RltEntryRvsngdEtpsSccd"`
+	RltEntryRcvgdEtpsNm    string `xml:"RltEntryRcvgdEtpsNm"`
+	RltEntryDclEtpsno      string `xml:"RltEntryDclEtpsno"`
+	RltEntryDclEtpsSccd    string `xml:"RltEntryDclEtpsSccd"`
+	RltEntryDclEtpsNm      string `xml:"RltEntryDclEtpsNm"`
+	ImpexpPortcd           string `xml:"ImpexpPortcd"`
+	DclPlcCuscd            string `xml:"DclPlcCuscd"`
+	ImpexpMarkcd           string `xml:"ImpexpMarkcd"`
+	MtpckEndprdMarkcd      string `xml:"MtpckEndprdMarkcd"`
+	SupvModecd             string `xml:"SupvModecd"`
+	TrspModecd             string `xml:"TrspModecd"`
+	ApplyNo                string `xml:"ApplyNo"`
+	ListType               string `xml:"ListType"`
+	DclcusFlag             string `xml:"DclcusFlag"`
+	DclcusTypecd           string `xml:"DclcusTypecd"`
+	IcCardNo               string `xml:"IcCardNo"`
+	DecType                string `xml:"DecType"`
+	Rmk                    Cdata  `xml:"Rmk"`
+	StshipTrsarvNatcd      string `xml:"StshipTrsarvNatcd"`
+	EntryNo                string `xml:"EntryNo"`
+	RltEntryNo             string `xml:"RltEntryNo"`
+	DclTypecd              string `xml:"DclTypecd"`
+	GenDecFlag             string `xml:"GenDecFlag"`
 }
 
 type InvtListType struct {
@@ -106,7 +106,7 @@ type InvtListType struct {
 	PutrecSeqno      string `xml:"PutrecSeqno"`
 	GdsMtno          string `xml:"GdsMtno"`
 	Gdecd            string `xml:"Gdecd"`
-	GdsNm            string `xml:"GdsNm"`
+	GdsNm            Cdata  `xml:"GdsNm"`
 	GdsSpcfModelDesc string `xml:"GdsSpcfModelDesc"`
 	DclUnitcd        string `xml:"DclUnitcd"`
 	LawfUnitcd       string `xml:"LawfUnitcd"`
@@ -132,7 +132,7 @@ type InvtListType struct {
 	ApplyTbSeqno     string `xml:"ApplyTbSeqno"`
 	DestinationNatcd string `xml:"DestinationNatcd"`
 	ModfMarkcd       string `xml:"ModfMarkcd"`
-	Rmk              string `xml:"Rmk"`
+	Rmk              Cdata  `xml:"Rmk"`
 }
 
 type InvtDecHeadType struct {
@@ -158,7 +158,7 @@ type InvtDecHeadType struct {
 	TrspModecd             string `xml:"TrspModecd"`
 	TradeCountry           string `xml:"TradeCountry"`
 	DecType                string `xml:"DecType"`
-	Rmk                    string `xml:"Rmk"`
+	Rmk                    Cdata  `xml:"Rmk"`
 	CreateFlag             string `xml:"CreateFlag"`
 	BillNo                 string `xml:"BillNo"`
 	ContrNo                string `xml:"ContrNo"`
@@ -195,51 +195,51 @@ type InvtDecHeadType struct {
 }
 
 type InvtDecListType struct {
-	SeqNostring            string `xml:"SeqNo"`
-	DecSeqNostring         string `xml:"DecSeqNo"`
-	EntryGdsSeqnostring    string `xml:"EntryGdsSeqno"`
-	PutrecSeqnostring      string `xml:"PutrecSeqno"`
-	Gdecdstring            string `xml:"Gdecd"`
-	GdsNmstring            string `xml:"GdsNm"`
-	GdsSpcfModelDescstring string `xml:"GdsSpcfModelDesc"`
-	DclUnitcdstring        string `xml:"DclUnitcd"`
-	LawfUnitcdstring       string `xml:"LawfUnitcd"`
-	SecdLawfUnitcdstring   string `xml:"SecdLawfUnitcd"`
-	DclUprcAmtstring       string `xml:"DclUprcAmt"`
-	DclTotalAmtstring      string `xml:"DclTotalAmt"`
-	DclCurrCdstring        string `xml:"DclCurrCd"`
-	NatCdstring            string `xml:"NatCd"`
-	DestinationNatcdstring string `xml:"DestinationNatcd"`
-	LawfQtystring          string `xml:"LawfQty"`
-	SecdLawfQtystring      string `xml:"SecdLawfQty"`
-	DclQtystring           string `xml:"DclQty"`
-	UseCdstring            string `xml:"UseCd"`
-	Rmkstring              string `xml:"Rmk"`
-	LvyrlfModecdstring     string `xml:"LvyrlfModecd"`
-	CiqCodestring          string `xml:"CiqCode"`
-	DeclGoodsEnamestring   string `xml:"DeclGoodsEname"`
-	OrigPlaceCodestring    string `xml:"OrigPlaceCode"`
-	Purposestring          string `xml:"Purpose"`
-	ProdValidDtstring      string `xml:"ProdValidDt"`
-	ProdQgpstring          string `xml:"ProdQgp"`
-	GoodsAttrstring        string `xml:"GoodsAttr"`
-	Stuffstring            string `xml:"Stuff"`
-	UnCodestring           string `xml:"UnCode"`
-	DangNamestring         string `xml:"DangName"`
-	DangPackTypestring     string `xml:"DangPackType"`
-	DangPackSpecstring     string `xml:"DangPackSpec"`
-	EngManEntCnmstring     string `xml:"EngManEntCnm"`
-	NoDangFlagstring       string `xml:"NoDangFlag"`
-	DestCodestring         string `xml:"DestCode"`
-	GoodsSpecstring        string `xml:"GoodsSpec"`
-	GoodsModelstring       string `xml:"GoodsModel"`
-	GoodsBrandstring       string `xml:"GoodsBrand"`
-	ProduceDatestring      string `xml:"ProduceDate"`
-	ProdBatchNostring      string `xml:"ProdBatchNo"`
-	DistrictCodestring     string `xml:"DistrictCode"`
-	CiqNamestring          string `xml:"CiqName"`
-	MnufctrRegnostring     string `xml:"MnufctrRegno"`
-	MnufctrRegNamestring   string `xml:"MnufctrRegName"`
+	SeqNo            string `xml:"SeqNo"`
+	DecSeqNo         string `xml:"DecSeqNo"`
+	EntryGdsSeqno    string `xml:"EntryGdsSeqno"`
+	PutrecSeqno      string `xml:"PutrecSeqno"`
+	Gdecd            string `xml:"Gdecd"`
+	GdsNm            string `xml:"GdsNm"`
+	GdsSpcfModelDesc Cdata  `xml:"GdsSpcfModelDesc"`
+	DclUnitcd        string `xml:"DclUnitcd"`
+	LawfUnitcd       string `xml:"LawfUnitcd"`
+	SecdLawfUnitcd   string `xml:"SecdLawfUnitcd"`
+	DclUprcAmt       string `xml:"DclUprcAmt"`
+	DclTotalAmt      string `xml:"DclTotalAmt"`
+	DclCurrCd        string `xml:"DclCurrCd"`
+	NatCd            string `xml:"NatCd"`
+	DestinationNatcd string `xml:"DestinationNatcd"`
+	LawfQty          string `xml:"LawfQty"`
+	SecdLawfQty      string `xml:"SecdLawfQty"`
+	DclQty           string `xml:"DclQty"`
+	UseCd            string `xml:"UseCd"`
+	Rmk              Cdata  `xml:"Rmk"`
+	LvyrlfModecd     string `xml:"LvyrlfModecd"`
+	CiqCode          string `xml:"CiqCode"`
+	DeclGoodsEname   string `xml:"DeclGoodsEname"`
+	OrigPlaceCode    string `xml:"OrigPlaceCode"`
+	Purpose          string `xml:"Purpose"`
+	ProdValidDt      string `xml:"ProdValidDt"`
+	ProdQgp          string `xml:"ProdQgp"`
+	GoodsAttr        string `xml:"GoodsAttr"`
+	Stuff            string `xml:"Stuff"`
+	UnCode           string `xml:"UnCode"`
+	DangName         string `xml:"DangName"`
+	DangPackType     string `xml:"DangPackType"`
+	DangPackSpec     string `xml:"DangPackSpec"`
+	EngManEntCnm     string `xml:"EngManEntCnm"`
+	NoDangFlag       string `xml:"NoDangFlag"`
+	DestCode         string `xml:"DestCode"`
+	GoodsSpec        string `xml:"GoodsSpec"`
+	GoodsModel       string `xml:"GoodsModel"`
+	GoodsBrand       string `xml:"GoodsBrand"`
+	ProduceDate      string `xml:"ProduceDate"`
+	ProdBatchNo      string `xml:"ProdBatchNo"`
+	DistrictCode     string `xml:"DistrictCode"`
+	CiqName          string `xml:"CiqName"`
+	MnufctrRegno     string `xml:"MnufctrRegno"`
+	MnufctrRegName   string `xml:"MnufctrRegName"`
 }
 
 type InvtMessage struct {

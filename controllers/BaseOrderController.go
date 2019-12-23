@@ -497,106 +497,48 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		}
 
 		decHead := xmlTemplate.DecHead{}
-		enums.SetObjValueFromObj(&decHead, m)
-		//decHead.SeqNo = m.SeqNo
-		//decHead.IEFlag = m.IEFlag
-		//decHead.Type = m.Type
-		//decHead.AgentCode = m.AgentCode
-		//decHead.AgentName = m.AgentName
-		//decHead.ApprNo = m.ApprNo
-		//decHead.BillNo = m.BillNo
-		//decHead.ContrNo = m.ContrNo
-		//decHead.CustomMaster = m.CustomMaster
-		//decHead.CutMode = m.CutMode
-		//decHead.DistinatePort = m.DistinatePort
-		//decHead.FeeCurr = m.FeeCurr
-		//decHead.FeeMark = m.FeeMark
-		//decHead.FeeRate = m.FeeRate
-		//decHead.GrossWet = m.GrossWet
-		//decHead.IEDate = m.IEDate
-		//decHead.IEPort = m.IEPort
-		//decHead.InsurCurr = m.InsurCurr
-		//decHead.InsurMark = m.InsurMark
-		//decHead.InsurRate = m.InsurRate
-		//decHead.LicenseNo = m.LicenseNo
-		//decHead.ManualNo = m.ManualNo
-		//decHead.NetWt = m.NetWt
-		//decHead.NoteS = m.NoteS
-		//decHead.OtherCurr = m.OtherCurr
-		//decHead.OtherMark = m.OtherMark
-		//decHead.OtherRate = m.OtherRate
-		//decHead.OwnerCode = m.OwnerCode
-		//decHead.OwnerName = m.IEFlag
-		//decHead.PackNo = m.IEFlag
-		//decHead.TradeCode = m.IEFlag
-		//decHead.TradeCountry = m.IEFlag
-		//decHead.TradeMode = m.IEFlag
-		//decHead.TradeName = m.IEFlag
-		//decHead.TrafMode = m.IEFlag
-		//decHead.TrafName = m.IEFlag
-		//decHead.TransMode = m.IEFlag
-		//decHead.WrapType = m.IEFlag
-		//decHead.EntryId = m.IEFlag
-		//decHead.PreEntryId = m.IEFlag
-		//decHead.EdiId = m.IEFlag
-		//decHead.Risk = m.IEFlag
-		//decHead.CopName = m.IEFlag
-		//decHead.CopCode = m.IEFlag
-		//decHead.EntryType = m.IEFlag
-		//decHead.PDate = m.IEFlag
-		//decHead.TypistNo = m.IEFlag
-		//decHead.InputerName = m.IEFlag
-		//decHead.PartenerID = m.IEFlag
-		//decHead.TgdNo = m.IEFlag
-		//decHead.DataSource = m.IEFlag
-		//decHead.DeclTrnRel = m.IEFlag
-		//decHead.ChkSurety = m.IEFlag
-		//decHead.BillType = m.IEFlag
-		//decHead.CopCodeScc = m.IEFlag
-		//decHead.OwnerCodeScc = m.IEFlag
-		//decHead.AgentCodeScc = m.IEFlag
-		//decHead.TradeCoScc = m.IEFlag
-		//decHead.PromiseItmes = m.IEFlag
-		//decHead.TradeAreaCode = m.IEFlag
-		//decHead.CheckFlow = m.IEFlag
-		//decHead.TaxAaminMark = m.IEFlag
-		//decHead.MarkNo = m.IEFlag
-		//decHead.DespPortCode = m.IEFlag
-		//decHead.EntyPortCode = m.IEFlag
-		//decHead.GoodsPlace = m.IEFlag
-		//decHead.BLNo = m.IEFlag
-		//decHead.InspOrgCode = m.IEFlag
-		//decHead.SpecDeclFlag = m.IEFlag
-		//decHead.PurpOrgCode = m.IEFlag
-		//decHead.DespDate = m.IEFlag
-		//decHead.CmplDschrgDt = m.IEFlag
-		//decHead.CorrelationReasonFlag = m.IEFlag
-		//decHead.VsaOrgCode = m.IEFlag
-		//decHead.OrigBoxFlag = m.IEFlag
-		//decHead.DeclareName = m.IEFlag
-		//decHead.NoOtherPack = m.IEFlag
-		//decHead.OrgCode = m.IEFlag
-		//decHead.OverseasConsignorCode = m.IEFlag
-		//decHead.OverseasConsignorCname = m.IEFlag
-		//decHead.OverseasConsignorEname = m.IEFlag
-		//decHead.OverseasConsignorAddr = m.IEFlag
-		//decHead.OverseasConsigneeCode = m.IEFlag
-		//decHead.OverseasConsigneeEname = m.IEFlag
-		//decHead.DomesticConsigneeEname = m.IEFlag
-		//decHead.CorrelationNo = m.IEFlag
-		//decHead.EdiRemark = m.IEFlag
-		//decHead.EdiRemark2 = m.IEFlag
-		//decHead.TradeCiqCode = m.IEFlag
-		//decHead.OwnerCiqCode = m.IEFlag
-		//decHead.DeclCiqCode = m.IEFlag
+		enums.SetObjValueFromObj(&decHead, m) // 设置数据到 xml 结构体
+
+		gName := xmlTemplate.Cdata{Value: m.NoteS}
+		decHead.NoteS = gName
 
 		decLists := xmlTemplate.DecLists{}
-		decList := xmlTemplate.DecList{}
-		decGoodsLimits := xmlTemplate.DecGoodsLimits{}
-		decGoodsLimit := xmlTemplate.DecGoodsLimit{}
-		decGoodsLimits.DecGoodsLimit = decGoodsLimit
-		decList.DecGoodsLimits = decGoodsLimits
-		decLists.DecList = decList
+		decListsl := []xmlTemplate.DecList{}
+		for _, dl := range m.OrderItems {
+			decList := xmlTemplate.DecList{}
+			enums.SetObjValueFromObj(&decList, dl) // 设置数据到 xml 结构体
+
+			gName := xmlTemplate.Cdata{Value: dl.GName}
+			decList.GName = gName
+
+			gModel := xmlTemplate.Cdata{Value: dl.GModel}
+			decList.GModel = gModel
+
+			ciqName := xmlTemplate.Cdata{Value: dl.CiqName}
+			decList.CiqName = ciqName
+
+			decGoodsLimits := xmlTemplate.DecGoodsLimits{}
+			var decGoodsLimitsl []xmlTemplate.DecGoodsLimit
+			for _, oil := range dl.OrderItemLimits {
+				decGoodsLimit := xmlTemplate.DecGoodsLimit{}
+				enums.SetObjValueFromObj(&decGoodsLimit, oil) // 设置数据到 xml 结构体
+
+				var decGoodsLimitVins []xmlTemplate.DecGoodsLimitVin
+				for _, oilv := range oil.OrderItemLimitVins {
+					decGoodsLimitVin := xmlTemplate.DecGoodsLimitVin{}
+					enums.SetObjValueFromObj(&decGoodsLimitVin, oilv) // 设置数据到 xml 结构体
+					decGoodsLimitVins = append(decGoodsLimitVins, decGoodsLimitVin)
+				}
+				decGoodsLimit.DecGoodsLimitVin = decGoodsLimitVins
+				decGoodsLimitsl = append(decGoodsLimitsl, decGoodsLimit)
+			}
+
+			decGoodsLimits.DecGoodsLimit = decGoodsLimitsl
+			decList.DecGoodsLimits = decGoodsLimits
+			decListsl = append(decListsl, decList)
+		}
+
+		decLists.DecList = decListsl
 
 		decLicenseDocus := xmlTemplate.DecLicenseDocus{}
 		licenseDocu := xmlTemplate.LicenseDocu{}
