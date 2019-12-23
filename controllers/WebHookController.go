@@ -32,25 +32,29 @@ func (c *WebHookController) Get() {
 		enums.Cmd("bee", "", []string{"pack"})
 		if file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") {
 			enums.Cmd("mv", "", []string{"/root/go/src/BeeCustom/BeeCustom.tar.gz", "/root/back"})
-			utils.LogDebug("mv BeeCustom.tar.gz")
+			utils.LogDebug("mv BeeCustom.tar.gz success")
 		} else {
-			utils.LogDebug("mv BeeCustom.tar.gz error")
+			utils.LogDebug("/root/go/src/BeeCustom/BeeCustom.tar.gz pack error")
 		}
 
-		if !file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") && file.IsExist("/root/back/BeeCustom.tar.gz") {
+		if file.IsExist("/root/go/src/BeeCustom/BeeCustom.tar.gz") {
+			utils.LogDebug("/root/go/src/BeeCustom/BeeCustom.tar.gz exist")
+		} else if !file.IsExist("/root/back/BeeCustom.tar.gz") {
+			utils.LogDebug("/root/back/BeeCustom.tar.gz not exist")
+		} else {
 			enums.Cmd("cd", "", []string{"/root/back"})
 			enums.Cmd("tar", "", []string{"-zxvf", "/root/back/BeeCustom.tar.gz", "BeeCustom"})
 			enums.Cmd("rm", "y", []string{"/root/back/BeeCustom.tar.gz"})
-			utils.LogDebug("tar BeeCustom.tar.gz")
-		} else {
-			utils.LogDebug("tar BeeCustom.tar.gz error")
+			utils.LogDebug("tar BeeCustom.tar.gz success")
 		}
 
-		if file.IsExist("/root/back/BeeCustom") && !file.IsExist("/root/back/BeeCustom.tar.gz") {
-			enums.Cmd("mv", "", []string{"/root/back/BeeCustom", "/root/go/src/BeeCustom"})
-			utils.LogDebug("mv BeeCustom")
+		if !file.IsExist("/root/back/BeeCustom") {
+			utils.LogDebug("/root/back/BeeCustom not exist")
+		} else if file.IsExist("/root/back/BeeCustom.tar.gz") {
+			utils.LogDebug("/root/back/BeeCustom.tar.gz exist")
 		} else {
-			utils.LogDebug("mv BeeCustom error")
+			enums.Cmd("mv", "", []string{"/root/back/BeeCustom", "/root/go/src/BeeCustom"})
+			utils.LogDebug("mv BeeCustom success")
 		}
 
 		enums.Cmd("cd", "", []string{"/etc/supervisord.conf.d"})
