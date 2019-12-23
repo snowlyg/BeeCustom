@@ -44,5 +44,6 @@ func (c *WebHookController) Get() {
 	}
 
 	c.Data["json"] = "ok"
+	c.ServeJSONP()
 	c.ServeJSON()
 }
