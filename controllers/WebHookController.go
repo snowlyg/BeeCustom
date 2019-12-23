@@ -43,7 +43,7 @@ func (c *WebHookController) Get() {
 			utils.LogDebug("/root/back/BeeCustom.tar.gz not exist")
 		} else {
 			enums.Cmd("cd", "", []string{"/root/back"})
-			enums.Cmd("tar", "", []string{"-zxvf", "/root/back/BeeCustom.tar.gz", "/root/back/BeeCustom"})
+			enums.Cmd("tar", "", []string{"-zxvf", "/root/back/BeeCustom.tar.gz", "BeeCustom"})
 			enums.Cmd("rm", "y", []string{"/root/back/BeeCustom.tar.gz"})
 			utils.LogDebug("tar BeeCustom.tar.gz success")
 		}
@@ -53,7 +53,7 @@ func (c *WebHookController) Get() {
 		} else if file.IsExist("/root/back/BeeCustom.tar.gz") {
 			utils.LogDebug("/root/back/BeeCustom.tar.gz exist")
 		} else {
-			enums.Cmd("mv", "", []string{"/root/back/BeeCustom", "/root/go/src/BeeCustom"})
+			enums.Cmd("mv", "y", []string{"/root/back/BeeCustom", "/root/go/src/BeeCustom"})
 			utils.LogDebug("mv BeeCustom success")
 		}
 
