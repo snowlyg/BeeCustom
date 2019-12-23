@@ -227,7 +227,8 @@ func OrderPageList(params *OrderQueryParam) ([]*Order, int64, error) {
 	sql := "SELECT * "
 	sql = GetOrderCommonListSql(sql, params)
 	if len(params.StatusString) > 0 && params.StatusString != "全部订单" {
-		aStatus, _ := enums.GetSectionWithString(params.StatusString, "order_status")
+		aStatusS, _ := GetSettingRValueByKey("orderStatus", false)
+		aStatus, _, _ := enums.TransformCnToInt(aStatusS, params.StatusString)
 		sql += " AND status = " + strconv.Itoa(int(aStatus))
 	}
 
@@ -423,7 +424,8 @@ func GetOrderCommonListSql(sql string, params *OrderQueryParam) string {
 func TransformOrder(id int64, relation string, isRechek bool) map[string]interface{} {
 	v, _ := OrderOne(id, relation)
 	orderItem := make(map[string]interface{})
-	aStatus, err := enums.GetSectionWithInt(v.Status, "order_status")
+	aStatusS, err := GetSettingRValueByKey("orderStatus", false)
+	aStatus, err, _ := enums.TransformIntToCn(aStatusS, v.Status)
 	if err != nil {
 		return nil
 	}

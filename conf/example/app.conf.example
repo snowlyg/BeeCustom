@@ -1,70 +1,23 @@
-appname=BeeCustom
-httpaddr=127.0.0.1
-httpport=80
-runmode= local
+appname = BeeCustom
+httpaddr = "127.0.0.1"
+httpport = 8080
+runmode = local
+
 #Session参数
-sessionon = true
+sessionon =true
+sessionname = rmsbackusersessionid
 sessionprovider = redis
 sessionproviderconfig = "127.0.0.1:6379"
-sessionname = rmsbackusersessionid
-#sessioncookielifetime = 100 cookie的有效期（秒），默认是session,即会话结束则过期
+sessioncookielifetime = 100 #cookie的有效期（秒），默认是session,即会话结束则过期
+
 #开启监控
 EnableAdmin = true
 #开启JSON请求
 copyrequestbody = true
 #防止跨站请求伪造 未启用
-enablexsrf = false
+enablexsrf = true
 xsrfkey = asdfioerjlasdfmFADFOEJF2323SDFF
 xsrfexpire = 3600
-
-
-#报关通用数据
-AgentCodeScc = "914419007962277606"
-AgentCode = "4419986507"
-DeclCiqCode = "4400510052"
-AgentName = "广东东华报关服务有限公司"
-AgentTel = "0769-87510025"
-ICCode = "8930000083638"
-OperName = "卢明"
-AgentCustomMaster = "5200"
-AgentCopCode = "796227760"
-AgentClientId = "DXPESW0000002284"
-
-#清单报文字段数据
-AnnotationVersion = "1.0"
-AnnotationBusinessId = ""
-AnnotationMessageType = "INV101"
-#正式
-#AnnotationSenderId = "DXPESW0000002284"
-#测试
-AnnotationSenderId = "DXPESW0000003241"
-AnnotationReceiverIdC = "DXPEDCNEMS000001"
-AnnotationReceiverIdE = "DXPEDCNEMS000002"
-AnnotationSysIdC = "B1"
-AnnotationSysIdE = "95"
-
-#清单报文发送路径
-#手册
-annotation_xml_path_c = "C:/ImpPath/Npts/OutBox/"
-annotation_return_path_c = "C:/ImpPath/Npts/InBox/"
-annotation_send_xml_path_c = "C:/ImpPath/Npts/SentBox/"
-annotation_history_path_c = "C:/ImpPath/Npts/History/"
-#账册
-annotation_xml_path_e = "C:/ImpPath/Nems/OutBox/"
-annotation_return_path_e = "C:/ImpPath/Nems/InBox/"
-annotation_send_xml_path_e = "C:/ImpPath/Nems/SentBox/"
-annotation_history_path_e = "C:/ImpPath/Nems/History/"
-
-#货物报文发送路径
-order_xml_path = "C:/ImpPath/Deccus001/OutBox/"
-order_return_path = "C:/ImpPath/Deccus001/InBox/"
-order_send_xml_path = "C:/ImpPath/Deccus001/SentBox/"
-order_history_path = "C:/ImpPath/Deccus001/History/"
-
-
-#pdf 打印链接认证
-pdf_username="bee_custom_pdf"
-pdf_password="nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo"
 
 #数据库类型：postgres/mysql/sqlite3
 db_type = "mysql"
@@ -77,18 +30,20 @@ db_alias = "default"
 db_name = "sdrms"
 db_user = "root"
 db_pwd = "sdsdsd"
-db_host = "localhost"
+db_host = "127.0.0.1"
 db_port = 5432
 db_sslmode = "disable"
+
 #mysql配置
 [mysql]
 db_alias = "default"
 db_name = "bee_custom"
 db_user = "root"
-db_pwd = "2did4Yej411dnYCeX9Ukqah4EgfjAQlw"
-db_host = "localhost"
+db_pwd = "nvWQ8qE6kUtSURHhSQvWa2BZ3ct0eDOo"
+db_host = "127.0.0.1"
 db_port = 3306
 db_charset = "utf8"
+
 #sqlite3
 [sqlite3]
 db_alias = "default"
@@ -97,11 +52,13 @@ db_name = "sdrms.sqlite3"
 [lang]
 types=en-US|zh-CN
 names=English|简体中文
+
 #日志配置
 [logs]
 #"emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"
 # 0 ~ 7
 level = 7
+
 #cache配置
 [cache]
 #redis
@@ -110,7 +67,26 @@ redis_password = ""
 #过期时间
 cache_expire = 10
 
-include "import.conf"
-include "handbook.conf"
-include "annotation.conf"
-include "order.conf"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -158,12 +158,52 @@ type DecGoodsLimits struct {
 }
 
 type DecGoodsLimit struct {
+	GoodsNo          string           `xml:"GoodsNo"`
+	LicTypeCode      string           `xml:"LicTypeCode"`
+	LicenceNo        string           `xml:"LicenceNo"`
+	LicWrtofDetailNo string           `xml:"LicWrtofDetailNo"`
+	LicWrtofQty      string           `xml:"LicWrtofQty"`
+	DecGoodsLimitVin DecGoodsLimitVin `xml:"DecGoodsLimitVin"`
+}
+
+type DecGoodsLimitVin struct {
+	GoodsNo      string `xml:"GoodsNo"`
+	LicenceNo    string `xml:"LicenceNo"`
+	LicTypeCode  string `xml:"LicTypeCode"`
+	VinNo        string `xml:"VinNo"`
+	BillLadDate  string `xml:"BillLadDate"`
+	QualityQgp   string `xml:"QualityQgp"`
+	VinCode      string `xml:"VinCode"`
+	MotorNo      string `xml:"MotorNo"`
+	InvoiceNo    string `xml:"InvoiceNo"`
+	InvoiceNum   string `xml:"InvoiceNum"`
+	ProdCnnm     string `xml:"ProdCnnm"`
+	ProdEnnm     string `xml:"ProdEnnm"`
+	ModelEn      string `xml:"ModelEn"`
+	ChassisNo    string `xml:"ChassisNo"`
+	PricePerUnit string `xml:"PricePerUnit"`
 }
 
 type DecLicenseDocus struct {
+	LicenseDocu LicenseDocu `xml:"LicenseDocu"`
+}
+
+type LicenseDocu struct {
+	DocuCode string `xml:"DocuCode"`
+	CertCode string `xml:"CertCode"`
 }
 
 type DecContainers struct {
+	DecContainer DecContainer `xml:"DecContainer"`
+}
+
+type DecContainer struct {
+	DecContainer string `xml:"DecContainer"`
+	ContainerId  string `xml:"ContainerId"`
+	ContainerMd  string `xml:"ContainerMd"`
+	ContainerWt  string `xml:"ContainerWt"`
+	LclFlag      string `xml:"LclFlag"`
+	GoodsNo      string `xml:"GoodsNo"`
 }
 
 type DecSign struct {
@@ -191,16 +231,61 @@ type DecFreeTxt struct {
 	DecNo    string `xml:"DecNo"`
 }
 
+type EcoRelation struct {
+	CertType    string `xml:"CertType"`
+	EcoCertNo   string `xml:"EcoCertNo"`
+	DecGNo      string `xml:"DecGNo"`
+	EcoGNo      string `xml:"EcoGNo"`
+	ExtendFiled string `xml:"ExtendFiled"`
+}
+
 type DecRequestCerts struct {
+	DecRequestCert DecRequestCert `xml:"DecRequestCert"`
+}
+
+type DecRequestCert struct {
+	AppCertCode  string `xml:"AppCertCode"`
+	ApplOri      string `xml:"ApplOri"`
+	ApplCopyQuan string `xml:"ApplCopyQuan"`
 }
 
 type DecOtherPacks struct {
+	DecOtherPack DecOtherPack `xml:"DecOtherPack"`
+}
+
+type DecOtherPack struct {
+	PackQty  string `xml:"PackQty"`
+	PackType string `xml:"PackType"`
 }
 
 type DecCopLimits struct {
+	DecCopLimit DecCopLimit `xml:"DecCopLimit"`
+}
+type DecCopLimit struct {
+	EntQualifNo       string `xml:"EntQualifNo"`
+	EntQualifTypeCode string `xml:"EntQualifTypeCode"`
 }
 
 type DecUsers struct {
+	DecUser DecUser `xml:"DecUser"`
+}
+
+type DecUser struct {
+	UseOrgPersonCode string `xml:"UseOrgPersonCode"`
+	UseOrgPersonTel  string `xml:"UseOrgPersonTel"`
+}
+
+type EdocRealation struct {
+	EdocID        string `xml:"EdocID"`
+	EdocCode      string `xml:"EdocCode"`
+	EdocFomatType string `xml:"EdocFomatType"`
+	OpNote        string `xml:"OpNote"`
+	EdocCopId     string `xml:"EdocCopId"`
+	EdocOwnerCode string `xml:"EdocOwnerCode"`
+	SignUnit      string `xml:"SignUnit"`
+	SignTime      string `xml:"SignTime"`
+	EdocOwnerName string `xml:"EdocOwnerName"`
+	EdocSize      string `xml:"EdocSize"`
 }
 
 type DecCopPromises struct {
@@ -221,9 +306,11 @@ type DecMessage struct {
 	DecContainers   DecContainers   `xml:"DecContainers"`
 	DecSign         DecSign         `xml:"DecSign"`
 	DecFreeTxt      DecFreeTxt      `xml:"DecFreeTxt"`
+	EcoRelation     EcoRelation     `xml:"EcoRelation"`
 	DecRequestCerts DecRequestCerts `xml:"DecRequestCerts"`
 	DecOtherPacks   DecOtherPacks   `xml:"DecOtherPacks"`
 	DecCopLimits    DecCopLimits    `xml:"DecCopLimits"`
 	DecUsers        DecUsers        `xml:"DecUsers"`
 	DecCopPromises  DecCopPromises  `xml:"DecCopPromises"`
+	EdocRealation   EdocRealation   `xml:"EdocRealation"`
 }

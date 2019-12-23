@@ -128,15 +128,18 @@ func (c *HandBookController) Show() {
 	c.Data["m"] = m
 
 	var html, showFooterjs string
-	chandBookType, err := enums.GetSectionWithString("手册", "hand_book_type")
-	if err != nil {
+
+	handBookTypeS, err := c.getHandBookTypes()
+	chandBookType, err, done := enums.TransformCnToInt(handBookTypeS, "手册")
+	if done {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
 	}
 
-	ahandBookType, err := enums.GetSectionWithString("账册", "hand_book_type")
-	if err != nil {
+	ahandBookType, err, done := enums.TransformCnToInt(handBookTypeS, "账册")
+	if done {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
 	}
+
 	if m.Type == chandBookType {
 		html = "handbook/manual/show.html"
 		showFooterjs = "handbook/manual/show_footerjs.html"
@@ -149,6 +152,10 @@ func (c *HandBookController) Show() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = showFooterjs
 	c.GetXSRFToken()
+}
+
+func (c *HandBookController) getHandBookTypes() (map[string]string, error) {
+	return models.GetSettingRValueByKey("handBookType", false)
 }
 
 // 删除
@@ -179,8 +186,11 @@ func (c *HandBookController) Import() {
 	}
 
 	var sheet1Name, sheet1Title, sheet2Name, sheet2Title, sheet3Name, sheet3Title, sheet4Name, sheet4Title string
-	importManualType, _ := enums.GetSectionWithString("手册", "hand_book_type")
-	importAccountType, _ := enums.GetSectionWithString("账册", "hand_book_type")
+	handBookTypeS, err := c.getHandBookTypes()
+	importManualType, err, _ := enums.TransformCnToInt(handBookTypeS, "手册")
+
+	importAccountType, err, _ := enums.TransformCnToInt(handBookTypeS, "手册")
+
 	if importType == importManualType {
 		sheet1Name = "handbook_manual_excel_sheet1_name"
 		sheet1Title = "handbook_manual_excel_sheet1_title"
@@ -283,14 +293,13 @@ func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam
 // 获取 xlsx 文件内容
 func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam, Info []map[string]string) error {
 	var handBookGoods []*models.HandBookGood
-	for i := 0; i < len(Info); i++ {
-		handBookGood := models.NewHandBookGood(0)
-		enums.SetObjValue(&handBookGood, Info, i)
 
-		handBookGood.HandBook = &hIP.HandBook
-		handBookGood.Type = hIP.HandBookGoodType
-		handBookGoods = append(handBookGoods, &handBookGood)
-	}
+	handBookGood := models.NewHandBookGood(0)
+	enums.SetObjValueFromSlice(&handBookGood, Info)
+
+	handBookGood.HandBook = &hIP.HandBook
+	handBookGood.Type = hIP.HandBookGoodType
+	handBookGoods = append(handBookGoods, &handBookGood)
 
 	num, err := models.InsertHandBookGoodMulti(handBookGoods)
 	if err != nil {
@@ -309,17 +318,16 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam,
 func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportParam, Info []map[string]string) error {
 
 	var handBookUllages []*models.HandBookUllage
-	for i := 0; i < len(Info); i++ {
-		handBookUllage := models.NewHandBookUllage(0)
-		enums.SetObjValue(&handBookUllage, Info, i)
-		handBookGood, err := models.GetHandBookGoodBySerial(handBookUllage.FinishProNo)
-		if err != nil {
-			return err
-		}
 
-		handBookUllage.HandBookGood = handBookGood
-		handBookUllages = append(handBookUllages, &handBookUllage)
+	handBookUllage := models.NewHandBookUllage(0)
+	enums.SetObjValueFromSlice(&handBookUllage, Info)
+	handBookGood, err := models.GetHandBookGoodBySerial(handBookUllage.FinishProNo)
+	if err != nil {
+		return err
 	}
+
+	handBookUllage.HandBookGood = handBookGood
+	handBookUllages = append(handBookUllages, &handBookUllage)
 
 	num, err := models.InsertHandBookUllageMulti(handBookUllages)
 	if err != nil {
@@ -410,7 +418,8 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 
 		}
 
-		handBookGoodType, err := enums.GetSectionWithString(handBookTypeString, "hand_book_good_type")
+		handBookGoodTypeS, err := c.getHandBookTypes()
+		handBookGoodType, err, _ := enums.TransformCnToInt(handBookGoodTypeS, handBookTypeString)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
 		}

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"html"
 	"strings"
 	"time"
@@ -51,7 +52,7 @@ func SettingOne(id int64) (*Setting, error) {
 }
 
 // GetSettingRValueByKey 获取单条
-func GetSettingRValueByKey(key string) (map[string]string, error) {
+func GetSettingRValueByKey(key string, isSinge bool) (map[string]string, error) {
 	o := orm.NewOrm()
 	m := NewSetting(0)
 
@@ -63,15 +64,35 @@ func GetSettingRValueByKey(key string) (map[string]string, error) {
 
 	rValue := map[string]string{}
 	for _, v := range strings.Split(m.RValue, ",") {
+		if isSinge {
+			rValue["0"] = v
+			return rValue, nil
+		}
+
 		iv := strings.Split(v, ":")
 		if len(iv) > 1 && len(iv[0]) > 0 && len(iv[1]) > 0 {
 			rValue[iv[0]] = iv[1]
 		} else {
 			rValue["0"] = v
 		}
+
 	}
 
 	return rValue, nil
+}
+
+// GetSettingValueByKey 获取单条
+func GetSettingValueByKey(key string) (string, error) {
+	value, err := GetSettingRValueByKey(key, true)
+	if err != nil {
+		return "", err
+	}
+
+	if len(value) != 1 {
+		return "", errors.New("获取数据格式错误")
+	}
+
+	return value["0"], nil
 }
 
 // SettingTreeGrid 获取treegrid顺序的列表

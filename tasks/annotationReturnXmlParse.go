@@ -14,7 +14,6 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
 )
 
@@ -38,8 +37,8 @@ func annotationCReturnXmlParse() *toolbox.Task {
 // 解析回执
 func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
-	returnPath := beego.AppConfig.String(returnPathCofig)
-	historyPath := beego.AppConfig.String(historyPathCofig)
+	returnPath, err := models.GetSettingValueByKey(returnPathCofig)
+	historyPath, err := models.GetSettingValueByKey(historyPathCofig)
 	pathCfiles, err := ioutil.ReadDir(returnPath)
 	if err != nil {
 		// utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))

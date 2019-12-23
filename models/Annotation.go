@@ -192,7 +192,8 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 	sql := "SELECT * "
 	sql = GetCommonListSql(sql, params)
 	if len(params.StatusString) > 0 && params.StatusString != "全部订单" {
-		aStatus, _ := enums.GetSectionWithString(params.StatusString, "annotation_status")
+		aStatusS, _ := GetSettingRValueByKey("annotationStatus", false)
+		aStatus, _, _ := enums.TransformCnToInt(aStatusS, params.StatusString)
 		sql += " AND status = " + strconv.Itoa(int(aStatus))
 	}
 
@@ -368,7 +369,8 @@ func TransformAnnotation(id int64, relation string) map[string]interface{} {
 
 	v, _ := AnnotationOne(id, relation)
 	annotationItem := make(map[string]interface{})
-	aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
+	aStatusS, err := GetSettingRValueByKey("orderStatus", false)
+	aStatus, err, _ := enums.TransformIntToCn(aStatusS, v.Status)
 	if err != nil {
 		return nil
 	}

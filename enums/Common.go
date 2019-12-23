@@ -46,21 +46,29 @@ func GetSectionWithString(wordCh, configSection string) (int8, error) {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 	}
 
+	i, err, done := TransformCnToInt(sections, wordCh)
+	if done {
+		return i, err
+	}
+
+	return -1, errors.New("查询参数错误")
+}
+
+func TransformCnToInt(sections map[string]string, wordCh string) (int8, error, bool) {
 	for i, v := range sections {
 		if v == wordCh {
 
 			sectionI, err := strconv.Atoi(i)
 			if err != nil {
 				utils.LogDebug(fmt.Sprintf("ParseInt:%v", err))
-				return -1, err
+				return -1, err, true
 			}
 
-			return int8(sectionI), nil
+			return int8(sectionI), nil, true
 
 		}
 	}
-
-	return -1, errors.New("查询参数错误")
+	return 0, nil, false
 }
 
 //根据参数查询对应中文
@@ -70,20 +78,28 @@ func GetSectionWithInt(wordInt int8, configSection string) (string, error) {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 	}
 
+	s, err, done := TransformIntToCn(sections, wordInt)
+	if done {
+		return s, err
+	}
+
+	return "", errors.New("查询参数错误")
+}
+
+func TransformIntToCn(sections map[string]string, wordInt int8) (string, error, bool) {
 	for i, v := range sections {
 		sectionI, err := strconv.Atoi(i)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("ParseInt:%v", err))
-			return "", err
+			return "", err, true
 		}
 
 		if int8(sectionI) == wordInt {
-			return v, nil
+			return v, nil, true
 
 		}
 	}
-
-	return "", errors.New("查询参数错误")
+	return "", nil, false
 }
 
 //获取4位随机数
@@ -155,9 +171,16 @@ func InStringArray(s string, sS []string) bool {
 }
 
 //设置值 slice
-func SetObjValue(inObj interface{}, Info []map[string]string, i int) {
+func SetObjValueFromSlice(inObj interface{}, Info []map[string]string) {
+	for i := 0; i < len(Info); i++ {
+		SetObjValue(inObj, Info[i])
+	}
+}
+
+//设置值
+func SetObjValue(inObj interface{}, Info map[string]string) {
 	t := reflect.ValueOf(inObj).Elem()
-	for k, v := range Info[i] {
+	for k, v := range Info {
 		SetObjValueIn(k, v, t)
 	}
 }
@@ -202,6 +225,49 @@ func SetObjValueIn(objName, v string, t reflect.Value) {
 	default:
 		utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", v, objName))
 	}
+}
+
+//设置值
+func SetObjValueFromObj(outObj interface{}, inObj interface{}) {
+
+	outObjE := reflect.ValueOf(outObj).Elem()
+	outObjET := outObjE.Type()
+
+	inObjE := reflect.ValueOf(inObj).Elem()
+	inObjET := inObjE.Type()
+
+	for i := 0; i < outObjE.NumField(); i++ {
+
+		outObjEF := outObjE.Field(i)
+
+		for iI := 0; iI < inObjE.NumField(); iI++ {
+
+			inObjEF := inObjE.Field(iI)
+
+			if outObjET.Field(i).Name == inObjET.Field(iI).Name && outObjEF.Type() == inObjEF.Type() {
+				if outObjEF.CanSet() {
+					switch inObjEF.Kind() {
+					case reflect.String:
+						outObjEF.SetString(inObjEF.String())
+					case reflect.Bool:
+						outObjEF.SetBool(inObjEF.Bool())
+					case reflect.Float64, reflect.Float32:
+						outObjEF.SetFloat(inObjEF.Float())
+					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+						outObjEF.SetInt(inObjEF.Int())
+					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+						outObjEF.SetUint(inObjEF.Uint())
+					case reflect.Struct:
+						SetObjValueFromObj(outObjEF, inObjEF)
+					default:
+						utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", inObjEF.Kind(), inObjEF))
+					}
+				}
+			}
+		}
+
+	}
+
 }
 
 // hmac 加密

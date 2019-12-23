@@ -15,11 +15,13 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 
 	task := toolbox.NewTask("task", "* * * * * *", func() error {
 		o := orm.NewOrm()
-		status9, err := enums.GetSectionWithString("复核通过", "annotation_status")
+		aStatusS, err := models.GetSettingRValueByKey("annotationStatus", false)
+		status9, err, _ := enums.TransformCnToInt(aStatusS, "复核通过")
 		if err != nil {
 			utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
 		}
-		status11, err := enums.GetSectionWithString("已提交单一", "annotation_status")
+
+		status11, err, _ := enums.TransformCnToInt(aStatusS, "已提交单一")
 		if err != nil {
 			utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
 		}

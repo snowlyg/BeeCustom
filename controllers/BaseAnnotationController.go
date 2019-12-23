@@ -14,7 +14,6 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
-	"github.com/astaxie/beego"
 )
 
 type BaseAnnotationController struct {
@@ -36,6 +35,7 @@ func (c *BaseAnnotationController) bDataGrid(impexpMarkcd string) {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
+
 	// 格式化数据
 	annotationList := c.TransformAnnotationList(data)
 	c.ResponseList(annotationList, total)
@@ -470,7 +470,22 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString, action, acti
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 	// 生成 pdf 凭证
-	pdfData := enums.PdfData{m.Id, m.EtpsInnerInvtNo, "annotation_recheck_pdf", action, "annotation", "", 10}
+	// basic auth 认证用户名和密码
+	username, _ := models.GetSettingValueByKey("pdf_username")
+	password, _ := models.GetSettingValueByKey("pdf_password")
+
+	pdfData := enums.PdfData{
+		m.Id,
+		m.EtpsInnerInvtNo,
+		"annotation_recheck_pdf",
+		action,
+		"annotation",
+		"",
+		username,
+		password,
+		10,
+	}
+
 	if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
@@ -517,7 +532,20 @@ func (c *BaseAnnotationController) bPrint(id int64) {
 	}
 	if m != nil {
 		// 生成 pdf 凭证
-		pdfData := enums.PdfData{m.Id, m.EtpsInnerInvtNo, "annotation_pdf", "report", "annotation", "", 10}
+		// basic auth 认证用户名和密码
+		username, _ := models.GetSettingValueByKey("pdf_username")
+		password, _ := models.GetSettingValueByKey("pdf_password")
+		pdfData := enums.PdfData{
+			m.Id,
+			m.EtpsInnerInvtNo,
+			"annotation_pdf",
+			"report",
+			"annotation",
+			"",
+			username,
+			password,
+			10,
+		}
 		if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		} else {
@@ -555,19 +583,20 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		var sysId string
 		var receiverId string
 		var path string
-		handBookType1, _ := enums.GetSectionWithString("手册", "hand_book_type")
-		handBookType2, _ := enums.GetSectionWithString("账册", "hand_book_type")
+		handBookTypeS, _ := models.GetSettingRValueByKey("handBookType", false)
+		handBookType1, _, _ := enums.TransformCnToInt(handBookTypeS, "手册")
+		handBookType2, _, _ := enums.TransformCnToInt(handBookTypeS, "账册")
 		if handBook == nil {
 			c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
 		} else {
 			if handBook.Type == handBookType1 {
-				receiverId = beego.AppConfig.String("AnnotationReceiverIdC")
-				sysId = beego.AppConfig.String("AnnotationSysIdC")
-				path = beego.AppConfig.String("annotation_xml_path_c")
+				receiverId, _ = models.GetSettingValueByKey("AnnotationReceiverIdC")
+				sysId, _ = models.GetSettingValueByKey("AnnotationSysIdC")
+				path, _ = models.GetSettingValueByKey("annotation_xml_path_c")
 			} else if handBook.Type == handBookType2 {
-				receiverId = beego.AppConfig.String("AnnotationReceiverIdE")
-				sysId = beego.AppConfig.String("AnnotationSysIdE")
-				path = beego.AppConfig.String("annotation_xml_path_e")
+				receiverId, _ = models.GetSettingValueByKey("AnnotationReceiverIdE")
+				sysId, _ = models.GetSettingValueByKey("AnnotationSysIdE")
+				path, _ = models.GetSettingValueByKey("annotation_xml_path_e")
 			} else {
 				c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
 			}
@@ -575,22 +604,23 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 
 		pathTemp := "./static/generate/annotation/" + strconv.FormatInt(id, 10) + "/temp/"
 		// 报文名称
-		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.EtpsInnerInvtNo
+		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "_" + m.EtpsInnerInvtNo
 		fileName := mName + ".xml"
 
 		signature.Object.Package.EnvelopInfo.FileName = fileName
-		signature.Object.Package.EnvelopInfo.Version = beego.AppConfig.String("AnnotationVersion")
-		signature.Object.Package.EnvelopInfo.BusinessId = beego.AppConfig.String("AnnotationBusinessId")
-		signature.Object.Package.EnvelopInfo.MessageType = beego.AppConfig.String("AnnotationMessageType")
-		signature.Object.Package.EnvelopInfo.SenderId = beego.AppConfig.String("AnnotationSenderId")
+		signature.Object.Package.EnvelopInfo.Version, _ = models.GetSettingValueByKey("AnnotationVersion")
+		signature.Object.Package.EnvelopInfo.BusinessId, _ = models.GetSettingValueByKey("AnnotationBusinessId")
+		signature.Object.Package.EnvelopInfo.MessageType, _ = models.GetSettingValueByKey("AnnotationMessageType")
+		signature.Object.Package.EnvelopInfo.SenderId, _ = models.GetSettingValueByKey("AnnotationSenderId")
 		signature.Object.Package.EnvelopInfo.ReceiverId = receiverId
 		signature.Object.Package.EnvelopInfo.MessageId = m.EtpsInnerInvtNo
 		signature.Object.Package.EnvelopInfo.SendTime = time.Now().Format(enums.RFC3339)
 
 		signature.Object.Package.DataInfo.BussinessData.DelcareFlag = "0" // 0:暂存，1:申报
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.SysId = sysId
-		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode = beego.AppConfig.String("AgentCode")
+		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode, _ = models.GetSettingValueByKey("AgentCode")
 
+		iCCode, _ := models.GetSettingValueByKey("ICCode")
 		invtHeadType := xmlTemplate.InvtHeadType{
 			SeqNo:                        m.SeqNo,
 			BondInvtNo:                   m.BondInvtNo,
@@ -634,7 +664,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			ListTypestring:               m.ListType,
 			DclcusFlagstring:             m.DclcusFlag,
 			DclcusTypecdstring:           m.DclcusTypecd,
-			IcCardNostring:               beego.AppConfig.String("ICCode"),
+			IcCardNostring:               iCCode,
 			DecTypestring:                m.DecType,
 			Rmkstring:                    m.Rmk,
 			StshipTrsarvNatcdstring:      m.StshipTrsarvNatcd,
@@ -762,7 +792,8 @@ func (c *BaseAnnotationController) bAuditFirstRejectLog(id int64) {
 	aRecord := models.NewAnnotationRecord(0)
 	aRecord.Annotation = m
 
-	sSting, err := enums.GetSectionWithInt(m.Status, "annotation_status")
+	aStatusS, err := c.getAnnotationStatus("orderStatus")
+	sSting, err, _ := enums.TransformIntToCn(aStatusS, m.Status)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	}
@@ -804,7 +835,8 @@ func (c *BaseAnnotationController) setAnnotaionUserRelType(m *models.Annotation,
 	rs := strings.Split(userTypes, ",")
 	for _, v := range rs {
 		aur := models.NewAnnotationUserRel(0)
-		aStatus, err := enums.GetSectionWithString(v, "annotation_user_type")
+		aStatusS, err := c.getAnnotationStatus("annotationUserType")
+		aStatus, err, _ := enums.TransformCnToInt(aStatusS, v)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 			return err
@@ -824,6 +856,10 @@ func (c *BaseAnnotationController) setAnnotaionUserRelType(m *models.Annotation,
 	return nil
 }
 
+func (c *BaseAnnotationController) getAnnotationStatus(status string) (map[string]string, error) {
+	return models.GetSettingRValueByKey(status, false)
+}
+
 // TransformAnnotationList 格式化列表数据
 func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotation) []*map[string]interface{} {
 
@@ -831,11 +867,14 @@ func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotati
 	for _, v := range ms {
 		annotationCreatorName := "" // 制单人
 		annotationItem := make(map[string]interface{})
-		aStatus, err := enums.GetSectionWithInt(v.Status, "annotation_status")
+		aStatusS, err := c.getAnnotationStatus("orderStatus")
+		aStatus, err, _ := enums.TransformIntToCn(aStatusS, v.Status)
+
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
 		}
-		userType, err := enums.GetSectionWithString("制单人", "annotation_user_type")
+		userTypeS, err := c.getAnnotationStatus("annotationUserType")
+		userType, err, _ := enums.TransformCnToInt(userTypeS, "制单人")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 		}
@@ -880,7 +919,8 @@ func (c *BaseAnnotationController) setStatusOnly(m *models.Annotation, statusStr
 
 // 操作记录
 func (c *BaseAnnotationController) newAnnotationRecord(m *models.Annotation, content string) *models.AnnotationRecord {
-	statusString, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
+	aStatusS, _ := c.getAnnotationStatus("orderStatus")
+	statusString, _, _ := enums.TransformIntToCn(aStatusS, m.Status)
 	annotationRecord := models.NewAnnotationRecord(0)
 	annotationRecord.Content = content
 	annotationRecord.BackendUser = &c.curUser
@@ -897,13 +937,13 @@ func (c *BaseAnnotationController) getCanStore(m *models.Annotation, impexpMarkc
 	if m == nil {
 		return c.checkActionAuthor(c.controllerName, impexpMarkcd+"Audit")
 	} else {
+		aStatusS, _ := c.getAnnotationStatus("orderStatus")
+		aStatus, _, _ := enums.TransformIntToCn(aStatusS, m.Status)
 		if c.checkActionAuthor(c.controllerName, m.ImpexpMarkcd+"Audit") {
-			aStatus, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
 			if aStatus == "待审核" || aStatus == "审核中" {
 				return true
 			}
 		} else if c.checkActionAuthor(c.controllerName, m.ImpexpMarkcd+"Make") {
-			aStatus, _ := enums.GetSectionWithInt(m.Status, "annotation_status")
 			if aStatus == "待制单" || aStatus == "制单中" {
 				return true
 			}

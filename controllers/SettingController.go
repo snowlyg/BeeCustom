@@ -84,7 +84,7 @@ func (c *SettingController) TreeGrid() {
 func (c *SettingController) GetOne() {
 	key := c.GetString(":key", "")
 	if len(key) > 0 {
-		rvalue, err := models.GetSettingRValueByKey(key)
+		rvalue, err := models.GetSettingRValueByKey(key, false)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("数据无效出错：%v", err))
 			c.pageError("数据无效，请刷新后重试")

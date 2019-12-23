@@ -17,6 +17,8 @@ type PdfData struct {
 	Action          string
 	ModelName       string
 	Header          string
+	Username        string
+	Password        string
 	MarginTop       uint
 }
 
@@ -38,10 +40,6 @@ func NewPDFGenerator(pdfData *PdfData) (string, error) {
 	httpaddr := beego.AppConfig.String("httpaddr")
 	httpport := beego.AppConfig.String("httpport")
 
-	// basic auth 认证用户名和密码
-	username := beego.AppConfig.String("pdf_username")
-	password := beego.AppConfig.String("pdf_password")
-
 	// Create a new input page from an URL
 	formatInt := strconv.FormatInt(pdfData.Id, 10)
 	page := wkhtmltopdf.NewPage(httpaddr + ":" + httpport + "/pdf/" + pdfData.Url + "/" + formatInt)
@@ -61,8 +59,8 @@ func NewPDFGenerator(pdfData *PdfData) (string, error) {
 	page.DebugJavascript.Set(true)
 	page.MinimumFontSize.Set(12)
 
-	page.Username.Set(username)
-	page.Password.Set(password)
+	page.Username.Set(pdfData.Username)
+	page.Password.Set(pdfData.Password)
 
 	// // Add to document
 	pdfg.AddPage(page)

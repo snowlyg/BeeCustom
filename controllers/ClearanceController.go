@@ -35,7 +35,7 @@ func (c *ClearanceController) Prepare() {
 	// 如果一个Controller的所有Action都需要登录验证，则将验证放到Prepare
 	// 权限控制里会进行登录验证，因此这里不用再作登录验证
 	// c.checkLogin()
-	c.clearanceType, _ = models.GetSettingRValueByKey("ClearanceTypes")
+	c.clearanceType, _ = models.GetSettingRValueByKey("ClearanceTypes", false)
 
 }
 
@@ -292,12 +292,11 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 
 	// 转换 excel 数据
 	// 忽略标题行
-	for i := 0; i < len(Info); i++ {
-		inObj := models.NewClearance(0)
-		inObj.Type = cIP.ClearanceType
-		enums.SetObjValue(&inObj, Info, i)
-		cIP.Obj = append(cIP.Obj, &inObj)
-	}
+
+	inObj := models.NewClearance(0)
+	inObj.Type = cIP.ClearanceType
+	enums.SetObjValueFromSlice(&inObj, Info)
+	cIP.Obj = append(cIP.Obj, &inObj)
 
 }
 

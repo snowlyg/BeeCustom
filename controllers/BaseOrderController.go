@@ -14,7 +14,6 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
-	"github.com/astaxie/beego"
 )
 
 type BaseOrderController struct {
@@ -403,7 +402,20 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 	// 生成 pdf 凭证
-	pdfData := enums.PdfData{m.Id, m.ClientSeqNo, "order_recheck_pdf", action, "order", "order_recheck_pdf_header", 30}
+	// basic auth 认证用户名和密码
+	username, _ := models.GetSettingValueByKey("pdf_username")
+	password, _ := models.GetSettingValueByKey("pdf_password")
+	pdfData := enums.PdfData{
+		m.Id,
+		m.ClientSeqNo,
+		"order_recheck_pdf",
+		action,
+		"order",
+		"order_recheck_pdf_header",
+		username,
+		password,
+		30,
+	}
 	if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
@@ -434,6 +446,7 @@ func (c *BaseOrderController) bRecheck(id int64) {
 	c.setStatusOnly(m, "复核中", false)
 	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
 	c.Data["m"] = order
+	c.Data["IEFlagName"] = enums.GetImpexpMarkcdCNName(m.IEFlag)
 	c.setTpl("order/recheck.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "order/recheck_footerjs.html"
@@ -449,7 +462,19 @@ func (c *BaseOrderController) bPrint(id int64) {
 	}
 	if m != nil {
 		// 生成
-		pdfData := enums.PdfData{m.Id, m.ClientSeqNo, "order_pdf", "report", "order", "order_pdf_header", 30}
+		username, _ := models.GetSettingValueByKey("pdf_username")
+		password, _ := models.GetSettingValueByKey("pdf_password")
+		pdfData := enums.PdfData{
+			m.Id,
+			m.ClientSeqNo,
+			"order_pdf",
+			"report",
+			"order",
+			"order_pdf_header",
+			username,
+			password,
+			30,
+		}
 		if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 		} else {
@@ -472,18 +497,142 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		}
 
 		decHead := xmlTemplate.DecHead{}
+		enums.SetObjValueFromObj(&decHead, m)
+		//decHead.SeqNo = m.SeqNo
+		//decHead.IEFlag = m.IEFlag
+		//decHead.Type = m.Type
+		//decHead.AgentCode = m.AgentCode
+		//decHead.AgentName = m.AgentName
+		//decHead.ApprNo = m.ApprNo
+		//decHead.BillNo = m.BillNo
+		//decHead.ContrNo = m.ContrNo
+		//decHead.CustomMaster = m.CustomMaster
+		//decHead.CutMode = m.CutMode
+		//decHead.DistinatePort = m.DistinatePort
+		//decHead.FeeCurr = m.FeeCurr
+		//decHead.FeeMark = m.FeeMark
+		//decHead.FeeRate = m.FeeRate
+		//decHead.GrossWet = m.GrossWet
+		//decHead.IEDate = m.IEDate
+		//decHead.IEPort = m.IEPort
+		//decHead.InsurCurr = m.InsurCurr
+		//decHead.InsurMark = m.InsurMark
+		//decHead.InsurRate = m.InsurRate
+		//decHead.LicenseNo = m.LicenseNo
+		//decHead.ManualNo = m.ManualNo
+		//decHead.NetWt = m.NetWt
+		//decHead.NoteS = m.NoteS
+		//decHead.OtherCurr = m.OtherCurr
+		//decHead.OtherMark = m.OtherMark
+		//decHead.OtherRate = m.OtherRate
+		//decHead.OwnerCode = m.OwnerCode
+		//decHead.OwnerName = m.IEFlag
+		//decHead.PackNo = m.IEFlag
+		//decHead.TradeCode = m.IEFlag
+		//decHead.TradeCountry = m.IEFlag
+		//decHead.TradeMode = m.IEFlag
+		//decHead.TradeName = m.IEFlag
+		//decHead.TrafMode = m.IEFlag
+		//decHead.TrafName = m.IEFlag
+		//decHead.TransMode = m.IEFlag
+		//decHead.WrapType = m.IEFlag
+		//decHead.EntryId = m.IEFlag
+		//decHead.PreEntryId = m.IEFlag
+		//decHead.EdiId = m.IEFlag
+		//decHead.Risk = m.IEFlag
+		//decHead.CopName = m.IEFlag
+		//decHead.CopCode = m.IEFlag
+		//decHead.EntryType = m.IEFlag
+		//decHead.PDate = m.IEFlag
+		//decHead.TypistNo = m.IEFlag
+		//decHead.InputerName = m.IEFlag
+		//decHead.PartenerID = m.IEFlag
+		//decHead.TgdNo = m.IEFlag
+		//decHead.DataSource = m.IEFlag
+		//decHead.DeclTrnRel = m.IEFlag
+		//decHead.ChkSurety = m.IEFlag
+		//decHead.BillType = m.IEFlag
+		//decHead.CopCodeScc = m.IEFlag
+		//decHead.OwnerCodeScc = m.IEFlag
+		//decHead.AgentCodeScc = m.IEFlag
+		//decHead.TradeCoScc = m.IEFlag
+		//decHead.PromiseItmes = m.IEFlag
+		//decHead.TradeAreaCode = m.IEFlag
+		//decHead.CheckFlow = m.IEFlag
+		//decHead.TaxAaminMark = m.IEFlag
+		//decHead.MarkNo = m.IEFlag
+		//decHead.DespPortCode = m.IEFlag
+		//decHead.EntyPortCode = m.IEFlag
+		//decHead.GoodsPlace = m.IEFlag
+		//decHead.BLNo = m.IEFlag
+		//decHead.InspOrgCode = m.IEFlag
+		//decHead.SpecDeclFlag = m.IEFlag
+		//decHead.PurpOrgCode = m.IEFlag
+		//decHead.DespDate = m.IEFlag
+		//decHead.CmplDschrgDt = m.IEFlag
+		//decHead.CorrelationReasonFlag = m.IEFlag
+		//decHead.VsaOrgCode = m.IEFlag
+		//decHead.OrigBoxFlag = m.IEFlag
+		//decHead.DeclareName = m.IEFlag
+		//decHead.NoOtherPack = m.IEFlag
+		//decHead.OrgCode = m.IEFlag
+		//decHead.OverseasConsignorCode = m.IEFlag
+		//decHead.OverseasConsignorCname = m.IEFlag
+		//decHead.OverseasConsignorEname = m.IEFlag
+		//decHead.OverseasConsignorAddr = m.IEFlag
+		//decHead.OverseasConsigneeCode = m.IEFlag
+		//decHead.OverseasConsigneeEname = m.IEFlag
+		//decHead.DomesticConsigneeEname = m.IEFlag
+		//decHead.CorrelationNo = m.IEFlag
+		//decHead.EdiRemark = m.IEFlag
+		//decHead.EdiRemark2 = m.IEFlag
+		//decHead.TradeCiqCode = m.IEFlag
+		//decHead.OwnerCiqCode = m.IEFlag
+		//decHead.DeclCiqCode = m.IEFlag
+
 		decLists := xmlTemplate.DecLists{}
+		decList := xmlTemplate.DecList{}
+		decGoodsLimits := xmlTemplate.DecGoodsLimits{}
+		decGoodsLimit := xmlTemplate.DecGoodsLimit{}
+		decGoodsLimits.DecGoodsLimit = decGoodsLimit
+		decList.DecGoodsLimits = decGoodsLimits
+		decLists.DecList = decList
+
 		decLicenseDocus := xmlTemplate.DecLicenseDocus{}
+		licenseDocu := xmlTemplate.LicenseDocu{}
+		decLicenseDocus.LicenseDocu = licenseDocu
+
 		decContainers := xmlTemplate.DecContainers{}
+		decContainer := xmlTemplate.DecContainer{}
+		decContainers.DecContainer = decContainer
+
 		decSign := xmlTemplate.DecSign{}
+
 		decFreeTxt := xmlTemplate.DecFreeTxt{}
+
+		ecoRelation := xmlTemplate.EcoRelation{}
+
 		decRequestCerts := xmlTemplate.DecRequestCerts{}
+		decRequestCert := xmlTemplate.DecRequestCert{}
+		decRequestCerts.DecRequestCert = decRequestCert
+
 		decOtherPacks := xmlTemplate.DecOtherPacks{}
+		decOtherPack := xmlTemplate.DecOtherPack{}
+		decOtherPacks.DecOtherPack = decOtherPack
+
 		decCopLimits := xmlTemplate.DecCopLimits{}
+		decCopLimit := xmlTemplate.DecCopLimit{}
+		decCopLimits.DecCopLimit = decCopLimit
+
 		decUsers := xmlTemplate.DecUsers{}
+		decUser := xmlTemplate.DecUser{}
+		decUsers.DecUser = decUser
+
 		decCopPromises := xmlTemplate.DecCopPromises{}
 		decCopPromise := xmlTemplate.DecCopPromise{}
 		decCopPromises.DecCopPromise = decCopPromise
+
+		edocRealation := xmlTemplate.EdocRealation{}
 
 		decMessage.DecHead = decHead
 		decMessage.DecLists = decLists
@@ -491,16 +640,18 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		decMessage.DecContainers = decContainers
 		decMessage.DecSign = decSign
 		decMessage.DecFreeTxt = decFreeTxt
+		decMessage.EcoRelation = ecoRelation
 		decMessage.DecRequestCerts = decRequestCerts
 		decMessage.DecOtherPacks = decOtherPacks
 		decMessage.DecCopLimits = decCopLimits
 		decMessage.DecUsers = decUsers
 		decMessage.DecCopPromises = decCopPromises
+		decMessage.EdocRealation = edocRealation
 
-		path := beego.AppConfig.String("order_xml_path")
+		path, _ := models.GetSettingValueByKey("order_xml_path")
 		pathTemp := "./static/generate/order/" + strconv.FormatInt(id, 10) + "/temp/"
 		// 报文名称
-		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "__" + m.ClientSeqNo
+		mName := time.Now().Format(enums.BaseDateTimeSecondFormat) + "_" + m.ClientSeqNo
 		fileName := mName + ".xml"
 
 		output, err := xml.MarshalIndent(decMessage, "", "")
@@ -572,8 +723,8 @@ func (c *BaseOrderController) bAuditFirstRejectLog(id int64) {
 
 	aRecord := models.NewOrderRecord(0)
 	aRecord.Order = m
-
-	sSting, err := enums.GetSectionWithInt(m.Status, "order_status")
+	aStatusS, err := c.getOrderStatus("orderStatus")
+	sSting, err, _ := enums.TransformIntToCn(aStatusS, m.Status)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	}
@@ -612,7 +763,8 @@ func (c *BaseOrderController) setAnnotaionUserRelType(m *models.Order, bu *model
 	rs := strings.Split(userTypes, ",")
 	for _, v := range rs {
 		aur := models.NewOrderUserRel(0)
-		aStatus, err := enums.GetSectionWithString(v, "order_user_type")
+		aStatusS, err := c.getOrderStatus("orderUserType")
+		aStatus, err, _ := enums.TransformCnToInt(aStatusS, v)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 			return err
@@ -639,11 +791,13 @@ func (c *BaseOrderController) TransformOrderList(ms []*models.Order) []*map[stri
 	for _, v := range ms {
 		orderCreatorName := "" // 制单人
 		orderItem := make(map[string]interface{})
-		aStatus, err := enums.GetSectionWithInt(v.Status, "order_status")
+		aStatusS, err := c.getOrderStatus("orderStatus")
+		aStatus, err, _ := enums.TransformIntToCn(aStatusS, v.Status)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
 		}
-		userType, err := enums.GetSectionWithString("制单人", "order_user_type")
+		userTypeS, err := c.getOrderStatus("orderUserType")
+		userType, err, _ := enums.TransformCnToInt(userTypeS, "制单人")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 		}
@@ -707,13 +861,19 @@ func (c *BaseOrderController) setStatusOnly(m *models.Order, statusString string
 
 // 操作记录
 func (c *BaseOrderController) newOrderRecord(m *models.Order, content string) *models.OrderRecord {
-	statusString, _ := enums.GetSectionWithInt(m.Status, "order_status")
+	aStatusS, _ := c.getOrderStatus("orderStatus")
+	statusString, _, _ := enums.TransformIntToCn(aStatusS, m.Status)
 	orderRecord := models.NewOrderRecord(0)
 	orderRecord.Content = content
 	orderRecord.BackendUser = &c.curUser
 	orderRecord.Status = statusString
 	orderRecord.Order = m
 	return &orderRecord
+}
+
+// 转换订单状态和订单用户状态
+func (c *BaseOrderController) getOrderStatus(status string) (map[string]string, error) {
+	return models.GetSettingRValueByKey(status, false)
 }
 
 // 是否能保存
@@ -724,13 +884,13 @@ func (c *BaseOrderController) getCanStore(m *models.Order, ieflag string) bool {
 	if m == nil {
 		return c.checkActionAuthor(c.controllerName, ieflag+"Audit")
 	} else {
+		aStatusS, _ := c.getOrderStatus("orderStatus")
+		aStatus, _, _ := enums.TransformIntToCn(aStatusS, m.Status)
 		if c.checkActionAuthor(c.controllerName, m.IEFlag+"Audit") {
-			aStatus, _ := enums.GetSectionWithInt(m.Status, "order_status")
 			if aStatus == "待审核" || aStatus == "审核中" {
 				return true
 			}
 		} else if c.checkActionAuthor(c.controllerName, m.IEFlag+"Make") {
-			aStatus, _ := enums.GetSectionWithInt(m.Status, "order_status")
 			if aStatus == "待制单" || aStatus == "制单中" {
 				return true
 			}

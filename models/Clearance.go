@@ -109,7 +109,7 @@ func GetClearancesByTypes(clearanceType string, isOld bool) []orm.ParamsList {
 	var lists []orm.ParamsList
 	query := orm.NewOrm().QueryTable(ClearanceTBName())
 
-	clearanceTypeStrings, err := GetSettingRValueByKey("clearanceTypes")
+	clearanceTypeStrings, err := GetSettingRValueByKey("clearanceTypes", false)
 	if err != nil {
 		return nil
 	}

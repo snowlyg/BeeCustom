@@ -4,7 +4,7 @@
   }).extend({
     index: 'lib/index',
   }).use(['index', 'AutoComplete', 'laydate', 'laytpl'], async () => {
-    const {form, admin, $,laytpl} = layui;
+    const {form, admin, $} = layui;
       let order_note_data, order_note_index
           , order_id = "@{{.m.Id}}" || null //状态
           , iEFlagName = "@{{.IEFlagName}}"  //进出口标志名称
@@ -61,7 +61,7 @@
           layui.admin.reloadFrame(iEFlagName + '报关整合申报iframe');
             // 加载按钮
             admin.getBtnTem("#order_button_template","#order_button",{
-                statusString: statusString,
+                statusString: "复核通过",
                 jq: $,
             });
         }, 150);
@@ -110,10 +110,14 @@
         const res = await admin.post(`/order/recheck_reject/${order_id}`, data.field, true);
         layer.closeAll('loading');
         if (res.status) {
-          setTimeout(() => {
-            layer.closeAll();
-            window.location.reload();
-          }, 1000);
+            setTimeout(() => {
+                layui.admin.reloadFrame(iEFlagName + '报关整合申报iframe');
+                // 加载按钮
+                admin.getBtnTem("#order_button_template","#order_button",{
+                    statusString: "复核不通过",
+                    jq: $,
+                });
+            }, 150);
         }
       } catch (e) {
         layer.closeAll('loading');
