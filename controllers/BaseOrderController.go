@@ -600,9 +600,12 @@ func (c *BaseOrderController) bPushXml(id int64) {
 
 		var edocRealations []xmlTemplate.EdocRealation
 		for _, odr := range m.OrderFiles {
-			edocRealation := xmlTemplate.EdocRealation{}
-			enums.SetObjValueFromObj(&edocRealation, odr) // 设置数据到 xml 结构体
-			edocRealations = append(edocRealations, edocRealation)
+			edocCodes, _ := models.GetSettingRValueByKey("edocCodes", false)
+			if enums.InStringMap(odr.EdocCode, edocCodes) {
+				edocRealation := xmlTemplate.EdocRealation{}
+				enums.SetObjValueFromObj(&edocRealation, odr) // 设置数据到 xml 结构体
+				edocRealations = append(edocRealations, edocRealation)
+			}
 		}
 
 		decMessage.DecHead = decHead

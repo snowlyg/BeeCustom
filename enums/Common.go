@@ -21,10 +21,10 @@ import (
 type JsonResultCode int
 
 const (
-	JRCodeFailed JsonResultCode = iota //接口返回状态 0
-	JRCodeSucc                         //接口返回状态 1
-	JRCode302    = 302                 //跳转至地址
-	JRCode401    = 401                 //未授权访问
+	JRCodeFailed JsonResultCode = iota // 接口返回状态 0
+	JRCodeSucc                         // 接口返回状态 1
+	JRCode302    = 302                 // 跳转至地址
+	JRCode401    = 401                 // 未授权访问
 )
 
 const (
@@ -39,7 +39,7 @@ const BaseDateTimeSecondFormat = "20060102150405"
 const BaseDateFormat = "20060102"
 const RFC3339 = "2006-01-02T15:04:05"
 
-//根据中文查询对应参数
+// 根据中文查询对应参数
 func GetSectionWithString(wordCh, configSection string) (int8, error) {
 	sections, err := beego.AppConfig.GetSection(configSection)
 	if err != nil {
@@ -71,7 +71,7 @@ func TransformCnToInt(sections map[string]string, wordCh string) (int8, error, b
 	return 0, nil, false
 }
 
-//根据参数查询对应中文
+// 根据参数查询对应中文
 func GetSectionWithInt(wordInt int8, configSection string) (string, error) {
 	sections, err := beego.AppConfig.GetSection(configSection)
 	if err != nil {
@@ -102,12 +102,12 @@ func TransformIntToCn(sections map[string]string, wordInt int8) (string, error, 
 	return "", nil, false
 }
 
-//获取4位随机数
+// 获取4位随机数
 func CreateCaptcha() string {
 	return fmt.Sprintf("%04v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
 }
 
-//判断时间，格式时间
+// 判断时间，格式时间
 func GetDateTimeString(v *time.Time, format string) string {
 	if v.IsZero() {
 		return ""
@@ -116,7 +116,7 @@ func GetDateTimeString(v *time.Time, format string) string {
 	}
 }
 
-//返回进出口中文
+// 返回进出口中文
 func GetImpexpMarkcdCNName(impexpMarkcd string) string {
 
 	if impexpMarkcd == "I" {
@@ -128,7 +128,7 @@ func GetImpexpMarkcdCNName(impexpMarkcd string) string {
 	}
 }
 
-//获取时间段
+// 获取时间段
 func GetOrderAnnotationDateTime(timeString, filedName string) string {
 	var sql string
 	switch timeString {
@@ -159,7 +159,7 @@ func GetOrderAnnotationDateTime(timeString, filedName string) string {
 	return sql
 }
 
-//string slice in
+// string slice in
 func InStringArray(s string, sS []string) bool {
 	for _, v := range sS {
 		if v == s {
@@ -170,14 +170,25 @@ func InStringArray(s string, sS []string) bool {
 	return false
 }
 
-//设置值 slice
+// string map in
+func InStringMap(s string, sS map[string]string) bool {
+	for _, v := range sS {
+		if v == s {
+			return true
+		}
+	}
+
+	return false
+}
+
+// 设置值 slice
 func SetObjValueFromSlice(inObj interface{}, Info []map[string]string) {
 	for i := 0; i < len(Info); i++ {
 		SetObjValue(inObj, Info[i])
 	}
 }
 
-//设置值
+// 设置值
 func SetObjValue(inObj interface{}, Info map[string]string) {
 	t := reflect.ValueOf(inObj).Elem()
 	for k, v := range Info {
@@ -185,7 +196,7 @@ func SetObjValue(inObj interface{}, Info map[string]string) {
 	}
 }
 
-//设置值
+// 设置值
 func SetObjValueIn(objName, v string, t reflect.Value) {
 	switch t.FieldByName(objName).Kind() {
 	case reflect.String:
@@ -227,7 +238,7 @@ func SetObjValueIn(objName, v string, t reflect.Value) {
 	}
 }
 
-//设置值
+// 设置值
 func SetObjValueFromObj(outObj interface{}, inObj interface{}) {
 
 	outObjE := reflect.ValueOf(outObj).Elem()
@@ -270,7 +281,7 @@ func SetObjValueFromObj(outObj interface{}, inObj interface{}) {
 
 }
 
-// hmac 加密
+//  hmac 加密
 func Hmac(key string, data []byte) string {
 	hmacSha1 := hmac.New(sha1.New, []byte(key))
 	hmacSha1.Write(data)
@@ -292,7 +303,7 @@ func Cmd(action, input string, arg []string) {
 	}
 }
 
-//if 0 to ""
+// if 0 to ""
 func IsFloatZore(f float64) string {
 	floatString := strconv.FormatFloat(f, 'f', 0, 64)
 	if floatString == "0" {
@@ -301,7 +312,7 @@ func IsFloatZore(f float64) string {
 	return floatString
 }
 
-//if 0 to ""
+// if 0 to ""
 func IsIZore(i int) string {
 	if strconv.Itoa(i) == "0" {
 		return ""
