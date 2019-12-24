@@ -228,7 +228,7 @@
     $(document).on('click', '.returns_show', async function() {
       const id = $(this).data('id');
       let content;
-      const data = await admin.post(`/annotation_return/datagrid`, JSON.stringify({OrderId: id}));
+      const data = await admin.post(`/annotation_return/datagrid`, JSON.stringify({OrderId: id}),true);
       if (data.rows.length === 0) {
         content = '<p class="returns_tips_close" style="color: #888888;text-align: center;">无数据</p>';
       } else {
