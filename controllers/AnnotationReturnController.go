@@ -3,9 +3,10 @@ package controllers
 import (
 	"encoding/json"
 
+	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/transforms"
-	"github.com/snowlyg/GoTransform"
+	"github.com/snowlyg/gotransform"
 )
 
 type AnnotationReturnController struct {
@@ -41,18 +42,19 @@ func (c *AnnotationReturnController) transformAnnotationReturnList(ms []*models.
 	var annotationReturnList []*transforms.AnnotationReturn
 	for _, v := range ms {
 		annotationReturnT := transforms.AnnotationReturn{}
-		//AnnotationReturn["Id"] = strconv.FormatInt(v.Id, 10)
-		//AnnotationReturn["CheckInfo"] = v.CheckInfo
-		//AnnotationReturn["DealFlag"] = v.DealFlag
-		//AnnotationReturn["EtpsPreentNo"] = v.EtpsPreentNo
-		//AnnotationReturn["ManageResult"] = v.ManageResult
-		//AnnotationReturn["BusinessId"] = v.BusinessId
-		//AnnotationReturn["Reason"] = v.Reason
-		//AnnotationReturn["SeqNo"] = v.SeqNo
-		//AnnotationReturn["Rmk"] = v.Rmk
-		//AnnotationReturn["CreateDate"] = v.CreateDate.Format(enums.BaseDateTimeFormat)
-		//AnnotationReturn["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
-		GoTransform.Transform(&annotationReturnT, v)
+		// AnnotationReturn["Id"] = strconv.FormatInt(v.Id, 10)
+		// AnnotationReturn["CheckInfo"] = v.CheckInfo
+		// AnnotationReturn["DealFlag"] = v.DealFlag
+		// AnnotationReturn["EtpsPreentNo"] = v.EtpsPreentNo
+		// AnnotationReturn["ManageResult"] = v.ManageResult
+		// AnnotationReturn["BusinessId"] = v.BusinessId
+		// AnnotationReturn["Reason"] = v.Reason
+		// AnnotationReturn["SeqNo"] = v.SeqNo
+		// AnnotationReturn["Rmk"] = v.Rmk
+		// AnnotationReturn["CreateDate"] = v.CreateDate.Format(enums.BaseDateTimeFormat)
+		// AnnotationReturn["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
+		g := gotransform.NewTransform(&annotationReturnT, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
 		annotationReturnList = append(annotationReturnList, &annotationReturnT)
 	}
 

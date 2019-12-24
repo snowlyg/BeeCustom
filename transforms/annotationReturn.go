@@ -1,8 +1,7 @@
 package transforms
 
 type AnnotationReturn struct {
-	BaseTransform
-
+	Id           int64
 	SeqNo        string
 	CheckInfo    string
 	DealFlag     string
@@ -13,4 +12,6 @@ type AnnotationReturn struct {
 	CreateDate   string
 	Rmk          string
 	DeletedAt    string
+	CreatedAt    string
+	UpdatedAt    string
 }
