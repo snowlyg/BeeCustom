@@ -6,6 +6,12 @@ import (
 )
 
 func init() {
+	// 货物申报附件列表
+	beego.Router("/order_file/datagrid", &controllers.OrderFileController{}, "Post:DataGrid")
+	// 货物申报回执列表
+	beego.Router("/order_return/datagrid", &controllers.OrderReturnController{}, "Post:DataGrid")
+	// 货物申报办理记录管理
+	beego.Router("/order_record/datagrid", &controllers.OrderRecordController{}, "Post:DataGrid")
 
 	// 货物申报表体许可证vin管理
 	beego.Router("/order_item_limit_vin/store/?:aid", &controllers.OrderItemLimitVinController{}, "Post:Store")
@@ -94,7 +100,7 @@ func init() {
 		// 打印
 		beego.Router("/order/print/?:id", &controllers.OrderController{}, "Get:"+flag+"Print")
 		// 附注
-		beego.Router("/order/extra_remark/?:id", &controllers.OrderController{}, "Post:"+flag+"Remark")
+		beego.Router("/order/remark/?:id", &controllers.OrderController{}, "Post:"+flag+"Remark")
 		// 重启
 		beego.Router("/order/restart/?:id", &controllers.OrderController{}, "Post:"+flag+"Restart")
 		// 驳回原因

@@ -3799,7 +3799,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-//排序数字从小到大规则
+            //排序数字从小到大规则
             compare(prop) {
                 return (obj1, obj2) => {
                     let val1 = obj1[prop]
@@ -3819,7 +3819,7 @@ layui.define('view', function (exports) {
             }
             ,
 
-//小数点自动补零
+            //小数点自动补零
             formatnumber(value, num) {
                 let a, b, c, i
                 a = value.toString()
@@ -3847,17 +3847,15 @@ layui.define('view', function (exports) {
             ,
 
             //货物申报-办理记录
-            async order_jilu_click(dom, type) {
-                const id = $(dom).data('id')
-                layer.load(2)
-                const data_order = await admin.get(`/order/${type}/${id}/order_logs`)
-                layer.closeAll('loading')
-                const data = {
-                    data_order: data_order,
-                }
-                layui.laytpl($('#order_take_template').html()).render(data, function (html) {
+            async order_jilu_click(dom) {
+                const id = $(dom).data('id');
+                layer.load(2);
+                const orderRecords = await admin.post(`/order_record/datagrid`, JSON.stringify({OrderId: parseInt(id)}), true)
+                layer.closeAll('loading');
+                let rows = orderRecords.rows ? orderRecords.rows : [];
+                layui.laytpl($('#order_take_template').html()).render(rows, function (html) {
                     $('#order_take_list').html(html)
-                })
+                });
                 layer.open({
                     type: 1,
                     title: '办理记录',
@@ -3870,19 +3868,19 @@ layui.define('view', function (exports) {
 
             //核注清单-办理记录
             async annotation_jilu_click(dom) {
-                const id = $(dom).data('id')
+                const id = $(dom).data('id');
                 if (!id) {
                     return layer.msg('请先保存订单！')
                 }
-                layer.load(2)
-                const annotationRecords = await admin.post(
-                    `/annotation_record/datagrid`,
-                    JSON.stringify({AnnotationId: parseInt(id)}), true)
-                layer.closeAll('loading')
-                let rows = annotationRecords.rows ? annotationRecords.rows : []
+                layer.load(2);
+
+                const annotationRecords = await admin.post(`/annotation_record/datagrid`, JSON.stringify({AnnotationId: parseInt(id)}), true)
+                layer.closeAll('loading');
+                let rows = annotationRecords.rows ? annotationRecords.rows : [];
                 laytpl($('#order_take_template').html()).render(rows, function (html) {
                     $('#order_take_list').html(html)
-                })
+                });
+
                 layer.open({
                     type: 1,
                     title: '办理记录',
