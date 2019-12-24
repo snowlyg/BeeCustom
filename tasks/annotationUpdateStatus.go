@@ -26,9 +26,10 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 			utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
 		}
 
-		sendPathCNames, sendPathENames := []string{}, []string{}
-		sendPathCNames = getAnnotationXmlNames("annotation_send_xml_path_c", sendPathCNames)
-		sendPathENames = getAnnotationXmlNames("annotation_send_xml_path_e", sendPathENames)
+		var sendPathCNames []string
+		var sendPathENames []string
+		sendPathCNames = getXmlNames("annotation_send_xml_path_c", sendPathCNames)
+		sendPathENames = getXmlNames("annotation_send_xml_path_e", sendPathENames)
 		qs := o.QueryTable(models.AnnotationTBName()).Filter("Status", status9)
 		if (len(sendPathCNames) > 0 && len(sendPathCNames[0]) > 0) || (len(sendPathENames) > 0 && len(sendPathENames[0]) > 0) {
 
@@ -48,7 +49,7 @@ func annotationUpdateAnnotationStatus() *toolbox.Task {
 
 			//ws 自动更新
 			if mun > 0 {
-				msg := utils.Message{"清单状态更新", true}
+				msg := utils.Message{Message: "清单状态更新", IsUpdated: true}
 				utils.Broadcast <- msg
 			}
 		}

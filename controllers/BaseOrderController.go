@@ -232,7 +232,7 @@ func (c *BaseOrderController) bCancel(id int64) {
 	if err = UpdateOrderStatus(m, "订单关闭", false); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
-	if err := models.OrderUpdateStatus(m); err != nil {
+	if err := models.OrderUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "取消失败", m)
 	}
 	orderRecord := c.newOrderRecord(m, "取消订单")
@@ -322,7 +322,7 @@ func (c *BaseOrderController) bForRecheck(id int64) {
 	if err = UpdateOrderStatus(m, "待复核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	if err := models.OrderUpdateStatus(m); err != nil {
+	if err := models.OrderUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	orderRecord := c.newOrderRecord(m, "复核")
@@ -341,7 +341,7 @@ func (c *BaseOrderController) bRestart(id int64) {
 	if err = UpdateOrderStatus(m, "待审核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	if err := models.OrderUpdateStatus(m); err != nil {
+	if err := models.OrderUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	orderRecord := c.newOrderRecord(m, "重新开启订单")
@@ -360,7 +360,7 @@ func (c *BaseOrderController) bReForRecheck(id int64) {
 	if err = UpdateOrderStatus(m, "待复核", true); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
-	if err := models.OrderUpdateStatus(m); err != nil {
+	if err := models.OrderUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	orderRecord := c.newOrderRecord(m, "复核")
@@ -385,7 +385,7 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 	itemRecheckErrorInputIds := c.GetString("ItemRecheckErrorInputIds")
 	m.RecheckErrorInputIds = recheckErrorInputIds
 	m.ItemRecheckErrorInputIds = itemRecheckErrorInputIds
-	if err := models.OrderUpdateStatusRecheckErrorInputIds(m); err != nil {
+	if err := models.OrderUpdate(m, []string{"Status", "StatusUpdatedAt", "RecheckErrorInputIds", "ItemRecheckErrorInputIds"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 	content := c.GetString("Content")
@@ -682,7 +682,7 @@ func (c *BaseOrderController) bRemark(id int64, remark string) {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	}
 	m.Remark = remark
-	if err = models.OrderUpdateRemark(m); err != nil {
+	if err = models.OrderUpdate(m, []string{"Remark"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	}
 	c.jsonResult(enums.JRCodeSucc, "操作成功", err)
@@ -828,7 +828,7 @@ func (c *BaseOrderController) setStatusOnly(m *models.Order, statusString string
 	if err := UpdateOrderStatus(m, statusString, isRestart); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 	}
-	if err := models.OrderUpdateStatus(m); err != nil {
+	if err := models.OrderUpdate(m, []string{"Status", "StatusUpdatedAt"}); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", m)
 	}
 }

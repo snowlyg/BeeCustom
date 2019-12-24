@@ -317,7 +317,7 @@ func AnnotationUpdateOrSave(m *Annotation) error {
 	return nil
 }
 
-// 保存附注
+// 保存
 func AnnotationUpdate(m *Annotation, arg []string) error {
 	var err error
 	o := orm.NewOrm()

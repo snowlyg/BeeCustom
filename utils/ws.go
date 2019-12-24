@@ -12,8 +12,8 @@ var (
 )
 
 type Message struct {
-	Message             string `json:"message"`
-	AnnotationIsUpdated bool   `json:"annotation_is_updated"`
+	Message   string `json:"message"`
+	IsUpdated bool   `json:"is_updated"`
 }
 
 //初始化数据连接

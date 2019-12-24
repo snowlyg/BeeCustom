@@ -6,11 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-	"time"
 
 	"BeeCustom/controllers"
-	"BeeCustom/enums"
-	"BeeCustom/file"
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
@@ -35,21 +32,20 @@ func annotationCReturnXmlParse() *toolbox.Task {
 }
 
 // 解析回执
-func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
+func parseAnnotationReturns(returnPathConfig, historyPathConfig string) {
 
-	returnPath, err := models.GetSettingValueByKey(returnPathCofig)
-	historyPath, err := models.GetSettingValueByKey(historyPathCofig)
-	pathCfiles, err := ioutil.ReadDir(returnPath)
+	returnPath, err := models.GetSettingValueByKey(returnPathConfig)
+	historyPath, err := models.GetSettingValueByKey(historyPathConfig)
+	pathCFiles, err := ioutil.ReadDir(returnPath)
 	if err != nil {
-		// utils.LogError(fmt.Sprintf("获取数据列表和总数 error:%v", err))
 		return
 	}
 
-	for _, f := range pathCfiles {
+	for _, f := range pathCFiles {
 		fullPath := returnPath + f.Name()
 
 		// 文件前缀和后缀
-		prefix, ext, failedName := getNameExts(f)
+		prefix, ext, failedName := getNameExt(f)
 		if len(prefix) == 0 || len(ext) == 0 {
 			continue
 		}
@@ -76,7 +72,6 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 				annotation, err := models.GetAnnotationByEtpsInnerInvtNo(v.EtpsPreentNo)
 				if err != nil {
-					// utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v", err, f.Name()))
 					xmlFile.Close()
 					continue
 				}
@@ -182,7 +177,7 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 			}
 
 			// ws 自动更新
-			msg := utils.Message{"清单状态更新", true}
+			msg := utils.Message{Message: "清单状态更新", IsUpdated: true}
 			utils.Broadcast <- msg
 
 		} else if ext == "xml" {
@@ -204,7 +199,6 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 
 				annotation, err := models.GetAnnotationByEtpsInnerInvtNo(failedName)
 				if err != nil {
-					// utils.LogError(fmt.Sprintf(" models.GetAnnotationByEtpsInnerInvtNo :%v,filename:%v,failedName:%v", err, f.Name(), failedName))
 					xmlFile.Close()
 					continue
 				}
@@ -230,42 +224,8 @@ func parseAnnotationReturns(returnPathCofig, historyPathCofig string) {
 	}
 }
 
-// 打开文件
-func openFile(fullPath string) (*os.File, error, []byte) {
-	xmlFile, err := os.Open(fullPath)
-	if err != nil {
-		utils.LogError(fmt.Sprintf("os.Open :%v", err))
-	}
-	data, err := ioutil.ReadAll(xmlFile)
-	if err != nil {
-		utils.LogError(fmt.Sprintf(" ioutil.ReadAll :%v", err))
-	}
-	return xmlFile, err, data
-}
-
-// ws 自动更新
-func wsPush() {
-	msg := utils.Message{"清单状态更新", true}
-	utils.Broadcast <- msg
-}
-
-// 移动文件
-func moveFile(historyPath, v, fullPath string, f os.FileInfo) error {
-	path := historyPath + time.Now().Format(enums.BaseDateFormat) + "/" + v + "/"
-	if err := file.CreateFile(path); err != nil {
-		utils.LogError(fmt.Sprintf("文件夹创建失败:%v", err))
-	}
-
-	err := os.Rename(fullPath, path+f.Name())
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // 回执文件的前缀，和后缀
-func getNameExts(f os.FileInfo) (string, string, string) {
+func getNameExt(f os.FileInfo) (string, string, string) {
 	extNames := strings.Split(f.Name(), ".")
 	if len(extNames) > 1 && len(extNames[1]) > 0 && len(extNames[0]) > 0 {
 		eNames := strings.Split(extNames[0], "_")

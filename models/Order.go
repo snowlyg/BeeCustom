@@ -355,41 +355,13 @@ func OrderUpdateOrSave(m *Order) error {
 	return nil
 }
 
-// Save 添加、编辑页面 保存
-func OrderUpdateStatusRecheckErrorInputIds(m *Order) error {
-	var err error
-	o := orm.NewOrm()
-
-	_, err = o.Update(m, "Status", "StatusUpdatedAt", "RecheckErrorInputIds", "ItemRecheckErrorInputIds")
-
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("OrderSave:%v", err))
-		return err
-	}
-
-	return nil
-}
-
 // 保存附注
-func OrderUpdateRemark(m *Order) error {
+func OrderUpdate(m *Order, arg []string) error {
 	var err error
 	o := orm.NewOrm()
 
-	_, err = o.Update(m, "Remark")
+	_, err = o.Update(m, arg...)
 
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("OrderSave:%v", err))
-		return err
-	}
-
-	return nil
-}
-
-// OrderUpdateStatus 添加、编辑页面 保存
-func OrderUpdateStatus(m *Order) error {
-	var err error
-	o := orm.NewOrm()
-	_, err = o.Update(m, "Status", "StatusUpdatedAt")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("OrderSave:%v", err))
 		return err

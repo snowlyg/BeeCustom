@@ -37,6 +37,7 @@ func init() {
 		new(OrderItemLimitVin),
 		new(OrderContainer),
 		new(OrderDocument),
+		new(OrderReturn),
 		new(Setting),
 	)
 }
@@ -195,4 +196,9 @@ func OrderContainerTBName() string {
 // OrderDocumentTBName 获取 OrderDocumentTBName 对应的表名称
 func OrderDocumentTBName() string {
 	return TableName("order_documents")
+}
+
+// OrderReturnTBName 获取 OrderReturnTBName 对应的表名称
+func OrderReturnTBName() string {
+	return TableName("order_returns")
 }

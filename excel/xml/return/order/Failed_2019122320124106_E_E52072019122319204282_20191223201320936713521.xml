@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DecImportResponse xmlns="http://www.chinaport.gov.cn/dec">
+    <ResponseCode>1</ResponseCode>
+    <ErrorMessage>暂存失败：商品序号1：,出口享惠情况填制不规范（尚未与最终目的国签署并实施优惠贸易安排）</ErrorMessage>
+    <ClientSeqNo>E52072019122319204282</ClientSeqNo>
+</DecImportResponse>
