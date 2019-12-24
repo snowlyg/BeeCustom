@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
-	"strconv"
 
-	"BeeCustom/enums"
 	"BeeCustom/models"
+	"github.com/snowlyg/GoTransform"
 )
 
 type OrderReturnController struct {
@@ -39,22 +38,23 @@ func (c *OrderReturnController) DataGrid() {
 // TransformOrderList 格式化列表数据
 func (c *OrderReturnController) transformOrderReturnList(ms []*models.OrderReturn) []*map[string]interface{} {
 	var orderReturnList []*map[string]interface{}
-	for _, v := range ms {
-		OrderReturn := make(map[string]interface{})
-		OrderReturn["Id"] = strconv.FormatInt(v.Id, 10)
-		//OrderReturn["CheckInfo"] = v.CheckInfo
-		//OrderReturn["DealFlag"] = v.DealFlag
-		//OrderReturn["EtpsPreentNo"] = v.EtpsPreentNo
-		//OrderReturn["ManageResult"] = v.ManageResult
-		//OrderReturn["BusinessId"] = v.BusinessId
-		//OrderReturn["Reason"] = v.Reason
-		//OrderReturn["SeqNo"] = v.SeqNo
-		//OrderReturn["Rmk"] = v.Rmk
-		//OrderReturn["CreateDate"] = v.CreateDate.Format(enums.BaseDateTimeFormat)
-		OrderReturn["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
-
-		orderReturnList = append(orderReturnList, &OrderReturn)
-	}
+	GoTransform.Transform(ms, orderReturnList)
+	//for _, v := range ms {
+	//	OrderReturn := make(map[string]interface{})
+	//	OrderReturn["Id"] = strconv.FormatInt(v.Id, 10)
+	//	//OrderReturn["CheckInfo"] = v.CheckInfo
+	//	//OrderReturn["DealFlag"] = v.DealFlag
+	//	//OrderReturn["EtpsPreentNo"] = v.EtpsPreentNo
+	//	//OrderReturn["ManageResult"] = v.ManageResult
+	//	//OrderReturn["BusinessId"] = v.BusinessId
+	//	//OrderReturn["Reason"] = v.Reason
+	//	//OrderReturn["SeqNo"] = v.SeqNo
+	//	//OrderReturn["Rmk"] = v.Rmk
+	//	//OrderReturn["CreateDate"] = v.CreateDate.Format(enums.BaseDateTimeFormat)
+	//	OrderReturn["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
+	//
+	//	orderReturnList = append(orderReturnList, &OrderReturn)
+	//}
 
 	return orderReturnList
 }

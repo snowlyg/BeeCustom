@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"strconv"
 
-	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/transforms"
+	"github.com/snowlyg/GoTransform"
 )
 
 type AnnotationReturnController struct {
@@ -37,23 +37,23 @@ func (c *AnnotationReturnController) DataGrid() {
 }
 
 // TransformAnnotationList 格式化列表数据
-func (c *AnnotationReturnController) transformAnnotationReturnList(ms []*models.AnnotationReturn) []*map[string]interface{} {
-	var annotationReturnList []*map[string]interface{}
+func (c *AnnotationReturnController) transformAnnotationReturnList(ms []*models.AnnotationReturn) []*transforms.AnnotationReturn {
+	var annotationReturnList []*transforms.AnnotationReturn
 	for _, v := range ms {
-		AnnotationReturn := make(map[string]interface{})
-		AnnotationReturn["Id"] = strconv.FormatInt(v.Id, 10)
-		AnnotationReturn["CheckInfo"] = v.CheckInfo
-		AnnotationReturn["DealFlag"] = v.DealFlag
-		AnnotationReturn["EtpsPreentNo"] = v.EtpsPreentNo
-		AnnotationReturn["ManageResult"] = v.ManageResult
-		AnnotationReturn["BusinessId"] = v.BusinessId
-		AnnotationReturn["Reason"] = v.Reason
-		AnnotationReturn["SeqNo"] = v.SeqNo
-		AnnotationReturn["Rmk"] = v.Rmk
-		AnnotationReturn["CreateDate"] = v.CreateDate.Format(enums.BaseDateTimeFormat)
-		AnnotationReturn["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
-
-		annotationReturnList = append(annotationReturnList, &AnnotationReturn)
+		annotationReturnT := transforms.AnnotationReturn{}
+		//AnnotationReturn["Id"] = strconv.FormatInt(v.Id, 10)
+		//AnnotationReturn["CheckInfo"] = v.CheckInfo
+		//AnnotationReturn["DealFlag"] = v.DealFlag
+		//AnnotationReturn["EtpsPreentNo"] = v.EtpsPreentNo
+		//AnnotationReturn["ManageResult"] = v.ManageResult
+		//AnnotationReturn["BusinessId"] = v.BusinessId
+		//AnnotationReturn["Reason"] = v.Reason
+		//AnnotationReturn["SeqNo"] = v.SeqNo
+		//AnnotationReturn["Rmk"] = v.Rmk
+		//AnnotationReturn["CreateDate"] = v.CreateDate.Format(enums.BaseDateTimeFormat)
+		//AnnotationReturn["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
+		GoTransform.Transform(&annotationReturnT, v)
+		annotationReturnList = append(annotationReturnList, &annotationReturnT)
 	}
 
 	return annotationReturnList
