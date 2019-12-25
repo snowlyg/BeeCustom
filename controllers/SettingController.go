@@ -84,15 +84,15 @@ func (c *SettingController) TreeGrid() {
 func (c *SettingController) GetOne() {
 	key := c.GetString(":key", "")
 	if len(key) > 0 {
-		rvalue, err := models.GetSettingRValueByKey(key, false)
+		rvalue, err := models.GetSettingValueByKey(key)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("数据无效出错：%v", err))
 			c.pageError("数据无效，请刷新后重试")
 		}
 
-		//单个设置
+		// 单个设置
 		if len(rvalue) == 1 {
-			c.Data["json"] = rvalue["0"]
+			c.Data["json"] = rvalue
 		} else {
 			c.Data["json"] = rvalue
 		}

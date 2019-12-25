@@ -65,7 +65,7 @@ func GetSettingRValueByKey(key string, isSinge bool) (map[string]string, error) 
 	rValue := map[string]string{}
 	for _, v := range strings.Split(m.RValue, ",") {
 		if isSinge {
-			rValue["0"] = v
+			rValue["-1"] = v
 			return rValue, nil
 		}
 
@@ -73,7 +73,7 @@ func GetSettingRValueByKey(key string, isSinge bool) (map[string]string, error) 
 		if len(iv) > 1 && len(iv[0]) > 0 && len(iv[1]) > 0 {
 			rValue[iv[0]] = iv[1]
 		} else {
-			rValue["0"] = v
+			rValue["-1"] = v
 		}
 
 	}
@@ -92,7 +92,7 @@ func GetSettingValueByKey(key string) (string, error) {
 		return "", errors.New("获取数据格式错误")
 	}
 
-	return value["0"], nil
+	return value["-1"], nil
 }
 
 // SettingTreeGrid 获取treegrid顺序的列表

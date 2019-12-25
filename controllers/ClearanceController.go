@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"strconv"
 	"time"
 
@@ -11,6 +10,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xlsx"
+	"github.com/snowlyg/gotransform"
 )
 
 type ClearanceController struct {
@@ -227,9 +227,9 @@ func (c *ClearanceController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "上传失败", nil)
 	}
 
-	cIP := models.ClearanceImportParam{
+	cIP := models.ClearanceImport{
 		ClearanceType: clearanceType,
-		BaseImportParam: xlsx.BaseImportParam{
+		BaseImport: xlsx.BaseImport{
 			ExcelName:    "Sheet1",
 			FileNamePath: fileNamePath,
 		},
@@ -251,8 +251,8 @@ func (c *ClearanceController) Import() {
 }
 
 // 导入基础参数 xlsx 文件内容
-func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportParam) ([]*models.Clearance, error) {
-	rXmlTitles, err := models.GetSettingRValueByKey("clearanceExcelTile", false)
+func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImport) ([]*models.Clearance, error) {
+	titles, err := models.GetSettingRValueByKey("clearanceExcelTile", false)
 	if err != nil {
 		return nil, err
 	}
@@ -268,41 +268,13 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImportPar
 		if roI > 0 {
 			// 将数组  转成对应的 map
 			c := models.NewClearance(0)
-			of := reflect.ValueOf(&c).Elem()
-			for i := 0; i < of.NumField(); i++ {
-				cf := of.Field(i)
-				cft := of.Type().Field(i)
-				for _, iw := range rXmlTitles {
-					if iw == cft.Name {
-						rI := xlsx.ObjIsExists(rXmlTitles, iw)
-						//  模板字段数量定义
-						if rI != -1 && rI <= len(row) {
-							switch cf.Kind() {
-							case reflect.String:
-								cf.SetString(row[rI])
-							case reflect.Slice:
-								//reflect.Copy(cf, row[rI])
-							case reflect.Bool:
-								//cf.SetBool(row[rI])
-							case reflect.Float64, reflect.Float32:
-								float, _ := strconv.ParseFloat(row[rI], 64)
-								cf.SetFloat(float)
-							case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-								atob, _ := strconv.Atoi(row[rI])
-								cf.SetInt(int64(atob))
-							case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-								//cf.SetUint()
-							default:
-								fmt.Printf("数据类型错误:%v,%v", cf.Kind(), cf)
-							}
-						} else {
-							continue
-						}
-					} else if cft.Name == "Type" { // 类型赋值
-						cf.SetInt(int64(cIP.ClearanceType))
-					}
-				}
+			c.Type = cIP.ClearanceType
+			x := gotransform.NewXlxsTransform(&c, titles, row)
+			err := x.XlxsTransformer()
+			if err != nil {
+				return nil, err
 			}
+
 			clearances = append(clearances, &c)
 		}
 	}

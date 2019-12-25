@@ -49,9 +49,9 @@ type ClearanceQueryParam struct {
 	NameLike   string // 模糊查询
 }
 
-// ClearanceImportParam 用于查询的类
-type ClearanceImportParam struct {
-	xlsx.BaseImportParam
+// ClearanceImport 用于查询的类
+type ClearanceImport struct {
+	xlsx.BaseImport
 	ClearanceType int8
 }
 

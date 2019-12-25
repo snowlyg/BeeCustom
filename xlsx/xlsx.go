@@ -9,8 +9,8 @@ import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
-// ClearanceImportParam 用于查询的类
-type BaseImportParam struct {
+// BaseImport
+type BaseImport struct {
 	FileNamePath string
 	ExcelTitle   map[string]string
 	ExcelName    string
@@ -37,7 +37,7 @@ func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 
 }
 
-//导入基础参数 Cell 文件内容
+// 导入基础参数 Cell 文件内容
 func GetExcelCell(fileNamePath, excelName, axis string) (string, error) {
 
 	f, err := excelize.OpenFile(fileNamePath)

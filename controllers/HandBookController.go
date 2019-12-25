@@ -227,8 +227,8 @@ func (c *HandBookController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	hIP := models.HandBookImportParam{
-		BaseImportParam: xlsx.BaseImportParam{
+	hIP := models.HandBookImport{
+		BaseImport: xlsx.BaseImport{
 			ExcelTitle:   handBook1Title,
 			ExcelName:    handBookName["1"],
 			FileNamePath: fileNamePath,
@@ -276,8 +276,8 @@ func (c *HandBookController) Import() {
 }
 
 // 导入账册表体
-func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam, hBGIP *models.HandBookGoodImportParam) {
-	handBookSheetName, err := models.GetSettingRValueByKey(hBGIP.ExcelName, true)
+func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImport, hBGIP *models.HandBookGoodImportParam) {
+	handBookSheetName, err := models.GetSettingValueByKey(hBGIP.ExcelName)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
@@ -287,7 +287,7 @@ func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	hIP.ExcelName = handBookSheetName["0"]
+	hIP.ExcelName = handBookSheetName
 	hIP.ExcelTitle = handBookSheetTitle
 
 	c.ImportHandBookXlsxByRow(hIP, hBGIP.HandBookTypeString)
@@ -295,7 +295,7 @@ func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam
 }
 
 // 获取 xlsx 文件内容
-func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam, Info []map[string]string) error {
+func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImport, Info []map[string]string) error {
 	var handBookGoods []*models.HandBookGood
 
 	handBookGood := models.NewHandBookGood(0)
@@ -324,7 +324,7 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam,
 }
 
 // 获取 xlsx 文件内容
-func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportParam, Info []map[string]string) error {
+func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImport, Info []map[string]string) error {
 
 	var handBookUllages []*models.HandBookUllage
 
@@ -357,7 +357,7 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 }
 
 // 导入基础参数 xlsx 文件内容
-func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImportParam) {
+func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport) {
 
 	t := reflect.ValueOf(&hIP.HandBook).Elem()
 	for i := 0; i < t.NumField(); i++ {
@@ -441,7 +441,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 }
 
 // 导入基础参数 xlsx 文件内容
-func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportParam, handBookTypeString string) {
+func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport, handBookTypeString string) {
 	rows, err := xlsx.GetExcelRows(hIP.FileNamePath, hIP.ExcelName)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)

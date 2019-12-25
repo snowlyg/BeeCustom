@@ -116,8 +116,8 @@ func NewHandBookQueryParam() HandBookQueryParam {
 }
 
 // HandBookImportParam 用于导入的类
-type HandBookImportParam struct {
-	xlsx.BaseImportParam
+type HandBookImport struct {
+	xlsx.BaseImport
 
 	HandBookGoodType int8
 	HandBook         HandBook
