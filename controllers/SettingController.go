@@ -3,12 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"html"
-	"strconv"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/transforms"
 	"BeeCustom/utils"
+	"github.com/snowlyg/gotransform"
 )
 
 type SettingController struct {
@@ -144,21 +144,15 @@ func (c *SettingController) Delete() {
 }
 
 // TransformSettingList 格式化列表数据
-func (c *SettingController) TransformSettingList(ms []*models.Setting) []*map[string]interface{} {
-	var dataLists []*map[string]interface{}
+func (c *SettingController) TransformSettingList(ms []*models.Setting) []*transforms.Setting {
+	var uts []*transforms.Setting
 	for _, v := range ms {
-		value := html.UnescapeString(v.Value)
-		valueEnd := value[:len(value)-1]
-		if len(value) > 30 {
-			valueEnd = value[:30] + "..."
-		}
-		dataList := make(map[string]interface{})
-		dataList["Id"] = strconv.FormatInt(v.Id, 10)
-		dataList["Key"] = v.Key
-		dataList["Value"] = valueEnd
-		dataList["Rmk"] = v.Rmk
-		dataList["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
-		dataLists = append(dataLists, &dataList)
+		ut := transforms.Setting{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
 	}
-	return dataLists
+
+	return uts
 }
