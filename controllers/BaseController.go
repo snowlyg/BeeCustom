@@ -268,11 +268,7 @@ func (c *BaseController) GetDateTime(timeString, timeFormatString string) (*time
 // 更新状态和状态更新时间
 func UpdateAnnotationStatus(m *models.Annotation, StatusString string, isRestart bool) error {
 	aStatusS, err := models.GetSettingRValueByKey("annotationStatus", false)
-	aStatus, err, done := enums.TransformCnToInt(aStatusS, StatusString)
-	if !done {
-		return err
-	}
-
+	aStatus, err := enums.TransformCnToInt(aStatusS, StatusString)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("转换清单状态出错:%v", err))
 		return err
@@ -290,10 +286,7 @@ func UpdateAnnotationStatus(m *models.Annotation, StatusString string, isRestart
 // 更新状态和状态更新时间
 func UpdateOrderStatus(m *models.Order, StatusString string, isRestart bool) error {
 	aStatusS, err := models.GetSettingRValueByKey("orderStatus", false)
-	aStatus, err, done := enums.TransformCnToInt(aStatusS, StatusString)
-	if !done {
-		return err
-	}
+	aStatus, err := enums.TransformCnToInt(aStatusS, StatusString)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("转换状态出错:%v", err))
 		return err

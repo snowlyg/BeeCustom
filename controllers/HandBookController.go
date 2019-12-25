@@ -132,13 +132,13 @@ func (c *HandBookController) Show() {
 	var html, showFooterjs string
 
 	handBookTypeS, err := c.getHandBookTypes()
-	chandBookType, err, done := enums.TransformCnToInt(handBookTypeS, "手册")
-	if !done {
+	chandBookType, err := enums.TransformCnToInt(handBookTypeS, "手册")
+	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("手账册类型获取失败:%v", err), nil)
 	}
 
-	ahandBookType, err, done := enums.TransformCnToInt(handBookTypeS, "账册")
-	if !done {
+	ahandBookType, err := enums.TransformCnToInt(handBookTypeS, "账册")
+	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("手账册类型获取失败:%v", err), nil)
 	}
 
@@ -189,27 +189,26 @@ func (c *HandBookController) Import() {
 
 	var sheetName, sheet1Title, sheet2Name, sheet2Title, sheet3Name, sheet3Title, sheet4Name, sheet4Title string
 	handBookTypeS, err := c.getHandBookTypes()
-	importManualType, err, _ := enums.TransformCnToInt(handBookTypeS, "手册")
-
-	importAccountType, err, _ := enums.TransformCnToInt(handBookTypeS, "手册")
+	importManualType, err := enums.TransformCnToInt(handBookTypeS, "手册")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+	}
+	importAccountType, err := enums.TransformCnToInt(handBookTypeS, "账册")
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+	}
 
 	if importType == importManualType {
 		sheetName = "handbookManualExcelSheetName"
 		sheet1Title = "handbookManualExcelSheet1Title"
-		sheet2Name = "handbookManualExcelSheet2Name"
 		sheet2Title = "handbookManualExcelSheet2Title"
-		sheet3Name = "handbookManualExcelSheet3Name"
 		sheet3Title = "handbookManualExcelSheet3Title"
-		sheet4Name = "handbookManualExcelSheet4Name"
 		sheet4Title = "handbookManualExcelSheet4Title"
 	} else if importType == importAccountType {
 		sheetName = "handbookAccountExcelSheetName"
 		sheet1Title = "handbookAccountExcelSheet1Title"
-		sheet2Name = "handbookAccountExcelSheet2Name"
 		sheet2Title = "handbookAccountExcelSheet2Title"
-		sheet3Name = "handbookAccountExcelSheet3Name"
 		sheet3Title = "handbookAccountExcelSheet3Title"
-		sheet4Name = "handbookAccountExcelSheet4Name"
 		sheet4Title = "handbookAccountExcelSheet4Title"
 	}
 
@@ -474,7 +473,10 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImportP
 		}
 
 		handBookGoodTypeS, err := c.getHandBookTypes()
-		handBookGoodType, err, _ := enums.TransformCnToInt(handBookGoodTypeS, handBookTypeString)
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+		}
+		handBookGoodType, err := enums.TransformCnToInt(handBookGoodTypeS, handBookTypeString)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
 		}

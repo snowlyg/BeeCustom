@@ -193,7 +193,7 @@ func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, err
 	sql = GetCommonListSql(sql, params)
 	if len(params.StatusString) > 0 && params.StatusString != "全部订单" {
 		aStatusS, _ := GetSettingRValueByKey("annotationStatus", false)
-		aStatus, _, _ := enums.TransformCnToInt(aStatusS, params.StatusString)
+		aStatus, _ := enums.TransformCnToInt(aStatusS, params.StatusString)
 		sql += " AND status = " + strconv.Itoa(int(aStatus))
 	}
 

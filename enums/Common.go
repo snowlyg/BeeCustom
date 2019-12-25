@@ -46,28 +46,30 @@ func GetSectionWithString(wordCh, configSection string) (int8, error) {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 	}
 
-	i, err, done := TransformCnToInt(sections, wordCh)
-	if !done {
+	i, err := TransformCnToInt(sections, wordCh)
+	if err != nil {
 		return i, err
 	}
 
 	return -1, errors.New("查询参数错误")
 }
 
-func TransformCnToInt(sections map[string]string, wordCh string) (int8, error, bool) {
+func TransformCnToInt(sections map[string]string, wordCh string) (int8, error) {
+
 	for i, v := range sections {
 		if v == wordCh {
 			sectionI, err := strconv.Atoi(i)
 			if err != nil {
 				utils.LogDebug(fmt.Sprintf("ParseInt:%v", err))
-				return -1, err, false
+				return -1, err
 			}
 
-			return int8(sectionI), nil, true
+			return int8(sectionI), nil
 
 		}
 	}
-	return 0, nil, false
+
+	return 0, errors.New("not in")
 }
 
 // 根据参数查询对应中文

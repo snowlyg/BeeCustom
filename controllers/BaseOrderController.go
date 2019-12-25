@@ -738,7 +738,7 @@ func (c *BaseOrderController) setAnnotaionUserRelType(m *models.Order, bu *model
 	for _, v := range rs {
 		aur := models.NewOrderUserRel(0)
 		aStatusS, err := c.getOrderStatus("orderUserType")
-		aStatus, err, _ := enums.TransformCnToInt(aStatusS, v)
+		aStatus, err := enums.TransformCnToInt(aStatusS, v)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 			return err
@@ -771,7 +771,7 @@ func (c *BaseOrderController) TransformOrderList(ms []*models.Order) []*map[stri
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
 		}
 		userTypeS, err := c.getOrderStatus("orderUserType")
-		userType, err, _ := enums.TransformCnToInt(userTypeS, "制单人")
+		userType, err := enums.TransformCnToInt(userTypeS, "制单人")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 		}

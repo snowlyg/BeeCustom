@@ -584,8 +584,8 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		var receiverId string
 		var path string
 		handBookTypeS, _ := models.GetSettingRValueByKey("handBookType", false)
-		handBookType1, _, _ := enums.TransformCnToInt(handBookTypeS, "手册")
-		handBookType2, _, _ := enums.TransformCnToInt(handBookTypeS, "账册")
+		handBookType1, _ := enums.TransformCnToInt(handBookTypeS, "手册")
+		handBookType2, _ := enums.TransformCnToInt(handBookTypeS, "账册")
 		if handBook == nil {
 			c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
 		} else {
@@ -765,7 +765,7 @@ func (c *BaseAnnotationController) setAnnotaionUserRelType(m *models.Annotation,
 	for _, v := range rs {
 		aur := models.NewAnnotationUserRel(0)
 		aStatusS, err := c.getAnnotationStatus("annotationUserType")
-		aStatus, err, _ := enums.TransformCnToInt(aStatusS, v)
+		aStatus, err := enums.TransformCnToInt(aStatusS, v)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 			return err
@@ -803,7 +803,7 @@ func (c *BaseAnnotationController) TransformAnnotationList(ms []*models.Annotati
 			c.jsonResult(enums.JRCodeFailed, "获取状态转中文出错", nil)
 		}
 		userTypeS, err := c.getAnnotationStatus("annotationUserType")
-		userType, err, _ := enums.TransformCnToInt(userTypeS, "制单人")
+		userType, err := enums.TransformCnToInt(userTypeS, "制单人")
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("转换制单人类型出错:%v", err))
 		}
