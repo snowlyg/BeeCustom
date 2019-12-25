@@ -7,7 +7,9 @@ import (
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/transforms"
 	"BeeCustom/utils"
+	"github.com/snowlyg/gotransform"
 )
 
 type PermList struct {
@@ -91,7 +93,8 @@ func (c *RoleController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.RolePageList(&params)
-	c.ResponseList(data, total)
+
+	c.ResponseList(c.transformRoleList(data), total)
 	c.ServeJSON()
 }
 
@@ -217,4 +220,18 @@ func (c *RoleController) Delete() {
 	} else {
 		c.jsonResult(enums.JRCodeFailed, "删除失败", id)
 	}
+}
+
+// TransformAnnotationList 格式化列表数据
+func (c *RoleController) transformRoleList(ms []*models.Role) []*transforms.Role {
+	var uts []*transforms.Role
+	for _, v := range ms {
+		ut := transforms.Role{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
+	}
+
+	return uts
 }

@@ -1,14 +1,17 @@
 package controllers
 
 import (
-	"BeeCustom/enums"
-	"BeeCustom/models"
-	"BeeCustom/utils"
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego/validation"
 	"strconv"
 	"strings"
+
+	"BeeCustom/enums"
+	"BeeCustom/models"
+	"BeeCustom/transforms"
+	"BeeCustom/utils"
+	"github.com/astaxie/beego/validation"
+	"github.com/snowlyg/gotransform"
 )
 
 type BackendUserController struct {
@@ -59,7 +62,7 @@ func (c *BackendUserController) DataGrid() {
 		c.jsonResult(enums.JRCodeFailed, "关联关系获取失败", nil)
 	}
 
-	c.ResponseList(ms, total)
+	c.ResponseList(c.transformBackendUserList(ms), total)
 	c.ServeJSON()
 }
 
@@ -231,4 +234,18 @@ func (c *BackendUserController) Profile() {
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "backenduser/profile_footerjs.html"
 	c.GetXSRFToken()
+}
+
+// TransformAnnotationList 格式化列表数据
+func (c *BackendUserController) transformBackendUserList(ms []*models.BackendUser) []*transforms.BackendUser {
+	var uts []*transforms.BackendUser
+	for _, v := range ms {
+		ut := transforms.BackendUser{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
+	}
+
+	return uts
 }

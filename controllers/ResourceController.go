@@ -3,11 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/transforms"
 	"BeeCustom/utils"
+	"github.com/snowlyg/gotransform"
 )
 
 type ResourceController struct {
@@ -83,35 +84,8 @@ func (c *ResourceController) TreeGrid() {
 
 	//获取数据列表和总数
 	data, total := models.ResourceTreeGrid(&params)
-	c.ResponseList(data, total)
+	c.ResponseList(c.transformResourceList(data), total)
 	c.ServeJSON()
-}
-
-// UrlFor2LinkOne 使用URLFor方法，将资源表里的UrlFor值转成LinkUrl
-func (c *ResourceController) UrlFor2LinkOne(urlfor string) string {
-	if len(urlfor) == 0 {
-		return ""
-	}
-	// ResourceController.Edit,:id,1
-	strs := strings.Split(urlfor, ",")
-
-	if len(strs) == 1 {
-		return c.URLFor(strs[0])
-	} else if len(strs) > 1 {
-		var values []interface{}
-		for _, val := range strs[1:] {
-			values = append(values, val)
-		}
-		return c.URLFor(strs[0], values...)
-	}
-	return ""
-}
-
-//UrlFor2Link 使用URLFor方法，批量将资源表里的UrlFor值转成LinkUrl
-func (c *ResourceController) UrlFor2Link(src []*models.Resource) {
-	for _, item := range src {
-		item.LinkUrl = c.UrlFor2LinkOne(item.UrlFor)
-	}
 }
 
 //Edit 资源编辑页面
@@ -173,13 +147,16 @@ func (c *ResourceController) Delete() {
 	}
 }
 
-//CheckUrlFor 填写UrlFor时进行验证
-func (c *ResourceController) CheckUrlFor() {
-	urlfor := c.GetString("urlfor")
-	link := c.UrlFor2LinkOne(urlfor)
-	if len(link) > 0 {
-		c.jsonResult(enums.JRCodeSucc, "解析成功", link)
-	} else {
-		c.jsonResult(enums.JRCodeFailed, "解析失败", link)
+// TransformAnnotationList 格式化列表数据
+func (c *ResourceController) transformResourceList(ms []*models.Resource) []*transforms.Resource {
+	var uts []*transforms.Resource
+	for _, v := range ms {
+		ut := transforms.Resource{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
 	}
+
+	return uts
 }

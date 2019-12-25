@@ -28,7 +28,6 @@ type Role struct {
 	Name          string   `orm:"size(32)" form:"Name" valid:"Required;MaxSize(32)"`
 	UrlFors       []string `orm:"-" `
 	UrlForstrings string   `orm:"-" form:"urlForstrings"`
-	//BackendUsers []*BackendUser `orm:"_"`                     //设置一对多关系
 }
 
 //初始化角色

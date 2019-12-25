@@ -36,15 +36,8 @@
                     field: 'Icon', title: '图标', sort: true,  templet: function (data) {
                         return `<i class="layui-icon iconfont icon${data.Icon}" ></i>`
                     }
-                }, {
-                    field: 'Parent', title: '父级', sort: true,templet: function (data) {
-                        if(data.Parent){
-                            return data.Parent.Name
-                        }else{
-                            return ''
-                        }
-                    }
                 }
+                , {field: 'ParentName', title: '父级', sort: true}
                 , {field: 'UrlFor', title: '路由', sort: true}
                 , {field: 'CreatedAt', title: '创建时间', sort: true}
                 , {title: '操作', toolbar: '#perm_toolbar', width: 150}
