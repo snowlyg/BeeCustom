@@ -97,8 +97,8 @@ func (c *BaseOrderController) bStore(iEFlag string) {
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "时间格式出错", nil)
 	}
-	m.AplDate = aplDate
 	m.IEFlag = iEFlag
+	m.AplDate = aplDate
 	m.ContactSignDate = aplDate.AddDate(0, -1, 0)
 
 	company, err := models.CompanyByManageCode(m.TradeCode)
@@ -404,15 +404,15 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 	// 生成 pdf 凭证
 	// basic auth 认证用户名和密码
 	pdfData := enums.PdfData{
-		m.Id,
-		m.ClientSeqNo,
-		"order_recheck_pdf",
-		action,
-		"order",
-		"order_recheck_pdf_header",
-		c.pdfUsername,
-		c.pdfPassword,
-		30,
+		Id:              m.Id,
+		EtpsInnerInvtNo: m.ClientSeqNo,
+		Url:             "order_recheck_pdf",
+		Action:          action,
+		ModelName:       "order",
+		Header:          "order_recheck_pdf_header",
+		Username:        c.pdfUsername,
+		Password:        c.pdfPassword,
+		MarginTop:       30,
 	}
 	if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
@@ -444,7 +444,9 @@ func (c *BaseOrderController) bRecheck(id int64) {
 	c.setStatusOnly(m, "复核中", false)
 	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
 	c.Data["m"] = order
-	c.Data["IEFlagName"] = enums.GetImpexpMarkcdCNName(m.IEFlag)
+	if m != nil {
+		c.Data["IEFlagName"] = enums.GetImpexpMarkcdCNName(m.IEFlag)
+	}
 	c.setTpl("order/recheck.html")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "order/recheck_footerjs.html"
@@ -460,15 +462,15 @@ func (c *BaseOrderController) bPrint(id int64) {
 	}
 	if m != nil {
 		pdfData := enums.PdfData{
-			m.Id,
-			m.ClientSeqNo,
-			"order_pdf",
-			"report",
-			"order",
-			"order_pdf_header",
-			c.pdfUsername,
-			c.pdfPassword,
-			30,
+			Id:              m.Id,
+			EtpsInnerInvtNo: m.ClientSeqNo,
+			Url:             "order_pdf",
+			Action:          "report",
+			ModelName:       "order",
+			Header:          "order_pdf_header",
+			Username:        c.pdfUsername,
+			Password:        c.pdfPassword,
+			MarginTop:       30,
 		}
 		if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
 			c.jsonResult(enums.JRCodeFailed, "添加失败", m)

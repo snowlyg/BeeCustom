@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"reflect"
 	"strconv"
 	"strings"
-	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -318,59 +316,14 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImport, ha
 // 导入基础参数 xlsx 文件内容
 func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport) {
 
-	t := reflect.ValueOf(&hIP.HandBook).Elem()
-	for i := 0; i < t.NumField(); i++ {
-		tf := t.Field(i)
-		hb := t.Type().Field(i)
-
-		for iw, v := range hIP.ExcelTitle {
-			//  Get value from cell by given worksheet name and axis.
-			if iw == hb.Name {
-				cell, err := xlsx.GetExcelCell(hIP.FileNamePath, hIP.ExcelName, v)
-				if err != nil {
-					c.jsonResult(enums.JRCodeFailed, "导入失败", err)
-				}
-
-				switch tf.Kind() {
-				case reflect.String:
-					tf.SetString(cell)
-				case reflect.Float64:
-					if len(cell) > 0 {
-						objV, err := strconv.ParseFloat(cell, 64)
-						if err != nil {
-							utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
-						}
-						tf.SetFloat(objV)
-					}
-				case reflect.Int8:
-					if len(cell) > 0 {
-						objV, err := strconv.Atoi(cell)
-						if err != nil {
-							utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
-						}
-						tf.SetInt(int64(objV))
-					}
-				case reflect.Uint64:
-					reflect.ValueOf(cell)
-					objV, err := strconv.ParseUint(v, 0, 64)
-					if err != nil {
-						utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
-					}
-					tf.SetUint(objV)
-				case reflect.Struct:
-					if len(cell) > 0 {
-						objV, err := time.Parse("20060102", cell)
-						if err != nil {
-							utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
-						}
-						tf.Set(reflect.ValueOf(objV))
-					}
-
-				default:
-					utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", cell, hb.Name))
-				}
-			}
-		}
+	f, err := xlsx.GetExcel(hIP.FileNamePath)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("GetExcel:%v", err), nil)
+	}
+	x := gotransform.NewXlxsTransform(&hIP.HandBook, hIP.ExcelTitle, nil, hIP.ExcelName, f)
+	err = x.XlxsCellTransformer()
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
 	}
 
 	hB, err := models.GetHandBookByContractNumber(hIP.HandBook.ContractNumber)
@@ -420,7 +373,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 			if roI > 1 { // 忽略标题和表头 2 行
 				hb := models.NewHandBookGood(0)
 				hb.Type = handBookGoodType
-				x := gotransform.NewXlxsTransform(&hb, hIP.ExcelTitle, row)
+				x := gotransform.NewXlxsTransform(&hb, hIP.ExcelTitle, row, "", nil)
 				err := x.XlxsTransformer()
 				if err != nil {
 					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
@@ -441,7 +394,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 		for roI, row := range rows {
 			if roI > 1 { // 忽略标题行
 				hbu := models.NewHandBookUllage(0)
-				x := gotransform.NewXlxsTransform(&hbu, hIP.ExcelTitle, row)
+				x := gotransform.NewXlxsTransform(&hbu, hIP.ExcelTitle, row, "", nil)
 				err := x.XlxsTransformer()
 				if err != nil {
 					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)

@@ -40,26 +40,19 @@ func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 }
 
 // 导入基础参数 Cell 文件内容
-func GetExcelCell(fileNamePath, excelName, axis string) (string, error) {
+func GetExcel(fileNamePath string) (*excelize.File, error) {
 
 	f, err := excelize.OpenFile(fileNamePath)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetExcelCell.OpenFile:%v", err))
-		return "", err
+		return nil, err
 	}
 
 	if f == nil {
-		return "", errors.New("excelize.OpenFile 出错")
+		return nil, errors.New("excelize.OpenFile 出错")
 	}
 
-	cell, err := f.GetCellValue(excelName, axis)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetExcelCell.GetCellValue:%v", err))
-		return "", err
-	}
-
-	return cell, nil
-
+	return f, nil
 }
 
 // 设置值
