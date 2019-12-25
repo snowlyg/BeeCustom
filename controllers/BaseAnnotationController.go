@@ -470,10 +470,6 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString, action, acti
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	}
 	// 生成 pdf 凭证
-	// basic auth 认证用户名和密码
-	username, _ := models.GetSettingValueByKey("pdf_username")
-	password, _ := models.GetSettingValueByKey("pdf_password")
-
 	pdfData := enums.PdfData{
 		m.Id,
 		m.EtpsInnerInvtNo,
@@ -481,8 +477,8 @@ func (c *BaseAnnotationController) bRecheckPassReject(statusString, action, acti
 		action,
 		"annotation",
 		"",
-		username,
-		password,
+		c.pdfUsername,
+		c.pdfPassword,
 		10,
 	}
 
@@ -532,9 +528,6 @@ func (c *BaseAnnotationController) bPrint(id int64) {
 	}
 	if m != nil {
 		// 生成 pdf 凭证
-		// basic auth 认证用户名和密码
-		username, _ := models.GetSettingValueByKey("pdf_username")
-		password, _ := models.GetSettingValueByKey("pdf_password")
 		pdfData := enums.PdfData{
 			m.Id,
 			m.EtpsInnerInvtNo,
@@ -542,8 +535,8 @@ func (c *BaseAnnotationController) bPrint(id int64) {
 			"report",
 			"annotation",
 			"",
-			username,
-			password,
+			c.pdfUsername,
+			c.pdfPassword,
 			10,
 		}
 		if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {

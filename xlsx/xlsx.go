@@ -21,6 +21,7 @@ func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 
 	f, err := excelize.OpenFile(fileNamePath)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetExcelRows.OpenFile:%v", err))
 		return nil, err
 	}
 
@@ -30,6 +31,7 @@ func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 
 	rows, err := f.GetRows(excelName)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetExcelRows.OpenFile:%v", err))
 		return nil, err
 	}
 
@@ -42,6 +44,7 @@ func GetExcelCell(fileNamePath, excelName, axis string) (string, error) {
 
 	f, err := excelize.OpenFile(fileNamePath)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetExcelCell.OpenFile:%v", err))
 		return "", err
 	}
 
@@ -51,6 +54,7 @@ func GetExcelCell(fileNamePath, excelName, axis string) (string, error) {
 
 	cell, err := f.GetCellValue(excelName, axis)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetExcelCell.GetCellValue:%v", err))
 		return "", err
 	}
 

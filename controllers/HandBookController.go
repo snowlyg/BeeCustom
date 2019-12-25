@@ -134,12 +134,12 @@ func (c *HandBookController) Show() {
 	handBookTypeS, err := c.getHandBookTypes()
 	chandBookType, err := enums.TransformCnToInt(handBookTypeS, "手册")
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("手账册类型获取失败:%v", err), nil)
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("TransformCnToInt:%v", err), nil)
 	}
 
 	ahandBookType, err := enums.TransformCnToInt(handBookTypeS, "账册")
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("手账册类型获取失败:%v", err), nil)
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("TransformCnToInt:%v", err), nil)
 	}
 
 	if m.Type == chandBookType {
@@ -191,11 +191,11 @@ func (c *HandBookController) Import() {
 	handBookTypeS, err := c.getHandBookTypes()
 	importManualType, err := enums.TransformCnToInt(handBookTypeS, "手册")
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 	importAccountType, err := enums.TransformCnToInt(handBookTypeS, "账册")
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 
 	if importType == importManualType {
@@ -214,8 +214,7 @@ func (c *HandBookController) Import() {
 
 	handBookName, err := models.GetSettingRValueByKey(sheetName, false)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("handBook1Name:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 	sheet2Name = handBookName["2"]
 	sheet3Name = handBookName["3"]
@@ -223,8 +222,7 @@ func (c *HandBookController) Import() {
 
 	handBook1Title, err := models.GetSettingRValueByKey(sheet1Title, false)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("handBook1Title:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 
 	hIP := models.HandBookImport{
@@ -242,8 +240,7 @@ func (c *HandBookController) Import() {
 
 	m, err := models.HandBookSave(&hIP.HandBook)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("InsertMulti:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 	hIP.HandBook = *m
 
@@ -277,17 +274,12 @@ func (c *HandBookController) Import() {
 
 // 导入账册表体
 func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImport, hBGIP *models.HandBookGoodImportParam) {
-	handBookSheetName, err := models.GetSettingValueByKey(hBGIP.ExcelName)
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
-	}
-
 	handBookSheetTitle, err := models.GetSettingRValueByKey(hBGIP.ExcelTitleString, false)
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 
-	hIP.ExcelName = handBookSheetName
+	hIP.ExcelName = hBGIP.ExcelName
 	hIP.ExcelTitle = handBookSheetTitle
 
 	c.ImportHandBookXlsxByRow(hIP, hBGIP.HandBookTypeString)
@@ -299,12 +291,11 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImport, hand
 
 	num, err := models.InsertHandBookGoodMulti(handBookGoods)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("InsertHandBookGoodMulti:%v ", err))
 		return err
 	}
 
 	if num == 0 {
-		return errors.New("InsertHandBookGoodMulti:导入失败")
+		return errors.New("InsertHandBookGoodMulti error")
 	}
 
 	return nil
@@ -314,7 +305,6 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImport, hand
 func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImport, handBookUllages []*models.HandBookUllage) error {
 	num, err := models.InsertHandBookUllageMulti(handBookUllages)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("InsertHandBookGoodMulti:%v ", err))
 		return err
 	}
 
@@ -338,7 +328,6 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 			if iw == hb.Name {
 				cell, err := xlsx.GetExcelCell(hIP.FileNamePath, hIP.ExcelName, v)
 				if err != nil {
-					utils.LogDebug(fmt.Sprintf("err:%v", err))
 					c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 				}
 
@@ -386,7 +375,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 
 	hB, err := models.GetHandBookByContractNumber(hIP.HandBook.ContractNumber)
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 
 	if hB != nil && hB.Id != 0 {
@@ -402,7 +391,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 	CompanyManageCode := hIP.HandBook.CompanyManageCode //  经营单位代码
 	company, err := models.CompanyByManageCode(CompanyManageCode)
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 
 	hIP.HandBook.Company = company
@@ -413,20 +402,20 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport, handBookTypeString string) {
 	rows, err := xlsx.GetExcelRows(hIP.FileNamePath, hIP.ExcelName)
 	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
-	}
-
-	hbs := make([]*models.HandBookGood, 0)
-	handBookGoodTypeS, err := c.getHandBookTypes()
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
-	}
-	handBookGoodType, err := enums.TransformCnToInt(handBookGoodTypeS, handBookTypeString)
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+		c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 	}
 
 	if len(handBookTypeString) > 0 { // 表体
+		hbs := make([]*models.HandBookGood, 0)
+		handBookGoodTypeS, err := models.GetSettingRValueByKey("handBookGoodType", false)
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("getHandBookGoodTypes:%v", err), nil)
+		}
+		handBookGoodType, err := enums.TransformCnToInt(handBookGoodTypeS, handBookTypeString)
+		if err != nil {
+			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("TransformCnToInt:%v", err), nil)
+		}
+
 		for roI, row := range rows {
 			if roI > 1 { // 忽略标题和表头 2 行
 				hb := models.NewHandBookGood(0)
@@ -436,13 +425,14 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 				if err != nil {
 					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
 				}
+				hb.HandBook = &hIP.HandBook
 				hbs = append(hbs, &hb)
 			}
 		}
 
 		err = c.InsertHandBookGood(hIP, hbs)
 		if err != nil {
-			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 		}
 
 	} else { // 单损
@@ -458,7 +448,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 				}
 				hbg, err := models.GetHandBookGoodBySerial(hbu.FinishProNo)
 				if err != nil {
-					c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+					c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 				}
 
 				hbu.HandBookGood = hbg
@@ -468,7 +458,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 
 		err = c.InsertHandBookUllage(hIP, hbus)
 		if err != nil {
-			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 		}
 	}
 }

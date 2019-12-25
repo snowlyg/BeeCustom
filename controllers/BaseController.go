@@ -20,6 +20,8 @@ type BaseController struct {
 	beego.Controller
 	controllerName string             // 当前控制名称
 	actionName     string             // 当前action名称
+	pdfUsername    string             //
+	pdfPassword    string             //
 	curUser        models.BackendUser // 当前用户信息
 }
 
@@ -28,6 +30,9 @@ func (c *BaseController) Prepare() {
 	c.controllerName, c.actionName = c.GetControllerAndAction()
 	// 从Session里获取数据 设置用户信息
 	c.adapterUserInfo()
+	pdfAuth, _ := models.GetSettingRValueByKey("pdfAuth", false)
+	c.pdfUsername = pdfAuth["pdf_username"]
+	c.pdfPassword = pdfAuth["pdf_password"]
 }
 
 func (c *BaseController) GetXSRFToken() {

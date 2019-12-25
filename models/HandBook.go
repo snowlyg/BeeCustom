@@ -12,12 +12,12 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// TableName 设置HandBook表名
+//  TableName 设置HandBook表名
 func (u *HandBook) TableName() string {
 	return HandBookTBName()
 }
 
-// HandBook 实体类
+//  HandBook 实体类
 type HandBook struct {
 	BaseModel
 
@@ -99,23 +99,23 @@ type HandBook struct {
 	Company   *Company `orm:"column(company_id);rel(fk)"`
 	CompanyId int64    `orm:"-" form:"CompanyId"`
 
-	HandBookGoods []*HandBookGood `orm:"reverse(many)"` //设置一对多关系
+	HandBookGoods []*HandBookGood `orm:"reverse(many)"` // 设置一对多关系
 }
 
-// HandBookQueryParam 用于查询的类
+//  HandBookQueryParam 用于查询的类
 type HandBookQueryParam struct {
 	BaseQueryParam
 
-	Type           string //模糊查询
-	ContractNumber string //模糊查询
+	Type           string // 模糊查询
+	ContractNumber string // 模糊查询
 }
 
-//查询参数
+// 查询参数
 func NewHandBookQueryParam() HandBookQueryParam {
 	return HandBookQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc"}}
 }
 
-// HandBookImportParam 用于导入的类
+//  HandBookImportParam 用于导入的类
 type HandBookImport struct {
 	xlsx.BaseImport
 
@@ -123,7 +123,7 @@ type HandBookImport struct {
 	HandBook         HandBook
 }
 
-// HandBookGoodImportParam 用于导入的类
+//  HandBookGoodImportParam 用于导入的类
 type HandBookGoodImportParam struct {
 	ExcelName          string
 	ExcelTitleString   string
@@ -155,7 +155,7 @@ func HandBookGetRelations(v *HandBook, relations string) (*HandBook, error) {
 	return v, nil
 }
 
-// HandBookPageList 获取分页数据
+//  HandBookPageList 获取分页数据
 func HandBookPageList(params *HandBookQueryParam) ([]*HandBook, int64) {
 	query := orm.NewOrm().QueryTable(HandBookTBName())
 	data := make([]*HandBook, 0)
@@ -180,7 +180,7 @@ func HandBookPageList(params *HandBookQueryParam) ([]*HandBook, int64) {
 	return data, total
 }
 
-// HandBookOne 根据id获取单条
+//  HandBookOne 根据id获取单条
 func HandBookOne(id int64, relations string) (*HandBook, error) {
 	m := NewHandBook(0)
 	o := orm.NewOrm()
@@ -203,7 +203,7 @@ func HandBookOne(id int64, relations string) (*HandBook, error) {
 	return &m, nil
 }
 
-// GetHandBookByContractNumber 根据contractNumber获取单条
+//  GetHandBookByContractNumber 根据contractNumber获取单条
 func GetHandBookByContractNumber(contractNumber string) (*HandBook, error) {
 	m := NewHandBook(0)
 	o := orm.NewOrm()
@@ -219,15 +219,17 @@ func GetHandBookByContractNumber(contractNumber string) (*HandBook, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
+// Save 添加、编辑页面 保存
 func HandBookSave(m *HandBook) (*HandBook, error) {
 	o := orm.NewOrm()
 	if m.Id == 0 {
 		if _, err := o.Insert(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("HandBookSave:%v", err))
 			return nil, err
 		}
 	} else {
 		if _, err := o.Update(m); err != nil {
+			utils.LogDebug(fmt.Sprintf("HandBookSave:%v", err))
 			return nil, err
 		}
 	}
@@ -235,7 +237,7 @@ func HandBookSave(m *HandBook) (*HandBook, error) {
 	return m, nil
 }
 
-//删除
+// 删除
 func HandBookDelete(id int64) (num int64, err error) {
 	m := NewHandBook(id)
 	if num, err := BaseDelete(&m); err != nil {

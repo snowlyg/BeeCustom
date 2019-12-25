@@ -2,10 +2,12 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"html"
 	"strings"
 	"time"
 
+	"BeeCustom/utils"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -59,6 +61,7 @@ func GetSettingRValueByKey(key string, isSinge bool) (map[string]string, error) 
 	query := o.QueryTable(SettingTBName())
 	err := query.Filter("Key", key).One(&m)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetSettingRValueByKey:%v, key:%v", err, key))
 		return nil, err
 	}
 
@@ -72,8 +75,6 @@ func GetSettingRValueByKey(key string, isSinge bool) (map[string]string, error) 
 		iv := strings.Split(v, ":")
 		if len(iv) > 1 && len(iv[0]) > 0 && len(iv[1]) > 0 {
 			rValue[iv[0]] = iv[1]
-		} else {
-			rValue["-1"] = v
 		}
 
 	}
@@ -85,6 +86,7 @@ func GetSettingRValueByKey(key string, isSinge bool) (map[string]string, error) 
 func GetSettingValueByKey(key string) (string, error) {
 	value, err := GetSettingRValueByKey(key, true)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf("GetSettingValueByKey:%v, key:%v", err, key))
 		return "", err
 	}
 

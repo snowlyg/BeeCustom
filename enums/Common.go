@@ -54,17 +54,17 @@ func GetSectionWithString(wordCh, configSection string) (int8, error) {
 	return -1, errors.New("查询参数错误")
 }
 
-func TransformCnToInt(sections map[string]string, wordCh string) (int8, error) {
+func TransformCnToInt(ss map[string]string, s string) (int8, error) {
 
-	for i, v := range sections {
-		if v == wordCh {
-			sectionI, err := strconv.Atoi(i)
+	for i, v := range ss {
+		if v == s {
+			si, err := strconv.Atoi(i)
 			if err != nil {
 				utils.LogDebug(fmt.Sprintf("ParseInt:%v", err))
 				return -1, err
 			}
 
-			return int8(sectionI), nil
+			return int8(si), nil
 
 		}
 	}

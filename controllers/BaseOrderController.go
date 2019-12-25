@@ -403,8 +403,6 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 	}
 	// 生成 pdf 凭证
 	// basic auth 认证用户名和密码
-	username, _ := models.GetSettingValueByKey("pdf_username")
-	password, _ := models.GetSettingValueByKey("pdf_password")
 	pdfData := enums.PdfData{
 		m.Id,
 		m.ClientSeqNo,
@@ -412,8 +410,8 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 		action,
 		"order",
 		"order_recheck_pdf_header",
-		username,
-		password,
+		c.pdfUsername,
+		c.pdfPassword,
 		30,
 	}
 	if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {
@@ -461,9 +459,6 @@ func (c *BaseOrderController) bPrint(id int64) {
 		c.pageError("数据无效，请刷新后重试")
 	}
 	if m != nil {
-		// 生成
-		username, _ := models.GetSettingValueByKey("pdf_username")
-		password, _ := models.GetSettingValueByKey("pdf_password")
 		pdfData := enums.PdfData{
 			m.Id,
 			m.ClientSeqNo,
@@ -471,8 +466,8 @@ func (c *BaseOrderController) bPrint(id int64) {
 			"report",
 			"order",
 			"order_pdf_header",
-			username,
-			password,
+			c.pdfUsername,
+			c.pdfPassword,
 			30,
 		}
 		if ffp, err := enums.NewPDFGenerator(&pdfData); err != nil {

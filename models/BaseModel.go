@@ -1,9 +1,11 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"BeeCustom/enums"
+	"BeeCustom/utils"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -84,7 +86,7 @@ func BaseDeleteAll(clearanceType int8) (num int64, err error) {
 func BaseInsertMulti(m interface{}) (num int64, err error) {
 	o := orm.NewOrm()
 	if num, err := o.InsertMulti(100, m); err != nil {
-
+		utils.LogDebug(fmt.Sprintf("BaseInsertMulti:%v ", err))
 		return num, err
 	} else {
 		return num, nil
