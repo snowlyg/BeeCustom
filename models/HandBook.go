@@ -125,7 +125,7 @@ type HandBookImportParam struct {
 
 // HandBookGoodImportParam 用于导入的类
 type HandBookGoodImportParam struct {
-	ExcelNameString    string
+	ExcelName          string
 	ExcelTitleString   string
 	HandBookTypeString string
 }

@@ -47,7 +47,7 @@ func GetSectionWithString(wordCh, configSection string) (int8, error) {
 	}
 
 	i, err, done := TransformCnToInt(sections, wordCh)
-	if done {
+	if !done {
 		return i, err
 	}
 
@@ -57,11 +57,10 @@ func GetSectionWithString(wordCh, configSection string) (int8, error) {
 func TransformCnToInt(sections map[string]string, wordCh string) (int8, error, bool) {
 	for i, v := range sections {
 		if v == wordCh {
-
 			sectionI, err := strconv.Atoi(i)
 			if err != nil {
 				utils.LogDebug(fmt.Sprintf("ParseInt:%v", err))
-				return -1, err, true
+				return -1, err, false
 			}
 
 			return int8(sectionI), nil, true
@@ -79,7 +78,7 @@ func GetSectionWithInt(wordInt int8, configSection string) (string, error) {
 	}
 
 	s, err, done := TransformIntToCn(sections, wordInt)
-	if done {
+	if !done {
 		return s, err
 	}
 
@@ -179,63 +178,6 @@ func InStringMap(s string, sS map[string]string) bool {
 	}
 
 	return false
-}
-
-// 设置值 slice
-func SetObjValueFromSlice(inObj interface{}, Info []map[string]string) {
-	for i := 0; i < len(Info); i++ {
-		SetObjValue(inObj, Info[i])
-	}
-}
-
-// 设置值
-func SetObjValue(inObj interface{}, Info map[string]string) {
-	t := reflect.ValueOf(inObj).Elem()
-	for k, v := range Info {
-		SetObjValueIn(k, v, t)
-	}
-}
-
-// 设置值
-func SetObjValueIn(objName, v string, t reflect.Value) {
-	switch t.FieldByName(objName).Kind() {
-	case reflect.String:
-		t.FieldByName(objName).Set(reflect.ValueOf(v))
-	case reflect.Float64:
-		if len(v) > 0 {
-			objV, err := strconv.ParseFloat(v, 64)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, v, objName))
-			}
-			t.FieldByName(objName).Set(reflect.ValueOf(objV))
-		}
-	case reflect.Int8:
-		if len(v) > 0 {
-			objV, err := strconv.Atoi(v)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, v, objName))
-			}
-			t.FieldByName(objName).Set(reflect.ValueOf(int8(objV)))
-		}
-	case reflect.Uint64:
-		reflect.ValueOf(v)
-		objV, err := strconv.ParseUint(v, 0, 64)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, v, objName))
-		}
-		t.FieldByName(objName).Set(reflect.ValueOf(objV))
-	case reflect.Struct:
-		if len(v) > 0 {
-			objV, err := time.Parse("20060102", v)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, v, objName))
-			}
-			t.FieldByName(objName).Set(reflect.ValueOf(objV))
-		}
-
-	default:
-		utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", v, objName))
-	}
 }
 
 // 设置值

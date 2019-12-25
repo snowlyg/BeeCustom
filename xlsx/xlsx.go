@@ -50,6 +50,9 @@ func GetExcelCell(fileNamePath, excelName, axis string) (string, error) {
 	}
 
 	cell, err := f.GetCellValue(excelName, axis)
+	if err != nil {
+		return "", err
+	}
 
 	return cell, nil
 

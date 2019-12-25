@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -132,13 +133,13 @@ func (c *HandBookController) Show() {
 
 	handBookTypeS, err := c.getHandBookTypes()
 	chandBookType, err, done := enums.TransformCnToInt(handBookTypeS, "手册")
-	if done {
-		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+	if !done {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("手账册类型获取失败:%v", err), nil)
 	}
 
 	ahandBookType, err, done := enums.TransformCnToInt(handBookTypeS, "账册")
-	if done {
-		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+	if !done {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("手账册类型获取失败:%v", err), nil)
 	}
 
 	if m.Type == chandBookType {
@@ -186,14 +187,14 @@ func (c *HandBookController) Import() {
 		c.jsonResult(enums.JRCodeFailed, "文件格式错误，只能导入 xlsx 文件", nil)
 	}
 
-	var sheet1Name, sheet1Title, sheet2Name, sheet2Title, sheet3Name, sheet3Title, sheet4Name, sheet4Title string
+	var sheetName, sheet1Title, sheet2Name, sheet2Title, sheet3Name, sheet3Title, sheet4Name, sheet4Title string
 	handBookTypeS, err := c.getHandBookTypes()
 	importManualType, err, _ := enums.TransformCnToInt(handBookTypeS, "手册")
 
 	importAccountType, err, _ := enums.TransformCnToInt(handBookTypeS, "手册")
 
 	if importType == importManualType {
-		sheet1Name = "handbookManualExcelSheet1Name"
+		sheetName = "handbookManualExcelSheetName"
 		sheet1Title = "handbookManualExcelSheet1Title"
 		sheet2Name = "handbookManualExcelSheet2Name"
 		sheet2Title = "handbookManualExcelSheet2Title"
@@ -202,7 +203,7 @@ func (c *HandBookController) Import() {
 		sheet4Name = "handbookManualExcelSheet4Name"
 		sheet4Title = "handbookManualExcelSheet4Title"
 	} else if importType == importAccountType {
-		sheet1Name = "handbookAccountExcelSheet1Name"
+		sheetName = "handbookAccountExcelSheetName"
 		sheet1Title = "handbookAccountExcelSheet1Title"
 		sheet2Name = "handbookAccountExcelSheet2Name"
 		sheet2Title = "handbookAccountExcelSheet2Title"
@@ -212,22 +213,25 @@ func (c *HandBookController) Import() {
 		sheet4Title = "handbookAccountExcelSheet4Title"
 	}
 
-	handBook1Name, err := models.GetSettingRValueByKey(sheet1Name, true)
+	handBookName, err := models.GetSettingRValueByKey(sheetName, false)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
+		utils.LogDebug(fmt.Sprintf("handBook1Name:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
+	sheet2Name = handBookName["2"]
+	sheet3Name = handBookName["3"]
+	sheet4Name = handBookName["4"]
 
 	handBook1Title, err := models.GetSettingRValueByKey(sheet1Title, false)
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
+		utils.LogDebug(fmt.Sprintf("handBook1Title:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
 	hIP := models.HandBookImportParam{
 		BaseImportParam: xlsx.BaseImportParam{
 			ExcelTitle:   handBook1Title,
-			ExcelName:    handBook1Name["0"],
+			ExcelName:    handBookName["1"],
 			FileNamePath: fileNamePath,
 		},
 		HandBook: models.NewHandBook(0),
@@ -274,7 +278,7 @@ func (c *HandBookController) Import() {
 
 // 导入账册表体
 func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam, hBGIP *models.HandBookGoodImportParam) {
-	handBookSheetName, err := models.GetSettingRValueByKey(hBGIP.ExcelNameString, true)
+	handBookSheetName, err := models.GetSettingRValueByKey(hBGIP.ExcelName, true)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
@@ -357,17 +361,57 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImportParam) {
 
 	t := reflect.ValueOf(&hIP.HandBook).Elem()
-	for i := 0; i < reflect.ValueOf(hIP.HandBook).NumField(); i++ {
-		obj := reflect.TypeOf(hIP.HandBook).Field(i)
+	for i := 0; i < t.NumField(); i++ {
+		tf := t.Field(i)
+		hb := t.Type().Field(i)
+
 		for iw, v := range hIP.ExcelTitle {
 			//  Get value from cell by given worksheet name and axis.
-			if iw == strings.ToLower(obj.Name) {
+			if iw == hb.Name {
 				cell, err := xlsx.GetExcelCell(hIP.FileNamePath, hIP.ExcelName, v)
 				if err != nil {
-					c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+					utils.LogDebug(fmt.Sprintf("err:%v", err))
+					c.jsonResult(enums.JRCodeFailed, "导入失败", err)
 				}
 
-				enums.SetObjValueIn(obj.Name, cell, t)
+				switch tf.Kind() {
+				case reflect.String:
+					tf.SetString(cell)
+				case reflect.Float64:
+					if len(cell) > 0 {
+						objV, err := strconv.ParseFloat(cell, 64)
+						if err != nil {
+							utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
+						}
+						tf.SetFloat(objV)
+					}
+				case reflect.Int8:
+					if len(cell) > 0 {
+						objV, err := strconv.Atoi(cell)
+						if err != nil {
+							utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
+						}
+						tf.SetInt(int64(objV))
+					}
+				case reflect.Uint64:
+					reflect.ValueOf(cell)
+					objV, err := strconv.ParseUint(v, 0, 64)
+					if err != nil {
+						utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
+					}
+					tf.SetUint(objV)
+				case reflect.Struct:
+					if len(cell) > 0 {
+						objV, err := time.Parse("20060102", cell)
+						if err != nil {
+							utils.LogDebug(fmt.Sprintf("Parse:%v,%v,%v", err, cell, hb.Name))
+						}
+						tf.Set(reflect.ValueOf(objV))
+					}
+
+				default:
+					utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", cell, hb.Name))
+				}
 			}
 		}
 	}
