@@ -4,11 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"BeeCustom/utils"
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/astaxie/beego"
 )
 
 // ClearanceImportParam 用于查询的类
@@ -55,37 +53,6 @@ func GetExcelCell(fileNamePath, excelName, axis string) (string, error) {
 
 	return cell, nil
 
-}
-
-//获取导入文件表头
-func GetExcelTitles(xmlTitle, configSection string) (map[string]string, error) {
-	rXmlTitles := map[string]string{}
-	if len(xmlTitle) == 0 {
-		importWord, err := beego.AppConfig.GetSection(configSection)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
-			return nil, err
-		}
-		rXmlTitles = importWord
-	} else {
-		xmlTitles := strings.Split(xmlTitle, "/")
-		for k, v := range xmlTitles {
-			rXmlTitles[v] = strconv.Itoa(k)
-		}
-	}
-
-	return rXmlTitles, nil
-}
-
-//获取导入文件表名称
-func GetExcelName(configSection string) (string, error) {
-	nameMap, err := beego.AppConfig.GetSection(configSection)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
-		return configSection, err
-	}
-	name := nameMap["name"]
-	return name, nil
 }
 
 // 设置值

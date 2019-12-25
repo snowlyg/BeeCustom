@@ -52,9 +52,7 @@ type ClearanceQueryParam struct {
 // ClearanceImportParam 用于查询的类
 type ClearanceImportParam struct {
 	xlsx.BaseImportParam
-
 	ClearanceType int8
-	Obj           []*Clearance
 }
 
 func NewClearance(id int64) Clearance {
@@ -167,7 +165,7 @@ func ClearanceDelete(id int64) (num int64, err error) {
 	}
 }
 
-// 删除
+// 批量删除
 func ClearanceDeleteAll(clearanceType int8) (num int64, err error) {
 	if num, err := BaseDeleteAll(clearanceType); err != nil {
 		return num, err

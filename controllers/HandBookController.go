@@ -12,6 +12,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xlsx"
+	"github.com/snowlyg/gotransform"
 )
 
 type HandBookController struct {
@@ -192,32 +193,32 @@ func (c *HandBookController) Import() {
 	importAccountType, err, _ := enums.TransformCnToInt(handBookTypeS, "手册")
 
 	if importType == importManualType {
-		sheet1Name = "handbook_manual_excel_sheet1_name"
-		sheet1Title = "handbook_manual_excel_sheet1_title"
-		sheet2Name = "handbook_manual_excel_sheet2_name"
-		sheet2Title = "handbook_manual_excel_sheet2_title"
-		sheet3Name = "handbook_manual_excel_sheet3_name"
-		sheet3Title = "handbook_manual_excel_sheet3_title"
-		sheet4Name = "handbook_manual_excel_sheet4_name"
-		sheet4Title = "handbook_manual_excel_sheet4_title"
+		sheet1Name = "handbookManualExcelSheet1Name"
+		sheet1Title = "handbookManualExcelSheet1Title"
+		sheet2Name = "handbookManualExcelSheet2Name"
+		sheet2Title = "handbookManualExcelSheet2Title"
+		sheet3Name = "handbookManualExcelSheet3Name"
+		sheet3Title = "handbookManualExcelSheet3Title"
+		sheet4Name = "handbookManualExcelSheet4Name"
+		sheet4Title = "handbookManualExcelSheet4Title"
 	} else if importType == importAccountType {
-		sheet1Name = "handbook_account_excel_sheet1_name"
-		sheet1Title = "handbook_account_excel_sheet1_title"
-		sheet2Name = "handbook_account_excel_sheet2_name"
-		sheet2Title = "handbook_account_excel_sheet2_title"
-		sheet3Name = "handbook_account_excel_sheet3_name"
-		sheet3Title = "handbook_account_excel_sheet3_title"
-		sheet4Name = "handbook_account_excel_sheet4_name"
-		sheet4Title = "handbook_account_excel_sheet4_title"
+		sheet1Name = "handbookAccountExcelSheet1Name"
+		sheet1Title = "handbookAccountExcelSheet1Title"
+		sheet2Name = "handbookAccountExcelSheet2Name"
+		sheet2Title = "handbookAccountExcelSheet2Title"
+		sheet3Name = "handbookAccountExcelSheet3Name"
+		sheet3Title = "handbookAccountExcelSheet3Title"
+		sheet4Name = "handbookAccountExcelSheet4Name"
+		sheet4Title = "handbookAccountExcelSheet4Title"
 	}
 
-	accountSheet1Name, _ := xlsx.GetExcelName(sheet1Name)
+	handBook1Name, err := models.GetSettingRValueByKey(sheet1Name, true)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	accountSheet1Title, _ := xlsx.GetExcelTitles("", sheet1Title)
+	handBook1Title, err := models.GetSettingRValueByKey(sheet1Title, false)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetSection:%v", err))
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
@@ -225,8 +226,8 @@ func (c *HandBookController) Import() {
 
 	hIP := models.HandBookImportParam{
 		BaseImportParam: xlsx.BaseImportParam{
-			ExcelTitle:   accountSheet1Title,
-			ExcelName:    accountSheet1Name,
+			ExcelTitle:   handBook1Title,
+			ExcelName:    handBook1Name["0"],
 			FileNamePath: fileNamePath,
 		},
 		HandBook: models.NewHandBook(0),
@@ -273,18 +274,18 @@ func (c *HandBookController) Import() {
 
 // 导入账册表体
 func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImportParam, hBGIP *models.HandBookGoodImportParam) {
-	accountSheetName, err := xlsx.GetExcelName(hBGIP.ExcelNameString)
+	handBookSheetName, err := models.GetSettingRValueByKey(hBGIP.ExcelNameString, true)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	accountSheetTitle, err := xlsx.GetExcelTitles("", hBGIP.ExcelTitleString)
+	handBookSheetTitle, err := models.GetSettingRValueByKey(hBGIP.ExcelTitleString, false)
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	hIP.ExcelName = accountSheetName
-	hIP.ExcelTitle = accountSheetTitle
+	hIP.ExcelName = handBookSheetName["0"]
+	hIP.ExcelTitle = handBookSheetTitle
 
 	c.ImportHandBookXlsxByRow(hIP, hBGIP.HandBookTypeString)
 
@@ -295,7 +296,12 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImportParam,
 	var handBookGoods []*models.HandBookGood
 
 	handBookGood := models.NewHandBookGood(0)
-	enums.SetObjValueFromSlice(&handBookGood, Info)
+	gf := gotransform.NewTransform(&Info, &handBookGood, enums.BaseDateTimeFormat)
+	err := gf.Transformer()
+	if err != nil {
+		return err
+	}
+	//enums.SetObjValueFromSlice(&handBookGood, Info)
 
 	handBookGood.HandBook = &hIP.HandBook
 	handBookGood.Type = hIP.HandBookGoodType
@@ -320,7 +326,12 @@ func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImportPara
 	var handBookUllages []*models.HandBookUllage
 
 	handBookUllage := models.NewHandBookUllage(0)
-	enums.SetObjValueFromSlice(&handBookUllage, Info)
+	gf := gotransform.NewTransform(&Info, &handBookUllage, enums.BaseDateTimeFormat)
+	err := gf.Transformer()
+	if err != nil {
+		return err
+	}
+	//enums.SetObjValueFromSlice(&handBookUllage, Info)
 	handBookGood, err := models.GetHandBookGoodBySerial(handBookUllage.FinishProNo)
 	if err != nil {
 		return err
