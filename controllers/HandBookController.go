@@ -295,20 +295,7 @@ func (c *HandBookController) InsertHandBookGoods(hIP *models.HandBookImport, hBG
 }
 
 // 获取 xlsx 文件内容
-func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImport, Info []map[string]string) error {
-	var handBookGoods []*models.HandBookGood
-
-	handBookGood := models.NewHandBookGood(0)
-	gf := gotransform.NewTransform(&Info, &handBookGood, enums.BaseDateTimeFormat)
-	err := gf.Transformer()
-	if err != nil {
-		return err
-	}
-	//enums.SetObjValueFromSlice(&handBookGood, Info)
-
-	handBookGood.HandBook = &hIP.HandBook
-	handBookGood.Type = hIP.HandBookGoodType
-	handBookGoods = append(handBookGoods, &handBookGood)
+func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImport, handBookGoods []*models.HandBookGood) error {
 
 	num, err := models.InsertHandBookGoodMulti(handBookGoods)
 	if err != nil {
@@ -324,25 +311,7 @@ func (c *HandBookController) InsertHandBookGood(hIP *models.HandBookImport, Info
 }
 
 // 获取 xlsx 文件内容
-func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImport, Info []map[string]string) error {
-
-	var handBookUllages []*models.HandBookUllage
-
-	handBookUllage := models.NewHandBookUllage(0)
-	gf := gotransform.NewTransform(&Info, &handBookUllage, enums.BaseDateTimeFormat)
-	err := gf.Transformer()
-	if err != nil {
-		return err
-	}
-	//enums.SetObjValueFromSlice(&handBookUllage, Info)
-	handBookGood, err := models.GetHandBookGoodBySerial(handBookUllage.FinishProNo)
-	if err != nil {
-		return err
-	}
-
-	handBookUllage.HandBookGood = handBookGood
-	handBookUllages = append(handBookUllages, &handBookUllage)
-
+func (c *HandBookController) InsertHandBookUllage(hIP *models.HandBookImport, handBookUllages []*models.HandBookUllage) error {
 	num, err := models.InsertHandBookUllageMulti(handBookUllages)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("InsertHandBookGoodMulti:%v ", err))
@@ -447,78 +416,60 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 	}
 
-	var Info []map[string]string
+	hbs := make([]*models.HandBookGood, 0)
+	handBookGoodTypeS, err := c.getHandBookTypes()
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+	}
+	handBookGoodType, err := enums.TransformCnToInt(handBookGoodTypeS, handBookTypeString)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
+	}
+
 	if len(handBookTypeString) > 0 { // 表体
-		obj := models.NewHandBookGood(0)
 		for roI, row := range rows {
 			if roI > 1 { // 忽略标题和表头 2 行
-				// 将数组  转成对应的 map
-				var info = make(map[string]string)
-				//  模型前两个字段是 BaseModel ，Type 不需要赋值
-				for i := 0; i < reflect.ValueOf(obj).NumField(); i++ {
-					obj := reflect.TypeOf(obj).Field(i)
-					for _, iw := range hIP.ExcelTitle {
-						if iw == obj.Name {
-							rI := xlsx.ObjIsExists(hIP.ExcelTitle, iw)
-							//  模板字段数量定义
-							if rI != -1 && rI <= len(row)-1 {
-								info[obj.Name] = row[rI]
-							}
-						}
-					}
+				hb := models.NewHandBookGood(0)
+				hb.Type = handBookGoodType
+				x := gotransform.NewXlxsTransform(&hb, hIP.ExcelTitle, row)
+				err := x.XlxsTransformer()
+				if err != nil {
+					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
 				}
-				Info = append(Info, info)
+				hbs = append(hbs, &hb)
 			}
-
 		}
 
-		handBookGoodTypeS, err := c.getHandBookTypes()
-		if err != nil {
-			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
-		}
-		handBookGoodType, err := enums.TransformCnToInt(handBookGoodTypeS, handBookTypeString)
-		if err != nil {
-			c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("账册类型获取失败:%v", err), nil)
-		}
-
-		hIP.HandBookGoodType = handBookGoodType
-
-		err = c.InsertHandBookGood(hIP, Info)
+		err = c.InsertHandBookGood(hIP, hbs)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
 
 	} else { // 单损
 
-		obj := models.NewHandBookUllage(0)
+		var hbus []*models.HandBookUllage
 		for roI, row := range rows {
 			if roI > 1 { // 忽略标题行
-				// 将数组  转成对应的 map
-				var info = make(map[string]string)
-				//  模型前两个字段是 BaseModel ，Type 不需要赋值
-				for i := 0; i < reflect.ValueOf(obj).NumField(); i++ {
-					obj := reflect.TypeOf(obj).Field(i)
-					for _, iw := range hIP.ExcelTitle {
-						if iw == obj.Name {
-							rI := xlsx.ObjIsExists(hIP.ExcelTitle, iw)
-							//  模板字段数量定义
-							if rI != -1 && rI <= len(row) {
-								info[obj.Name] = row[rI]
-							}
-						}
-					}
+				hbu := models.NewHandBookUllage(0)
+				x := gotransform.NewXlxsTransform(&hbu, hIP.ExcelTitle, row)
+				err := x.XlxsTransformer()
+				if err != nil {
+					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
+				}
+				hbg, err := models.GetHandBookGoodBySerial(hbu.FinishProNo)
+				if err != nil {
+					c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 				}
 
-				Info = append(Info, info)
+				hbu.HandBookGood = hbg
+				hbus = append(hbus, &hbu)
 			}
-
 		}
 
-		err = c.InsertHandBookUllage(hIP, Info)
+		err = c.InsertHandBookUllage(hIP, hbus)
 		if err != nil {
 			c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
 		}
-
 	}
 }
 
