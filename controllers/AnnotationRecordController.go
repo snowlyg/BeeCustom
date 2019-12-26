@@ -38,7 +38,7 @@ func (c *AnnotationRecordController) DataGrid() {
 	c.ServeJSON()
 }
 
-// TransformAnnotationList 格式化列表数据
+//  格式化列表数据
 func (c *AnnotationRecordController) transformAnnotationRecordList(ms []*models.AnnotationRecord) []*map[string]interface{} {
 	var annotationRecordList []*map[string]interface{}
 	for _, v := range ms {

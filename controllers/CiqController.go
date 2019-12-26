@@ -1,9 +1,12 @@
 package controllers
 
 import (
+	"BeeCustom/enums"
+	"BeeCustom/transforms"
 	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/snowlyg/gotransform"
 
 	"BeeCustom/models"
 )
@@ -51,7 +54,7 @@ func (c *CiqController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.CiqPageList(&params)
-	c.ResponseList(data, total)
+	c.ResponseList(c.transformCiqList(data), total)
 	c.ServeJSON()
 }
 
@@ -77,4 +80,18 @@ func (c *CiqController) Import() {
 		}
 		fmt.Println()
 	}
+}
+
+//  格式化列表数据
+func (c *CiqController) transformCiqList(ms []*models.Ciq) []*transforms.Ciq {
+	var uts []*transforms.Ciq
+	for _, v := range ms {
+		ut := transforms.Ciq{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
+	}
+
+	return uts
 }

@@ -236,7 +236,7 @@ func (c *BackendUserController) Profile() {
 	c.GetXSRFToken()
 }
 
-// TransformAnnotationList 格式化列表数据
+//  格式化列表数据
 func (c *BackendUserController) transformBackendUserList(ms []*models.BackendUser) []*transforms.BackendUser {
 	var uts []*transforms.BackendUser
 	for _, v := range ms {

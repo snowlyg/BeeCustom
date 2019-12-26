@@ -222,7 +222,7 @@ func (c *RoleController) Delete() {
 	}
 }
 
-// TransformAnnotationList 格式化列表数据
+//  格式化列表数据
 func (c *RoleController) transformRoleList(ms []*models.Role) []*transforms.Role {
 	var uts []*transforms.Role
 	for _, v := range ms {

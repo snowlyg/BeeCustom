@@ -1,9 +1,12 @@
 package controllers
 
 import (
+	"BeeCustom/enums"
+	"BeeCustom/transforms"
 	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/snowlyg/gotransform"
 
 	"BeeCustom/models"
 )
@@ -53,7 +56,7 @@ func (c *HsCodeController) DataGrid() {
 
 	// 获取数据列表和总数
 	data, total := models.HsCodePageList(&params)
-	c.ResponseList(data, total)
+	c.ResponseList(c.transformHsCodeList(data), total)
 	c.ServeJSON()
 }
 
@@ -87,4 +90,18 @@ func (c *HsCodeController) Import() {
 		}
 		fmt.Println()
 	}
+}
+
+//  格式化列表数据
+func (c *HsCodeController) transformHsCodeList(ms []*models.HsCode) []*transforms.HsCode {
+	var uts []*transforms.HsCode
+	for _, v := range ms {
+		ut := transforms.HsCode{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
+	}
+
+	return uts
 }

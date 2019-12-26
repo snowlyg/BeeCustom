@@ -147,7 +147,7 @@ func (c *ResourceController) Delete() {
 	}
 }
 
-// TransformAnnotationList 格式化列表数据
+//  格式化列表数据
 func (c *ResourceController) transformResourceList(ms []*models.Resource) []*transforms.Resource {
 	var uts []*transforms.Resource
 	for _, v := range ms {

@@ -37,7 +37,7 @@ func (c *AnnotationReturnController) DataGrid() {
 	c.ServeJSON()
 }
 
-// TransformAnnotationList 格式化列表数据
+//  格式化列表数据
 func (c *AnnotationReturnController) transformAnnotationReturnList(ms []*models.AnnotationReturn) []*transforms.AnnotationReturn {
 	var annotationReturnList []*transforms.AnnotationReturn
 	for _, v := range ms {
