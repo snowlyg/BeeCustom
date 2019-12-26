@@ -110,20 +110,23 @@ func CompanyPageList(params *CompanyQueryParam) ([]*Company, int64) {
 
 func CompaniesGetRelations(rs []*Company, relations string) ([]*Company, error) {
 	for _, rv := range rs {
-		_, _ = CompanyGetRelations(rv, relations)
+		err := CompanyGetRelations(rv, relations)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return rs, nil
 }
 
-func CompanyGetRelations(v *Company, relations string) (*Company, error) {
+func CompanyGetRelations(v *Company, relations string) error {
 	o := orm.NewOrm()
 	rs := strings.Split(relations, ",")
 	for _, rv := range rs {
 		_, err := o.LoadRelated(v, rv)
 		if err != nil {
 			utils.LogDebug(fmt.Sprintf("LoadRelated:%v", err))
-			return nil, err
+			return err
 		}
 
 		for _, hv := range v.HandBooks {
@@ -132,7 +135,7 @@ func CompanyGetRelations(v *Company, relations string) (*Company, error) {
 
 	}
 
-	return v, nil
+	return nil
 }
 
 // CompanyByManageCode 根据海关编码 获取单条
@@ -162,7 +165,7 @@ func CompanyOne(id int64, relations string) (*Company, error) {
 	}
 
 	if len(relations) > 0 {
-		_, err := CompanyGetRelations(&m, relations)
+		err := CompanyGetRelations(&m, relations)
 		if err != nil {
 			return nil, err
 		}

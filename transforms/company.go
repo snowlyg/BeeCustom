@@ -1,8 +1,13 @@
 package transforms
 
+import (
+	"BeeCustom/models"
+)
+
 type Company struct {
 	Id                  int64
 	Number              string
+	AdminName           string `gtf:"Func.GetAdminName(CompanyContacts)"`
 	Name                string
 	Short               string
 	Registration        string
@@ -37,4 +42,14 @@ type Company struct {
 	Tax                 int8
 	CreatedAt           string
 	UpdatedAt           string
+}
+
+func (c *Company) GetAdminName(vs []*models.CompanyContact) string {
+	for _, v := range vs {
+		if v.IsAdmin == 1 {
+			return v.Name
+		}
+	}
+
+	return ""
 }

@@ -5,7 +5,7 @@ import "html"
 type Setting struct {
 	Id        int64
 	Key       string
-	RValue    string `gtf:"Func.GetValueEnd"`
+	RValue    string `gtf:"Func.GetValueEnd()"`
 	Rmk       string
 	CreatedAt string
 	UpdatedAt string

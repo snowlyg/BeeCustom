@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"BeeCustom/transforms"
 	"encoding/json"
 	"fmt"
+
+	"BeeCustom/transforms"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/snowlyg/gotransform"
 
@@ -55,6 +56,7 @@ func (c *CompanyController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.CompanyPageList(&params)
+	data, _ = models.CompaniesGetRelations(data, "CompanyContacts")
 	c.ResponseList(c.transformCompanyList(data), total)
 	c.ServeJSON()
 }
@@ -175,9 +177,18 @@ func (c *CompanyController) transformCompanyList(ms []*models.Company) []*transf
 		ut := transforms.Company{}
 		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
-
+		//ut.AdminName = c.getAdminName(v)
 		uts = append(uts, &ut)
 	}
 
 	return uts
+}
+
+func (c *CompanyController) getAdminName(v *models.Company) string {
+	for _, cc := range v.CompanyContacts {
+		if cc.IsAdmin == 1 {
+			return cc.Name
+		}
+	}
+	return ""
 }
