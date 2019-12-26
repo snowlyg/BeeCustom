@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"BeeCustom/transforms"
 	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/snowlyg/gotransform"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -53,7 +55,7 @@ func (c *CompanyController) DataGrid() {
 
 	//获取数据列表和总数
 	data, total := models.CompanyPageList(&params)
-	c.ResponseList(data, total)
+	c.ResponseList(c.transformCompanyList(data), total)
 	c.ServeJSON()
 }
 
@@ -164,4 +166,18 @@ func (c *CompanyController) Import() {
 		}
 		fmt.Println()
 	}
+}
+
+//  格式化列表数据
+func (c *CompanyController) transformCompanyList(ms []*models.Company) []*transforms.Company {
+	var uts []*transforms.Company
+	for _, v := range ms {
+		ut := transforms.Company{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
+	}
+
+	return uts
 }
