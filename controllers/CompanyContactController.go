@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -36,7 +35,6 @@ func (c *CompanyContactController) DataGrid() {
 	//直接获取参数 getDataGridData()
 	params := models.NewCompanyContactQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
-
 	//获取数据列表和总数
 	data, total := models.CompanyContactPageList(&params)
 	c.ResponseList(data, total)
@@ -130,7 +128,7 @@ func (c *CompanyContactController) Delete() {
 func (c *CompanyContactController) checkAdminContactCount(id, companyId int64, isAdmin int8) {
 	params := models.NewCompanyContactQueryParam()
 	params.IsAdmin = true
-	params.CompanyId = strconv.FormatInt(companyId, 10)
+	params.CompanyId = companyId
 
 	ccs, count := models.CompanyContactPageList(&params)
 

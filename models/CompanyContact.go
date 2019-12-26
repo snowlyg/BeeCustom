@@ -35,7 +35,7 @@ type CompanyContact struct {
 type CompanyContactQueryParam struct {
 	BaseQueryParam
 
-	CompanyId string
+	CompanyId int64
 	IsAdmin   bool
 }
 
