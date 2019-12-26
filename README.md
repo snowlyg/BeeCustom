@@ -1,5 +1,8 @@
 ## BeeCustom
 
+#### Require
+- go 1.13.x
+
 # 简介
 BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `Layui` 进行开发，功能参考海关的单一窗口。
 
