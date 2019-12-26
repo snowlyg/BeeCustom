@@ -177,11 +177,11 @@ func BackendUserOneByUserName(username, userpwd string) (*BackendUser, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
+// Save 添加、编辑页面 保存
 func BackendUserSave(m *BackendUser, roleIds []string) (*BackendUser, error) {
 	o := orm.NewOrm()
 	if m.Id == 0 {
-		//对密码进行加密
+		// 对密码进行加密
 		m.UserPwd = utils.String2md5(m.UserPwd)
 
 		if err := setRoles(m, roleIds); err != nil {
