@@ -63,8 +63,8 @@ type HandBook struct {
 	AccountStartFlag        string
 	ComplateStatus          string
 	AccountFunction         string
-	AplDate                 string `gtf:"Func.FormatTime()"`
-	UsefulLife              string `gtf:"Func.FormatTime()"`
+	AplDate                 string
+	UsefulLife              string
 	Bank                    string
 	StopInOutFlag           string
 	FirstExportAt           string
@@ -74,7 +74,7 @@ type HandBook struct {
 	SelfAuditFlag           string
 	ManualChangTimes        string
 	ManualType              string
-	PreentryDate            string `gtf:"Func.FormatTime()"`
+	PreentryDate            string
 	CreatedAt               string
 	UpdatedAt               string
 }

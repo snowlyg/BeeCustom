@@ -317,7 +317,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("GetExcel:%v", err), nil)
 	}
-	x := gotransform.NewXlxsTransform(&hIP.HandBook, hIP.ExcelTitle, nil, hIP.ExcelName, f)
+	x := gotransform.NewXlxsTransform(&hIP.HandBook, hIP.ExcelTitle, nil, hIP.ExcelName, "", f)
 	err = x.XlxsCellTransformer()
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
@@ -370,7 +370,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 			if roI > 1 { // 忽略标题和表头 2 行
 				hb := models.NewHandBookGood(0)
 				hb.Type = handBookGoodType
-				x := gotransform.NewXlxsTransform(&hb, hIP.ExcelTitle, row, "", nil)
+				x := gotransform.NewXlxsTransform(&hb, hIP.ExcelTitle, row, "", "", nil)
 				err := x.XlxsTransformer()
 				if err != nil {
 					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
@@ -391,7 +391,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 		for roI, row := range rows {
 			if roI > 1 { // 忽略标题行
 				hbu := models.NewHandBookUllage(0)
-				x := gotransform.NewXlxsTransform(&hbu, hIP.ExcelTitle, row, "", nil)
+				x := gotransform.NewXlxsTransform(&hbu, hIP.ExcelTitle, row, "", "", nil)
 				err := x.XlxsTransformer()
 				if err != nil {
 					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)

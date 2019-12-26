@@ -38,7 +38,7 @@ type Company struct {
 	IsOwner             int8
 	Business            string
 	BusinessAuditStatus int8
-	BusinessAuditAt     string `gtf:"Func.FormatTime()"`
+	BusinessAuditAt     string
 	Tax                 int8
 	CreatedAt           string
 	UpdatedAt           string

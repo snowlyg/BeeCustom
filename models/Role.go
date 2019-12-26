@@ -30,7 +30,7 @@ type Role struct {
 	UrlForstrings string   `orm:"-" form:"urlForstrings"`
 }
 
-//初始化角色
+// 初始化角色
 func NewRole(id int64) Role {
 	return Role{BaseModel: BaseModel{Id: id, CreatedAt: time.Now(), UpdatedAt: time.Now()}}
 }
@@ -51,7 +51,7 @@ func RolePageList(params *RoleQueryParam) ([]*Role, int64) {
 	return data, total
 }
 
-//查询参数
+// 查询参数
 func NewRoleQueryParam() RoleQueryParam {
 	return RoleQueryParam{BaseQueryParam: BaseQueryParam{Limit: -1, Sort: "Id", Order: "asc", Offset: 0}}
 }
@@ -85,7 +85,7 @@ func RoleOne(id int64, hasResource bool) (*Role, error) {
 	return &m, nil
 }
 
-//Save 添加、编辑页面 保存
+// Save 添加、编辑页面 保存
 func RoleSave(m *Role) error {
 	o := orm.NewOrm()
 	if _, err := o.Insert(m); err != nil {
@@ -104,7 +104,7 @@ func RoleSave(m *Role) error {
 	return nil
 }
 
-//Save 添加、编辑页面 保存
+// Save 添加、编辑页面 保存
 func RoleUpdate(m *Role) (*Role, error) {
 	o := orm.NewOrm()
 	if _, err := o.Update(m, "Name", "UpdatedAt"); err != nil {
@@ -128,7 +128,7 @@ func RoleUpdate(m *Role) (*Role, error) {
 	return m, nil
 }
 
-//删除
+// 删除
 func RoleDelete(id int64) (num int64, err error) {
 	m := NewRole(id)
 	if num, err := BaseDelete(&m); err != nil {

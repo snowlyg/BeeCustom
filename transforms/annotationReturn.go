@@ -11,7 +11,7 @@ type AnnotationReturn struct {
 	Reason       string
 	CreateDate   string
 	Rmk          string
-	DeletedAt    string `gtf:"Func.FormatTime()"`
+	DeletedAt    string
 	CreatedAt    string
 	UpdatedAt    string
 }

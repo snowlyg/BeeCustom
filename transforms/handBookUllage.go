@@ -25,7 +25,7 @@ type HandBookUllage struct {
 	ChangeMark            string
 	BondedRate            string
 	CompanyExecuteFlag    string
-	OnlyUllageAt          string `gtf:"Func.FormatTime()"`
+	OnlyUllageAt          string
 	UllageFlag            string
 	TalkFlag              string
 	Remark                string

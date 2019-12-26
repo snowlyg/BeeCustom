@@ -7,7 +7,7 @@ type Ciq struct {
 	CiqCode     string
 	CiqName     string
 	Version     string
-	VersionDate string `gtf:"Func.FormatTime()"`
+	VersionDate string
 	Mark        int8
 	Status      string
 	CreatedAt   string

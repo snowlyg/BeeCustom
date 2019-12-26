@@ -95,7 +95,7 @@ func GetCreateBackendUsers(roleResouceString string) []*BackendUser {
 func IsSuperAdmin(id int64) bool {
 	formatInt := strconv.FormatInt(id, 10)
 	hasRoleForUser, _ := utils.E.HasRoleForUser(formatInt, "1")
-	//超级管理员
+	// 超级管理员
 	return hasRoleForUser
 }
 
@@ -117,6 +117,7 @@ func BackendUserGetRelations(v *BackendUser) error {
 	roleIdStrings, err := utils.E.GetRolesForUser(strconv.FormatInt(v.Id, 10))
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetRolesForUser error:%v", err))
+		return err
 	}
 
 	var roleNames string
@@ -124,15 +125,19 @@ func BackendUserGetRelations(v *BackendUser) error {
 		for _, roleId := range roleIdStrings {
 			id64, err := strconv.ParseInt(roleId, 10, 64)
 			if err != nil {
-				utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+				utils.LogDebug(fmt.Sprintf("ParseInt error:%v \n", err))
+				return err
 			}
 
 			role, err := RoleOne(id64, false)
-			if err != nil {
-				utils.LogDebug(fmt.Sprintf("ParseInt error:%v", err))
+			if err != nil && err.Error() != "<QuerySeter> no row found" {
+				utils.LogDebug(fmt.Sprintf("RoleOne error:%v %v \n", err, id64))
+				return err
 			}
 
-			roleNames += role.Name + ","
+			if role != nil {
+				roleNames += role.Name + ","
+			}
 		}
 	}
 
