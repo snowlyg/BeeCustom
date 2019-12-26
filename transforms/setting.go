@@ -7,7 +7,6 @@ type Setting struct {
 	Key       string
 	RValue    string `gtf:"Func.GetValueEnd"`
 	Rmk       string
-	DeletedAt string
 	CreatedAt string
 	UpdatedAt string
 }

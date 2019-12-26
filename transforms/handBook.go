@@ -1,0 +1,80 @@
+package transforms
+
+type HandBook struct {
+	Id                      int64
+	CompanyName             string `gtf:"Company.Name"`
+	CompanyNo               string
+	CompanyManageCode       string
+	CompanyManageName       string
+	ContractNumber          string
+	CompanyClientCode       string
+	CompanyClientName       string
+	PutrecNo                string
+	ForeignTradeCompanyName string
+	PermitNumber            string
+	Manualslx               string
+	SuperviseMode           string
+	Permitcn                string
+	TaxationxzName          string
+	ProcessingMode          string
+	OriginalityPquantity    string
+	FinishedPquantity       string
+	BondedMode              string
+	InAmount                float64
+	ContractNo              string
+	OutAmount               float64
+	InMoneyunit             string
+	OutMoneyunit            string
+	InContractNo            string
+	OutContractNo           string
+	WarehouseVolume         string
+	WarehouseArea           string
+	FinishedRate            string
+	UllageMode              string
+	ThroughPut              float64
+	ThroughPutUnit          string
+	MaxWorkingCapital       string
+	Remark                  string
+	Type                    int8
+	CompanyManageCreditCode string
+	CompanyClientCreditCode string
+	AgentCode               string
+	AgentCodeScc            string
+	AgentName               string
+	CompanyClientAreaName   string
+	AplCompanyType          string
+	AplType                 string
+	CompanyDocNo            string
+	OriginCount             string
+	FinishCount             string
+	Ciq                     string
+	InputCompanyCode        string
+	InputCompanyCodeScc     string
+	InputCompanyName        string
+	RecordAt                string
+	ChangeAt                string
+	LastComplateAt          string
+	UllagePro               string
+	UllageProVersionFlag    string
+	ChangTimes              string
+	BiggestInAmount         string
+	ComplateDays            string
+	ComplateType            string
+	AccountStartFlag        string
+	ComplateStatus          string
+	AccountFunction         string
+	AplDate                 string `gtf:"Func.FormatTime()"`
+	UsefulLife              string `gtf:"Func.FormatTime()"`
+	Bank                    string
+	StopInOutFlag           string
+	FirstExportAt           string
+	CompanyContact          string
+	CompanyContactPhone     string
+	StopChangeFlag          string
+	SelfAuditFlag           string
+	ManualChangTimes        string
+	ManualType              string
+	PreentryDate            string `gtf:"Func.FormatTime()"`
+	CreatedAt               string
+	UpdatedAt               string
+}

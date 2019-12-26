@@ -8,7 +8,6 @@ type Resource struct {
 	UrlFor     string
 	ParentName string `gtf:"Parent.Name"`
 	Sons       []*Resource
-	DeletedAt  string
 	CreatedAt  string
 	UpdatedAt  string
 }

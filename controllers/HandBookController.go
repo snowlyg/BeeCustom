@@ -9,6 +9,7 @@ import (
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/transforms"
 	"BeeCustom/utils"
 	"BeeCustom/xlsx"
 	"github.com/snowlyg/gotransform"
@@ -78,7 +79,7 @@ func (c *HandBookController) GoodDataGrid() {
 
 	// 获取数据列表和总数
 	data, total := models.HandBookGoodPageList(&params)
-	c.ResponseList(data, total)
+	c.ResponseList(c.TransformHandBookGoodsList(data), total)
 	c.ServeJSON()
 }
 
@@ -89,9 +90,7 @@ func (c *HandBookController) GetHandBookGoodByHandBookId() {
 
 	data, _ := models.GetHandBookGoodById(&params)
 
-	handBookGoodsList := c.TransformHandBookGood(data)
-
-	c.Data["json"] = handBookGoodsList
+	c.Data["json"] = c.TransformHandBookGood(data)
 	c.ServeJSON()
 }
 
@@ -111,7 +110,7 @@ func (c *HandBookController) UllageDataGrid() {
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 
 	data, total := models.HandBookUllagePageList(&params)
-	c.ResponseList(data, total)
+	c.ResponseList(c.TransformHandBookUllageList(data), total)
 	c.ServeJSON()
 }
 
@@ -125,10 +124,7 @@ func (c *HandBookController) Show() {
 		}
 	}
 
-	c.Data["m"] = m
-
 	var html, showFooterjs string
-
 	handBookTypeS, err := c.getHandBookTypes()
 	chandBookType, err := enums.TransformCnToInt(handBookTypeS, "手册")
 	if err != nil {
@@ -149,6 +145,7 @@ func (c *HandBookController) Show() {
 	}
 
 	c.setTpl(html)
+	c.Data["m"] = c.TransformHandBook(m)
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = showFooterjs
 	c.GetXSRFToken()
@@ -417,45 +414,45 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 }
 
 //  TransformHandBookGoodsList 格式化列表数据
-func (c *HandBookController) TransformHandBookGoodsList(ms []*models.HandBookGood) []*map[string]interface{} {
-	var handBookList []*map[string]interface{}
-	clearances1 := models.GetClearancesByTypes("货币代码", true)
-	clearances2 := models.GetClearancesByTypes("计量单位代码", false)
+func (c *HandBookController) TransformHandBookGoodsList(ms []*models.HandBookGood) []*transforms.HandBookGood {
+	var uts []*transforms.HandBookGood
 	for _, v := range ms {
-		var unitOneCode interface{}
-		var unitTwoCode interface{}
-		var moneyunitCode interface{}
-		for _, c := range clearances2 {
-			if c[0] == v.UnitOne {
-				unitOneCode = c[1]
-			}
+		ut := transforms.HandBookGood{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
 
-			if c[0] == v.UnitTwo {
-				unitTwoCode = c[1]
-			}
-		}
-		for _, c := range clearances1 {
-			if c[0] == v.Moneyunit {
-				moneyunitCode = c[1]
-			}
-
-		}
-		handBook := make(map[string]interface{})
-		handBook["Id"] = strconv.FormatInt(v.Id, 10)
-		handBook["RecordNo"] = v.RecordNo
-		handBook["HsCode"] = v.HsCode
-		handBook["Name"] = v.Name
-		handBook["Special"] = v.Special
-		handBook["UnitOne"] = v.UnitOne
-		handBook["UnitOneCode"] = unitOneCode
-		handBook["UnitTwo"] = v.UnitTwo
-		handBook["UnitTwoCode"] = unitTwoCode
-		handBook["Price"] = v.Price
-		handBook["Moneyunit"] = v.Moneyunit
-		handBook["MoneyunitCode"] = moneyunitCode
-
-		handBookList = append(handBookList, &handBook)
+		uts = append(uts, &ut)
 	}
+	return uts
+}
 
-	return handBookList
+//  TransformHandBookGoodUllageList 格式化列表数据
+func (c *HandBookController) TransformHandBookUllageList(ms []*models.HandBookUllage) []*transforms.HandBookUllage {
+	var uts []*transforms.HandBookUllage
+	for _, v := range ms {
+		ut := transforms.HandBookUllage{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
+	}
+	return uts
+}
+
+// TransformHandBookGood 格式化列表数据
+func (c *HandBookController) TransformHandBookGood(v *models.HandBookGood) *transforms.HandBookGood {
+	ut := &transforms.HandBookGood{}
+	g := gotransform.NewTransform(ut, v, enums.BaseDateTimeFormat)
+	_ = g.Transformer()
+
+	return ut
+}
+
+// TransformHandBookGood 格式化列表数据
+func (c *HandBookController) TransformHandBook(v *models.HandBook) *transforms.HandBook {
+	ut := &transforms.HandBook{}
+	g := gotransform.NewTransform(ut, v, enums.BaseDateTimeFormat)
+	_ = g.Transformer()
+
+	return ut
 }

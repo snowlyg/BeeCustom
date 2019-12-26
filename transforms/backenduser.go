@@ -13,7 +13,6 @@ type BackendUser struct {
 	IsSuper   bool
 	Status    bool
 	RoleNames string
-	DeletedAt string
 	CreatedAt string
 	UpdatedAt string
 }

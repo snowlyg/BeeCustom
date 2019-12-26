@@ -11,9 +11,8 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/validations"
-	"github.com/astaxie/beego/validation"
-
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/validation"
 )
 
 type BaseController struct {
@@ -304,45 +303,4 @@ func UpdateOrderStatus(m *models.Order, StatusString string, isRestart bool) err
 	}
 
 	return nil
-}
-
-// TransformHandBookGood 格式化列表数据
-func (c *HandBookController) TransformHandBookGood(v *models.HandBookGood) map[string]interface{} {
-
-	clearances1 := models.GetClearancesByTypes("货币代码", true)
-	clearances2 := models.GetClearancesByTypes("计量单位代码", false)
-	var unitOneCode interface{}
-	var unitTwoCode interface{}
-	var moneyunitCode interface{}
-	for _, c := range clearances2 {
-		if c[0] == v.UnitOne {
-			unitOneCode = c[1]
-		}
-
-		if c[0] == v.UnitTwo {
-			unitTwoCode = c[1]
-		}
-	}
-
-	for _, c := range clearances1 {
-		if c[0] == v.Moneyunit {
-			moneyunitCode = c[1]
-		}
-
-	}
-	handBook := make(map[string]interface{})
-	handBook["Id"] = strconv.FormatInt(v.Id, 10)
-	handBook["RecordNo"] = v.RecordNo
-	handBook["HsCode"] = v.HsCode
-	handBook["Name"] = v.Name
-	handBook["Special"] = v.Special
-	handBook["UnitOne"] = v.UnitOne
-	handBook["UnitOneCode"] = unitOneCode
-	handBook["UnitTwo"] = v.UnitTwo
-	handBook["UnitTwoCode"] = unitTwoCode
-	handBook["Price"] = v.Price
-	handBook["Moneyunit"] = v.Moneyunit
-	handBook["MoneyunitCode"] = moneyunitCode
-
-	return handBook
 }

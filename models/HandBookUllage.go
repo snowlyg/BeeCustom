@@ -43,8 +43,8 @@ type HandBookUllage struct {
 	BondedRate            string        `orm:"column(bonded_rate);size(255);null" description:"保税料件比例%"`
 	CompanyExecuteFlag    string        `orm:"column(company_execute_flag);size(255);null" description:"企业执行标志"`
 	OnlyUllageAt          time.Time     `orm:"column(only_ullage_at);type(datetime);null" description:"单耗有效期"`
-	UllageFlag            time.Time     `orm:"column(ullage_flag);type(datetime);null" description:"单耗质疑标志"`
-	TalkFlag              time.Time     `orm:"column(talk_flag);type(datetime);null" description:"磋商标志"`
+	UllageFlag            string        `orm:"column(ullage_flag);null" description:"单耗质疑标志"`
+	TalkFlag              string        `orm:"column(talk_flag);null" description:"磋商标志"`
 	Remark                string        `orm:"column(remark);size(255);null" description:"备注"`
 	HandBookGood          *HandBookGood `orm:"column(hand_book_good_id);rel(fk)"`
 	HandBookGoodId        int64         `orm:"-" form:"HandBookGoodId"`
