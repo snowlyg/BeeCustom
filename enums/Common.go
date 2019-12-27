@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"math/rand"
 	"os/exec"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -180,62 +179,6 @@ func InStringMap(s string, sS map[string]string) bool {
 	}
 
 	return false
-}
-
-// 设置值
-func SetObjValueFromObj(outObj interface{}, inObj interface{}) {
-
-	outObjE := reflect.ValueOf(outObj).Elem()
-	outObjET := outObjE.Type()
-
-	vaInObj := reflect.ValueOf(inObj)
-
-	for i := 0; i < outObjE.NumField(); i++ {
-		outObjEF := outObjE.Field(i)
-		outObjETF := outObjET.Field(i)
-		switch vaInObj.Kind() {
-		case reflect.String:
-			outObjEF.SetString(vaInObj.String())
-		case reflect.Bool:
-			outObjEF.SetBool(vaInObj.Bool())
-		case reflect.Float64, reflect.Float32:
-			outObjEF.SetFloat(vaInObj.Float())
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			outObjEF.SetString(strconv.Itoa(int(vaInObj.Int())))
-		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			outObjEF.SetUint(vaInObj.Uint())
-		case reflect.Struct, reflect.Ptr:
-			inObjE := vaInObj.Elem()
-			inObjET := inObjE.Type()
-			for iI := 0; iI < inObjE.NumField(); iI++ {
-				inObjEF := inObjE.Field(iI)
-				inObjETF := inObjET.Field(iI)
-				if outObjETF.Name == inObjETF.Name && outObjEF.Type() == inObjEF.Type() {
-					if outObjEF.CanSet() {
-						switch inObjEF.Kind() {
-						case reflect.String:
-							outObjEF.SetString(inObjEF.String())
-						case reflect.Bool:
-							outObjEF.SetBool(inObjEF.Bool())
-						case reflect.Float64, reflect.Float32:
-							outObjEF.SetFloat(inObjEF.Float())
-						case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-							outObjEF.SetInt(inObjEF.Int())
-						case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-							outObjEF.SetUint(inObjEF.Uint())
-						case reflect.Struct:
-							SetObjValueFromObj(outObjEF, inObjEF)
-						default:
-							utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", inObjEF.Kind(), inObjEF))
-						}
-					}
-				}
-			}
-		default:
-			utils.LogDebug(fmt.Sprintf("未知类型:%v,%v", vaInObj.Kind(), vaInObj))
-		}
-	}
-
 }
 
 //  hmac 加密

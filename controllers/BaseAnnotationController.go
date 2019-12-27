@@ -14,6 +14,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
+	"github.com/snowlyg/gotransform"
 )
 
 type BaseAnnotationController struct {
@@ -578,7 +579,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		handBookType1, _ := enums.TransformCnToInt(handBookTypeS, "手册")
 		handBookType2, _ := enums.TransformCnToInt(handBookTypeS, "账册")
 		if handBook == nil {
-			c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
+			c.jsonResult(enums.JRCodeFailed, "错误手账册类型", handBook)
 		} else {
 			if handBook.Type == handBookType1 {
 				receiverId, _ = models.GetSettingValueByKey("AnnotationReceiverIdC")
@@ -589,7 +590,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 				sysId, _ = models.GetSettingValueByKey("AnnotationSysIdE")
 				path, _ = models.GetSettingValueByKey("annotation_xml_path_e")
 			} else {
-				c.jsonResult(enums.JRCodeFailed, "错误手账册类型", nil)
+				c.jsonResult(enums.JRCodeFailed, "错误手账册类型", handBook.Type)
 			}
 		}
 
@@ -612,7 +613,9 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode, _ = models.GetSettingValueByKey("AgentCode")
 
 		invtHeadType := xmlTemplate.InvtHeadType{}
-		enums.SetObjValueFromObj(&invtHeadType, m) // 设置数据到 xml 结构体
+		//enums.SetObjValueFromObj(&invtHeadType, m) // 设置数据到 xml 结构体
+		g := gotransform.NewTransform(&invtHeadType, m, "")
+		_ = g.Transformer()
 
 		iCCode, _ := models.GetSettingValueByKey("ICCode")
 		invtHeadType.IcCardNo = iCCode
@@ -623,7 +626,9 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		var invtListTypes []xmlTemplate.InvtListType
 		for _, v := range m.AnnotationItems {
 			invtListType := xmlTemplate.InvtListType{}
-			enums.SetObjValueFromObj(&invtListType, v) // 设置数据到 xml 结构体
+			//enums.SetObjValueFromObj(&invtListType, v) // 设置数据到 xml 结构体
+			g := gotransform.NewTransform(&invtListType, v, "")
+			_ = g.Transformer()
 
 			gdsNm := xmlTemplate.Cdata{Value: v.GdsNm}
 			invtListType.GdsNm = gdsNm

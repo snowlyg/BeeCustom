@@ -14,6 +14,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
+	"github.com/snowlyg/gotransform"
 )
 
 type BaseOrderController struct {
@@ -494,7 +495,9 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		}
 
 		decHead := xmlTemplate.DecHead{}
-		enums.SetObjValueFromObj(&decHead, m) // 设置数据到 xml 结构体
+		//enums.SetObjValueFromObj(&decHead, m) // 设置数据到 xml 结构体
+		g := gotransform.NewTransform(&decHead, m, "")
+		_ = g.Transformer()
 
 		gName := xmlTemplate.Cdata{Value: m.NoteS}
 		decHead.NoteS = gName
@@ -503,7 +506,9 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decListsl []xmlTemplate.DecList
 		for _, dl := range m.OrderItems {
 			decList := xmlTemplate.DecList{}
-			enums.SetObjValueFromObj(&decList, dl) // 设置数据到 xml 结构体
+			//enums.SetObjValueFromObj(&decList, dl) // 设置数据到 xml 结构体
+			g := gotransform.NewTransform(&decList, dl, "")
+			_ = g.Transformer()
 
 			gName := xmlTemplate.Cdata{Value: dl.GName}
 			decList.GName = gName
@@ -518,12 +523,17 @@ func (c *BaseOrderController) bPushXml(id int64) {
 			var decGoodsLimitsl []xmlTemplate.DecGoodsLimit
 			for _, oil := range dl.OrderItemLimits {
 				decGoodsLimit := xmlTemplate.DecGoodsLimit{}
-				enums.SetObjValueFromObj(&decGoodsLimit, oil) // 设置数据到 xml 结构体
+				//enums.SetObjValueFromObj(&decGoodsLimit, oil) // 设置数据到 xml 结构体
+				g := gotransform.NewTransform(&decGoodsLimit, oil, "")
+				_ = g.Transformer()
 
 				var decGoodsLimitVins []xmlTemplate.DecGoodsLimitVin
 				for _, oilv := range oil.OrderItemLimitVins {
 					decGoodsLimitVin := xmlTemplate.DecGoodsLimitVin{}
-					enums.SetObjValueFromObj(&decGoodsLimitVin, oilv) // 设置数据到 xml 结构体
+					//enums.SetObjValueFromObj(&decGoodsLimitVin, oilv) // 设置数据到 xml 结构体
+					g := gotransform.NewTransform(&decGoodsLimitVin, oilv, "")
+					_ = g.Transformer()
+
 					decGoodsLimitVins = append(decGoodsLimitVins, decGoodsLimitVin)
 				}
 				decGoodsLimit.DecGoodsLimitVin = decGoodsLimitVins
@@ -541,7 +551,10 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var licenseDocusl []xmlTemplate.LicenseDocu
 		for _, odec := range m.OrderDocuments {
 			decLicenseDocu := xmlTemplate.LicenseDocu{}
-			enums.SetObjValueFromObj(&decLicenseDocu, odec) // 设置数据到 xml 结构体
+			//enums.SetObjValueFromObj(&decLicenseDocu, odec) // 设置数据到 xml 结构体
+			g := gotransform.NewTransform(&decLicenseDocu, odec, "")
+			_ = g.Transformer()
+
 			licenseDocusl = append(licenseDocusl, decLicenseDocu)
 		}
 		decLicenseDocus.LicenseDocu = licenseDocusl
@@ -550,7 +563,10 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decContainersl []xmlTemplate.DecContainer
 		for _, oc := range m.OrderContainers {
 			decContainer := xmlTemplate.DecContainer{}
-			enums.SetObjValueFromObj(&decContainer, oc) // 设置数据到 xml 结构体
+			//enums.SetObjValueFromObj(&decContainer, oc) // 设置数据到 xml 结构体
+			g := gotransform.NewTransform(&decContainer, oc, "")
+			_ = g.Transformer()
+
 			decContainersl = append(decContainersl, decContainer)
 		}
 		decContainers.DecContainer = decContainersl
@@ -564,7 +580,10 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decRequestCertsl []xmlTemplate.DecRequestCert
 		for _, odrc := range m.DecRequestCerts {
 			decRequestCert := xmlTemplate.DecRequestCert{}
-			enums.SetObjValueFromObj(&decRequestCert, odrc) // 设置数据到 xml 结构体
+			//enums.SetObjValueFromObj(&decRequestCert, odrc) // 设置数据到 xml 结构体
+			g := gotransform.NewTransform(&decRequestCert, odrc, "")
+			_ = g.Transformer()
+
 			decRequestCertsl = append(decRequestCertsl, decRequestCert)
 		}
 		decRequestCerts.DecRequestCert = decRequestCertsl
@@ -573,7 +592,10 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decOtherPacksl []xmlTemplate.DecOtherPack
 		for _, odop := range m.DecOtherPacks {
 			decOtherPack := xmlTemplate.DecOtherPack{}
-			enums.SetObjValueFromObj(&decOtherPack, odop) // 设置数据到 xml 结构体
+			//enums.SetObjValueFromObj(&decOtherPack, odop) // 设置数据到 xml 结构体
+			g := gotransform.NewTransform(&decOtherPack, odop, "")
+			_ = g.Transformer()
+
 			decOtherPacksl = append(decOtherPacksl, decOtherPack)
 		}
 		decOtherPacks.DecOtherPack = decOtherPacksl
@@ -586,7 +608,10 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decUsersl []xmlTemplate.DecUser
 		for _, odu := range m.DecUsers {
 			decUser := xmlTemplate.DecUser{}
-			enums.SetObjValueFromObj(&decUser, odu) // 设置数据到 xml 结构体
+			//enums.SetObjValueFromObj(&decUser, odu) // 设置数据到 xml 结构体
+			g := gotransform.NewTransform(&decUser, odu, "")
+			_ = g.Transformer()
+
 			decUsersl = append(decUsersl, decUser)
 		}
 		decUsers.DecUser = decUsersl
@@ -600,7 +625,9 @@ func (c *BaseOrderController) bPushXml(id int64) {
 			edocCodes, _ := models.GetSettingRValueByKey("sendEdocCodes", false)
 			if enums.InStringMap(odr.EdocCode, edocCodes) {
 				edocRealation := xmlTemplate.EdocRealation{}
-				enums.SetObjValueFromObj(&edocRealation, odr) // 设置数据到 xml 结构体
+				//enums.SetObjValueFromObj(&edocRealation, odr) // 设置数据到 xml 结构体
+				g := gotransform.NewTransform(&edocRealation, odr, "")
+				_ = g.Transformer()
 				edocRealations = append(edocRealations, edocRealation)
 			}
 		}
