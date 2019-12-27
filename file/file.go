@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"BeeCustom/utils"
-	uuid "github.com/iris-contrib/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 // 调用os.MkdirAll递归创建文件夹
