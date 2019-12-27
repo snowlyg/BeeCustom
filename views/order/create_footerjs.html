@@ -53,7 +53,9 @@
         OrderItemsData.sort(function (a, b) {  // 排序表体
             return a.GNo - b.GNo;
         });
-
+        admin.getOrderTable(OrderItemsData, ieflag); //表体
+        renderContainerTable(); //集装箱
+        renderDocTable(); // 随附单证table
         // 加载按钮
         admin.getBtnTem("#order_button_template","#order_button",{
             statusString: statusString,
@@ -2480,23 +2482,6 @@
             index: null,
         };
 
-        table.render({
-            elem: '#order_containers_table'
-            , toolbar: '#order_containers_tool'
-            , defaultToolbar: ['filter']
-            , colFilterRecord: 'local'
-            , cols: [
-                [
-                    {type: 'checkbox'}
-                    , {field: 'ContainerId', title: '集装箱号', width: 120}
-                    , {field: 'ContainerMdName', title: '集装箱规格', width: 150}
-                    , {field: 'LclFlagName', title: '拼箱标识', width: 120},
-                ]]
-            , data: OrderContainers
-            , limit: OrderContainers.length
-            , height: 200,
-        })
-
         /**集装箱--商品序号默认全选**/
         $('body').on('keyup', '#ContainerId', function (event) {
             const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
@@ -2640,21 +2625,6 @@
             index: null,
         }
 
-        table.render({
-            elem: '#order_documents_table'
-            , toolbar: '#order_documents_tool'
-            , defaultToolbar: ['filter']
-            , colFilterRecord: 'local'
-            , cols: [
-                [
-                    {type: 'checkbox'}
-                    , {field: 'DocuCode', title: '单证代码', width: 120}
-                    , {field: 'CertCode', title: '单证编号'},
-                ]]
-            , data: OrderDocuments
-            , limit: OrderDocuments.length
-            , height: 200,
-        })
 
         /**随附单证--点击行反填数据**/
         table.on('row(order_documents_table)', function (obj) {
@@ -4061,6 +4031,44 @@
             isOrderItemInsert = is_order_item_insert
         }
 
+        // 集装箱
+        function renderContainerTable() {
+            table.render({
+                elem: '#order_containers_table'
+                , toolbar: '#order_containers_tool'
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [
+                    [
+                        {type: 'checkbox'}
+                        , {field: 'ContainerId', title: '集装箱号', width: 120}
+                        , {field: 'ContainerMdName', title: '集装箱规格', width: 150}
+                        , {field: 'LclFlagName', title: '拼箱标识', width: 120},
+                    ]]
+                , data: OrderContainers
+                , limit: OrderContainers.length
+                , height: 200,
+            });
+        }
+
+        // 随附单证
+        function renderDocTable() {
+            table.render({
+                elem: '#order_documents_table'
+                , toolbar: '#order_documents_tool'
+                , defaultToolbar: ['filter']
+                , colFilterRecord: 'local'
+                , cols: [
+                    [
+                        {type: 'checkbox'}
+                        , {field: 'DocuCode', title: '单证代码', width: 120}
+                        , {field: 'CertCode', title: '单证编号'},
+                    ]]
+                , data: OrderDocuments
+                , limit: OrderDocuments.length
+                , height: 200,
+            })
+        }
 
     })
 </script>
