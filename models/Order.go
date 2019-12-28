@@ -479,7 +479,7 @@ func TransformOrder(id int64, relation string, isRechek bool) map[string]interfa
 	orderItem["LicenseNo"] = v.LicenseNo                                 // "license_no);size(20);null" description:"许可证号"`
 	orderItem["TradeCountry"] = v.TradeCountry                           // "trade_country);size(3);null" description:"启运国（地区）/运抵国(地区)"`
 	orderItem["TradeCountryName"] = v.TradeCountryName                   // "trade_country_name);size(50);null" description:"启运国（地区）/运抵国(地区)名称"`
-	orderItem["DistinatePort "] = v.DistinatePort                        // "distinate_port);size(6);null" description:"经停港/指运港"`
+	orderItem["DistinatePort"] = v.DistinatePort                         // "distinate_port);size(6);null" description:"经停港/指运港"`
 	orderItem["DistinatePortName"] = v.DistinatePortName                 // "distinate_port_name);size(50);null" description:"经停港/指运港名称"`
 	orderItem["TransMode"] = v.TransMode                                 // "trans_mode);size(1);null" description:"成交方式"`
 	orderItem["TransModeName"] = v.TransModeName                         // "trans_mode_name);size(50);null" description:"成交方式名称"`
@@ -510,7 +510,7 @@ func TransformOrder(id int64, relation string, isRechek bool) map[string]interfa
 	orderItem["GoodsPlace"] = v.GoodsPlace                               // "goods_place);size(100);null" description:"货物存放地点（海关监管作业场所、分拨仓库、定点加工厂、隔离检疫场、企业自有仓库）"`
 	orderItem["DespPortCode"] = v.DespPortCode                           // "desp_port_code);size(6);null" description:"启运港"`
 	orderItem["DespPortName"] = v.DespPortName                           // "desp_port_name);size(100);null" description:"启运港名称"`
-	orderItem["EntryType "] = v.EntryType                                // "entry_type);size(1);null" description:"报关单类型"`
+	orderItem["EntryType"] = v.EntryType                                 // "entry_type);size(1);null" description:"报关单类型"`
 	orderItem["EntryTypeName"] = v.EntryTypeName                         // "entry_type_name);size(50);null" description:"报关单类型名称"`
 	orderItem["EdiId"] = v.EdiId                                         // "edi_id);size(1);null" description:"报关标志"`
 	orderItem["Type"] = v.Type                                           // "type);(2);null" description:"单据类型(业务事项)"`

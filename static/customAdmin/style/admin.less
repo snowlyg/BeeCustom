@@ -1,3 +1,4 @@
+@import "iconfont.css";
 @import "formSelects-v4.css";
 @import "tablePlug.css";
 @import "editor.css";
@@ -16,6 +17,17 @@ html #layuicss-layuiAdmin {
 ::-webkit-input-placeholder {
   color: #ccc
 }
+
+/** 滚动条 **/
+/*
+::-webkit-scrollbar{width: 10px; height: 10px;}
+::-webkit-scrollbar-button:vertical{display: none;}
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner{background-color: #e2e2e2;}
+::-webkit-scrollbar-thumb{border-radius: 0; background-color: rgba(0,0,0,.3);}
+::-webkit-scrollbar-thumb:vertical:hover{background-color: rgba(0,0,0,.35);}
+::-webkit-scrollbar-thumb:vertical:active{background-color: rgba(0,0,0,.38);}
+*/
+
 
 /* 全局 */
 html {
@@ -42,6 +54,11 @@ html {
   width: 100%;
   height: 50px;
 }
+
+/*
+.layui-layout-admin .layui-header .layui-layout-right .layui-nav-item a{color: #fff;}
+.layui-layout-admin .layui-header .layui-layout-right .layui-nav-item a cite{color: rgba(255,255,255,.7);}
+*/
 
 .layui-layout-admin .layui-header .layui-nav .layui-nav-child a {
   color: #333;
@@ -192,21 +209,21 @@ html {
 
 /* 重置表格风格 */
 /*
-.layui-table th, 
-.layui-table td, 
+.layui-table th,
+.layui-table td,
 .layui-table[lay-skin="line"],
-.layui-table[lay-skin="row"], 
-.layui-table-view, 
+.layui-table[lay-skin="row"],
+.layui-table-view,
 .layui-table-header,
 .layui-table-tool,
 .layui-table-page,
 .layui-table-fixed-r,
 .layui-table-tips-main{border-color: #f6f6f6;}
 
-.layui-table thead tr, 
-.layui-table-header, 
+.layui-table thead tr,
+.layui-table-header,
 .layui-table-tool,
-.layui-table-patch, 
+.layui-table-patch,
 .layui-table-mend{background-color: #fff;}
 
 .layui-table[lay-even] tr:nth-child(even),
@@ -793,9 +810,9 @@ html {
 
 
 /*
- 
+
  格局
- 
+
 */
 
 .layui-fluid {
@@ -838,9 +855,9 @@ html {
 
 
 /*
- 
+
  控制台
- 
+
 */
 
 
@@ -1077,9 +1094,9 @@ html {
 
 
 /********************************
- 
+
   其它主页开始 By star1029
- 
+
 *******************************/
 
 /* 主页示例一 by star1029 */
@@ -1331,7 +1348,7 @@ html {
 /*
 
  应用
- 
+
 */
 
 
@@ -1379,9 +1396,9 @@ html {
 
 
 /*
- 
+
  系统
- 
+
 */
 
 
@@ -1928,7 +1945,7 @@ html {
             }
 
             &-txt {
-              line-height: 30px;
+              line-height: 24px;
             }
           }
         }
@@ -1957,12 +1974,30 @@ html {
     &-advanced {
       margin: 20px 0;
       padding: 20px 15px;
-      display: flex;
+      /*display: flex;*/
       border: 1px solid rgba(240, 240, 240, 1);
       border-radius: 4px;
 
       .advanced_list {
         margin-right: 15px;
+          margin-bottom: 10px;
+          float: left;
+          span{
+              width: 100px;
+              display: block;
+              float: left;
+              height: 38px;
+              line-height: 38px;
+              text-align: right;
+          }
+          span.custom-new_btn{
+              width: auto;
+              text-align: center;
+              padding: 0 20px;
+          }
+          .layui-input-inline{
+              width: 181px;
+          }
       }
     }
 
@@ -2085,7 +2120,7 @@ html {
       }
 
       &-input {
-        padding-left: 35px;
+        padding-left: 38px;
         border-radius: 4px;
       }
     }
@@ -2732,8 +2767,11 @@ html {
       }
 
       &-contract {
+        margin-top: 20px;
+        border: 1px solid rgb(228, 231, 237);
         border-radius: 4px;
         background: white;
+        padding: 30px 25px;
 
         h1 {
           font-size: 16px;
@@ -2780,16 +2818,19 @@ html {
                 background-color: rgb(230, 58, 64);
               }
             }
-            margin-right: 10px;
-            margin-left: 10px;
+
+            width: 266px;
+            height: 68px;
+            margin-top: 20px;
+            margin-right: 20px;
             border-radius: 4px;
-            padding: 20px 20px;
+            padding: 20px;
             position: relative;
 
             .is_list_left{
               cursor: pointer;
             }
-            
+
             .is_list_delete{
               float: right;
               cursor: pointer;
@@ -2970,7 +3011,7 @@ html {
 }
 
 .xtree_contianer {
-  //max-height: 400px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
@@ -3004,7 +3045,7 @@ html {
 }
 
 .width-75 {
-  width: 68%;
+  width: 73%;
   display: inline-block;
   position: relative;
 }
@@ -3723,16 +3764,14 @@ div[lay-id='order_documents_table'] .layui-table-tool-temp {
   .is_error {
     background-color: #FF3940;
     color: #FFFFFF;
+    font-family: "iconfont" !important;
     font-style: normal;
-    font-size: 12px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    padding:4px;
   }
 
-  .font-12 {
-   font-style: normal;
-       font-size: 12px;
+  .is_error:after {
+    content: '\eb1f';
   }
 
   .is_warn {
@@ -3740,10 +3779,8 @@ div[lay-id='order_documents_table'] .layui-table-tool-temp {
     color: #FFFFFF;
     font-family: "iconfont" !important;
     font-style: normal;
-    font-size: 12px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    padding:4px;
   }
 
   .is_warn:after {
