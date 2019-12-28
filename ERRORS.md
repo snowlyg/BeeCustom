@@ -28,6 +28,7 @@ sessionon = true
 3. wkhtmltopdf 增加 js 支持
 - 不能引入其他js
 - 不能使用jq
+- 不能使用es5 相关功能 let const 关键词
 - --enable-javascript 开启js
 - ----debug-javascript 调试js
 

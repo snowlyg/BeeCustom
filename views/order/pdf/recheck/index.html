@@ -312,7 +312,8 @@
 
 <script>
     var order = @{{.m}}
-    if (order.StatusString == '复核通过' || order.StatusString == '待暂存') {
+    var statusString = order.StatusString;
+    if (statusString == '复核通过' || statusString == '待暂存') {
         var ids = document.querySelectorAll('span[data-id]')
         for (var i = 0; i < ids.length; i++) {
             var text = ids[i].innerText
@@ -322,32 +323,33 @@
         }
     }
 
-    if (order.StatusString == '复核不通过') {
-        if (order.RecheckErrorInputIds) {
-            for (var ri in order.RecheckErrorInputIds) {  //遍历数组
-                // order.RecheckErrorInputIds.forEach(function (v, i) {
-                let element = document.querySelector("span[data-id=" + order.RecheckErrorInputIds[ri] + "]");
+    if (statusString == '复核不通过') {
+        var recheckErrorInputIds = order.RecheckErrorInputIds;
+        if (recheckErrorInputIds) {
+            for (var ri in recheckErrorInputIds) {  //遍历数组
+                var element = document.querySelector("span[data-id=" + recheckErrorInputIds[ri] + "]");
                 if (element) {
                     element.classList.add('is_error')
                 }
             }
-            // });
 
-            // order.ItemRecheckErrorInputIds.forEach(function (v, i) {
-            for (var iri in order.ItemRecheckErrorInputIds) {  //遍历数组
-                for (var ii in order.ItemRecheckErrorInputIds[iri]) {  //遍历数组
-                    for (var vii in order.ItemRecheckErrorInputIds[iri][ii]) {  //遍历数组
-                        var ids = document.querySelectorAll('span[data-index="' + iri + '"][data-id=' + order.ItemRecheckErrorInputIds[iri][ii][vii] + "]");
+            var itemRecheckErrorInputIds = order.ItemRecheckErrorInputIds;
+            for (var iri in itemRecheckErrorInputIds) {  //遍历数组
+                var itemRecheckErrorInputId = itemRecheckErrorInputIds[iri];
+                for (var ii in itemRecheckErrorInputId) {  //遍历数组
+                    for (var vii in itemRecheckErrorInputId[ii]) {  //遍历数组
+                        var ids = document.querySelectorAll('span[data-index="' + iri + '"][data-id=' + itemRecheckErrorInputId[ii][vii] + "]");
                         for (var iii = 0; iii < ids.length; iii++) {
-                            var text = ids[iii].innerText;
-                            if (text && ids[iii]) {
-                                ids[iii].classList.add('is_error')
+                            var id = ids[iii];
+                            var text = id.innerText;
+                            if (text && id) {
+                                id.classList.add('is_error')
                             }
                         }
                     }
                 }
             }
-            // })
+
         }
     }
 

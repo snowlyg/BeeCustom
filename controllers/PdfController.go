@@ -15,7 +15,7 @@ func (c *PdfController) AnnotationRecheckPdf() {
 	annotation := models.TransformAnnotation(id, "AnnotationItems")
 	c.Data["M"] = annotation
 	c.Data["Now"] = time.Now()
-	c.setTpl("annotation/pdf/recheck.html", "shared/layout_app.html")
+	c.setTpl("annotation/pdf/recheck.html", "shared/layout_pdf.html")
 }
 
 func (c *PdfController) AnnotationPdf() {
@@ -23,21 +23,21 @@ func (c *PdfController) AnnotationPdf() {
 	annotation := models.TransformAnnotation(id, "AnnotationItems")
 	c.Data["M"] = annotation
 	c.Data["Now"] = time.Now()
-	c.setTpl("annotation/pdf/index.html", "shared/layout_app.html")
+	c.setTpl("annotation/pdf/index.html", "shared/layout_pdf.html")
 }
 
 func (c *PdfController) OrderRecheckPdf() {
 	id, _ := c.GetInt64(":id")
 	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
 	c.Data["m"] = order
-	c.setTpl("order/pdf/recheck/index.html", "")
+	c.setTpl("order/pdf/recheck/index.html", "shared/layout_pdf.html")
 }
 
 func (c *PdfController) OrderPdf() {
 	id, _ := c.GetInt64(":id")
 	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
 	c.Data["m"] = order
-	c.setTpl("order/pdf/declaration/index.html", "")
+	c.setTpl("order/pdf/declaration/index.html", "shared/layout_pdf.html")
 }
 
 func (c *PdfController) OrderPdfHeader() {
@@ -49,7 +49,7 @@ func (c *PdfController) OrderPdfHeader() {
 	c.Data["IsRecheck"] = false
 	c.Data["topage"] = topage
 	c.Data["page"] = page
-	c.setTpl("order/pdf/header/header.html", "shared/layout_app.html")
+	c.setTpl("order/pdf/header/header.html", "shared/layout_pdf.html")
 }
 
 func (c *PdfController) OrderRecheckPdfHeader() {
@@ -61,5 +61,5 @@ func (c *PdfController) OrderRecheckPdfHeader() {
 	c.Data["IsRecheck"] = true
 	c.Data["topage"] = topage
 	c.Data["page"] = page
-	c.setTpl("order/pdf/header/header.html", "shared/layout_app.html")
+	c.setTpl("order/pdf/header/header.html", "shared/layout_pdf.html")
 }
