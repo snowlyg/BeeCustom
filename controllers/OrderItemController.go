@@ -70,6 +70,7 @@ func (c *OrderItemController) Update() {
 // Copy 复制
 func (c *OrderItemController) Copy() {
 	Id, _ := c.GetInt64(":id", 0)
+	GNo, _ := c.GetInt("GNo", 0)
 	m, _ := models.OrderItemOne(Id)
 	_ = models.OrderItemGetRelation(m, "OrderItemLimits")
 	orderItemLimits, _ := models.OrderItemLimitGetRelations(m.OrderItemLimits, "OrderItemLimitVins")
@@ -77,7 +78,7 @@ func (c *OrderItemController) Copy() {
 	newOrderItem := models.NewOrderItem(0)
 	newOrderItem = *m
 	newOrderItem.Id = 0
-	newOrderItem.GNo = m.GNo + 1
+	newOrderItem.GNo = GNo
 	if err := models.OrderItemSave(&newOrderItem, 0); err != nil {
 		c.jsonResult(enums.JRCodeFailed, "操作失败", err)
 	} else {

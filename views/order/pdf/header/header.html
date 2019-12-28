@@ -69,6 +69,23 @@
     .height_30 {
         height: 30px;
     }
+    .is_success {
+        background-color: #f7fff7;
+        color: #16b615;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+
+    .is_error {
+        background-color: #FF3940;
+        color: #FFFFFF;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
 </style>
 <div class="pdf-header">
     <div class="pdf-top">
@@ -104,7 +121,7 @@
         @{{ end }}
         </div>
         <div class="three">
-            <span>(@{{ .m.CustomMasterName }})</span>
+            <span data-id="CustomMasterName">(@{{ .m.CustomMasterName }})</span>
         </div>
         <div class="four">
             <span>页码/页数：</span>
@@ -112,3 +129,30 @@
         </div>
     </div>
 </div>
+
+<script>
+    var order = @{{.m}}
+    var statusString = order.StatusString;
+    if (statusString == '复核通过' || statusString == '待暂存') {
+        var ids = document.querySelectorAll('span[data-id]')
+        for (var i = 0; i < ids.length; i++) {
+            var text = ids[i].innerText
+            if (text) {
+                ids[i].classList.add('is_success')
+            }
+        }
+    }
+
+    if (statusString == '复核不通过') {
+        var recheckErrorInputIds = order.RecheckErrorInputIds;
+        if (recheckErrorInputIds) {
+            for (var ri in recheckErrorInputIds) {  //遍历数组
+                var element = document.querySelector("span[data-id=" + recheckErrorInputIds[ri] + "]");
+                if (element) {
+                    element.classList.add('is_error')
+                }
+            }
+        }
+    }
+
+</script>

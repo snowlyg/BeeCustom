@@ -57,7 +57,7 @@
         renderContainerTable(); //集装箱
         renderDocTable(); // 随附单证table
         // 加载按钮
-        admin.getBtnTem("#order_button_template","#order_button",{
+        admin.getBtnTem("#order_button_template", "#order_button", {
             statusString: statusString,
             jq: $,
         });
@@ -1819,7 +1819,7 @@
                         return layer.msg('商品数量不能超过50条！')
                     }
 
-                    let resultCopy = await admin.post('/order_item/copy/' + checkData[0].Id);
+                    let resultCopy = await admin.post('/order_item/copy/' + checkData[0].Id, {GNo: OrderItemsData.length + 1});
                     if (resultCopy.status) {
                         OrderItemsData.push(resultCopy.obj);
                         setOrderItemEmptyData(false)
@@ -3630,7 +3630,7 @@
                 setTimeout(() => {
                     admin.reloadFrame(iEFlagName + '报关整合申报iframe');
                     statusString = "待复核";
-                    admin.getBtnTem("#order_button_template","#order_button",{
+                    admin.getBtnTem("#order_button_template", "#order_button", {
                         statusString: statusString,
                         jq: $,
                     });
