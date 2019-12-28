@@ -158,6 +158,22 @@ func (c *HandBookController) getHandBookTypes() (map[string]string, error) {
 // 删除
 func (c *HandBookController) Delete() {
 	id, _ := c.GetInt64(":id")
+	_, os, err := models.GetOrders(id)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "查询关联货物出错", err)
+	}
+	if os != 0 {
+		c.jsonResult(enums.JRCodeFailed, "不能删除有关联货物的手账册", err)
+	}
+
+	_, as, err := models.GetAnnotations(id)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "查询关联清单出错", err)
+	}
+	if as != 0 {
+		c.jsonResult(enums.JRCodeFailed, "不能删除有关联清单的手账册", err)
+	}
+
 	if num, err := models.HandBookDelete(id); err == nil {
 		c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("成功删除 %d 项", num), "")
 	} else {

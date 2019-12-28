@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
-	"strconv"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/transforms"
+	"github.com/snowlyg/gotransform"
 )
 
 type OrderFileController struct {
@@ -34,25 +35,21 @@ func (c *OrderFileController) DataGrid() {
 
 	// 获取数据列表和总数
 	data, total := models.OrderFilePageList(&params)
-	c.ResponseList(c.transformOrderFileList(data), total)
+	c.ResponseList(c.TransformOrderFileList(data), total)
 	c.ServeJSON()
 }
 
-// TransformOrderList 格式化列表数据
-func (c *OrderFileController) transformOrderFileList(ms []*models.OrderFile) []*map[string]interface{} {
-	var orderFileList []*map[string]interface{}
+// TransformOrderFile 格式化列表数据
+func (c *OrderFileController) TransformOrderFileList(ms []*models.OrderFile) []*transforms.OrderFile {
+
+	var uts []*transforms.OrderFile
 	for _, v := range ms {
-		OrderFile := make(map[string]interface{})
-		OrderFile["Id"] = strconv.FormatInt(v.Id, 10)
-		//OrderFile["Type"] = v.Type
-		//OrderFile["Name"] = v.Name
-		//OrderFile["Url"] = v.Url
-		OrderFile["Creator"] = v.Creator
-		OrderFile["Version"] = v.Version
-		OrderFile["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
+		ut := &transforms.OrderFile{}
+		g := gotransform.NewTransform(ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
 
-		orderFileList = append(orderFileList, &OrderFile)
+		uts = append(uts, ut)
 	}
+	return uts
 
-	return orderFileList
 }

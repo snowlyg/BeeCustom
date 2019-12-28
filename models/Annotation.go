@@ -273,6 +273,19 @@ func AnnotationOne(id int64, relations string) (*Annotation, error) {
 	return &m, nil
 }
 
+// Annotations
+func GetAnnotations(handBookId int64) ([]*Annotation, int64, error) {
+	var ms []*Annotation
+	o := orm.NewOrm()
+	tatol, err := o.QueryTable(AnnotationTBName()).Filter("hand_book_id", handBookId).RelatedSel().All(&ms)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("find annotation:%v", err))
+		return nil, 0, err
+	}
+
+	return ms, tatol, nil
+}
+
 // GetAnnotationByEtpsInnerInvtNo 根据清单号获取单条
 func GetAnnotationByEtpsInnerInvtNo(etpsInnerInvtNo string) (*Annotation, error) {
 	m := NewAnnotation(0)

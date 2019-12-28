@@ -310,6 +310,19 @@ func OrderOne(id int64, relations string) (*Order, error) {
 	return &m, nil
 }
 
+// Orders
+func GetOrders(handBookId int64) ([]*Order, int64, error) {
+	var ms []*Order
+	o := orm.NewOrm()
+	tatol, err := o.QueryTable(OrderTBName()).Filter("hand_book_id", handBookId).RelatedSel().All(&ms)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("find order:%v", err))
+		return nil, 0, err
+	}
+
+	return ms, tatol, nil
+}
+
 // GetOrderByClientSeqNo 根据清单号获取单条
 func GetOrderByClientSeqNo(clientSeqNo string) (*Order, error) {
 	m := NewOrder(0)

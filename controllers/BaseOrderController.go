@@ -419,8 +419,12 @@ func (c *BaseOrderController) bRecheckPassReject(statusString, action, actionNam
 		c.jsonResult(enums.JRCodeFailed, "添加失败", m)
 	} else {
 		aFile := models.NewOrderFile(0)
+		edocCode := actionName
+		aFile.EdocID = m.IEPort + edocCode + "SW" + time.Now().Format(enums.BaseDateTimeSecondFormat)
+		aFile.EdocFomatType = "US"
 		aFile.EdocCopUrl = strings.Replace(ffp, ".", "", 1)
-		aFile.EdocCode = actionName
+		aFile.EdocCode = edocCode
+		aFile.EdocCopId = actionName
 		aFile.EdocCodeName = actionName
 		aFile.Creator = c.curUser.RealName
 		aFile.Order = m
