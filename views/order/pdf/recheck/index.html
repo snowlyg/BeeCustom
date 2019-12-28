@@ -292,7 +292,6 @@
     }
 
 
-
     .is_error {
         background-color: #FF3940;
         color: #FFFFFF;
@@ -312,35 +311,44 @@
 @{{template "/order/pdf/common/recheck_delaration_body.html" .}}
 
 <script>
-  var order = @{{.m}}
-  if (order.StatusString == '复核通过' || order.StatusString == '待暂存') {
-    var ids = document.querySelectorAll('span[data-id]')
-    for (var i = 0; i < ids.length; i++) {
-      var text = ids[i].innerText
-      if (text) {
-        ids[i].classList.add('is_success')
-      }
-    }
-  }
-  if (order.StatusString == '复核不通过') {
-    if (order.RecheckErrorInputIds) {
-      order.RecheckErrorInputIds.forEach(function (v, i) {
-        document.querySelector(`span[data-id=${v}]`).classList.add('is_error')
-      })
-
-      order.ItemRecheckErrorInputIds.forEach(function (v, i) {
-        for (var ii in v) {  //遍历数组
-          for (var vii in v[ii]) {  //遍历数组
-            var ids = document.querySelectorAll(`span[data-index="${i}"][data-id=${v[ii][vii]}]`)
-            for (var iii = 0; iii < ids.length; iii++) {
-              var text = ids[iii].innerText
-              if (text) {
-                ids[iii].classList.add('is_error')
-              }
+    var order = @{{.m}}
+    if (order.StatusString == '复核通过' || order.StatusString == '待暂存') {
+        var ids = document.querySelectorAll('span[data-id]')
+        for (var i = 0; i < ids.length; i++) {
+            var text = ids[i].innerText
+            if (text) {
+                ids[i].classList.add('is_success')
             }
-          }
         }
-      })
     }
-  }
+
+    if (order.StatusString == '复核不通过') {
+        if (order.RecheckErrorInputIds) {
+            for (var ri in order.RecheckErrorInputIds) {  //遍历数组
+                // order.RecheckErrorInputIds.forEach(function (v, i) {
+                let element = document.querySelector("span[data-id=" + order.RecheckErrorInputIds[ri] + "]");
+                if (element) {
+                    element.classList.add('is_error')
+                }
+            }
+            // });
+
+            // order.ItemRecheckErrorInputIds.forEach(function (v, i) {
+            for (var iri in order.ItemRecheckErrorInputIds) {  //遍历数组
+                for (var ii in order.ItemRecheckErrorInputIds[iri]) {  //遍历数组
+                    for (var vii in order.ItemRecheckErrorInputIds[iri][ii]) {  //遍历数组
+                        var ids = document.querySelectorAll('span[data-index="' + iri + '"][data-id=' + order.ItemRecheckErrorInputIds[iri][ii][vii] + "]");
+                        for (var iii = 0; iii < ids.length; iii++) {
+                            var text = ids[iii].innerText;
+                            if (text && ids[iii]) {
+                                ids[iii].classList.add('is_error')
+                            }
+                        }
+                    }
+                }
+            }
+            // })
+        }
+    }
+
 </script>

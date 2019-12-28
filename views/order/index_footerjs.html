@@ -240,9 +240,7 @@
           } else {
             icon = '<i class="layui-icon layui-timeline-axis_i"></i>';
           }
-          txt += `<li class="layui-timeline-item">${icon}<div class="layui-timeline-content layui-text_rate"><h4 class="layui-timeline-title">${item.DealFlag ==
-          '0'
-              ? '暂存成功'
+          txt += `<li class="layui-timeline-item">${icon}<div class="layui-timeline-content layui-text_rate"><h4 class="layui-timeline-title">${item.DealFlag == '0' ? '暂存成功'
               : item.CheckInfo}<span class="margin_left_10">${item.CreatedAt}</span></h4><p class="record"><span>海关预录入编号为：</span><span class="_time">${item.SeqNo}</span></p></div></li>`;
         });
         content = `<div class="returns_tips returns_tips_close"><p class="returns_tips_content">回执内容：</p><ul class="layui-timeline">${txt}</ul></div>`;
@@ -317,7 +315,7 @@
       List: {
         Url: `/order/datagrid/` + "@{{.IEFlag}}",
         Request: {
-          SearchTimeString: MonthTime,
+          // SearchTimeString: MonthTime,
           sort: 'apl_date',
           order: 'desc',
         },
@@ -325,7 +323,7 @@
       StatusCount: {
         Url: `/order/statuscount/` + "@{{.IEFlag}}",
         Request: {
-          SearchTimeString: MonthTime,
+          // SearchTimeString: MonthTime,
         },
       },
     };

@@ -3,12 +3,9 @@ package sysinit
 import (
 	"fmt"
 
-	"BeeCustom/models"
 	"BeeCustom/utils"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/plugins/auth"
-
 	// _ "github.com/mattn/go-sqlite3"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -54,9 +51,9 @@ func InitDatabase() {
 	}
 
 	// basicAuth 认证
-	pdfAuth, _ := models.GetSettingRValueByKey("pdfAuth", false)
-	username := pdfAuth["pdf_username"]
-	password := pdfAuth["pdf_password"]
-
-	beego.InsertFilter("/pdf/*", beego.BeforeRouter, auth.Basic(username, password))
+	//pdfAuth, _ := models.GetSettingRValueByKey("pdfAuth", false)
+	//username := pdfAuth["pdf_username"]
+	//password := pdfAuth["pdf_password"]
+	//
+	//beego.InsertFilter("/pdf/*", beego.BeforeRouter, auth.Basic(username, password))
 }

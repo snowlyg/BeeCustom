@@ -56,6 +56,7 @@ func NewPDFGenerator(pdfData *PdfData) (string, error) {
 
 	// page.Zoom.Set(0.95)
 	page.DisableJavascript.Set(false)
+	//page.EnableJavascript.Set(true)
 	page.DebugJavascript.Set(true)
 	page.MinimumFontSize.Set(12)
 

@@ -30,14 +30,14 @@ func (c *PdfController) OrderRecheckPdf() {
 	id, _ := c.GetInt64(":id")
 	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
 	c.Data["m"] = order
-	c.setTpl("order/pdf/recheck/index.html", "shared/layout_app.html")
+	c.setTpl("order/pdf/recheck/index.html", "")
 }
 
 func (c *PdfController) OrderPdf() {
 	id, _ := c.GetInt64(":id")
 	order := models.TransformOrder(id, "OrderItems,OrderContainers,OrderDocuments", true)
 	c.Data["m"] = order
-	c.setTpl("order/pdf/declaration/index.html", "shared/layout_app.html")
+	c.setTpl("order/pdf/declaration/index.html", "")
 }
 
 func (c *PdfController) OrderPdfHeader() {

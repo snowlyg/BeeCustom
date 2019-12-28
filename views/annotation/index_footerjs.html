@@ -324,7 +324,7 @@
         Url: `/annotation/datagrid/` + "@{{.ImpexpMarkcd}}",
         Request: {
           IsDelete: @{{.IsDelete}},
-          SearchTimeString: MonthTime,
+          // SearchTimeString: MonthTime,
           sort: 'invt_dcl_time',
           order: 'desc',
         },
@@ -333,7 +333,7 @@
         Url: `/annotation/statuscount/` + "@{{.ImpexpMarkcd}}",
         Request: {
           IsDelete: @{{.IsDelete}},
-          SearchTimeString: MonthTime,
+          // SearchTimeString: MonthTime,
         },
       },
     };
