@@ -1602,16 +1602,16 @@
                 $('#order_pros_submit').click()
             }
             $('.layui-table-main').scrollTop(38 * (edit_row - 1))
-        })
+        });
 
         /**保存商品**/
         form.on('submit(order_pros_submit)', async function (data) {
             if ($('#GNo').val() > 50) {
-                layer.msg('商品数量不能超过50条！')
+                layer.msg('商品数量不能超过50条！');
                 return
             }
             if (OrderItemsData.length >= 51) {
-                layer.msg('商品数量不能超过50条！')
+                layer.msg('商品数量不能超过50条！');
                 return
             }
             if (OrderItemsData.length > 1) {
@@ -1632,37 +1632,37 @@
             if (data.field.CodeTS.toString().length != 10) {
                 return layer.msg('商品编号必须为10位！')
             }
-            data.field.DeclPrice = admin.formatnumber(data.field.DeclPrice, 4)
-            data.field.DeclTotal = admin.formatnumber(data.field.DeclTotal, 4)
+            data.field.DeclPrice = admin.formatnumber(data.field.DeclPrice, 4);
+            data.field.DeclTotal = admin.formatnumber(data.field.DeclTotal, 4);
 
             // 检验检疫货物规格
-            data.field.Stuff = OrderItemStuff
-            data.field.ProdValidDt = OrderItemProdValidDt
-            data.field.ProdQgp = OrderItemProdQgp
-            data.field.EngManEntCnm = OrderItemEngManEntCnm
-            data.field.GoodsSpec = OrderItemGoodsSpec
-            data.field.GoodsModel = OrderItemGoodsModel
-            data.field.GoodsBrand = OrderItemGoodsBrand
-            data.field.ProduceDate = OrderItemProduceDate
-            data.field.ProdBatchNo = OrderItemProdBatchNo
+            data.field.Stuff = OrderItemStuff;
+            data.field.ProdValidDt = OrderItemProdValidDt;
+            data.field.ProdQgp = OrderItemProdQgp;
+            data.field.EngManEntCnm = OrderItemEngManEntCnm;
+            data.field.GoodsSpec = OrderItemGoodsSpec;
+            data.field.GoodsModel = OrderItemGoodsModel;
+            data.field.GoodsBrand = OrderItemGoodsBrand;
+            data.field.ProduceDate = OrderItemProduceDate;
+            data.field.ProdBatchNo = OrderItemProdBatchNo;
 
             // 货物属性
-            data.field.GoodsAttr = JSON.stringify(OrderItemGoodsAttr)
-            data.field.GoodsAttrName = JSON.stringify(OrderItemGoodsAttrName)
+            data.field.GoodsAttr = JSON.stringify(OrderItemGoodsAttr);
+            data.field.GoodsAttrName = JSON.stringify(OrderItemGoodsAttrName);
 
             // 危险货物信息
-            data.field.Stuff = OrderItemNoDangFlag
-            data.field.NoDangFlagName = OrderItemNoDangFlagName
-            data.field.DangName = OrderItemDangName
-            data.field.UnCode = OrderItemUnCode
-            data.field.DangPackType = OrderItemDangPackType
-            data.field.DangPackTypeName = OrderItemDangPackTypeName
-            data.field.DangPackSpec = OrderItemDangPackSpec
-            data.field.DangPackSpecName = OrderItemDangPackSpecName
-            data.field.OrderItemLimits = OrderItemLimits // 产品资质
+            data.field.Stuff = OrderItemNoDangFlag;
+            data.field.NoDangFlagName = OrderItemNoDangFlagName;
+            data.field.DangName = OrderItemDangName;
+            data.field.UnCode = OrderItemUnCode;
+            data.field.DangPackType = OrderItemDangPackType;
+            data.field.DangPackTypeName = OrderItemDangPackTypeName;
+            data.field.DangPackSpec = OrderItemDangPackSpec;
+            data.field.DangPackSpecName = OrderItemDangPackSpecName;
+            data.field.OrderItemLimits = OrderItemLimits ;// 产品资质
 
             data.field.OrderId = order_id;  // id
-            if (isOrderItemInsert) {
+            if (isOrderItemInsert) { //插入
                 OrderItemsData.splice(orderItemIndex - 1, 0, data.field);  // id
                 OrderItemsData.forEach((value, index) => {
                     value.GNo = index + 1
@@ -1773,7 +1773,7 @@
             //   }
             // }
             // }
-        })
+        });
 
         /**商品列表--按钮操作**/
         table.on('toolbar(order_pros)', async function (obj) {
@@ -1782,7 +1782,7 @@
             switch (obj.event) {
                 case 'add':
                     setOrderItemEmptyData(false);
-                    break
+                    break;
                 case 'delete':
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据')
@@ -1881,7 +1881,9 @@
                     if (checkData.length != 1) {
                         return layer.msg('只能选择一条数据插入')
                     }
-                    setOrderItemEmptyData(true);
+                    setOrderItemEmptyData(false)
+                    $('#GNo').val(checkData[0].GNo +1);
+                    isOrderItemInsert = true;
                     break;
                 case 'again':
                     if (!($('#CodeTS').val().trim())) {
@@ -1996,6 +1998,7 @@
                             $('#val1Name').val(value.value)
                         }
                     });
+                    isOrderItemInsert=false;
                     break;
 
                 case 'look':
@@ -2099,7 +2102,7 @@
                             $('#val1Name').val(value.value)
                         }
                     })
-
+                    isOrderItemInsert=false;
                     break
                 case 'batch_edit':
                     if (checkData.length === 0) {
@@ -2147,10 +2150,10 @@
                     //     id: ['#DutyModeNameBatch'],
                     //     after: ['#DutyModeBatch']
                     // });
-
+                    isOrderItemInsert=false;
                     break
             }
-        })
+        });
 
         async function last_dec(type) {
             if (declaration_index == 0) {
@@ -2165,10 +2168,10 @@
                 } else {
                     return item.substr(2)
                 }
-            })
+            });
             laytpl($('#declaration_template').html()).render(data_show, function (html) {
                 $('#declaration_list_reload').html(html)
-            })
+            });
 
             if (type == 'look') {
                 $('#declaration_next').attr('id', 'declaration_next_look')
@@ -4027,8 +4030,8 @@
             }
             admin.is_total_number(OrderItemsData)
             /**tip:总价/成交数量合计/法定第一数量合计/法定第二数量合计**/
-            orderItemIndex = null
-            isOrderItemInsert = is_order_item_insert
+            orderItemIndex = null;
+            isOrderItemInsert = false;
         }
 
         // 集装箱
