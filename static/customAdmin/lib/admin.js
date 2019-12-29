@@ -2270,7 +2270,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#InvtTypeName'],
                         after: ['#InvtType'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(list_types)
                 }
 
@@ -2308,7 +2308,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DclcusFlagName'],
                         after: ['#DclcusFlag'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(nuclear_declaration_lis)
                 }
                 if ($.inArray('customs_declaration_type', loadArray) >= 0) {
@@ -2320,7 +2320,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DclcusTypecdName'],
                         after: ['#DclcusTypecd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(customs_declaration_type)
                 }
 
@@ -2333,7 +2333,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#DecTypeName'],
                         after: ['#DecType'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(type_declaration_list)
                 }
 
@@ -2346,7 +2346,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#GenDecFlagName'],
                         after: ['#GenDecFlag'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(gen_dec_flag_list)
                 }
 
@@ -2359,7 +2359,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#ModfMarkcdName'],
                         after: ['#ModfMarkcd'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(modf_markcd_list)
                 }
 
@@ -2377,7 +2377,7 @@ layui.define('view', function (exports) {
                             '#CustomMaster',
                             '#IEPort',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(entry_clearance)
                 }
 
@@ -2396,7 +2396,7 @@ layui.define('view', function (exports) {
                             '#ImpexpPortcd',
                             '#DclPlcCuscd',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_entry_clearance)
                 }
 
@@ -2452,7 +2452,7 @@ layui.define('view', function (exports) {
                         after: [
                             '#SupvModecd',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(ann_objectives_based)
                 }
 
@@ -2464,7 +2464,7 @@ layui.define('view', function (exports) {
                         filter_type: 's',
                         id: ['#CutModeName'],
                         after: ['#CutMode'],
-                    }
+                    };
                     await admin.base_clearance_data_auto(nature_exemption)
                 }
 
@@ -2486,7 +2486,7 @@ layui.define('view', function (exports) {
                             '#DestinationCountry',
                             '#OriginCountry',
                         ],
-                    }
+                    };
                     await admin.base_clearance_data_auto(country_area)
                 }
 

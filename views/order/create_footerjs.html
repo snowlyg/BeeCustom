@@ -48,6 +48,7 @@
             , DeclaratioMaterialCode = @{{.m.DeclaratioMaterialCode}}   /**企业承诺**/
             , isSaved = false //是否保存数据
             , orderItemIndex = null // 表体当前数据下标
+            , GoodsAttrBatchData = [] // 批量修改货物属性
             , isOrderItemInsert = false; //插入数据标志
 
         OrderItemsData.sort(function (a, b) {  // 排序表体
@@ -1659,7 +1660,7 @@
             data.field.DangPackTypeName = OrderItemDangPackTypeName;
             data.field.DangPackSpec = OrderItemDangPackSpec;
             data.field.DangPackSpecName = OrderItemDangPackSpecName;
-            data.field.OrderItemLimits = OrderItemLimits ;// 产品资质
+            data.field.OrderItemLimits = OrderItemLimits;// 产品资质
 
             data.field.OrderId = order_id;  // id
             if (isOrderItemInsert) { //插入
@@ -1882,7 +1883,7 @@
                         return layer.msg('只能选择一条数据插入')
                     }
                     setOrderItemEmptyData(false)
-                    $('#GNo').val(checkData[0].GNo +1);
+                    $('#GNo').val(checkData[0].GNo + 1);
                     isOrderItemInsert = true;
                     break;
                 case 'again':
@@ -1998,7 +1999,7 @@
                             $('#val1Name').val(value.value)
                         }
                     });
-                    isOrderItemInsert=false;
+                    isOrderItemInsert = false;
                     break;
 
                 case 'look':
@@ -2102,7 +2103,7 @@
                             $('#val1Name').val(value.value)
                         }
                     })
-                    isOrderItemInsert=false;
+                    isOrderItemInsert = false;
                     break
                 case 'batch_edit':
                     if (checkData.length === 0) {
@@ -2112,48 +2113,189 @@
                         type: 1,
                         title: '商品批量修改',
                         shadeClose: true,
-                        area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', '500px'],
+                        area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', '550px'],
                         content: $('#batch_edit_list').html(),
-                    })
-                    $('#TradeCurrNameBatch').focus()
-                    laydate.render({elem: '#ProdValidDtBatch', theme: '#1E9FFF', fixed: true})
-                    laydate.render({elem: '#ProduceDateBatch', theme: '#1E9FFF', fixed: true})
+                    });
+                    $('#TradeCurrNameBatch').focus();
+                    laydate.render({elem: '#ProdValidDtBatch', theme: '#1E9FFF', fixed: true});
+                    laydate.render({elem: '#ProduceDateBatch', theme: '#1E9FFF', fixed: true});
 
                     /**自动完成--批量修改--币制**/
-                    // auto_fn({
-                    //     data: admin.all_complete_data.currency,
-                    //     listDirection: false,
-                    //     id: ['#TradeCurrNameBatch'],
-                    //     after: ['#TradeCurrBatch']
-                    // });
+                    let currency = {
+                        dataType: 'commonClearance',
+                        type: 19,
+                        name: '货币代码',
+                        filter_type: 'l',
+                        id: [
+                            '#TradeCurrNameBatch',
+                        ],
+                        after: [
+                            '#TradeCurrBatch',
+                        ],
+                    };
+                    await admin.base_clearance_data_auto(currency);
 
                     /**自动完成--批量修改--原产国（地区）**/
-                    // auto_fn({
-                    //     data: admin.all_complete_data.country_area,
-                    //     listDirection: false,
-                    //     id: ['#DestinationCountryNameBatch'],
-                    //     after: ['#DestinationCountryBatch']
-                    // });
+                    let country_area = {
+                        dataType: 'commonClearance',
+                        type: 9,
+                        name: '国别地区代码',
+                        filter_type: 'l',
+                        id: [
+                            '#OriginCountryNameBatch',
+                        ],
+                        after: [
+                            '#OriginCountryBatch',
+                        ],
+                    };
+                    await admin.base_clearance_data_auto(country_area)
 
-                    /**自动完成--批量修改--境内目的地代码**/
-                    // auto_fn({
-                    //     data: admin.all_complete_data.domestic_area,
-                    //     listDirection: false,
-                    //     id: ['#DistrictCodeNameBatch'],
-                    //     after: ['#DistrictCodeBatch']
-                    // });
+                    /**自动完成--批量修改--境内目的地代码**/  let domestic_area = {
+                        dataType: 'orderClearance',
+                        type: 14,
+                        name: '国内地区代码',
+                        filter_type: 's',
+                        id: ['#DistrictCodeNameBatch'],
+                        after: ['#DistrictCodeBatch'],
+                    }
+                    await admin.base_clearance_data_auto(domestic_area)
 
                     /**自动完成--征免方式**/
-                    // auto_fn({
-                    //     data: admin.all_complete_data.exempting_method,
-                    //     listDirection: false,
-                    //     id: ['#DutyModeNameBatch'],
-                    //     after: ['#DutyModeBatch']
-                    // });
-                    isOrderItemInsert=false;
+                    let exempting_method = {
+                        dataType: 'commonClearance',
+                        type: 4,
+                        name: '征减免税方式代码',
+                        filter_type: 's',
+                        id: ['#DutyModeNameBatch'],
+                        after: ['#DutyModeBatch'],
+                    };
+                    await admin.base_clearance_data_auto(exempting_method)
+
+                    isOrderItemInsert = false;
                     break
             }
         });
+
+        /**批量修改--货物属性**/
+        $('body').on('click', '#GoodsAttrOpenBatch', async function () {
+            const data = layui.data('orderClearance').data[22];
+            const len = data.length;
+            let result = []
+            const sliceNum = 4
+            for (let i = 0; i < len / sliceNum; i++) {
+                result.push(data.slice(i * sliceNum, (i + 1) * sliceNum))
+            }
+            laytpl($('#goods_attr_batch_data_template').html()).render(result, function (html) {
+                $('#goods_attr_batch_data_list').html(html)
+            });
+            const goods_attr_batch_index = layer.open({
+                type: 1,
+                title: '货物属性',
+                shadeClose: true,
+                area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', '300px'],
+                content: $('#goods_attr_batch_data_list').html(),
+                success: function (layero, index) {
+                    this.enterEsc = function (event) {
+                        if (event.keyCode === 13) {
+                            layer.close(goods_attr_batch_index);
+                            return false
+                        }
+                    };
+                    $(document).on('keydown', this.enterEsc)
+                },
+                end: function () {
+                    $(document).off('keydown', this.enterEsc);
+                    $('#stuff_batch').focus()
+                },
+            })
+
+            $('.tableDiv_attr_batch_td').each(function () {
+                const result = GoodsAttrBatchData.some(item => {
+                    if (item.CustomsCode == $(this).data('id')) {
+                        return true
+                    }
+                });
+                if (result) {
+                    $(this).addClass('bgcolor')
+                }
+            })
+        });
+
+        /**批量修改--货物属性选择**/
+        $('body').on('click', '.tableDiv_attr_batch_td', function () {
+            if ($(this).hasClass('bgcolor')) {
+                $(this).removeClass('bgcolor')
+            } else {
+                $(this).addClass('bgcolor')
+            }
+            const result = GoodsAttrBatchData.some(item => {
+                if (item.CustomsCode == $(this).data('id')) {
+                    return true
+                }
+            });
+            if (result) {
+                const index = GoodsAttrBatchData.findIndex(item => item.CustomsCode == $(this).data('id'))
+                GoodsAttrBatchData.splice(index, 1)
+            } else {
+                GoodsAttrBatchData.push({
+                    CustomsCode: $(this).data('id'),
+                    Name: $(this).attr('name'),
+                })
+            }
+            const data = GoodsAttrBatchData.map(item => item.Name)
+            $('#goods_attr_batch').val(data.join(','))
+        })
+
+        /**批量修改--征免方式回车**/
+        $('body').on('keyup', '#duty_mode_name_batch', function (event) {
+            const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
+            if (event.shiftKey != 1 && eCode == 13) {
+                $('#goods_attr_open_batch').click()
+            }
+        });
+
+        /**批量修改--生产批次回车**/
+        $('body').on('keyup', '#prod_batch_no_batch', function (event) {
+            const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
+            if (event.shiftKey != 1 && eCode == 13) {
+                $('#batch_edit_save').click()
+                return false
+            }
+        });
+
+        /**批量修改--保存**/
+        form.on('submit(batch_edit_save)', async (data) => {
+            const checkData = table.checkStatus('order_pros').data
+            const data_map = checkData.map(item => item.GNo)
+            for (let item of data_map) {
+                for (let value in data.field) {
+                    if (value.indexOf('type') > -1) {
+                        if (data.field[value]) {
+                            const value_rep = value.replace('type_', '')
+                            OrderItemsData[parseInt(item) - 1].GoodsSpecData[value_rep] = data.field[value]
+                        }
+                    } else {
+                        if (data.field[value]) {
+                            OrderItemsData[parseInt(item) - 1][value] = data.field[value]
+                        }
+                    }
+                }
+                if (GoodsAttrBatchData) {
+                    OrderItemsData[parseInt(item) - 1].OrderItemGoodsAttr = GoodsAttrBatchData
+                }
+            }
+            table.reload('order_pros', {
+                data: OrderItemsData,
+                limit: OrderItemsData.length,
+            });
+            layer.closeAll();
+            for (let item of data_map) {
+                $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${parseInt(item) - 1}] input`).prop('checked', true)
+            }
+            form.render('checkbox');
+            $('#dec_users_submit').click()
+        });
+
 
         async function last_dec(type) {
             if (declaration_index == 0) {
@@ -2357,124 +2499,6 @@
             })
         }
 
-        /**批量修改--货物属性**/
-        $('body').on('click', '#goods_attr_open_batch', async function () {
-            const data = await admin.get(`/clearance/no_paginate?type=货物属性代码`)
-            const len = data.length
-            let result = []
-            const sliceNum = 4
-            for (let i = 0; i < len / sliceNum; i++) {
-                result.push(data.slice(i * sliceNum, (i + 1) * sliceNum))
-            }
-            laytpl($('#goods_attr_batch_data_template').html()).render(result, function (html) {
-                $('#goods_attr_batch_data_list').html(html)
-            })
-            const goods_attr_batch_index = layer.open({
-                type: 1,
-                title: '货物属性',
-                shadeClose: true,
-                area: admin.screen() < 2 ? ['80%', '300px'] : ['680px', '300px'],
-                content: $('#goods_attr_batch_data_list').html(),
-                success: function (layero, index) {
-                    this.enterEsc = function (event) {
-                        if (event.keyCode === 13) {
-                            layer.close(goods_attr_batch_index)
-                            return false
-                        }
-                    }
-                    $(document).on('keydown', this.enterEsc)
-                },
-                end: function () {
-                    $(document).off('keydown', this.enterEsc)
-                    $('#stuff_batch').focus()
-                },
-            })
-
-            $('.tableDiv_attr_batch_td').each(function () {
-                const result = goods_attr_batch_data.some(item => {
-                    if (item.code == $(this).data('id')) {
-                        return true
-                    }
-                })
-                if (result) {
-                    $(this).addClass('bgcolor')
-                }
-            })
-        })
-
-        /**批量修改--货物属性选择**/
-        $('body').on('click', '.tableDiv_attr_batch_td', function () {
-            if ($(this).hasClass('bgcolor')) {
-                $(this).removeClass('bgcolor')
-            } else {
-                $(this).addClass('bgcolor')
-            }
-            const result = goods_attr_batch_data.some(item => {
-                if (item.code == $(this).data('id')) {
-                    return true
-                }
-            })
-            if (result) {
-                const index = goods_attr_batch_data.findIndex(item => item.code == $(this).data('id'))
-                goods_attr_batch_data.splice(index, 1)
-            } else {
-                goods_attr_batch_data.push({
-                    code: $(this).data('id'),
-                    name: $(this).attr('name'),
-                })
-            }
-            const data = goods_attr_batch_data.map(item => item.name)
-            $('#goods_attr_batch').val(data.join(','))
-        })
-
-        /**批量修改--征免方式回车**/
-        $('body').on('keyup', '#duty_mode_name_batch', function (event) {
-            const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
-            if (event.shiftKey != 1 && eCode == 13) {
-                $('#goods_attr_open_batch').click()
-            }
-        })
-        /**批量修改--生产批次回车**/
-        $('body').on('keyup', '#prod_batch_no_batch', function (event) {
-            const eCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
-            if (event.shiftKey != 1 && eCode == 13) {
-                $('#batch_edit_save').click()
-                return false
-            }
-        })
-
-        /**批量修改--保存**/
-        form.on('submit(batch_edit_save)', async (data) => {
-            const checkData = table.checkStatus('order_pros').data
-            const data_map = checkData.map(item => item.g_no)
-            for (let item of data_map) {
-                for (let value in data.field) {
-                    if (value.indexOf('type') > -1) {
-                        if (data.field[value]) {
-                            const value_rep = value.replace('type_', '')
-                            OrderItemsData[parseInt(item) - 1].goods_spec_data[value_rep] = data.field[value]
-                        }
-                    } else {
-                        if (data.field[value]) {
-                            OrderItemsData[parseInt(item) - 1][value] = data.field[value]
-                        }
-                    }
-                }
-                if (goods_attr_batch_data) {
-                    OrderItemsData[parseInt(item) - 1].OrderItemGoodsAttr = goods_attr_batch_data
-                }
-            }
-            table.reload('order_pros', {
-                data: OrderItemsData,
-                limit: OrderItemsData.length,
-            })
-            layer.closeAll()
-            for (let item of data_map) {
-                $(`.layui-table-view[lay-id='order_pros'] .layui-table-body tr[data-index=${parseInt(item) - 1}] input`).prop('checked', true)
-            }
-            form.render('checkbox')
-            $('#dec_users_submit').click()
-        })
 
         /**集装箱**/
         let ContaineremptyObj = {

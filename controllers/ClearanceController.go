@@ -146,7 +146,7 @@ func (c *ClearanceController) transforClearance(data []*models.Clearance, arg []
 				clearance["Name"] = v.Name
 				clearance["CustomsCode"] = v.CustomsCode
 				clearance["OldCustomName"] = v.OldCustomName
-				clearance["OldCustomCode"] = v.OldCustomCode
+				clearance["OldCiqCode"] = v.OldCiqCode
 				clearances = append(clearances, clearance)
 			}
 			jsonData[i] = clearances

@@ -8,27 +8,32 @@
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
                             <input type="hidden" name="TradeCurr" id="TradeCurrBatch">
-                            <input type="text" class="non-empty" name="TradeCurrName" id="TradeCurrNameBatch" autocomplete="off">
+                            <input type="text" class="non-empty" name="TradeCurrName" id="TradeCurrNameBatch"
+                                   autocomplete="off">
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="td-scale-01 text-align-right">原产国（地区）</td>
+                    <td class="td-scale-01 text-align-right">@{{if eq "I" .IEFlag}}原产国（地区）@{{else if eq "E" .IEFlag  .m.IEFlag }}目的国（地区）@{{end }}</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="origin_country" id="OriginCountryBatch">
-                            <input type="text" class="non-empty" name="origin_country_name" id="OriginCountryNameBatch" autocomplete="off">
+                        <input type="hidden" name="OriginCountry" id="OriginCountryBatch">
+                        <input type="text" class="non-empty" name="OriginCountryName" id="OriginCountryNameBatch"
+                               autocomplete="off">
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="td-scale-01 text-align-right">境内目的地</td>
+
+                    <td class="td-scale-01 text-align-right">@{{if eq "I" .IEFlag}}境内目的地@{{else if eq "E" .IEFlag  .m.IEFlag }}境内货源地@{{end }}</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="hidden" name="district_code" id="district_code_batch">
-                            <input type="text" class="non-empty" name="DistrictCodeName" id="DistrictCodeNameBatch" autocomplete="off">
+                            <input type="hidden" name="DistrictCode" id="DistrictCodeBatch">
+                            <input type="text" class="non-empty" name="DistrictCodeName" id="DistrictCodeNameBatch"
+                                   autocomplete="off">
                         </div>
                     </td>
+
                 </tr>
                 <tr>
                     <td class="td-scale-01 text-align-right">征免方式</td>
@@ -129,15 +134,16 @@
                     <td class="td-scale-01 text-align-right">生产批次</td>
                     <td class="td-scale-02 td-btn">
                         <div class="input-group valid">
-                            <input type="text" class="non-empty" name="TypeProdBatchNo" id="ProdBatchNoBatch" autocomplete="off">
+                            <input type="text" class="non-empty" name="TypeProdBatchNo" id="ProdBatchNoBatch"
+                                   autocomplete="off">
                         </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <div class="manual_no_btn">
-                <button class="layui-btn custom-create_btn" lay-submit lay-filter="batch_edit_save"
-                        id="batch_edit_save" type="button">
+                <button class="layui-btn custom-create_btn" lay-submit lay-filter="batch_edit_save" id="batch_edit_save"
+                        type="button">
                     提交
                 </button>
             </div>
