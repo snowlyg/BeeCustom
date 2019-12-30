@@ -4,7 +4,7 @@
     }).extend({
         index: 'lib/index'
     }).use(['index'], function () {
-        const table = layui.table, admin = layui.admin, $ = layui.$;
+        const {table, admin, $} = layui;
         table.render({
             elem: '#perm_lists'
             , autoSort: false
@@ -31,7 +31,7 @@
                 };
             }
             , cols: [[
-                {field: 'Key', title: 'Key',sort: true}
+                {field: 'Key', title: 'Key', sort: true}
                 , {field: 'RValue', title: 'Value', sort: true}
                 , {field: 'Rmk', title: '备注', sort: true}
                 , {field: 'CreatedAt', title: '创建时间', sort: true}

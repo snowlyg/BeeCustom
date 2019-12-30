@@ -139,6 +139,13 @@
     top: 8px;
     color: #ccc;
 }
+
+.layui_report_time div{
+    float: left;
+}
+.layui_report_time .report_to_time{
+    line-height: 36px;
+}
 .report_time_input{
     border: none;
     width: 130px;

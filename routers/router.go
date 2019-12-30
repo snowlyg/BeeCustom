@@ -281,7 +281,7 @@ func init() {
 	beego.Router("/setting/delete/?:id", &controllers.SettingController{}, "Delete:Delete")
 
 	// 登录控制
-	beego.Router("/home/control", &controllers.HomeController{}, "*:Control")
+	beego.Router("/home/control", &controllers.HomeController{}, "Get:Control")
 	beego.Router("/home/login", &controllers.HomeController{}, "*:Login")
 	beego.Router("/home/dologin", &controllers.HomeController{}, "Post:DoLogin")
 	beego.Router("/home/logout", &controllers.HomeController{}, "*:Logout")

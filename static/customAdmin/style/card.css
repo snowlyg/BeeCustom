@@ -44,6 +44,7 @@
     line-height: 30px;
     font-size: 12px;
     color: #999999;
+    margin: 10px 5px;
 }
 .bold-number{
     font-weight: 400;
@@ -52,7 +53,7 @@
     color: #1B87FF;
 }
 .order_num_class{
-    height: 290px;
+    height: 374px;
     width: 100%;
 }
 .order_num_class #order_num{
@@ -60,7 +61,7 @@
     height: 100%;
 }
 .make_order_num_class{
-    height: 290px;
+    height: 380px;
 }
 .xian{
     height: 1px;
@@ -1007,7 +1008,7 @@
 .statement_th{
     height:40px;
     line-height: 40px;
-    text-align: center;   
+    text-align: center;
 }
 .statement_th div{
     display: inline-block;
@@ -1018,16 +1019,16 @@
     width:150px;
 }
 .th_company_value{
-    width:-webkit-calc(100%/2 - 328px); 
-    width:-moz-calc(100%/2 - 328px); 
+    width:-webkit-calc(100%/2 - 328px);
+    width:-moz-calc(100%/2 - 328px);
     width:calc(100%/2 - 328px);
 }
 .th_contact_key{
     width:150px;
 }
 .th_contact_value{
-    width:-webkit-calc(100%/2 - 328px); 
-    width:-moz-calc(100%/2 - 328px); 
+    width:-webkit-calc(100%/2 - 328px);
+    width:-moz-calc(100%/2 - 328px);
     width:calc(100%/2 - 328px);
 }
 .th_prices_key{
@@ -1074,3 +1075,175 @@
 }
 
 
+/* 盖章 */
+.chapter{
+    position: relative;
+}
+.chapter .chapter_img{
+    position: absolute;
+    bottom: -20px;
+    left: 130px;
+    max-width: 230px;
+    max-height: 164px;
+}
+
+
+.chapter_secred{
+    position: relative;
+}
+.chapter_secred_img{
+    position: absolute;
+    bottom: -20px;
+    left: 55%;
+    max-width: 230px;
+    max-height: 164px;
+}
+
+/* 报表 */
+.layui-form-item-tool{
+    display: inline-block;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+.report_date{
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    padding-right: 10px;
+    line-height: 36px;
+    display: inline-block;
+}
+.report_date input{
+    margin-left: 0;
+    padding-left: 0;
+}
+.report_select{
+    width: 140px;
+}
+.btn_search{
+    float: right;
+}
+.btn_search button{
+    border-radius: 5px;
+}
+
+
+/* 工作台 */
+.control_card_content_count{
+    height: 20px;
+    line-height: 20px;
+    text-align: left;
+    padding: 15px 20px;
+}
+.control_card_content_count i{
+    font-size: 28px;
+    height: 20px;
+    line-height: 20px;
+    float: left;
+}
+.control_card_content_count span{
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-left: 10px;
+    color: #ffffff;
+    background-color: #000;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    float: left;
+    font-size: 12px;
+}
+.data_num_tool{
+    padding: 15px 0;
+    text-align: left;
+    margin: 0 20px;
+}
+.data_num_tool h3{
+    font-size: 12px;
+    color: #ccc;
+}
+.data_num_tool p{
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 10px;
+}
+
+.control_order_title{
+
+}
+.control_order_title span{
+    margin: 0 7px;
+    display: block;
+    float: left;
+    cursor: pointer
+}
+
+.control_blue i{
+    color: rgb(27,135,255);
+}
+.control_blue span{
+    background-color:rgb(27,135,255);
+}
+.control_violet i{
+    color: rgb(176, 147, 239);
+}
+.control_violet span{
+    background-color:rgb(176, 147, 239);
+}
+.control_orange i{
+    color: rgb(253, 176, 12);
+}
+.control_orange span{
+    background-color:rgb(253, 176, 12);
+}
+
+.control_date{
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    padding-right: 10px;
+    line-height: 26px;
+    display: inline-block;
+    float: right;
+    font-size: 12px;
+    margin-top: 6px;
+    margin-left: 10px;
+}
+.control_date input{
+    margin-left: 0;
+    padding-left: 0;
+}
+.control_time_input {
+    border: none;
+    width: 100px;
+    height: 26px;
+    margin-left: 10px;
+    text-align: center;
+    background: none;
+}
+.layui-input-inline .control_time_input:focus {
+    border-bottom: none!important;
+}
+.control_date .layui-input-inline i{
+    display: none!important;
+}
+.layui-home-card-body{
+    position: relative;
+}
+.order_status_class{
+    padding: 20px 0;
+}
+
+.layui-col-xs2_5{
+    width: 19%;
+    display: inline-block;
+    text-align: center;
+}
+
+
+.finance_statement_btn{
+    float: right;
+    display: inline-block;
+}
+.finance_statement_btn button{
+    border-radius: 4px;
+}

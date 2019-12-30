@@ -1,1 +1,220 @@
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs8">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-xs6">
+                    <div class="layui-card">
+                        <div class="layui-home-card-title">
+                            <span class="title-name">货物申报</span>
+                            <div class="lay-title-tab">
+                                <span lay-data="goods" lay-value="today" class="lay-title-tab-span show-this">今天</span>
+                                <span lay-data="goods" lay-value="week" class="lay-title-tab-span">本周</span>
+                                <span lay-data="goods" lay-value="month" class="lay-title-tab-span">本月</span>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="layui-home-card-body center right-card">
+                            <div class="control_card_content_count control_blue">
+                                <i class="iconfont icon-shenbaojilu"></i>
+                                <span id="goods_count"></span>
+                            </div>
+                            <div class="data_num_tool">
+                                <div class="layui-col-xs2_5">
+                                    <h3>待审核</h3>
+                                    <p id="goods_1"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>待复核</h3>
+                                    <p id="goods_2"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>处理中</h3>
+                                    <p id="goods_3"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>已完成</h3>
+                                    <p id="goods_4"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>异常</h3>
+                                    <p id="goods_5"></p>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-card">
+                        <div class="layui-home-card-title">
+                            <span class="title-name">核注清单</span>
+                            <div class="lay-title-tab">
+                                <span lay-data="annotation" lay-value="today" class="lay-title-tab-span show-this">今天</span>
+                                <span lay-data="annotation" lay-value="week" class="lay-title-tab-span">本周</span>
+                                <span lay-data="annotation" lay-value="month" class="lay-title-tab-span">本月</span>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="layui-home-card-body center right-card">
+                            <div class="control_card_content_count control_violet">
+                                <i class="iconfont icon-fayunqingdan"></i>
+                                <span id="annotation_count"></span>
+                            </div>
+                            <div class="data_num_tool">
+                                <div class="layui-col-xs2_5">
+                                    <h3>待审核</h3>
+                                    <p id="annotation_1"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>待复核</h3>
+                                    <p id="annotation_2"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>处理中</h3>
+                                    <p id="annotation_3"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>已完成</h3>
+                                    <p id="annotation_4"></p>
+                                </div>
+                                <div class="layui-col-xs2_5">
+                                    <h3>异常</h3>
+                                    <p id="annotation_5"></p>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-card">
+                <div class="layui-home-card-title">
+                    <span class="title-name">舱单</span>
+                    <div class="lay-title-tab">
+                        <span lay-data="manifest" lay-value="today" class="lay-title-tab-span show-this">今天</span>
+                        <span lay-data="manifest" lay-value="week" class="lay-title-tab-span">本周</span>
+                        <span lay-data="manifest" lay-value="month" class="lay-title-tab-span">本月</span>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="layui-home-card-body center right-card">
+                    <div class="control_card_content_count control_orange">
+                        <i class="iconfont icon-fayunqingdan"></i>
+                        <span class="">0</span>
+                    </div>
+                    <div class="data_num_tool">
+                        <div class="layui-col-xs2_5">
+                            <h3>待审核</h3>
+                            <p>0</p>
+                        </div>
+                        <div class="layui-col-xs2_5">
+                            <h3>待复核</h3>
+                            <p>0</p>
+                        </div>
+                        <div class="layui-col-xs2_5">
+                            <h3>处理中</h3>
+                            <p>0</p>
+                        </div>
+                        <div class="layui-col-xs2_5">
+                            <h3>已完成</h3>
+                            <p>0</p>
+                        </div>
+                        <div class="layui-col-xs2_5">
+                            <h3>异常</h3>
+                            <p>0</p>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="layui-col-xs8">
+            <div class="layui-card">
+                <div class="layui-home-card-title">
+                    <span class="title-name">订单数量统计</span>
+                    <div class="lay-title-tab">
+                        <span lay-data="echart-2" lay-value="months" class="lay-title-tab-span show-this">月度</span>
+                        <span lay-data="echart-2" lay-value="quarters" class="lay-title-tab-span">季度</span>
+                        <span lay-data="echart-2" lay-value="years" class="lay-title-tab-span">年度</span>
+                    </div>
+                </div>
+                <div class="layui-home-card-body order_num_class">
+                    <div id="order_num"></div>
+
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-home-card-title">
+                        <span class="control_order_title">
+                                <span lay-data="echart-3" lay-value="4" class="lay-title-tab-span show-this">派单</span>
+                                <span lay-data="echart-3" lay-value="2" class="lay-title-tab-span">制单</span>
+                                <span lay-data="echart-3" lay-value="3" class="lay-title-tab-span">复核</span>
+                        </span>
+                    <div class="control_date layui-form" id="date_type1">
+                        <div class="layui-input-inline">
+                            <input type="text" name="start_time" class="layui-input control_time_input"
+                                   id="report-start" placeholder="年-月-日" autocomplete="off" >
+                        </div>
+                        <div class="report_to_time">
+                            至
+                        </div>
+                        <div class="layui-input-inline">
+                            <input type="text" name="end_time" class="layui-input control_time_input"
+                                   id="report-end" placeholder="年-月-日" autocomplete="off" >
+                        </div>
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <div class="lay-title-tab" id="date_type2">
+                        <span lay-data="echart-3" lay-value="today" class="lay-title-tab-span show-this">今天</span>
+                        <span lay-data="echart-3" lay-value="week" class="lay-title-tab-span">本周</span>
+                        <span lay-data="echart-3" lay-value="month" class="lay-title-tab-span">本月</span>
+                    </div>
+                </div>
+                <div class="layui-home-card-body make_order_num_class">
+                    <div id="make_order_num"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-card">
+                <div class="layui-home-card-title">
+                    <span class="title-name">快捷功能</span>
+                </div>
+                <div class="layui-home-card-body center right-card">
+                    <div class="layui-col-xs4">
+                        <p class="card-title"><a href="/">快速下单</a></p>
+                    </div>
+                    <div class="layui-col-xs4">
+                        <p class="card-title"><a href="/">商品编码查询</a></p>
+                    </div>
+                    <div class="layui-col-xs4">
+                        <p class="card-title"><a href="/">商检编码查询</a></p>
+                    </div>
+                    <div class="layui-col-xs4">
+                        <p class="card-title"><a href="/">快速审核</a></p>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-home-card-title">
+                    <span class="title-name">订单情况</span>
+                    <div class="lay-title-tab">
+                        <span lay-data="echart-4" lay-value="months" class="lay-title-tab-span show-this">月度</span>
+                        <span lay-data="echart-4" lay-value="quarters" class="lay-title-tab-span">季度</span>
+                        <span lay-data="echart-4" lay-value="years" class="lay-title-tab-span">年度</span>
+                    </div>
+                </div>
+                <div class="layui-home-card-body order_status_class">
+                    <div id="order_status"></div>
+                    <div class="xian"></div>
+                    <div id="unusual_order"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
