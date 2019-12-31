@@ -89,15 +89,15 @@
             });
             
             chart.source(all_order_data, {
-                year: {}
+                Year: {}
             });
             chart.tooltip({
                 crosshairs: {
                     type: 'line'
                 }
             });
-            chart.areaStack().position('year*value').color('country');
-            chart.lineStack().position('year*value').color('country').size(2);
+            chart.areaStack().position('Year*Value').color('Country');
+            chart.lineStack().position('Year*Value').color('Country').size(2);
             chart.render();
         }
 
