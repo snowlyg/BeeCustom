@@ -309,4 +309,6 @@ func init() {
 	// 自动部署
 	beego.Router("/auto_pull", &controllers.WebHookController{}, "*:Get")
 
+	// singe
+	beego.Router("/singe", &controllers.SingeController{})
 }
