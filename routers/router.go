@@ -282,6 +282,9 @@ func init() {
 
 	// 登录控制
 	beego.Router("/home/control", &controllers.HomeController{}, "Get:Control")
+	beego.Router("/home/get_all_order_data", &controllers.HomeController{}, "Get:GetAllOrderData")
+	beego.Router("/home/get_all_annotation_data", &controllers.HomeController{}, "Get:GetAllAnnotationData")
+	beego.Router("/home/get_order_data", &controllers.HomeController{}, "Get:GetOrderData")
 	beego.Router("/home/login", &controllers.HomeController{}, "*:Login")
 	beego.Router("/home/dologin", &controllers.HomeController{}, "Post:DoLogin")
 	beego.Router("/home/logout", &controllers.HomeController{}, "*:Logout")

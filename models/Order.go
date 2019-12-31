@@ -206,7 +206,7 @@ func OrderStatusCount(params *OrderQueryParam) (orm.Params, error) {
 	sql += "count( CASE WHEN STATUS = 7 THEN 1 END ) AS '待复核',"
 	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '单一处理中',"
 	sql += "count( CASE WHEN STATUS = 13 THEN 1 END ) AS '已完成' "
-	sql = GetOrderCommonListSql(sql, params)
+	sql = GetOrderCommonListSql(sql, params, "")
 
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
@@ -219,14 +219,82 @@ func OrderStatusCount(params *OrderQueryParam) (orm.Params, error) {
 	}
 
 	return rows, nil
+}
 
+// HomeOrderStatusCount
+func HomeOrderStatusCount(params *OrderQueryParam) (orm.Params, error) {
+
+	var maps []orm.Params
+	rows := orm.Params{
+		"待审核": 0,
+		"待复核": 0,
+		"处理中": 0,
+		"已完成": 0,
+		"异常":  0,
+		"all": 0,
+	}
+	o := orm.NewOrm()
+
+	sql := "SELECT "
+	sql += "count( CASE WHEN STATUS = 1 THEN 1 END ) AS '待审核',"
+	sql += "count( CASE WHEN STATUS = 7 THEN 1 END ) AS '待复核',"
+	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '处理中',"
+	sql += "count( CASE WHEN STATUS = 13 THEN 1 END ) AS '已完成',"
+	sql += "count( CASE WHEN STATUS = 15 THEN 1 END ) AS '异常',"
+	sql += "count( CASE WHEN STATUS != 14 THEN 1 END ) AS 'all'"
+	sql = GetOrderCommonListSql(sql, params, "")
+
+	_, err := o.Raw(sql).Values(&maps)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("Raw:%v", err))
+		return nil, err
+	}
+
+	if len(maps) > 0 {
+		rows = maps[0]
+	}
+
+	return rows, nil
+}
+
+// HomeOrderData
+func HomeOrderData(params *OrderQueryParam) (orm.Params, error) {
+	var maps []orm.Params
+	rows := orm.Params{
+		"country": "",
+		"value":   0,
+		"year":    "",
+	}
+
+	o := orm.NewOrm()
+
+	groupBy := "%Y-%m" //季度月度
+	if len(params.SearchTimeString) > 0 && params.SearchTimeString == "年度" {
+		groupBy = "%Y" //年度
+	}
+
+	sql := "SELECT i_e_flag AS 'country', DATE_FORMAT(apl_date,'" + groupBy + "') AS 'year' ,"
+	sql += "count( CASE WHEN STATUS != 14 THEN 1 END ) AS 'value'"
+	sql = GetOrderCommonListSql(sql, params, groupBy)
+
+	_, err := o.Raw(sql).Values(&maps)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("Raw:%v", err))
+		return nil, err
+	}
+
+	if len(maps) > 0 {
+		rows = maps[0]
+	}
+
+	return rows, nil
 }
 
 // OrderPageList 获取分页数据
 func OrderPageList(params *OrderQueryParam) ([]*Order, int64, error) {
 	orders := make([]*Order, 0)
 	sql := "SELECT * "
-	sql = GetOrderCommonListSql(sql, params)
+	sql = GetOrderCommonListSql(sql, params, "")
 	if len(params.StatusString) > 0 && params.StatusString != "全部订单" {
 		aStatusS, _ := GetSettingRValueByKey("orderStatus", false)
 		aStatus, _ := enums.TransformCnToInt(aStatusS, params.StatusString)
@@ -394,13 +462,19 @@ func OrderDelete(id int64) (num int64, err error) {
 }
 
 // 列表公用sql
-func GetOrderCommonListSql(sql string, params *OrderQueryParam) string {
+func GetOrderCommonListSql(sql string, params *OrderQueryParam, groupBy string) string {
 	sql += " FROM " + OrderTBName()
 	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "apl_date")
-	sql += " AND i_e_flag = '" + params.IEFlag + "'"
+	if len(params.IEFlag) > 0 {
+		sql += " AND i_e_flag = '" + params.IEFlag + "'"
+	}
 	if len(params.ClientSeqNoLike) > 0 {
 		sql += " AND client_seq_no LIKE '%" + params.ClientSeqNoLike + "%'"
 		sql += " OR entry_id LIKE '%" + params.ClientSeqNoLike + "%'"
+	}
+
+	if len(groupBy) > 0 {
+		sql += " GROUP BY DATE_FORMAT(apl_date,'" + groupBy + "'),i_e_flag"
 	}
 
 	return sql

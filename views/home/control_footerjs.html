@@ -1,5 +1,4 @@
 <script>
-
     layui.config({
         base: '/static/customAdmin/'
     }).extend({
@@ -56,36 +55,31 @@
 
         /*货物申报*/
         async function goods_data_render(time_type) {
-            // let all_goods_data = await admin.get(`/get_all_order_data/goods?time_type=${time_type}`);
-            let all_goods_data = [ 48, 0, 47, 1, 0, 0,];
-            $("#goods_count").text(all_goods_data.count);
-            $("#goods_1").text(all_goods_data[0]);
-            $("#goods_2").text(all_goods_data[1]);
-            $("#goods_3").text(all_goods_data[2]);
-            $("#goods_4").text(all_goods_data[3]);
-            $("#goods_5").text(all_goods_data[4]);
+            let all_goods_data = await admin.get(`/home/get_all_order_data?apl_date=${time_type}`);
+            $("#goods_count").text(all_goods_data.all);
+            $("#goods_1").text(all_goods_data.待审核);
+            $("#goods_2").text(all_goods_data.待复核);
+            $("#goods_3").text(all_goods_data.处理中);
+            $("#goods_4").text(all_goods_data.已完成);
+            $("#goods_5").text(all_goods_data.异常);
         }
 
         /*清单申报*/
         async function annotation_data_render(time_type) {
-            // let all_annotation_data = await admin.get(`/get_all_order_data/annotation?time_type=${time_type}`);
-            let all_annotation_data = [48, 0, 47, 1, 0, 0,];
-            $("#annotation_count").text(all_annotation_data.count);
-            $("#annotation_1").text(all_annotation_data[0]);
-            $("#annotation_2").text(all_annotation_data[1]);
-            $("#annotation_3").text(all_annotation_data[2]);
-            $("#annotation_4").text(all_annotation_data[3]);
-            $("#annotation_5").text(all_annotation_data[4]);
+            let all_annotation_data = await admin.get(`/home/get_all_annotation_data?invt_dcl_time=${time_type}`);
+            $("#annotation_count").text(all_annotation_data.all);
+            $("#annotation_1").text(all_annotation_data.待审核);
+            $("#annotation_2").text(all_annotation_data.待复核);
+            $("#annotation_3").text(all_annotation_data.处理中);
+            $("#annotation_4").text(all_annotation_data.已完成);
+            $("#annotation_5").text(all_annotation_data.异常);
         }
-
 
         /*渲染*/
         await chart_order_num('months');
-
         /*渲染方法*/
         async function chart_order_num(time_type) {
-            // const all_order_data = await admin.get(`/get_order_data?time_type=${time_type}`);
-            const all_order_data = [];
+            const all_order_data = await admin.get(`/home/get_order_data?apl_date=${time_type}`);
             $('#order_num').html('');
             let chart = new G2.Chart({
                 container: 'order_num',
@@ -106,111 +100,111 @@
             chart.render();
         }
 
-        // const all_create_order_data = await admin.get(`/get_create_order_data?time_type=today&data_type=4`);
-        const all_create_order_data = [];
-        /*渲染*/
-        chart_make_order(all_create_order_data);
-
-        /*渲染方法*/
-        function chart_make_order(create_order_data) {
-            $('#make_order_num').html('');
-            let chart = new G2.Chart({
-                container: 'make_order_num',
-                forceFit: true,
-                height: $('.make_order_num_class').height()
-            });
-
-            if (create_order_data_type == 4) {
-                alias_name = '派单数量';
-            } else if (create_order_data_type == 2) {
-                alias_name = '制单数量';
-            } else if (create_order_data_type == 3) {
-                alias_name = '复审数量';
-            }
-            chart.source(create_order_data, {
-                sales: {
-                    alias: alias_name
-                }
-            });
-
-            chart.interval().position('year*sales');
-            chart.render();
-        }
-
-        async function chart_make_order_recreate(time_type, data_type) {
-            /*制单数据统计*/
-            // let data_info_3 = await admin.get(`/get_create_order_data?time_type=${time_type}&data_type=${data_type}&start_time=${start_time}&end_time=${end_time}`);
-            let data_info_3 = [];
-            /*初始化格式*/
-            let data_info_3_data = array_type(data_info_3);
-
-            /*渲染*/
-            chart_make_order(data_info_3_data);
-        }
-
-        /* 制单数据统计 END */
-
-        /* 订单情况 */
-        // const all_order_error_data = await admin.get(`/get_order_error_data?time_type=month`);
-        const all_order_error_data = [];
-
-        let data_order_error = all_order_error_data.异常订单说明;
-        let data_order_status = all_order_error_data.报关单状态;
-
-        /*状态*/
-        chart_order_status(data_order_error, 'order_status', ['#36CBCB', '#3AA0FF']);
-
-        /*行业*/
-        chart_order_status(data_order_status, 'unusual_order', ['#36CBCB', '#3AA0FF']);
-
-        /*渲染方法*/
-        function chart_order_status(order_error_data, chart_id, color) {
-            $('#' + chart_id).html('');
-            let chart = new G2.Chart({
-                container: chart_id,
-                forceFit: true,
-                padding: 'auto',
-                height: 300
-            });
-
-            chart.source(order_error_data, {
-                percent: {
-                    formatter: function formatter(val) {
-                        val = parseFloat((val * 100).toPrecision(12)) + "%";
-                        return val;
-                    }
-                }
-            });
-            chart.coord('theta', {
-                radius: 0.75,
-                innerRadius: 0.7
-            });
-
-            chart.tooltip({
-                showTitle: false,
-                itemTpl: '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
-            });
-
-            chart.intervalStack().position('percent').color('item').label('percent', {
-                formatter: function formatter(val, item) {
-                    return item.point.item + ': ' + val;
-                }
-            }).color('item', color).tooltip('item*percent', function (item, percent) {
-                percent = parseFloat((percent * 100).toPrecision(12)) + "%";
-                return {
-                    name: item,
-                    value: percent
-                };
-            }).style({
-                lineWidth: 1,
-                stroke: '#fff'
-            });
-
-            chart.render();
-        }
+        //
+        // // const all_create_order_data = await admin.get(`/get_create_order_data?time_type=today&data_type=4`);
+        // const all_create_order_data = [];
+        // /*渲染*/
+        // chart_make_order(all_create_order_data);
+        //
+        // /*渲染方法*/
+        // function chart_make_order(create_order_data) {
+        //     $('#make_order_num').html('');
+        //     let chart = new G2.Chart({
+        //         container: 'make_order_num',
+        //         forceFit: true,
+        //         height: $('.make_order_num_class').height()
+        //     });
+        //
+        //     if (create_order_data_type == 4) {
+        //         alias_name = '派单数量';
+        //     } else if (create_order_data_type == 2) {
+        //         alias_name = '制单数量';
+        //     } else if (create_order_data_type == 3) {
+        //         alias_name = '复审数量';
+        //     }
+        //     chart.source(create_order_data, {
+        //         sales: {
+        //             alias: alias_name
+        //         }
+        //     });
+        //
+        //     chart.interval().position('year*sales');
+        //     chart.render();
+        // }
+        //
+        // async function chart_make_order_recreate(time_type, data_type) {
+        //     /*制单数据统计*/
+        //     // let data_info_3 = await admin.get(`/get_create_order_data?time_type=${time_type}&data_type=${data_type}&start_time=${start_time}&end_time=${end_time}`);
+        //     let data_info_3 = [];
+        //     /*初始化格式*/
+        //     let data_info_3_data = array_type(data_info_3);
+        //
+        //     /*渲染*/
+        //     chart_make_order(data_info_3_data);
+        // }
+        //
+        // /* 制单数据统计 END */
+        //
+        // /* 订单情况 */
+        // // const all_order_error_data = await admin.get(`/get_order_error_data?time_type=month`);
+        // const all_order_error_data = [];
+        //
+        // let data_order_error = all_order_error_data.异常订单说明;
+        // let data_order_status = all_order_error_data.报关单状态;
+        //
+        // /*状态*/
+        // chart_order_status(data_order_error, 'order_status', ['#36CBCB', '#3AA0FF']);
+        //
+        // /*行业*/
+        // chart_order_status(data_order_status, 'unusual_order', ['#36CBCB', '#3AA0FF']);
+        //
+        // /*渲染方法*/
+        // function chart_order_status(order_error_data, chart_id, color) {
+        //     $('#' + chart_id).html('');
+        //     let chart = new G2.Chart({
+        //         container: chart_id,
+        //         forceFit: true,
+        //         padding: 'auto',
+        //         height: 300
+        //     });
+        //
+        //     chart.source(order_error_data, {
+        //         percent: {
+        //             formatter: function formatter(val) {
+        //                 val = parseFloat((val * 100).toPrecision(12)) + "%";
+        //                 return val;
+        //             }
+        //         }
+        //     });
+        //     chart.coord('theta', {
+        //         radius: 0.75,
+        //         innerRadius: 0.7
+        //     });
+        //
+        //     chart.tooltip({
+        //         showTitle: false,
+        //         itemTpl: '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+        //     });
+        //
+        //     chart.intervalStack().position('percent').color('item').label('percent', {
+        //         formatter: function formatter(val, item) {
+        //             return item.point.item + ': ' + val;
+        //         }
+        //     }).color('item', color).tooltip('item*percent', function (item, percent) {
+        //         percent = parseFloat((percent * 100).toPrecision(12)) + "%";
+        //         return {
+        //             name: item,
+        //             value: percent
+        //         };
+        //     }).style({
+        //         lineWidth: 1,
+        //         stroke: '#fff'
+        //     });
+        //
+        //     chart.render();
+        // }
 
         /* 订单情况 END */
-
 
         $('.lay-title-tab-span').click(async function (data) {
             /*切换日期*/
@@ -227,7 +221,6 @@
                 start_time = null;
                 end_time = null;
             }
-
             /*切换日期END*/
 
             /*切换数据*/

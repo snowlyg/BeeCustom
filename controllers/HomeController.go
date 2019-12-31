@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -31,6 +32,59 @@ func (c *HomeController) Control() {
 
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["footerjs"] = "home/control_footerjs.html"
+}
+
+func (c *HomeController) GetAllOrderData() {
+	//判断是否登录
+	c.checkLogin()
+
+	// 直接获取参数 getDataGridData()
+	params := models.NewOrderQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+
+	// 获取数据列表和总数
+	data, err := models.HomeOrderStatusCount(&params)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据总数出错", nil)
+	}
+
+	// 定义返回的数据结构
+	c.Data["json"] = data
+	c.ServeJSON()
+}
+
+func (c *HomeController) GetAllAnnotationData() {
+	//判断是否登录
+	c.checkLogin()
+
+	// 直接获取参数 getDataGridData()
+	params := models.NewAnnotationQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+	// 获取数据列表和总数
+	data, err := models.HomeAnnotationStatusCount(&params)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据总数出错", nil)
+	}
+
+	c.Data["json"] = data
+	c.ServeJSON()
+}
+
+func (c *HomeController) GetOrderData() {
+	//判断是否登录
+	c.checkLogin()
+
+	// 直接获取参数 getDataGridData()
+	params := models.NewOrderQueryParam()
+	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
+	// 获取数据列表和总数
+	data, err := models.HomeOrderData(&params)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "获取数据总数出错", nil)
+	}
+
+	c.Data["json"] = data
+	c.ServeJSON()
 }
 
 func (c *HomeController) Page404() {

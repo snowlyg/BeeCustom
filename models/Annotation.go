@@ -184,6 +184,42 @@ func AnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
 
 }
 
+// HomeAnnotationStatusCount
+func HomeAnnotationStatusCount(params *AnnotationQueryParam) (orm.Params, error) {
+	var maps []orm.Params
+	rows := orm.Params{
+		"待审核": 0,
+		"待复核": 0,
+		"处理中": 0,
+		"已完成": 0,
+		"异常":  0,
+		"all": 0,
+	}
+	o := orm.NewOrm()
+
+	sql := "SELECT "
+	sql += "count( CASE WHEN STATUS = 1 THEN 1 END ) AS '待审核',"
+	sql += "count( CASE WHEN STATUS = 7 THEN 1 END ) AS '待复核',"
+	sql += "count( CASE WHEN STATUS = 12 THEN 1 END ) AS '处理中',"
+	sql += "count( CASE WHEN STATUS = 13 THEN 1 END ) AS '已完成',"
+	sql += "count( CASE WHEN STATUS = 15 THEN 1 END ) AS '异常',"
+	sql += "count( CASE WHEN STATUS = 14 THEN 1 END ) AS 'all' "
+	sql = GetCommonListSql(sql, params)
+
+	_, err := o.Raw(sql).Values(&maps)
+	if err != nil {
+		utils.LogDebug(fmt.Sprintf("Raw:%v", err))
+		return nil, err
+	}
+
+	if len(maps) > 0 {
+		rows = maps[0]
+	}
+
+	return rows, nil
+
+}
+
 // AnnotationPageList 获取分页数据
 func AnnotationPageList(params *AnnotationQueryParam) ([]*Annotation, int64, error) {
 
@@ -359,7 +395,9 @@ func AnnotationDelete(id int64) (num int64, err error) {
 func GetCommonListSql(sql string, params *AnnotationQueryParam) string {
 	sql += " FROM " + AnnotationTBName()
 	sql += enums.GetOrderAnnotationDateTime(params.SearchTimeString, "invt_dcl_time")
-	sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
+	if len(params.ImpexpMarkcd) > 0 {
+		sql += " AND impexp_markcd = '" + params.ImpexpMarkcd + "'"
+	}
 	if len(params.EtpsInnerInvtNoLike) > 0 {
 		sql += " AND (etps_inner_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%'" + " OR bond_invt_no LIKE '%" + params.EtpsInnerInvtNoLike + "%')"
 	}
