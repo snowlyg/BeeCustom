@@ -258,36 +258,25 @@ func HomeOrderStatusCount(params *OrderQueryParam) (orm.Params, error) {
 }
 
 // HomeOrderData
-func HomeOrderData(params *OrderQueryParam) (orm.Params, error) {
-	var maps []orm.Params
-	rows := orm.Params{
-		"country": "",
-		"value":   0,
-		"year":    "",
-	}
-
+func HomeOrderData(params *OrderQueryParam) ([]orm.Params, error) {
 	o := orm.NewOrm()
-
 	groupBy := "%Y-%m" //季度月度
 	if len(params.SearchTimeString) > 0 && params.SearchTimeString == "年度" {
 		groupBy = "%Y" //年度
 	}
 
-	sql := "SELECT i_e_flag AS 'country', DATE_FORMAT(apl_date,'" + groupBy + "') AS 'year' ,"
-	sql += "count( CASE WHEN STATUS != 14 THEN 1 END ) AS 'value'"
+	sql := "SELECT i_e_flag AS 'Country', DATE_FORMAT(apl_date,'" + groupBy + "') AS 'Year' ,"
+	sql += "count( CASE WHEN STATUS != 14 THEN 1 END ) AS 'Value'"
 	sql = GetOrderCommonListSql(sql, params, groupBy)
 
+	var maps []orm.Params
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("Raw:%v", err))
 		return nil, err
 	}
 
-	if len(maps) > 0 {
-		rows = maps[0]
-	}
-
-	return rows, nil
+	return maps, nil
 }
 
 // OrderPageList 获取分页数据

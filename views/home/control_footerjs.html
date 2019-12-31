@@ -35,16 +35,16 @@
             }
         });
 
-        const insEnd = laydate.render({
-            elem: '#report-end'
-            , theme: '#1E9FFF'
-            , done: function (value, date) {
-                end_time = value;
-                console.log($('#date_type2').find('.show-this'));
-                $('#date_type2').find('.show-this')[0].classList.remove('show-this');
-                chart_make_order_recreate(create_order_date_type, create_order_data_type);
-            }
-        });
+        // const insEnd = laydate.render({
+        //     elem: '#report-end'
+        //     , theme: '#1E9FFF'
+        //     , done: function (value, date) {
+        //         end_time = value;
+        //         console.log($('#date_type2').find('.show-this'));
+        //         $('#date_type2').find('.show-this')[0].classList.remove('show-this');
+        //         chart_make_order_recreate(create_order_date_type, create_order_data_type);
+        //     }
+        // });
         /*数据时间段END*/
 
         /*汇总数据*/
@@ -77,6 +77,7 @@
 
         /*渲染*/
         await chart_order_num('months');
+
         /*渲染方法*/
         async function chart_order_num(time_type) {
             const all_order_data = await admin.get(`/home/get_order_data?apl_date=${time_type}`);
@@ -86,7 +87,7 @@
                 forceFit: true,
                 height: $('.order_num_class').height()
             });
-
+            
             chart.source(all_order_data, {
                 year: {}
             });

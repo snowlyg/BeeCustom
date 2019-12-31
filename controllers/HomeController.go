@@ -8,8 +8,11 @@ import (
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
+	"BeeCustom/transforms"
 	"BeeCustom/utils"
 	"BeeCustom/validations"
+	"github.com/astaxie/beego/orm"
+	"github.com/snowlyg/gotransform"
 )
 
 type HomeController struct {
@@ -83,7 +86,7 @@ func (c *HomeController) GetOrderData() {
 		c.jsonResult(enums.JRCodeFailed, "获取数据总数出错", nil)
 	}
 
-	c.Data["json"] = data
+	c.Data["json"] = c.transformHomeOrderData(data)
 	c.ServeJSON()
 }
 
@@ -160,4 +163,18 @@ func (c *HomeController) DataReset() {
 		c.jsonResult(enums.JRCodeFailed, "初始化失败,可能原因:"+err.Error(), "")
 	}
 
+}
+
+//  格式化列表数据
+func (c *HomeController) transformHomeOrderData(ms []orm.Params) []*transforms.HomeOrder {
+	var uts []*transforms.HomeOrder
+	for _, v := range ms {
+		ut := transforms.HomeOrder{}
+		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		_ = g.Transformer()
+
+		uts = append(uts, &ut)
+	}
+
+	return uts
 }
