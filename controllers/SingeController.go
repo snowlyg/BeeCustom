@@ -3,10 +3,10 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"os/exec"
 
 	"BeeCustom/utils"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/otiai10/gosseract"
 )
 
 // SingeController handles WebSocket requests.
@@ -15,6 +15,7 @@ type SingeController struct {
 }
 
 func (c *SingeController) Get() {
+	_ = exec.Command(`C:\Program Files\Tesseract-OCR\tesseract.exe`, "image_name", "output")
 	c.EnableRender = false
 	//req := httplib.Get("https://www.singlewindow.cn")
 	////req.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
@@ -38,20 +39,20 @@ func (c *SingeController) Get() {
 	//
 	//req.Debug(true)
 
-	client := gosseract.NewClient()
-	defer client.Close()
-
-	_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen.jpg")
-	text, _ := client.Text()
-	utils.LogDebug(fmt.Sprintf("text %v \n", text))
-
-	_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen1.jpg")
-	text1, _ := client.Text()
-	utils.LogDebug(fmt.Sprintf("text1 %v \n", text1))
-
-	_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen2.jpg")
-	text2, _ := client.Text()
-	utils.LogDebug(fmt.Sprintf("text2 %v \n", text2))
+	//client := gosseract.NewClient()
+	//defer client.Close()
+	//
+	//_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen.jpg")
+	//text, _ := client.Text()
+	//utils.LogDebug(fmt.Sprintf("text %v \n", text))
+	//
+	//_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen1.jpg")
+	//text1, _ := client.Text()
+	//utils.LogDebug(fmt.Sprintf("text1 %v \n", text1))
+	//
+	//_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen2.jpg")
+	//text2, _ := client.Text()
+	//utils.LogDebug(fmt.Sprintf("text2 %v \n", text2))
 
 	// Request the HTML page.
 	res, err := http.Get("https://app.singlewindow.cn/cas/login?service=http%3A%2F%2Fwww.singlewindow.cn%2Fsinglewindow%2Flogin.jspx")
