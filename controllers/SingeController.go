@@ -6,6 +6,7 @@ import (
 
 	"BeeCustom/utils"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/otiai10/gosseract"
 )
 
 // SingeController handles WebSocket requests.
@@ -37,8 +38,23 @@ func (c *SingeController) Get() {
 	//
 	//req.Debug(true)
 
+	client := gosseract.NewClient()
+	defer client.Close()
+
+	_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen.jpg")
+	text, _ := client.Text()
+	utils.LogDebug(fmt.Sprintf("text %v \n", text))
+
+	_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen1.jpg")
+	text1, _ := client.Text()
+	utils.LogDebug(fmt.Sprintf("text1 %v \n", text1))
+
+	_ = client.SetImage("/excel/orc/plat_cas_verifycode_gen2.jpg")
+	text2, _ := client.Text()
+	utils.LogDebug(fmt.Sprintf("text2 %v \n", text2))
+
 	// Request the HTML page.
-	res, err := http.Get("https://beego.me/docs/module/httplib.md")
+	res, err := http.Get("https://app.singlewindow.cn/cas/login?service=http%3A%2F%2Fwww.singlewindow.cn%2Fsinglewindow%2Flogin.jspx")
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("req.Get %v \n", err))
 	}
@@ -57,9 +73,9 @@ func (c *SingeController) Get() {
 	utils.LogDebug(fmt.Sprintf("Url %v \n", doc.Url))
 
 	// Find the review items
-	doc.Find(".nav.navbar-nav").Each(func(i int, s *goquery.Selection) {
+	doc.Find("#nav").Each(func(i int, s *goquery.Selection) {
 		// For each item found, get the band and title
-		band := s.Find("a").Text()
+		band := s.Find("li").Text()
 		utils.LogDebug(fmt.Sprintf("Review %d: %s \n", i, band))
 	})
 
