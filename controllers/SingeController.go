@@ -55,6 +55,7 @@ func (c *SingeController) Get() {
 
 	// Request the HTML page.
 	res, err := http.Get("https://app.singlewindow.cn/cas/login?service=http%3A%2F%2Fwww.singlewindow.cn%2Fsinglewindow%2Flogin.jspx")
+
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("req.Get %v \n", err))
 	}
