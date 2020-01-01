@@ -20,5 +20,10 @@ go get github.com/360EntSecGroup-Skylar/excelize
 [encoding/xml](https://studygolang.com/static/pkgdoc/pkg/encoding_xml.htm)
 
 
-4.encoding/xml
-[encoding/xml](https://studygolang.com/static/pkgdoc/pkg/encoding_xml.htm)
+5.otiai10/gosseract
+[otiai10/gosseract](https://github.com/otiai10/gosseract)
+
+1.[tesseract-ocr](https://github.com/tesseract-ocr/tesseract/wiki), including library and headers
+2.go get -t github.com/otiai10/gosseract
+
+[编译 tesseract-ocr](https://github.com/tesseract-ocr/tesseract/wiki/Compiling#windows)
