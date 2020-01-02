@@ -27,3 +27,8 @@ go get github.com/360EntSecGroup-Skylar/excelize
 2.go get -t github.com/otiai10/gosseract
 
 [编译 tesseract-ocr](https://github.com/tesseract-ocr/tesseract/wiki/Compiling#windows)
+
+
+5.tiaguinho/gosoap
+[tiaguinho/gosoap](go get github.com/tiaguinho/gosoap)
+
