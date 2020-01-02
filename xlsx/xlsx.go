@@ -29,7 +29,7 @@ func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 		return nil, errors.New("excelize.OpenFile 出错")
 	}
 
-	rows, err := f.GetRows(excelName)
+	rows := f.GetRows(excelName)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("GetExcelRows.OpenFile:%v", err))
 		return nil, err

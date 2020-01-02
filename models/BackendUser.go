@@ -235,8 +235,9 @@ func setRoles(m *BackendUser, roleIds []string) error {
 //获取关联模型
 func setBackendUserRole(m *BackendUser, roleIds []string) error {
 	for _, roleId := range roleIds {
-		_, err := utils.E.AddRoleForUser(strconv.FormatInt(m.Id, 10), roleId)
-		if err != nil {
+		b := utils.E.AddRoleForUser(strconv.FormatInt(m.Id, 10), roleId)
+		if b {
+			err := errors.New("AddRoleForUser faild")
 			utils.LogDebug(fmt.Sprintf("AddRoleForUser error:%v", err))
 			return err
 		}

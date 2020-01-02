@@ -44,7 +44,7 @@ func GetUploadFileUPath(f multipart.File, h *multipart.FileHeader, fileType stri
 		return "", errors.New("上传失败")
 	}
 
-	uid, _ := uuid.NewV4()
+	uid := uuid.NewV4()
 	if h != nil {
 
 		filepath := "static/upload/" + fileType
