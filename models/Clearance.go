@@ -167,11 +167,13 @@ func ClearanceDelete(id int64) (num int64, err error) {
 
 // 批量删除
 func ClearanceDeleteAll(clearanceType int8) (num int64, err error) {
-	if num, err := BaseDeleteAll(clearanceType); err != nil {
+	o := orm.NewOrm()
+	if num, err := o.QueryTable(ClearanceTBName()).Filter("type", clearanceType).Delete(); err != nil {
 		return num, err
 	} else {
 		return num, nil
 	}
+
 }
 
 // 批量插入

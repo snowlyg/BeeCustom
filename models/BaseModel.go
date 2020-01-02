@@ -72,16 +72,6 @@ func BaseDelete(m interface{}) (num int64, err error) {
 	}
 }
 
-// 删除
-func BaseDeleteAll(clearanceType int8) (num int64, err error) {
-	o := orm.NewOrm()
-	if num, err := o.QueryTable(ClearanceTBName()).Filter("type", clearanceType).Delete(); err != nil {
-		return num, err
-	} else {
-		return num, nil
-	}
-}
-
 // 批量插入
 func BaseInsertMulti(m interface{}) (num int64, err error) {
 	o := orm.NewOrm()

@@ -1,11 +1,14 @@
 package controllers
 
 import (
-	"BeeCustom/enums"
-	"BeeCustom/transforms"
 	"encoding/json"
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"strconv"
+
+	"BeeCustom/enums"
+	"BeeCustom/transforms"
+
+	"BeeCustom/xlsx"
 	"github.com/snowlyg/gotransform"
 
 	"BeeCustom/models"
@@ -70,26 +73,55 @@ func (c *HsCodeController) Get() {
 
 // 导入
 func (c *HsCodeController) Import() {
-	f, err := excelize.OpenFile("./Book1.xlsx")
+	fileType := "hs_code/" + strconv.FormatInt(c.curUser.Id, 10) + "/"
+	fileNamePath, err := c.BaseUpload(fileType)
 	if err != nil {
-		fmt.Println(err)
-		return
+		c.jsonResult(enums.JRCodeFailed, "上传失败", err)
 	}
-	//  Get value from cell by given worksheet name and axis.
-	cell, err := f.GetCellValue("Sheet1", "B2")
+
+	_, err = models.HsCodeDeleteAll() // 清空对应基础参数
 	if err != nil {
-		fmt.Println(err)
-		return
+		c.jsonResult(enums.JRCodeFailed, "清空数据报错", err)
 	}
-	fmt.Println(cell)
-	//  Get all the rows in the Sheet1.
-	rows, err := f.GetRows("Sheet1")
-	for _, row := range rows {
-		for _, colCell := range row {
-			fmt.Print(colCell, "\t")
+
+	cIP := xlsx.BaseImport{
+		ExcelName:    "Sheet1",
+		FileNamePath: fileNamePath,
+	}
+
+	titles, err := models.GetSettingRValueByKey("hsCodeExcelTile", false)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "上传失败", err)
+	}
+
+	rows, err := xlsx.GetExcelRows(cIP.FileNamePath, cIP.ExcelName)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "上传失败", err)
+	}
+
+	// 提取 excel 数据
+	hsCodes := make([]*models.HsCode, 0)
+	for roI, row := range rows {
+		if roI > 0 {
+			// 将数组  转成对应的 map
+			c := models.NewHsCode(0)
+			x := gotransform.NewXlxsTransform(&c, titles, row, "", "", nil)
+			err := x.XlxsTransformer()
+			if err != nil {
+				//c.jsonResult(enums.JRCodeFailed, "上传失败", err)
+
+			}
+
+			hsCodes = append(hsCodes, &c)
 		}
-		fmt.Println()
 	}
+
+	mun, err := models.InsertHsCodeMulti(hsCodes)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "导入失败", nil)
+	}
+
+	c.jsonResult(enums.JRCodeSucc, fmt.Sprintf("导入成功 %d 项基础参数", mun), mun)
 }
 
 //  格式化列表数据

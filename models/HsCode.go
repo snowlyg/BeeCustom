@@ -75,3 +75,19 @@ func GetHsCodeByCode(hsCodeS string) ([]*HsCode, error) {
 
 	return datas, nil
 }
+
+// 批量删除
+func HsCodeDeleteAll() (num int64, err error) {
+	o := orm.NewOrm()
+	if num, err := o.QueryTable(HsCodeTBName()).Filter("code__isnull", false).Delete(); err != nil {
+		return num, err
+	} else {
+		return num, nil
+	}
+
+}
+
+// 批量插入
+func InsertHsCodeMulti(datas []*HsCode) (num int64, err error) {
+	return BaseInsertMulti(datas)
+}
