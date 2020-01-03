@@ -6,6 +6,9 @@ import (
 )
 
 func init() {
+
+	beego.Router("/soap/sync", &controllers.SoapController{}, "Get:Soap")
+
 	// 货物申报附件列表
 	beego.Router("/order_file/datagrid", &controllers.OrderFileController{}, "Post:DataGrid")
 	// 货物申报回执列表

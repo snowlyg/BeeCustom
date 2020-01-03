@@ -24,11 +24,14 @@ go get github.com/360EntSecGroup-Skylar/excelize
 [otiai10/gosseract](https://github.com/otiai10/gosseract)
 
 1.[tesseract-ocr](https://github.com/tesseract-ocr/tesseract/wiki), including library and headers
+
 2.go get -t github.com/otiai10/gosseract
 
 [编译 tesseract-ocr](https://github.com/tesseract-ocr/tesseract/wiki/Compiling#windows)
 
 
-5.tiaguinho/gosoap
-[tiaguinho/gosoap](go get github.com/tiaguinho/gosoap)
+5.hooklift/gowsdl
+[hooklift/gowsdl](https://github.com/hooklift/gowsdl)
+
+[Go与SOAP](https://tonybai.com/2019/01/08/go-and-soap/)
 
