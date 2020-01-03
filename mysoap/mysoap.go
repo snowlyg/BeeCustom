@@ -2,8 +2,10 @@ package mysoap
 
 import (
 	"encoding/xml"
+	"fmt"
 	"time"
 
+	"BeeCustom/utils"
 	"github.com/hooklift/gowsdl/soap"
 )
 
@@ -11,6 +13,11 @@ import (
 var _ time.Time
 var _ xml.Name
 
+type Authentication struct {
+	XMLName xml.Name `xml:"Authentication"`
+
+	MessageType string `xml:"messageType,omitempty"`
+}
 type InBoundsRequest struct {
 	XMLName xml.Name `xml:"http://webservice.bgcd.hwt.com in_bounds"`
 
@@ -65,6 +72,7 @@ func (service *inBoundsServicePortType) InBounds(request *InBoundsRequest) (*InB
 	response := new(InBoundsResponse)
 	err := service.client.Call("urn:in_bounds", request, response)
 	if err != nil {
+		utils.LogDebug(fmt.Sprintf(" service.client.Call  error: %v", err))
 		return nil, err
 	}
 
