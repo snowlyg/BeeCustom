@@ -100,7 +100,7 @@ func (c *HsCodeController) Import() {
 
 	// 提取 excel 数据
 	hsCodes := make([]*models.HsCode, 0)
-	cs := models.GetClearancesByTypes("计量单位代码", false)
+	//cs := models.GetClearancesByTypes("计量单位代码", false)
 	for roI, row := range rows {
 		if roI > 0 {
 			// 将数组  转成对应的 map
@@ -110,14 +110,14 @@ func (c *HsCodeController) Import() {
 			if err != nil {
 				//c.jsonResult(enums.JRCodeFailed, "上传失败", err)
 			}
-			for _, cc := range cs {
-				if cc[1] == c.Unit1 {
-					c.Unit1Name = cc[0].(string)
-				}
-				if cc[1] == c.Unit2 {
-					c.Unit2Name = cc[0].(string)
-				}
-			}
+			//for _, cc := range cs {
+			//	if cc[1] == c.Unit1 {
+			//		c.Unit1Name = cc[0].(string)
+			//	}
+			//	if cc[1] == c.Unit2 {
+			//		c.Unit2Name = cc[0].(string)
+			//	}
+			//}
 			hsCodes = append(hsCodes, &c)
 		}
 	}

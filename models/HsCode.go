@@ -32,8 +32,6 @@ type HsCode struct {
 	Unit2       string  `orm:"column(unit2);size(255);null" description:"第二法定单位"`
 	Declaration string  `orm:"column(declaration);size(255);null" description:"申报要素"`
 	Remark      string  `orm:"column(remark);size(255);null" description:"备注"`
-	Unit1Name   string  `orm:"column(unit1_name);size(255);null" description:"第一单位名称"`
-	Unit2Name   string  `orm:"column(unit2_name);size(255);null" description:"第二单位名称"`
 }
 
 func NewHsCode(id int64) HsCode {
