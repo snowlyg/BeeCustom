@@ -33,5 +33,7 @@ go get github.com/360EntSecGroup-Skylar/excelize
 5.hooklift/gowsdl
 [hooklift/gowsdl](https://github.com/hooklift/gowsdl)
 
+[548c91d69953aea2e32c8f793e9cbdec8ccf7e71](https://github.com/hooklift/gowsdl/tree/548c91d69953aea2e32c8f793e9cbdec8ccf7e71)
+
 [Go与SOAP](https://tonybai.com/2019/01/08/go-and-soap/)
 
