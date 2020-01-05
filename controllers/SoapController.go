@@ -10,8 +10,8 @@ type SoapController struct {
 }
 
 func (c *SoapController) Soap() {
-	client := soap.NewClient("http://www.cusdectrans.com:8014/BGCDWebService/services/InBoundsService?wsdl", soap.WithSOAPVersion(12))
-	header := `<tns:Authentication xmlns:tns="authentication">DHBG-IT<tns:Username xmlns:tns="authentication"></tns:Username><tns:Password xmlns:tns="authentication">88888888</tns:Password></tns:Authentication>`
+	client := soap.NewClient("http://www.cusdectrans.com:8014/BGCDWebService/services/InBoundsService?wsdl")
+	header := mysoap.Authentication{Username: "DHBG-IT", Password: "88888888"}
 	client.AddHeader(header)
 	boundsServicePortType := mysoap.NewInBoundsServicePortType(client)
 	inBounds, err := boundsServicePortType.InBounds(&mysoap.InBoundsRequest{MessageType: "SDATE"})

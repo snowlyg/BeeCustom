@@ -16,7 +16,8 @@ var _ xml.Name
 type Authentication struct {
 	XMLName xml.Name `xml:"Authentication"`
 
-	MessageType string `xml:"messageType,omitempty"`
+	Username string `xml:"Username,omitempty"`
+	Password string `xml:"Password,omitempty"`
 }
 type InBoundsRequest struct {
 	XMLName xml.Name `xml:"http://webservice.bgcd.hwt.com in_bounds"`
