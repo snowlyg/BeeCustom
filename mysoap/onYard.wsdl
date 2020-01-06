@@ -1,0 +1,239 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://webservice.bgcd.hwt.com" xmlns:ax21="http://ws.apache.org/namespaces/axis2/map" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" targetNamespace="http://webservice.bgcd.hwt.com">
+    <wsdl:documentation>QueryContaStatus</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax22="http://ws.apache.org/namespaces/axis2/map" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://webservice.bgcd.hwt.com">
+            <xs:import namespace="http://ws.apache.org/namespaces/axis2/map"/>
+            <xs:element name="onYard_conta">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="conta_no" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="dock_code" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="onYard_contaResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="main">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="args" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDCWShipInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="conta_no" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDCWShipInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax21:map1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createDCXDoc">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="map" nillable="true" type="ax21:map2"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createDCXDocResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/namespaces/axis2/map">
+            <xs:complexType name="entry1">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="key" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="map1">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="entry" nillable="true" type="ax21:entry1"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="entry2">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="key" nillable="true" type="xs:anyType"/>
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:anyType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="map2">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="entry" nillable="true" type="ax21:entry2"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getDCWShipInfoRequest">
+        <wsdl:part name="parameters" element="ns:getDCWShipInfo"/>
+    </wsdl:message>
+    <wsdl:message name="getDCWShipInfoResponse">
+        <wsdl:part name="parameters" element="ns:getDCWShipInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="mainRequest">
+        <wsdl:part name="parameters" element="ns:main"/>
+    </wsdl:message>
+    <wsdl:message name="createDCXDocRequest">
+        <wsdl:part name="parameters" element="ns:createDCXDoc"/>
+    </wsdl:message>
+    <wsdl:message name="createDCXDocResponse">
+        <wsdl:part name="parameters" element="ns:createDCXDocResponse"/>
+    </wsdl:message>
+    <wsdl:message name="onYard_contaRequest">
+        <wsdl:part name="parameters" element="ns:onYard_conta"/>
+    </wsdl:message>
+    <wsdl:message name="onYard_contaResponse">
+        <wsdl:part name="parameters" element="ns:onYard_contaResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="QueryContaStatusPortType">
+        <wsdl:operation name="getDCWShipInfo">
+            <wsdl:input message="ns:getDCWShipInfoRequest" wsaw:Action="urn:getDCWShipInfo"/>
+            <wsdl:output message="ns:getDCWShipInfoResponse" wsaw:Action="urn:getDCWShipInfoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <wsdl:input message="ns:mainRequest" wsaw:Action="urn:main"/>
+        </wsdl:operation>
+        <wsdl:operation name="createDCXDoc">
+            <wsdl:input message="ns:createDCXDocRequest" wsaw:Action="urn:createDCXDoc"/>
+            <wsdl:output message="ns:createDCXDocResponse" wsaw:Action="urn:createDCXDocResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="onYard_conta">
+            <wsdl:input message="ns:onYard_contaRequest" wsaw:Action="urn:onYard_conta"/>
+            <wsdl:output message="ns:onYard_contaResponse" wsaw:Action="urn:onYard_contaResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="QueryContaStatusSoap11Binding" type="ns:QueryContaStatusPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getDCWShipInfo">
+            <soap:operation soapAction="urn:getDCWShipInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <soap:operation soapAction="urn:main" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createDCXDoc">
+            <soap:operation soapAction="urn:createDCXDoc" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="onYard_conta">
+            <soap:operation soapAction="urn:onYard_conta" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="QueryContaStatusSoap12Binding" type="ns:QueryContaStatusPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getDCWShipInfo">
+            <soap12:operation soapAction="urn:getDCWShipInfo" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <soap12:operation soapAction="urn:main" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createDCXDoc">
+            <soap12:operation soapAction="urn:createDCXDoc" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="onYard_conta">
+            <soap12:operation soapAction="urn:onYard_conta" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="QueryContaStatusHttpBinding" type="ns:QueryContaStatusPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getDCWShipInfo">
+            <http:operation location="getDCWShipInfo"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="main">
+            <http:operation location="main"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createDCXDoc">
+            <http:operation location="createDCXDoc"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="onYard_conta">
+            <http:operation location="onYard_conta"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="QueryContaStatus">
+        <wsdl:port name="QueryContaStatusHttpSoap11Endpoint" binding="ns:QueryContaStatusSoap11Binding">
+            <soap:address location="http://www.cusdectrans.com:8014/BGCDWebService/services/QueryContaStatus.QueryContaStatusHttpSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="QueryContaStatusHttpSoap12Endpoint" binding="ns:QueryContaStatusSoap12Binding">
+            <soap12:address location="http://www.cusdectrans.com:8014/BGCDWebService/services/QueryContaStatus.QueryContaStatusHttpSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="QueryContaStatusHttpEndpoint" binding="ns:QueryContaStatusHttpBinding">
+            <http:address location="http://www.cusdectrans.com:8014/BGCDWebService/services/QueryContaStatus.QueryContaStatusHttpEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
