@@ -165,7 +165,7 @@ func (c *SoapController) getXmlStr() []byte {
 	equipment.CharacteristicCode = "20GP"
 
 	identification := mysoap.EquipmentIdentification{}
-	identification.ID = "FCIU2558917"
+	identification.ID = "HLBU2358636"
 	equipment.EquipmentIdentification = identification
 
 	equipments = append(equipments, equipment)
@@ -191,7 +191,7 @@ func (c *SoapController) getXmlStr() []byte {
 	item.GoodsMeasure = measure
 
 	equipmentIdentification := mysoap.EquipmentIdentification{}
-	equipmentIdentification.ID = "FCIU2558917"
+	equipmentIdentification.ID = "HLBU2358636"
 	item.EquipmentIdentification = equipmentIdentification
 
 	items = append(items, item)
