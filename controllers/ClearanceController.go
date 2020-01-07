@@ -10,7 +10,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xlsx"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type ClearanceController struct {
@@ -269,7 +269,7 @@ func (c *ClearanceController) ImportClearanceXlsx(cIP *models.ClearanceImport) (
 			// 将数组  转成对应的 map
 			c := models.NewClearance(0)
 			c.Type = cIP.ClearanceType
-			x := gotransform.NewXlxsTransform(&c, titles, row, "", "", nil)
+			x := gtf.NewXlxsTransform(&c, titles, row, "", "", nil)
 			err := x.XlxsTransformer()
 			if err != nil {
 				return nil, err

@@ -6,7 +6,7 @@ import (
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/transforms"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type AnnotationReturnController struct {
@@ -42,7 +42,7 @@ func (c *AnnotationReturnController) transformAnnotationReturnList(ms []*models.
 	var annotationReturnList []*transforms.AnnotationReturn
 	for _, v := range ms {
 		annotationReturnT := transforms.AnnotationReturn{}
-		g := gotransform.NewTransform(&annotationReturnT, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&annotationReturnT, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 		annotationReturnList = append(annotationReturnList, &annotationReturnT)
 	}

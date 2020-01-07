@@ -14,7 +14,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type BaseAnnotationController struct {
@@ -614,7 +614,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 
 		invtHeadType := xmlTemplate.InvtHeadType{}
 		//enums.SetObjValueFromObj(&invtHeadType, m) // 设置数据到 xml 结构体
-		g := gotransform.NewTransform(&invtHeadType, m, "")
+		g := gtf.NewTransform(&invtHeadType, m, "")
 		_ = g.Transformer()
 
 		iCCode, _ := models.GetSettingValueByKey("ICCode")
@@ -627,7 +627,7 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		for _, v := range m.AnnotationItems {
 			invtListType := xmlTemplate.InvtListType{}
 			//enums.SetObjValueFromObj(&invtListType, v) // 设置数据到 xml 结构体
-			g := gotransform.NewTransform(&invtListType, v, "")
+			g := gtf.NewTransform(&invtListType, v, "")
 			_ = g.Transformer()
 
 			gdsNm := xmlTemplate.Cdata{Value: v.GdsNm}

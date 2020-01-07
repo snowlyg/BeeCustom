@@ -12,7 +12,7 @@ import (
 	"BeeCustom/transforms"
 	"BeeCustom/utils"
 	"BeeCustom/xlsx"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type HandBookController struct {
@@ -333,7 +333,7 @@ func (c *HandBookController) ImportHandBookXlsxByCell(hIP *models.HandBookImport
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("GetExcel:%v", err), nil)
 	}
-	x := gotransform.NewXlxsTransform(&hIP.HandBook, hIP.ExcelTitle, nil, hIP.ExcelName, "", f)
+	x := gtf.NewXlxsTransform(&hIP.HandBook, hIP.ExcelTitle, nil, hIP.ExcelName, "", f)
 	err = x.XlxsCellTransformer()
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
@@ -386,7 +386,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 			if roI > 1 { // 忽略标题和表头 2 行
 				hb := models.NewHandBookGood(0)
 				hb.Type = handBookGoodType
-				x := gotransform.NewXlxsTransform(&hb, hIP.ExcelTitle, row, "", "", nil)
+				x := gtf.NewXlxsTransform(&hb, hIP.ExcelTitle, row, "", "", nil)
 				err := x.XlxsTransformer()
 				if err != nil {
 					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
@@ -407,7 +407,7 @@ func (c *HandBookController) ImportHandBookXlsxByRow(hIP *models.HandBookImport,
 		for roI, row := range rows {
 			if roI > 1 { // 忽略标题行
 				hbu := models.NewHandBookUllage(0)
-				x := gotransform.NewXlxsTransform(&hbu, hIP.ExcelTitle, row, "", "", nil)
+				x := gtf.NewXlxsTransform(&hbu, hIP.ExcelTitle, row, "", "", nil)
 				err := x.XlxsTransformer()
 				if err != nil {
 					c.jsonResult(enums.JRCodeFailed, fmt.Sprintf("XlxsTransformer:%v", err), nil)
@@ -434,7 +434,7 @@ func (c *HandBookController) TransformHandBookGoodsList(ms []*models.HandBookGoo
 	var uts []*transforms.HandBookGood
 	for _, v := range ms {
 		ut := transforms.HandBookGood{}
-		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 
 		uts = append(uts, &ut)
@@ -447,7 +447,7 @@ func (c *HandBookController) TransformHandBookUllageList(ms []*models.HandBookUl
 	var uts []*transforms.HandBookUllage
 	for _, v := range ms {
 		ut := transforms.HandBookUllage{}
-		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 
 		uts = append(uts, &ut)
@@ -458,7 +458,7 @@ func (c *HandBookController) TransformHandBookUllageList(ms []*models.HandBookUl
 // TransformHandBookGood 格式化列表数据
 func (c *HandBookController) TransformHandBookGood(v *models.HandBookGood) *transforms.HandBookGood {
 	ut := &transforms.HandBookGood{}
-	g := gotransform.NewTransform(ut, v, enums.BaseDateTimeFormat)
+	g := gtf.NewTransform(ut, v, enums.BaseDateTimeFormat)
 	_ = g.Transformer()
 
 	return ut
@@ -467,7 +467,7 @@ func (c *HandBookController) TransformHandBookGood(v *models.HandBookGood) *tran
 // TransformHandBookGood 格式化列表数据
 func (c *HandBookController) TransformHandBook(v *models.HandBook) *transforms.HandBook {
 	ut := &transforms.HandBook{}
-	g := gotransform.NewTransform(ut, v, enums.BaseDateTimeFormat)
+	g := gtf.NewTransform(ut, v, enums.BaseDateTimeFormat)
 	_ = g.Transformer()
 
 	return ut

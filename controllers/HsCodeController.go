@@ -8,7 +8,7 @@ import (
 	"BeeCustom/enums"
 	"BeeCustom/transforms"
 	"BeeCustom/xlsx"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 
 	"BeeCustom/models"
 )
@@ -105,7 +105,7 @@ func (c *HsCodeController) Import() {
 		if roI > 0 {
 			// 将数组  转成对应的 map
 			c := models.NewHsCode(0)
-			x := gotransform.NewXlxsTransform(&c, titles, row, "", "", nil)
+			x := gtf.NewXlxsTransform(&c, titles, row, "", "", nil)
 			err := x.XlxsTransformer()
 			if err != nil {
 				//c.jsonResult(enums.JRCodeFailed, "上传失败", err)
@@ -135,7 +135,7 @@ func (c *HsCodeController) transformHsCodeList(ms []*models.HsCode) []*transform
 	var uts []*transforms.HsCode
 	for _, v := range ms {
 		ut := transforms.HsCode{}
-		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 
 		uts = append(uts, &ut)

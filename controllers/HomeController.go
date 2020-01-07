@@ -12,7 +12,7 @@ import (
 	"BeeCustom/utils"
 	"BeeCustom/validations"
 	"github.com/astaxie/beego/orm"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type HomeController struct {
@@ -170,7 +170,7 @@ func (c *HomeController) transformHomeOrderData(ms []orm.Params) []*transforms.H
 	var uts []*transforms.HomeOrder
 	for _, v := range ms {
 		ut := transforms.HomeOrder{}
-		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 
 		uts = append(uts, &ut)

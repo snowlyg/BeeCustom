@@ -6,7 +6,7 @@ import (
 	"BeeCustom/enums"
 	"BeeCustom/models"
 	"BeeCustom/transforms"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type OrderFileController struct {
@@ -45,7 +45,7 @@ func (c *OrderFileController) TransformOrderFileList(ms []*models.OrderFile) []*
 	var uts []*transforms.OrderFile
 	for _, v := range ms {
 		ut := &transforms.OrderFile{}
-		g := gotransform.NewTransform(ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 
 		uts = append(uts, ut)

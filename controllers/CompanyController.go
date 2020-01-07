@@ -6,7 +6,7 @@ import (
 
 	"BeeCustom/transforms"
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
@@ -172,7 +172,7 @@ func (c *CompanyController) transformCompanyList(ms []*models.Company) []*transf
 	var uts []*transforms.Company
 	for _, v := range ms {
 		ut := transforms.Company{}
-		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 		//ut.AdminName = c.getAdminName(v)
 		uts = append(uts, &ut)

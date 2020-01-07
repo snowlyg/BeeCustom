@@ -8,7 +8,7 @@ import (
 	"BeeCustom/models"
 	"BeeCustom/transforms"
 	"BeeCustom/utils"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type ResourceController struct {
@@ -152,7 +152,7 @@ func (c *ResourceController) transformResourceList(ms []*models.Resource) []*tra
 	var uts []*transforms.Resource
 	for _, v := range ms {
 		ut := transforms.Resource{}
-		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 
 		uts = append(uts, &ut)

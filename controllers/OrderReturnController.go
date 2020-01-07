@@ -5,7 +5,7 @@ import (
 
 	"BeeCustom/enums"
 	"BeeCustom/models"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 )
 
 type OrderReturnController struct {
@@ -54,7 +54,7 @@ func (c *OrderReturnController) transformOrderReturnList(ms []*models.OrderRetur
 		//	OrderReturn["CreatedAt"] = v.CreatedAt.Format(enums.BaseDateTimeFormat)
 		//
 
-		g := gotransform.NewTransform(&OrderReturn, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&OrderReturn, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 		orderReturnList = append(orderReturnList, &OrderReturn)
 	}

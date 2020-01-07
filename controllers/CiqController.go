@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/snowlyg/gotransform"
+	gtf "github.com/snowlyg/gotransformer"
 
 	"BeeCustom/models"
 )
@@ -84,7 +84,7 @@ func (c *CiqController) transformCiqList(ms []*models.Ciq) []*transforms.Ciq {
 	var uts []*transforms.Ciq
 	for _, v := range ms {
 		ut := transforms.Ciq{}
-		g := gotransform.NewTransform(&ut, v, enums.BaseDateTimeFormat)
+		g := gtf.NewTransform(&ut, v, enums.BaseDateTimeFormat)
 		_ = g.Transformer()
 
 		uts = append(uts, &ut)
