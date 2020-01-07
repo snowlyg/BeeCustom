@@ -37,3 +37,7 @@ go get github.com/360EntSecGroup-Skylar/excelize
 
 [Go与SOAP](https://tonybai.com/2019/01/08/go-and-soap/)
 
+```
+gowsdl mysoap/***.wsdl
+```
+

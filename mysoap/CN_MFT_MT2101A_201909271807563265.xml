@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Manifest>
+	<Head>
+		<MessageID>ZSBS_19092708561404707</MessageID>
+		<FunctionCode>9</FunctionCode>
+		<MessageType>MT2101A</MessageType>
+		<SenderID>ZSBS</SenderID>
+		<ReceiverID>DT</ReceiverID>
+		<SendTime>20190927085606011</SendTime>
+		<Version>1.0</Version>
+	</Head>
+	<Declaration>
+		<RepresentativePerson>
+			<!--舱单传输人-->
+			<Name>5304192209991</Name>
+		</RepresentativePerson>
+		<ExitCustomsOffice>
+			<!--运输工具离境地海关代码-->
+			<ID>CNYTN/5316</ID>
+		</ExitCustomsOffice>
+		<Carrier>
+			<!--承运人(箱属)-->
+			<ID>MSC</ID>
+		</Carrier>
+		<OptType>00</OptType>
+		<!-- 操作类型 00:入库； 10:入库并发送； -->
+		<TradeMode>0615</TradeMode>
+		<!--贸易方式 ４位数字-->
+		<DeclType>Q</DeclType>
+		<!--通关方式 (循环次数：1)： 只能为 Q、J、Z 其中一种。 说明： Q（清关）、J（监管仓 ）、Z（转关 ）-->
+		<BorderTransportMeans>
+			<JourneyID>FT939W</JourneyID>
+			<!--航次号 -->			
+			<ID>UN9469560</ID>
+			<!--运输工具-->
+			<Name>MSC TERESA</Name>
+			<!--运输工具名称-->
+		</BorderTransportMeans>
+		<!-- 提（运）单数据信息（循环次数：1）-->
+		<Consignment>
+			<TransportContractDocument>
+				<ConditionCode>10</ConditionCode>
+				<!--运输条款-->
+			</TransportContractDocument>
+			<LoadingLocation>
+				<ID>CNYTN</ID>
+				<!--装货地-->
+				<LoadingDate>201910042000</LoadingDate>
+				<!--货物装载时间-->
+			</LoadingLocation>
+			<UnloadingLocation>
+				<ID>TRIST</ID>
+				<!--卸货地 -->
+			</UnloadingLocation>
+			<CustomsStatusCode>001</CustomsStatusCode>
+			<!--货物海关状态-->
+			<FreightPayment>
+				<MethodCode>CC</MethodCode>
+				<!--运费支付方式-->
+			</FreightPayment>
+			<ConsignmentPackaging>
+				<QuantityQuantity>1440</QuantityQuantity>
+				<!--货物总件数-->
+				<TypeCode>CT</TypeCode>
+				<!--包装种类-->
+			</ConsignmentPackaging>
+			<TotalGrossMassMeasure>19770</TotalGrossMassMeasure>
+			<!--货物总毛重-->
+			<!-- 收货人信息（循环次数：0-1） -->
+			<Consignee>
+				<ID>MERSIS NUMBER+0461039586100014</ID>
+				<!--收货人代码-->
+				<Name>HEDEF TUKETIM URUNLERI SANAYI VE DIS TICARET A.S.</Name>
+				<!--收货人名称-->
+				<Address>
+					<Line>TERRA PLAZA, NO:25 KAT:3 D:9-10</Line>
+					<!--收货人详细地址（街道,邮箱）-->
+					<CountryCode>TR</CountryCode>
+					<!--收货人国家代码-->
+				</Address>
+				<Communication>
+					<ID>216 6390115</ID>
+					<!--收货人通讯方式号码-->
+					<TypeID>TE</TypeID>
+					<!--收货人通讯方式类别-->
+				</Communication>
+			</Consignee>
+			<!-- 发货人信息（循环次数：1）-->
+			<Consignor>
+				<ID>USCI+91441900730442249J</ID>
+				<!--发货人代码-->
+				<Name>广东力王新能源股份有限公司</Name>
+				<!--发货人名称-->
+				<Address>
+					<Line>广东省东莞市塘厦镇石马管理区</Line>
+					<!--发货人详细地址（街道,邮箱）-->
+					<CountryCode>CN</CountryCode>
+					<!--发货人国家代码-->
+				</Address>
+				<Communication>
+					<ID>0769-87885755</ID>
+					<!--发货人通讯方式号码-->
+					<TypeID>TE</TypeID>
+					<!--发货人通讯方式类别-->
+				</Communication>
+			</Consignor>
+			<!-- 危险品联系人信息（循环次数：0-1） -->
+			<UNDGContact>
+				<!-- 危险品联系人姓名（循环次数：0-1） -->
+				<Name>王华</Name>
+				<Communication>
+					<!--通讯方式号码（循环次数：1）-->
+					<ID>13565654852</ID>
+					<!-- 通讯方式类别代码（循环次数：1） -->
+					<TypeID>TE</TypeID>
+				</Communication>
+			</UNDGContact>
+			<!-- 集装箱（器）信息（循环次数：1-9999） -->
+			<TransportEquipment>
+				<EquipmentIdentification>
+					<ID>FCIU2558917</ID>
+					<!--集装箱（器）编号-->
+				</EquipmentIdentification>
+				<CharacteristicCode>20GP</CharacteristicCode>
+				<!--集装箱（器）尺寸和类型-->
+				<SupplierPartyTypeCode>2</SupplierPartyTypeCode>
+				<!--集装箱（器）来源代码-->
+				<FullnessCode>7</FullnessCode>
+				<!--重箱或者空箱标识代码-->
+				<SealID AgencyCode="CA">M/CNB549227</SealID>
+				<!--  封志类型/号码和施加封志人类型-->
+				<IsLcl>1</IsLcl>
+				<!--是否拼箱：0：否；1：是；-->
+				<LclNum>2</LclNum>
+				<!--拼箱数-->
+				<BookingNumber>181AS0193642072M1</BookingNumber>
+				<!--订舱号-->
+			</TransportEquipment>
+			<!-- 商品项信息（循环次数：1-999） -->
+			<ConsignmentItem>
+				<SequenceNumeric>1</SequenceNumeric>
+				<!--商品项序号-->
+				<ConsignmentItemPackaging>
+					<QuantityQuantity>1440</QuantityQuantity>
+					<!--商品项货物件数-->
+					<TypeCode>CT</TypeCode>
+					<!--包装种类代码-->
+					<MarksNumbers>N/M</MarksNumbers>
+					<!--唛头-->
+				</ConsignmentItemPackaging>
+				<Commodity>
+					<CargoDescription>碱性锌锰电池</CargoDescription>
+					<!-- 商品项简要描述-->
+					<UNDGCode>2343</UNDGCode>
+					<!-- 危险品编号 -->
+				</Commodity>
+				<GoodsMeasure>
+					<GrossMassMeasure>19770</GrossMassMeasure>
+					<!--商品项货物毛重-->
+				</GoodsMeasure>
+				<EquipmentIdentification>
+					<ID>FCIU2558917</ID>
+					<!--集装箱（器）编号-->
+				</EquipmentIdentification>
+			</ConsignmentItem>
+		</Consignment>
+	</Declaration>
+</Manifest>

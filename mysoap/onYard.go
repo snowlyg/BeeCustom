@@ -86,8 +86,6 @@ type Map2 struct {
 type QueryContaStatusPortType interface {
 	GetDCWShipInfo(request *GetDCWShipInfo) (*GetDCWShipInfoResponse, error)
 
-	//Main(request *Main) (*, error)
-
 	CreateDCXDoc(request *CreateDCXDoc) (*CreateDCXDocResponse, error)
 
 	OnYard_conta(request *OnYard_conta) (*OnYard_contaResponse, error)
@@ -112,16 +110,6 @@ func (service *queryContaStatusPortType) GetDCWShipInfo(request *GetDCWShipInfo)
 
 	return response, nil
 }
-
-//func (service *queryContaStatusPortType) Main(request *Main) (*, error) {
-//	response := new()
-//	err := service.client.Call("urn:main", request, response)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	return response, nil
-//}
 
 func (service *queryContaStatusPortType) CreateDCXDoc(request *CreateDCXDoc) (*CreateDCXDocResponse, error) {
 	response := new(CreateDCXDocResponse)

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
@@ -658,16 +659,11 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 
-		err = file.WriteFile(pathTemp+fileName, []byte(xml.Header))
+		bs := [][]byte{[]byte(xml.Header), output}
+		moutput := bytes.Join(bs, []byte(""))
+		err = file.WriteFile(pathTemp+fileName, moutput)
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
-		}
-
-		err = file.AppendFile(pathTemp+fileName, output)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("WriteFile error:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "写入内容出错", err)
 		}
 
 		f1, err := os.Open(pathTemp + fileName)
