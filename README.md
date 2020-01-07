@@ -1,5 +1,8 @@
 ## BeeCustom
 
+#### 更新日志
+[更新日志](UPDATE.MD)
+
 #### Require
 - go 1.13.x
 

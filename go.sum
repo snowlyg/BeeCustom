@@ -59,6 +59,8 @@ github.com/siddontang/ledisdb v0.0.0-20181029004158-becf5f38d373/go.mod h1:mF1Dp
 github.com/siddontang/rdb v0.0.0-20150307021120-fc89ed2e418d/go.mod h1:AMEsy7v5z92TR1JKMkLLoaOQk++LVnOKL3ScbJ8GNGA=
 github.com/snowlyg/gotransform v0.0.0-20191231114425-44949051c83b h1:Hs13cvQ8KaoPx4Apr6BRhtQ8WO/9D+LF9AOGl4sn6lw=
 github.com/snowlyg/gotransform v0.0.0-20191231114425-44949051c83b/go.mod h1:PKmFCxecjlAM/G3328YR+7BdVUYwCJq8kQthUpVdTYg=
+github.com/snowlyg/gotransformer v0.0.0-20200102145705-776a675cb1dc h1:T+/5w4TJVskv3jPJziU6/QKhmpB2QDeE1VclWIhvA3g=
+github.com/snowlyg/gotransformer v0.0.0-20200102145705-776a675cb1dc/go.mod h1:XQTsi1E7BSdtkFtsDNh0bLb7cooz/MfqoJws4FFIwYE=
 github.com/ssdb/gossdb v0.0.0-20180723034631-88f6b59b84ec/go.mod h1:QBvMkMya+gXctz3kmljlUCu/yB3GZ6oee+dUozsezQE=
 github.com/stretchr/testify v1.2.3-0.20181224173747-660f15d67dbb h1:cRItZejS4Ok67vfCdrbGIaqk86wmtQNOjVD7jSyS2aw=
 github.com/stretchr/testify v1.2.3-0.20181224173747-660f15d67dbb/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=

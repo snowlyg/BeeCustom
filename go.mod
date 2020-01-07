@@ -16,6 +16,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/snowlyg/gotransform v0.0.0-20191231114425-44949051c83b
+	github.com/snowlyg/gotransformer v0.0.0-20200102145705-776a675cb1dc // indirect
 	github.com/tiaguinho/gosoap v1.2.0
 	golang.org/x/text v0.3.2 // indirect
 )
