@@ -3,7 +3,6 @@ package xlsx
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"BeeCustom/utils"
 	"github.com/360EntSecGroup-Skylar/excelize"
@@ -30,10 +29,6 @@ func GetExcelRows(fileNamePath, excelName string) ([][]string, error) {
 	}
 
 	rows := f.GetRows(excelName)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("GetExcelRows.OpenFile:%v", err))
-		return nil, err
-	}
 
 	return rows, nil
 
@@ -61,18 +56,4 @@ func FilpValueString(obj map[string]string) map[string]string {
 		obj[v] = i
 	}
 	return obj
-}
-
-// 判断是否存在键
-func ObjIsExists(rXmlTitles map[string]string, s string) int {
-	fRXmlTitles := FilpValueString(rXmlTitles)
-	if _, ok := fRXmlTitles[s]; ok {
-		i, err := strconv.Atoi(rXmlTitles[s])
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("funcName=>Atoi:%v", err))
-		}
-		return i
-	} else {
-		return -1
-	}
 }

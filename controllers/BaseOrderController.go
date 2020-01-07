@@ -500,7 +500,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		}
 
 		decHead := xmlTemplate.DecHead{}
-		//enums.SetObjValueFromObj(&decHead, m) // 设置数据到 xml 结构体
 		g := gtf.NewTransform(&decHead, m, "")
 		_ = g.Transformer()
 
@@ -511,7 +510,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decListsl []xmlTemplate.DecList
 		for _, dl := range m.OrderItems {
 			decList := xmlTemplate.DecList{}
-			//enums.SetObjValueFromObj(&decList, dl) // 设置数据到 xml 结构体
 			g := gtf.NewTransform(&decList, dl, "")
 			_ = g.Transformer()
 
@@ -528,14 +526,12 @@ func (c *BaseOrderController) bPushXml(id int64) {
 			var decGoodsLimitsl []xmlTemplate.DecGoodsLimit
 			for _, oil := range dl.OrderItemLimits {
 				decGoodsLimit := xmlTemplate.DecGoodsLimit{}
-				//enums.SetObjValueFromObj(&decGoodsLimit, oil) // 设置数据到 xml 结构体
 				g := gtf.NewTransform(&decGoodsLimit, oil, "")
 				_ = g.Transformer()
 
 				var decGoodsLimitVins []xmlTemplate.DecGoodsLimitVin
 				for _, oilv := range oil.OrderItemLimitVins {
 					decGoodsLimitVin := xmlTemplate.DecGoodsLimitVin{}
-					//enums.SetObjValueFromObj(&decGoodsLimitVin, oilv) // 设置数据到 xml 结构体
 					g := gtf.NewTransform(&decGoodsLimitVin, oilv, "")
 					_ = g.Transformer()
 
@@ -556,7 +552,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var licenseDocusl []xmlTemplate.LicenseDocu
 		for _, odec := range m.OrderDocuments {
 			decLicenseDocu := xmlTemplate.LicenseDocu{}
-			//enums.SetObjValueFromObj(&decLicenseDocu, odec) // 设置数据到 xml 结构体
 			g := gtf.NewTransform(&decLicenseDocu, odec, "")
 			_ = g.Transformer()
 
@@ -568,7 +563,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decContainersl []xmlTemplate.DecContainer
 		for _, oc := range m.OrderContainers {
 			decContainer := xmlTemplate.DecContainer{}
-			//enums.SetObjValueFromObj(&decContainer, oc) // 设置数据到 xml 结构体
 			g := gtf.NewTransform(&decContainer, oc, "")
 			_ = g.Transformer()
 
@@ -585,7 +579,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decRequestCertsl []xmlTemplate.DecRequestCert
 		for _, odrc := range m.DecRequestCerts {
 			decRequestCert := xmlTemplate.DecRequestCert{}
-			//enums.SetObjValueFromObj(&decRequestCert, odrc) // 设置数据到 xml 结构体
 			g := gtf.NewTransform(&decRequestCert, odrc, "")
 			_ = g.Transformer()
 
@@ -597,7 +590,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decOtherPacksl []xmlTemplate.DecOtherPack
 		for _, odop := range m.DecOtherPacks {
 			decOtherPack := xmlTemplate.DecOtherPack{}
-			//enums.SetObjValueFromObj(&decOtherPack, odop) // 设置数据到 xml 结构体
 			g := gtf.NewTransform(&decOtherPack, odop, "")
 			_ = g.Transformer()
 
@@ -613,7 +605,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 		var decUsersl []xmlTemplate.DecUser
 		for _, odu := range m.DecUsers {
 			decUser := xmlTemplate.DecUser{}
-			//enums.SetObjValueFromObj(&decUser, odu) // 设置数据到 xml 结构体
 			g := gtf.NewTransform(&decUser, odu, "")
 			_ = g.Transformer()
 
@@ -630,7 +621,6 @@ func (c *BaseOrderController) bPushXml(id int64) {
 			edocCodes, _ := models.GetSettingRValueByKey("sendEdocCodes", false)
 			if enums.InStringMap(odr.EdocCode, edocCodes) {
 				edocRealation := xmlTemplate.EdocRealation{}
-				//enums.SetObjValueFromObj(&edocRealation, odr) // 设置数据到 xml 结构体
 				g := gtf.NewTransform(&edocRealation, odr, "")
 				_ = g.Transformer()
 				edocRealations = append(edocRealations, edocRealation)
@@ -678,6 +668,10 @@ func (c *BaseOrderController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeFailed, "打开文件出错", err)
 		}
 		defer f1.Close()
+
+		if err := file.CreateFile(path); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "新建文件出错", err)
+		}
 
 		var files = []*os.File{f1}
 		err = file.Compress(files, path+mName+".zip")

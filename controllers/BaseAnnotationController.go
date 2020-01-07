@@ -614,7 +614,6 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		signature.Object.Package.DataInfo.BussinessData.InvtMessage.OperCusRegCode, _ = models.GetSettingValueByKey("AgentCode")
 
 		invtHeadType := xmlTemplate.InvtHeadType{}
-		//enums.SetObjValueFromObj(&invtHeadType, m) // 设置数据到 xml 结构体
 		g := gtf.NewTransform(&invtHeadType, m, "")
 		_ = g.Transformer()
 
@@ -627,16 +626,12 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 		var invtListTypes []xmlTemplate.InvtListType
 		for _, v := range m.AnnotationItems {
 			invtListType := xmlTemplate.InvtListType{}
-			//enums.SetObjValueFromObj(&invtListType, v) // 设置数据到 xml 结构体
 			g := gtf.NewTransform(&invtListType, v, "")
 			_ = g.Transformer()
-
 			gdsNm := xmlTemplate.Cdata{Value: v.GdsNm}
 			invtListType.GdsNm = gdsNm
-
 			rmk := xmlTemplate.Cdata{Value: v.Rmk}
 			invtListType.Rmk = rmk
-
 			invtListTypes = append(invtListTypes, invtListType)
 		}
 
@@ -672,6 +667,10 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
 		}
 		defer f1.Close()
+
+		if err := file.CreateFile(path); err != nil {
+			c.jsonResult(enums.JRCodeFailed, "新建文件出错", err)
+		}
 
 		var files = []*os.File{f1}
 		err = file.Compress(files, path+mName+".zip")
