@@ -3,10 +3,13 @@ package controllers
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
 	"time"
 
 	"BeeCustom/enums"
+	"BeeCustom/file"
 	"BeeCustom/mysoap"
+	"BeeCustom/utils"
 	"github.com/hooklift/gowsdl/soap"
 )
 
@@ -153,7 +156,7 @@ func (c *SoapController) getXmlStr() []byte {
 	contact.Name = "IT部测试"
 	i := mysoap.Communication{}
 	i.ID = "13565654852"
-	i.ID = "TE"
+	i.TypeID = "TE"
 	contact.Communication = i
 	consignment.UNDGContact = contact
 
@@ -209,7 +212,7 @@ func (c *SoapController) getXmlStr() []byte {
 	head.SenderID = "DHBG-IT"
 	head.ReceiverID = "DT"
 	head.SendTime = time.Now().Format(enums.BaseDateTimeSecondFormat)
-	head.SendTime = "1.0"
+	head.Version = "1.0"
 
 	manifest.Declaration = declaration
 	manifest.Head = head
@@ -221,6 +224,15 @@ func (c *SoapController) getXmlStr() []byte {
 
 	bs := [][]byte{[]byte(xml.Header), output}
 	moutput := bytes.Join(bs, []byte(""))
+
+	if err := file.CreateFile("./"); err != nil {
+		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+	}
+	err = file.WriteFile("./123.xml", moutput)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "写入内容出错", err)
+	}
 
 	return moutput
 }

@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/xml"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -302,5 +305,37 @@ func UpdateOrderStatus(m *models.Order, StatusString string, isRestart bool) err
 		m.StatusUpdatedAt = time.Now()
 	}
 
+	return nil
+}
+
+// 生成 xml 文件
+func CreateXml(output []byte, pathTemp string, fileName string, path string, mName string) error {
+
+	bs := [][]byte{[]byte(xml.Header), output}
+	moutput := bytes.Join(bs, []byte(""))
+	if err := file.CreateFile(pathTemp); err != nil {
+		return err
+	}
+	err := file.WriteFile(pathTemp+fileName, moutput)
+	if err != nil {
+		return err
+	}
+	f1, err := os.Open(pathTemp + fileName)
+	if err != nil {
+		return err
+	}
+	defer f1.Close()
+	if err := file.CreateFile(path); err != nil {
+		return err
+	}
+	var files = []*os.File{f1}
+	err = file.Compress(files, path+mName+".zip")
+	if err != nil {
+		return err
+	}
+	err = os.Remove(pathTemp + fileName)
+	if err != nil {
+		return err
+	}
 	return nil
 }

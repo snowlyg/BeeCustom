@@ -1,17 +1,14 @@
 package controllers
 
 import (
-	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"BeeCustom/enums"
-	"BeeCustom/file"
 	"BeeCustom/models"
 	"BeeCustom/utils"
 	"BeeCustom/xmlTemplate"
@@ -645,44 +642,12 @@ func (c *BaseAnnotationController) bPushXml(id int64) {
 
 		output, err := xml.MarshalIndent(signature, "", "")
 		if err != nil {
-			utils.LogDebug(fmt.Sprintf("MarshalIndent error:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "文件解析出错", err)
 		}
 
-		if err := file.CreateFile(pathTemp); err != nil {
-			utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
-		}
-
-		bs := [][]byte{[]byte(xml.Header), output}
-		moutput := bytes.Join(bs, []byte(""))
-		err = file.WriteFile(pathTemp+fileName, moutput)
+		err = CreateXml(output, pathTemp, fileName, path, mName)
 		if err != nil {
-			c.jsonResult(enums.JRCodeFailed, "写入内容出错", err)
-		}
-
-		f1, err := os.Open(pathTemp + fileName)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("os.Open error:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
-		}
-		defer f1.Close()
-
-		if err := file.CreateFile(path); err != nil {
-			c.jsonResult(enums.JRCodeFailed, "新建文件出错", err)
-		}
-
-		var files = []*os.File{f1}
-		err = file.Compress(files, path+mName+".zip")
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("file.Compress error:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
-		}
-
-		err = os.Remove(pathTemp + fileName)
-		if err != nil {
-			utils.LogDebug(fmt.Sprintf("os.Remove error:%v", err))
-			c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+			c.jsonResult(enums.JRCodeFailed, "生成 xml 失败", err)
 		}
 
 		c.jsonResult(enums.JRCodeSucc, "操作成功", nil)
