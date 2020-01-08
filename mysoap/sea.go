@@ -113,10 +113,15 @@ type TransportEquipment struct {
 	CharacteristicCode      string                  `xml:"CharacteristicCode"`
 	SupplierPartyTypeCode   string                  `xml:"SupplierPartyTypeCode"`
 	FullnessCode            string                  `xml:"FullnessCode"`
-	SealID                  string                  `xml:"SealID"`
+	SealID                  SealID                  `xml:"SealID"`
 	IsLcl                   string                  `xml:"IsLcl"`
 	LclNum                  string                  `xml:"LclNum"`
 	BookingNumber           string                  `xml:"BookingNumber"`
+}
+
+type SealID struct {
+	AgencyCode string `xml:"AgencyCode,attr"`
+	SealID     string `xml:",chardata"`
 }
 
 type EquipmentIdentification struct {

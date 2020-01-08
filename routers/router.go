@@ -8,7 +8,7 @@ import (
 func init() {
 
 	//同步多途
-	beego.Router("/ACKMsg/sync", &controllers.SoapController{}, "Get:ACKMsg")
+	beego.Router("/ACKMsg/sync/?:messageType", &controllers.SoapController{}, "Get:ACKMsg")
 	beego.Router("/OnYard/sync", &controllers.SoapController{}, "Get:OnYard")
 	beego.Router("/sendDt/sync", &controllers.SoapController{}, "Get:SendDt")
 

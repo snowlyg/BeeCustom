@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"BeeCustom/enums"
-	"BeeCustom/file"
 	"BeeCustom/mysoap"
 	"github.com/hooklift/gowsdl/soap"
 )
@@ -15,13 +14,17 @@ type SoapController struct {
 	BaseController
 }
 
-//获取回执、船期、特殊费用
+//获取
+// 回执:MT2101A
+// 船期:SDATE
+// 特殊费用:SP_FEE
 func (c *SoapController) ACKMsg() {
+	messageType := c.GetString(":messageType")
 	client := soap.NewClient("http://www.cusdectrans.com:8014/BGCDWebService/services/InBoundsService?wsdl")
 	header := mysoap.Authentication{Username: "DHBG-IT", Password: "88888888"}
 	client.AddHeader(header)
 	m := mysoap.NewInBoundsServicePortType(client)
-	r, err := m.InBounds(&mysoap.InBoundsRequest{MessageType: "SDATE"})
+	r, err := m.InBounds(&mysoap.InBoundsRequest{MessageType: messageType})
 	if err != nil {
 		c.Data["json"] = err
 	} else {
@@ -159,7 +162,7 @@ func (c *SoapController) getXmlStr() []byte {
 	equipment.BookingNumber = "181AS0193642072M1"
 	equipment.LclNum = "2"
 	equipment.IsLcl = "1"
-	equipment.SealID = "M/CNB549227"
+	equipment.SealID = mysoap.SealID{AgencyCode: "AC", SealID: "M/CNB549227"}
 	equipment.FullnessCode = "7"
 	equipment.SupplierPartyTypeCode = "2"
 	equipment.CharacteristicCode = "20GP"
@@ -214,10 +217,6 @@ func (c *SoapController) getXmlStr() []byte {
 	output, err := xml.MarshalIndent(manifest, "", "")
 	if err != nil {
 		c.jsonResult(enums.JRCodeFailed, "xml文件解析出错", err)
-	}
-
-	if err := file.CreateFile("./"); err != nil {
-		c.jsonResult(enums.JRCodeFailed, "文件创建出错", err)
 	}
 
 	bs := [][]byte{[]byte(xml.Header), output}
