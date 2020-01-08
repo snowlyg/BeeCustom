@@ -3,13 +3,10 @@ package controllers
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
 	"time"
 
 	"BeeCustom/enums"
-	"BeeCustom/file"
 	"BeeCustom/mysoap"
-	"BeeCustom/utils"
 	"github.com/hooklift/gowsdl/soap"
 )
 
@@ -206,7 +203,7 @@ func (c *SoapController) getXmlStr() []byte {
 	declaration.Consignment = consignment
 
 	head := mysoap.Head{}
-	head.MessageID = "DHBG-IT_19092708561404707"
+	head.MessageID = "DHBG-IT_" + time.Now().Format(enums.BaseDateTimeSecondFormat)
 	head.FunctionCode = "9"
 	head.MessageType = "MT2101A"
 	head.SenderID = "DHBG-IT"
@@ -225,14 +222,14 @@ func (c *SoapController) getXmlStr() []byte {
 	bs := [][]byte{[]byte(xml.Header), output}
 	moutput := bytes.Join(bs, []byte(""))
 
-	if err := file.CreateFile("./"); err != nil {
-		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
-		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
-	}
-	err = file.WriteFile("./123.xml", moutput)
-	if err != nil {
-		c.jsonResult(enums.JRCodeFailed, "写入内容出错", err)
-	}
+	//if err := file.CreateFile("./"); err != nil {
+	//	utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+	//	c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+	//}
+	//err = file.WriteFile("./123.xml", moutput)
+	//if err != nil {
+	//	c.jsonResult(enums.JRCodeFailed, "写入内容出错", err)
+	//}
 
 	return moutput
 }
