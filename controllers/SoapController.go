@@ -3,10 +3,13 @@ package controllers
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
 	"time"
 
 	"BeeCustom/enums"
+	"BeeCustom/file"
 	"BeeCustom/mysoap"
+	"BeeCustom/utils"
 	"github.com/hooklift/gowsdl/soap"
 )
 
@@ -103,7 +106,7 @@ func (c *SoapController) getXmlStr() []byte {
 
 	location := mysoap.LoadingLocation{}
 	location.ID = "CNYTN"
-	location.LoadingDate = "201910042000"
+	location.LoadingDate = "20191121160000"
 	consignment.LoadingLocation = location
 
 	unloadingLocation := mysoap.UnloadingLocation{}
@@ -168,7 +171,7 @@ func (c *SoapController) getXmlStr() []byte {
 	equipment.CharacteristicCode = "20GP"
 
 	identification := mysoap.EquipmentIdentification{}
-	identification.ID = "HLBU2358636"
+	identification.ID = "FCIU2558917"
 	equipment.EquipmentIdentification = identification
 
 	equipments = append(equipments, equipment)
@@ -194,7 +197,7 @@ func (c *SoapController) getXmlStr() []byte {
 	item.GoodsMeasure = measure
 
 	equipmentIdentification := mysoap.EquipmentIdentification{}
-	equipmentIdentification.ID = "HLBU2358636"
+	equipmentIdentification.ID = "FCIU2558917"
 	item.EquipmentIdentification = equipmentIdentification
 
 	items = append(items, item)
@@ -203,12 +206,12 @@ func (c *SoapController) getXmlStr() []byte {
 	declaration.Consignment = consignment
 
 	head := mysoap.Head{}
-	head.MessageID = "DHBG-IT_" + time.Now().Format(enums.BaseDateTimeSecondFormat)
+	head.MessageID = "DHBG-IT_" + time.Now().Format(enums.DuoTuTimeSecondFormat)
 	head.FunctionCode = "9"
 	head.MessageType = "MT2101A"
 	head.SenderID = "DHBG-IT"
 	head.ReceiverID = "DT"
-	head.SendTime = time.Now().Format(enums.BaseDateTimeSecondFormat)
+	head.SendTime = time.Now().Format(enums.DuoTuTimeSecondFormat)
 	head.Version = "1.0"
 
 	manifest.Declaration = declaration
@@ -222,14 +225,14 @@ func (c *SoapController) getXmlStr() []byte {
 	bs := [][]byte{[]byte(xml.Header), output}
 	moutput := bytes.Join(bs, []byte(""))
 
-	//if err := file.CreateFile("./"); err != nil {
-	//	utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
-	//	c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
-	//}
-	//err = file.WriteFile("./123.xml", moutput)
-	//if err != nil {
-	//	c.jsonResult(enums.JRCodeFailed, "写入内容出错", err)
-	//}
+	if err := file.CreateFile("./"); err != nil {
+		utils.LogDebug(fmt.Sprintf("文件夹创建失败:%v", err))
+		c.jsonResult(enums.JRCodeFailed, "操作失败", nil)
+	}
+	err = file.WriteFile("./123.xml", moutput)
+	if err != nil {
+		c.jsonResult(enums.JRCodeFailed, "写入内容出错", err)
+	}
 
 	return moutput
 }

@@ -72,6 +72,7 @@ github.com/smartystreets/goconvey v1.6.4 h1:fv0U8FUIMPNf1L9lnHLvLhgicrIVChEkdzIK
 github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9QV7WQ/tjFTllLA=
 github.com/snowlyg/gotransformer v0.0.0-20200107031743-38a7dfd0c373 h1:Mh0q8Ozwk4jeI8zEFwQWftlcGvJGEviRaPXgNgkmHuI=
 github.com/snowlyg/gotransformer v0.0.0-20200107031743-38a7dfd0c373/go.mod h1:XQTsi1E7BSdtkFtsDNh0bLb7cooz/MfqoJws4FFIwYE=
+github.com/snowlyg/gotransformer v0.0.0-20200107144825-bbedae43c8fb h1:ChJjggmgHGvlo1cYJa1fxA/QifIvQsDHrUPybiLDGNw=
 github.com/snowlyg/gowatch v0.0.0-20191210075755-18d2e275710b h1:dH5pBTbGLL949fy6UJl/687D8h0Gv3gslI9OYhOBLjQ=
 github.com/snowlyg/gowatch v0.0.0-20191210075755-18d2e275710b/go.mod h1:x+Sol90UNPPEYCgMuDoL/3Yms7utloZPRaTORzu9bGs=
 github.com/ssdb/gossdb v0.0.0-20180723034631-88f6b59b84ec/go.mod h1:QBvMkMya+gXctz3kmljlUCu/yB3GZ6oee+dUozsezQE=

@@ -35,6 +35,7 @@ const (
 const BaseDateTimeFormat = "2006-01-02 15:04:05"
 const BaseDateFormatN = "2006-01-02"
 const BaseDateTimeSecondFormat = "20060102150405"
+const DuoTuTimeSecondFormat = "20060102150405000"
 const BaseDateFormat = "20060102"
 const RFC3339 = "2006-01-02T15:04:05"
 
