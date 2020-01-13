@@ -16,6 +16,8 @@ type WebHookController struct {
 }
 
 func (c *WebHookController) Get() {
+	utils.LogDebug(fmt.Sprintf("start webhook"))
+
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature")
 	content, err := ioutil.ReadAll(c.Ctx.Request.Body)
 	if err != nil {
