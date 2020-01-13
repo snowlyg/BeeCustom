@@ -16,7 +16,6 @@ type WebHookController struct {
 }
 
 func (c *WebHookController) Get() {
-	utils.LogDebug(fmt.Sprintf("start webhook"))
 
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature")
 	content, err := ioutil.ReadAll(c.Ctx.Request.Body)
@@ -35,7 +34,6 @@ func (c *WebHookController) Get() {
 	enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	//}
 
-	utils.LogDebug(fmt.Sprintf("stop webhook"))
 	c.Data["json"] = "ok"
 	c.ServeJSON()
 }
