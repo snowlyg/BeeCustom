@@ -27,7 +27,7 @@ func (c *WebHookController) Get() {
 	sha1 := enums.Hmac(SECRETTOKEN, content)
 	calculateSignature := "sha1=" + sha1
 
-	utils.LogDebug(fmt.Sprintf("calculateSignature == signature:%v", calculateSignature == signature))
+	utils.LogDebug(fmt.Sprintf("calculateSignature == signature:%v -%v -%v", calculateSignature == signature, calculateSignature, signature))
 	if calculateSignature == signature {
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", "", []string{"pull"})
