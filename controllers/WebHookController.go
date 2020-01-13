@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"io/ioutil"
 
 	"BeeCustom/enums"
 	"BeeCustom/utils"
@@ -15,14 +16,14 @@ type WebHookController struct {
 }
 
 func (c *WebHookController) Get() {
-	var content []byte
+
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature")
-	_, err := c.Ctx.Request.Body.Read(content)
+	res, err := ioutil.ReadAll(c.Ctx.Request.Body)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("c.Ctx.Request.Body.Read:%v", err))
 	}
 
-	sha1 := enums.Hmac(SECRETTOKEN, content)
+	sha1 := enums.Hmac(SECRETTOKEN, res)
 	calculateSignature := "sha1=" + sha1
 
 	utils.LogDebug(fmt.Sprintf("calculateSignature == signature:%v", calculateSignature == signature))
