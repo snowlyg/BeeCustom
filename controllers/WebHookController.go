@@ -27,6 +27,7 @@ func (c *WebHookController) Get() {
 	sha1 := enums.Hmac(SECRETTOKEN, content)
 	calculateSignature := "sha1=" + sha1
 
+	utils.LogDebug(fmt.Sprintf("calculateSignature == signature:%v", calculateSignature == signature))
 	if calculateSignature == signature {
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", "", []string{"pull"})
@@ -34,8 +35,7 @@ func (c *WebHookController) Get() {
 		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
 
-	utils.LogDebug(fmt.Sprintf("calculateSignature:%v", calculateSignature))
-
+	utils.LogDebug(fmt.Sprintf("stop webhook"))
 	c.Data["json"] = "ok"
 	c.ServeJSON()
 }
