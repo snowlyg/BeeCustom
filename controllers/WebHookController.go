@@ -32,6 +32,8 @@ func (c *WebHookController) Get() {
 		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
 
+	utils.LogDebug(fmt.Sprintf("calculateSignature:%v", calculateSignature))
+
 	c.Data["json"] = "ok"
 	c.ServeJSON()
 }
