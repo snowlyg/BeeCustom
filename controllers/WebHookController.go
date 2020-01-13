@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"io/ioutil"
 
 	"BeeCustom/enums"
 	"BeeCustom/utils"
@@ -16,9 +15,9 @@ type WebHookController struct {
 }
 
 func (c *WebHookController) Get() {
-
+	var content []byte
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature")
-	content, err := ioutil.ReadAll(c.Ctx.Request.Body)
+	_, err := c.Ctx.Request.Body.Read(content)
 	if err != nil {
 		utils.LogDebug(fmt.Sprintf("c.Ctx.Request.Body.Read:%v", err))
 	}
