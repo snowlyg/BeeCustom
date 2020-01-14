@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"BeeCustom/enums"
-	"BeeCustom/utils"
 )
 
 const SECRETTOKEN = "bee_custom_auto_pull"
@@ -10,6 +9,10 @@ const SECRETTOKEN = "bee_custom_auto_pull"
 // WebHookController handles WebSocket requests.
 type WebHookController struct {
 	BaseController
+}
+
+func (c *WebHookController) Prepare() {
+	c.EnableXSRF = false
 }
 
 func (c *WebHookController) Get() {
@@ -33,7 +36,6 @@ func (c *WebHookController) Get() {
 		Payload: palyload,
 	}
 
-	utils.LogDebug(data)
 	c.Data["json"] = data
 	c.ServeJSON()
 }
