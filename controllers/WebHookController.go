@@ -22,9 +22,9 @@ func (c *WebHookController) Get() {
 	contentType := c.Ctx.Request.Header.Get("Content-Type")     //获取加密签名
 
 	var res []byte
-	if contentType == "for application/json" {
+	if contentType == "application/json; charset=UTF-8" {
 		res, _ = ioutil.ReadAll(c.Ctx.Request.Body) // for application/json
-	} else if contentType == "application/x-www-form-urlencoded" { // for application/x-www-form-urlencoded
+	} else if contentType == "application/x-www-form-urlencoded; charset=UTF-8" { // for application/x-www-form-urlencoded
 		res = []byte(c.GetString(":payload"))
 	}
 
