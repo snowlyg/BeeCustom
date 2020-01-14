@@ -75,11 +75,11 @@ func (c *SoapController) getXmlStr() []byte {
 
 	declaration := mysoap.Declaration{}
 	declaration.OptType = "00"
-	declaration.TradeMode = "0615"
+	declaration.TradeMode = "1234"
 	declaration.DeclType = "Q"
 
 	person := mysoap.RepresentativePerson{}
-	person.Name = "5304192209991"
+	person.Name = "5304071102397"
 	declaration.RepresentativePerson = person
 
 	office := mysoap.ExitCustomsOffice{}
@@ -87,21 +87,21 @@ func (c *SoapController) getXmlStr() []byte {
 	declaration.ExitCustomsOffice = office
 
 	carrier := mysoap.Carrier{}
-	carrier.ID = "MSC"
+	carrier.ID = "HLC"
 	declaration.Carrier = carrier
 
 	means := mysoap.BorderTransportMeans{}
-	means.JourneyID = "FT939W"
-	means.ID = "UN9469560"
-	means.Name = "MSC TERESA"
+	means.JourneyID = "039E"
+	means.ID = "UN9588081"
+	means.Name = "HELSINKI BRIDGE"
 	declaration.BorderTransportMeans = means
 
 	consignment := mysoap.Consignment{}
 	consignment.CustomsStatusCode = "001"
-	consignment.TotalGrossMassMeasure = "19770"
+	consignment.TotalGrossMassMeasure = "573.08"
 
 	document := mysoap.TransportContractDocument{}
-	document.ConditionCode = "10"
+	document.ConditionCode = "11"
 	consignment.TransportContractDocument = document
 
 	location := mysoap.LoadingLocation{}
@@ -110,7 +110,7 @@ func (c *SoapController) getXmlStr() []byte {
 	consignment.LoadingLocation = location
 
 	unloadingLocation := mysoap.UnloadingLocation{}
-	unloadingLocation.ID = "TRIST"
+	unloadingLocation.ID = "CUMZO"
 	consignment.UnloadingLocation = unloadingLocation
 
 	payment := mysoap.FreightPayment{}
@@ -118,7 +118,7 @@ func (c *SoapController) getXmlStr() []byte {
 	consignment.FreightPayment = payment
 
 	packaging := mysoap.ConsignmentPackaging{}
-	packaging.QuantityQuantity = "1440"
+	packaging.QuantityQuantity = "65"
 	packaging.TypeCode = "CT"
 	consignment.ConsignmentPackaging = packaging
 
@@ -162,16 +162,16 @@ func (c *SoapController) getXmlStr() []byte {
 
 	var equipments []mysoap.TransportEquipment
 	equipment := mysoap.TransportEquipment{}
-	equipment.BookingNumber = "181AS0193642072M1"
+	equipment.BookingNumber = "49530296/2"
 	equipment.LclNum = "2"
 	equipment.IsLcl = "1"
-	equipment.SealID = mysoap.SealID{AgencyCode: "AC", SealID: "M/CNB549227"}
+	equipment.SealID = mysoap.SealID{AgencyCode: "CA", SealID: "M/HLB6465662"}
 	equipment.FullnessCode = "7"
 	equipment.SupplierPartyTypeCode = "2"
-	equipment.CharacteristicCode = "20GP"
+	equipment.CharacteristicCode = "40DC"
 
 	identification := mysoap.EquipmentIdentification{}
-	identification.ID = "FCIU2558917"
+	identification.ID = "HLBU1797589"
 	equipment.EquipmentIdentification = identification
 
 	equipments = append(equipments, equipment)
@@ -182,7 +182,7 @@ func (c *SoapController) getXmlStr() []byte {
 	item.SequenceNumeric = "1"
 
 	itemPackaging := mysoap.ConsignmentItemPackaging{}
-	itemPackaging.QuantityQuantity = "1440"
+	itemPackaging.QuantityQuantity = "65"
 	itemPackaging.TypeCode = "CT"
 	itemPackaging.MarksNumbers = "N/M"
 	item.ConsignmentItemPackaging = itemPackaging
@@ -193,11 +193,11 @@ func (c *SoapController) getXmlStr() []byte {
 	item.Commodity = commodity
 
 	measure := mysoap.GoodsMeasure{}
-	measure.GrossMassMeasure = "19770"
+	measure.GrossMassMeasure = "573.08"
 	item.GoodsMeasure = measure
 
 	equipmentIdentification := mysoap.EquipmentIdentification{}
-	equipmentIdentification.ID = "FCIU2558917"
+	equipmentIdentification.ID = "HLBU1797589"
 	item.EquipmentIdentification = equipmentIdentification
 
 	items = append(items, item)
