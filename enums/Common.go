@@ -186,7 +186,7 @@ func InStringMap(s string, sS map[string]string) bool {
 func Hmac(key string, data []byte) string {
 	hmacSha1 := hmac.New(sha1.New, []byte(key))
 	hmacSha1.Write(data)
-	return hex.EncodeToString(hmacSha1.Sum([]byte("")))
+	return hex.EncodeToString(hmacSha1.Sum(nil))
 }
 
 func Cmd(action, input string, arg []string) {
