@@ -20,7 +20,8 @@ func (c *WebHookController) Get() {
 	//res, err := ioutil.ReadAll(c.Ctx.Request.Body) // for application/json
 	palyload := c.GetString(":payload")
 	sha1 := enums.Hmac(SECRETTOKEN, []byte(palyload)) // for application/x-www-form-urlencoded
-	calculateSignature := "sha1=" + sha1              // 重新加密内容
+
+	calculateSignature := "sha1=" + sha1 // 重新加密内容
 	if calculateSignature == signature {
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", "", []string{"pull"})
@@ -30,9 +31,11 @@ func (c *WebHookController) Get() {
 	data := struct {
 		Status  bool
 		Payload string
+		Sha1    string
 	}{
 		Status:  calculateSignature == signature,
 		Payload: palyload,
+		Sha1:    sha1,
 	}
 	c.Data["json"] = data
 	c.ServeJSON()
