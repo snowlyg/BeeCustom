@@ -18,7 +18,7 @@ func (c *WebHookController) Prepare() {
 func (c *WebHookController) Get() {
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature") //获取加密签名
 	//res, err := ioutil.ReadAll(c.Ctx.Request.Body) // for application/json
-	palyload := c.GetString("payload")
+	palyload := c.GetString(":payload")
 	sha1 := enums.Hmac(SECRETTOKEN, []byte(palyload)) // for application/x-www-form-urlencoded
 
 	calculateSignature := "sha1=" + sha1 // 重新加密内容
@@ -29,11 +29,13 @@ func (c *WebHookController) Get() {
 		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
 	data := struct {
-		Status  bool
-		Payload string
+		Status   bool
+		Payload  string
+		PostForm map[string][]string
 	}{
-		Status:  calculateSignature == signature,
-		Payload: palyload,
+		Status:   calculateSignature == signature,
+		Payload:  palyload,
+		PostForm: c.Ctx.Request.PostForm,
 	}
 	c.Data["json"] = data
 	c.ServeJSON()
