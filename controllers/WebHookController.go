@@ -20,8 +20,14 @@ func (c *WebHookController) Prepare() {
 func (c *WebHookController) Get() {
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature") //获取加密签名
 	contentType := c.Ctx.Request.Header.Get("Content-Type")     //获取加密签名
-	res, _ := ioutil.ReadAll(c.Ctx.Request.Body)                // for application/json
-	//palyload := c.GetString(":payload")
+
+	var res []byte
+	if contentType == "for application/json" {
+		res, _ = ioutil.ReadAll(c.Ctx.Request.Body) // for application/json
+	} else if contentType == "application/x-www-form-urlencoded" { // for application/x-www-form-urlencoded
+		res = []byte(c.GetString(":payload"))
+	}
+
 	sha1 := enums.Hmac(SECRETTOKEN, res) // for application/x-www-form-urlencoded
 	calculateSignature := "sha1=" + sha1 // 重新加密内容
 	if calculateSignature == signature {
