@@ -33,7 +33,7 @@ func (c *WebHookController) Get() {
 	if calculateSignature == signature {
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", "", []string{"pull"})
-		//enums.Cmd("go build", "", []string{""})
+		//enums.Cmd("go ", "", []string{"build"})
 		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
 	data := struct {
