@@ -15,7 +15,7 @@ type WebHookController struct {
 func (c *WebHookController) Get() {
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature") //获取加密签名
 	//res, err := ioutil.ReadAll(c.Ctx.Request.Body) // for application/json
-	palyload := c.GetString("payload")
+	palyload := c.GetString(":payload")
 	sha1 := enums.Hmac(SECRETTOKEN, []byte(palyload)) // for application/x-www-form-urlencoded
 	calculateSignature := "sha1=" + sha1              // 重新加密内容
 	if calculateSignature == signature {
