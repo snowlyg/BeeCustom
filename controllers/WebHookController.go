@@ -31,11 +31,9 @@ func (c *WebHookController) Get() {
 	data := struct {
 		Status  bool
 		Payload string
-		Sha1    string
 	}{
 		Status:  calculateSignature == signature,
 		Payload: palyload,
-		Sha1:    sha1,
 	}
 	c.Data["json"] = data
 	c.ServeJSON()
