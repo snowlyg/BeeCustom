@@ -18,7 +18,7 @@ func (c *WebHookController) Get() {
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature") //获取加密签名
 	sha1 := enums.Hmac(SECRETTOKEN, c.Ctx.Input.RequestBody)
 	calculateSignature := "sha1=" + sha1 // 重新加密内容
-	utils.LogDebug(fmt.Sprintf("web_hook同步状态: %v %v %v ", calculateSignature == signature, c.Ctx.Input.RequestBody, calculateSignature))
+	utils.LogDebug(fmt.Sprintf("web_hook同步状态: %v %v %v ", calculateSignature == signature, signature, calculateSignature))
 	if calculateSignature == signature {
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
 		enums.Cmd("git", "", []string{"pull"})
