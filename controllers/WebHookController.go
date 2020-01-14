@@ -28,7 +28,6 @@ func (c *WebHookController) Get() {
 		enums.Cmd("go build", "", []string{""})
 		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
-
 	data := struct {
 		Status  bool
 		Payload string
@@ -36,7 +35,6 @@ func (c *WebHookController) Get() {
 		Status:  calculateSignature == signature,
 		Payload: palyload,
 	}
-
 	utils.LogDebug(data)
 	//c.Data["json"] = data
 	c.ServeJSON()
