@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"io/ioutil"
+
 	"BeeCustom/enums"
 )
 
@@ -17,10 +19,10 @@ func (c *WebHookController) Prepare() {
 
 func (c *WebHookController) Get() {
 	signature := c.Ctx.Request.Header.Get("X-Coding-Signature") //获取加密签名
-	//res, err := ioutil.ReadAll(c.Ctx.Request.Body) // for application/json
-	palyload := c.GetString(":payload")
-	sha1 := enums.Hmac(SECRETTOKEN, []byte(palyload)) // for application/x-www-form-urlencoded
-
+	contentType := c.Ctx.Request.Header.Get("Content-Type")     //获取加密签名
+	res, _ := ioutil.ReadAll(c.Ctx.Request.Body)                // for application/json
+	//palyload := c.GetString(":payload")
+	sha1 := enums.Hmac(SECRETTOKEN, res) // for application/x-www-form-urlencoded
 	calculateSignature := "sha1=" + sha1 // 重新加密内容
 	if calculateSignature == signature {
 		enums.Cmd("cd", "", []string{"/root/go/src/BeeCustom"})
@@ -29,13 +31,13 @@ func (c *WebHookController) Get() {
 		enums.Cmd("supervisorctl", "", []string{"restart", "beepkg"})
 	}
 	data := struct {
-		Status   bool
-		Payload  string
-		PostForm map[string][]string
+		Status      bool
+		Payload     string
+		ContentType string
 	}{
-		Status:   calculateSignature == signature,
-		Payload:  palyload,
-		PostForm: c.Ctx.Request.PostForm,
+		Status:      calculateSignature == signature,
+		Payload:     string(res),
+		ContentType: contentType,
 	}
 	c.Data["json"] = data
 	c.ServeJSON()
