@@ -200,7 +200,7 @@ func Cmd(action, input string, arg []string) {
 	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		utils.LogDebug(fmt.Sprintf("cmd:%v:%v--%v --%v", err, action, arg, stderr.String()))
+		utils.LogDebug(fmt.Sprintf("cmd error : %v, action:%v,arg : %v stderr.String(): %v", err, action, arg, stderr.String()))
 	}
 }
 
