@@ -6,9 +6,16 @@ require (
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.5.0
+	github.com/andybalholm/cascadia v1.1.0 // indirect
+	github.com/antchfx/htmlquery v1.2.2 // indirect
+	github.com/antchfx/xmlquery v1.2.3 // indirect
+	github.com/antchfx/xpath v1.1.4 // indirect
 	github.com/astaxie/beego v1.12.0
 	github.com/casbin/casbin v1.9.1
 	github.com/go-sql-driver/mysql v1.4.1
+	github.com/gocolly/colly/v2 v2.0.1
+	github.com/golang/groupcache v0.0.0-20191227052852-215e87163ea7 // indirect
+	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/gorilla/websocket v1.4.1
 	github.com/hooklift/gowsdl v0.3.1
 	github.com/howeyc/fsnotify v0.9.0 // indirect
@@ -19,6 +26,7 @@ require (
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/snowlyg/gotransformer v0.0.0-20200107031743-38a7dfd0c373
 	github.com/snowlyg/gowatch v0.0.0-20191210075755-18d2e275710b // indirect
+	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0 // indirect
 )

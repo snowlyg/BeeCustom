@@ -39,6 +39,7 @@ func init() {
 		new(OrderDocument),
 		new(OrderReturn),
 		new(Setting),
+		new(Article),
 	)
 }
 
@@ -201,4 +202,9 @@ func OrderDocumentTBName() string {
 // OrderReturnTBName 获取 OrderReturnTBName 对应的表名称
 func OrderReturnTBName() string {
 	return TableName("order_returns")
+}
+
+// ArticleTBName 获取 ArticleTBName 对应的表名称
+func ArticleTBName() string {
+	return TableName("articles")
 }

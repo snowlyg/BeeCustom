@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
-	"os/exec"
+	"log"
 
-	"BeeCustom/utils"
-	"github.com/PuerkitoBio/goquery"
+	"BeeCustom/enums"
+	"BeeCustom/models"
+	"github.com/gocolly/colly/v2"
+	"github.com/gocolly/colly/v2/debug"
 )
 
 // SingeController handles WebSocket requests.
@@ -14,56 +15,87 @@ type SingeController struct {
 	BaseController
 }
 
-func (c *SingeController) Get() {
-	_ = exec.Command(`C:\Program Files\Tesseract-OCR\tesseract.exe`, "image_name", "output")
-	c.EnableRender = false
-	//req := httplib.Get("https://www.singlewindow.cn")
-	////req.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-	//req.SetTimeout(100*time.Second, 30*time.Second)
-	//req.Param("username", "13800138000")
-	//req.Param("password", "DongHua@22898086")
-	//req.Header("Accept-Encoding", "gzip,deflate,sdch")
-	//req.Header("Host", "www.singlewindow.cn")
-	//req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.57 Safari/537.36")
-	//str, err := req.String()
-	//if err != nil {
-	//	utils.LogDebug(fmt.Sprintf("req.String err %v \n", err))
-	//}
-	//utils.LogDebug(fmt.Sprintf("req.String %v \n", str))
-	//
-	//res, err := req.Response()
-	//if err != nil {
-	//	utils.LogDebug(fmt.Sprintf("req.Response err %v \n", err))
-	//}
-	//utils.LogDebug(fmt.Sprintf("req.Response %v \n", res))
-	//
-	//req.Debug(true)
+func (s *SingeController) Get() {
+	var aType int8
 
-	// Request the HTML page.
-	res, err := http.Get("https://app.singlewindow.cn/cas/login?service=http%3A%2F%2Fwww.singlewindow.cn%2Fsinglewindow%2Flogin.jspx")
+	articles := make([]*models.Article, 0, 200)
 
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("req.Get %v \n", err))
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		utils.LogDebug(fmt.Sprintf("req.StatusCode %v \n", err))
-	}
+	// 1.准备收集器实例
+	c := colly.NewCollector(
+		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"),
+		colly.AllowURLRevisit(),
+		// 开启本机debug
+		colly.Debugger(&debug.LogDebugger{}),
+		colly.AllowedDomains("singlewindow.cn", "www.singlewindow.cn"),
+		// 防止页面重复下载
+		//colly.CacheDir("./Single_cache"),
+	)
 
-	// Load the HTML document
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		utils.LogDebug(fmt.Sprintf("req.NewDocumentFromReader %v \n", err))
-	}
-	utils.LogDebug(fmt.Sprintf("Cookies %v \n", res.Cookies()))
-	utils.LogDebug(fmt.Sprintf("StatusCode %v \n", res.StatusCode))
-	utils.LogDebug(fmt.Sprintf("Url %v \n", doc.Url))
+	// Create another collector to scrape article details
+	detailCollector := c.Clone()
 
-	// Find the review items
-	doc.Find("#nav").Each(func(i int, s *goquery.Selection) {
-		// For each item found, get the band and title
-		band := s.Find("li").Text()
-		utils.LogDebug(fmt.Sprintf("Review %d: %s \n", i, band))
+	//// On every a element which has href attribute call callback
+	//c.OnHTML("div.lsli > a", func(e *colly.HTMLElement) {
+	//	link := e.Attr("href")
+	//	if len(e.Text) == 0 {
+	//		return
+	//	}
+	//	switch e.Text {
+	//	case "新闻动态":
+	//		aType = 1
+	//	case "通知公告":
+	//		aType = 2
+	//	default:
+	//		aType = 1
+	//	}
+	//	e.Request.Visit(e.Request.AbsoluteURL(link))
+	//})
+
+	// On every a element which has href attribute call callback
+	c.OnHTML("div.lsbt > a", func(e *colly.HTMLElement) {
+		link := e.Attr("href")
+		a, _ := models.GetArticleByTitle(e.Text)
+		if a != nil && a.Id != 0 {
+			return
+		}
+		detailCollector.Visit(e.Request.AbsoluteURL(link))
 	})
 
+	// Before making a request print "Visiting ..."
+	c.OnRequest(func(r *colly.Request) {
+		//r.Headers.Set("User-Agent", RandomString())
+		fmt.Println("Visiting", r.URL.String())
+	})
+
+	// Extract details of the course
+	detailCollector.OnHTML(`#indetmain`, func(e *colly.HTMLElement) {
+		log.Println("Course found", e.Request.URL)
+		title := e.ChildText("#dettitle")
+		if title == "" {
+			log.Println("No title found", e.Request.URL)
+		}
+		article := &models.Article{
+			Type:    aType,
+			Title:   title,
+			Origin:  e.Request.URL.String(),
+			Content: e.ChildText("div.wnp"),
+			NewTime: e.ChildText("span#sj"),
+		}
+		articles = append(articles, article)
+	})
+
+	// 下一页
+	c.OnHTML("a[href].page-link", func(e *colly.HTMLElement) {
+		e.Request.Visit(e.Attr("href"))
+	})
+
+	// 启动
+	c.Visit("http://www.singlewindow.cn/xwdt/index.jhtml")
+
+	num := int64(0)
+	if len(articles) > 0 {
+		num, _ = models.InsertArticleMulti(articles)
+	}
+
+	s.jsonResult(enums.JRCodeSucc, fmt.Sprintf("采集 %v 个新闻", num), nil)
 }
