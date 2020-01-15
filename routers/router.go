@@ -256,6 +256,9 @@ func init() {
 	beego.Router("/backenduser/delete/?:id", &controllers.BackendUserController{}, "Delete:Delete")
 	beego.Router("/backenduser/profile", &controllers.BackendUserController{}, "Get:Profile")
 
+	//
+	beego.Router("/article/datagrid", &controllers.ArticleController{}, "Post:DataGrid")
+
 	// 用户角色路由
 	beego.Router("/role/index", &controllers.RoleController{}, "*:Index")
 	beego.Router("/role/create", &controllers.RoleController{}, "Get:Create")

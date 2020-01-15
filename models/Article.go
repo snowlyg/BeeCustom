@@ -13,7 +13,7 @@ func (u *Article) TableName() string {
 type ArticleQueryParam struct {
 	BaseQueryParam
 
-	NameLike string //模糊查询
+	Type string //模糊查询
 }
 
 // Article 实体类
@@ -42,12 +42,7 @@ func ArticlePageList(params *ArticleQueryParam) ([]*Article, int64) {
 	query := orm.NewOrm().QueryTable(ArticleTBName())
 	datas := make([]*Article, 0)
 
-	if len(params.NameLike) > 0 {
-		cond := orm.NewCondition()
-		cond1 := cond.And("name__istartswith", params.NameLike).
-			Or("code__istartswith", params.NameLike)
-		query = query.SetCond(cond1)
-	}
+	query.Filter("type", params.Type)
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)

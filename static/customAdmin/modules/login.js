@@ -1,6 +1,6 @@
 layui.define(function (exports) {
     layui.use(['Swiper', 'form'], async function () {
-        const $ = layui.$,Swiper = layui.Swiper, form = layui.form;
+        const $ = layui.$, Swiper = layui.Swiper, form = layui.form, admin = layui.admin;
         var search_type = 1;
         //导航条
         on_scroll = function () {
@@ -18,6 +18,55 @@ layui.define(function (exports) {
         };
         window.onscroll = on_scroll;
         $(on_scroll);
+
+        //新闻数据
+        try {
+            var data_come_type1 = await admin.post(`/article/datagrid`);
+            var data_come_type2 = await admin.post(`/article/datagrid`);
+        } catch (e) {
+            console.log(e);
+        }
+
+        shownews = function (datas, type, url) {
+            $('#news-ul-' + type).empty();
+            for (var i = 0; i < datas.rows.length; i++) {
+                $('#news-ul-' + type).append('<li>\n' +
+                    '<a href="/index_lists/' + datas.rows[i].Id + '">\n' +
+                    '        <p class="date">\n' +
+                    '            <span class="year">' + datas.rows[i].NewTime + '</span>\n' +
+                    '        </p>\n' +
+                    '        <h3>' + datas.rows[i].Title + '</h3>\n' +
+                    '        <p class="desc">资讯来源：' + datas.rows[i].Origin + '</p>\n' +
+                    '    </a>\n' +
+                    '</li>')
+            }
+            ;
+            $('#news-ul-' + type).append('<li class="more"><a href="' + url + '">查看更多 ></a></li>');
+        };
+
+        $(shownews(data_come_type2, 2, '/index_lists?type=2'));
+
+
+        //新闻tab
+        $('.tab-news').click(function (data) {
+            var parent = this.parentNode.getElementsByClassName('show');
+            for (var i = 0; i < parent.length; i++) {
+                parent[i].classList.remove('show');
+            }
+            this.classList.add('show');
+            var open = data.currentTarget.attributes[1].nodeValue;
+            var close = (open == 1) ? 2 : 1;
+            $('#news-ul-' + open).css('display', 'block');
+            $('#news-ul-' + close).css('display', 'none');
+
+            if (open == 2) {
+                $(shownews(data_come_type2, 2, '/index_lists?type=2'));
+            } else {
+                $(shownews(data_come_type1, 1, '/index_lists?type=1'));
+            }
+
+        });
+
         //搜索tab
         $('.tab-search').click(function (data) {
             var parent = this.parentNode.getElementsByClassName('show');
