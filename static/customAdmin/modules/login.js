@@ -24,16 +24,20 @@ layui.define(function (exports) {
             var data_come_type1 = await admin.post(`/article/datagrid`);
             var data_come_type2 = await admin.post(`/article/datagrid`);
         } catch (e) {
-            console.log(e);
+            console.log('新闻接口错误');
+            console.log(e)
         }
 
         shownews = function (datas, type, url) {
+
             $('#news-ul-' + type).empty();
             for (var i = 0; i < datas.rows.length; i++) {
                 $('#news-ul-' + type).append('<li>\n' +
                     '<a href="/index_lists/' + datas.rows[i].Id + '">\n' +
                     '        <p class="date">\n' +
                     '            <span class="year">' + datas.rows[i].NewTime + '</span>\n' +
+                    '            <span class="xian"></span>\n' +
+                    '            <span class="month-day">' + '</span>\n' +
                     '        </p>\n' +
                     '        <h3>' + datas.rows[i].Title + '</h3>\n' +
                     '        <p class="desc">资讯来源：' + datas.rows[i].Origin + '</p>\n' +
