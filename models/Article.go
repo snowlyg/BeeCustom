@@ -13,7 +13,7 @@ func (u *Article) TableName() string {
 type ArticleQueryParam struct {
 	BaseQueryParam
 
-	Type int //模糊查询
+	Type int8 //模糊查询
 }
 
 // Article 实体类
@@ -42,7 +42,7 @@ func ArticlePageList(params *ArticleQueryParam) ([]*Article, int64) {
 	query := orm.NewOrm().QueryTable(ArticleTBName())
 	datas := make([]*Article, 0)
 
-	query.Filter("type", params.Type)
+	query = query.Filter("type", params.Type)
 
 	total, _ := query.Count()
 	query = BaseListQuery(query, params.Sort, params.Order, params.Limit, params.Offset)

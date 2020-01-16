@@ -21,8 +21,16 @@ layui.define(function (exports) {
 
         //新闻数据
         try {
-            var data_come_type1 = await admin.post(`/article/datagrid`, JSON.stringify({Type: 1,offset: 1, limit: 5,}), true);
-            var data_come_type2 = await admin.post(`/article/datagrid`, JSON.stringify({Type: 2,offset: 1, limit: 5,}), true);
+            var data_come_type1 = await admin.post(`/article/datagrid`, JSON.stringify({
+                Type: 1,
+                offset: 1,
+                limit: 5,
+            }), true);
+            var data_come_type2 = await admin.post(`/article/datagrid`, JSON.stringify({
+                Type: 2,
+                offset: 1,
+                limit: 5,
+            }), true);
         } catch (e) {
             console.log('新闻接口错误');
             console.log(e)
@@ -31,19 +39,22 @@ layui.define(function (exports) {
         shownews = function (datas, type, url) {
             $('#news-ul-' + type).empty();
             for (var i = 0; i < datas.rows.length; i++) {
-                $('#news-ul-' + type).append('<li>\n' +
-                    '<a target="_blank" href=' + datas.rows[i].Origin + '>\n' +
-                    '        <p class="date">\n' +
-                    '            <span class="year">' + datas.rows[i].NewTime + '</span>\n' +
-                    '            <span class="xian"></span>\n' +
-                    '            <span class="month-day">' + '</span>\n' +
-                    '        </p>\n' +
-                    '        <h3>' + datas.rows[i].Title + '</h3>\n' +
-                    '        <p class="desc">资讯来源：' + datas.rows[i].Origin + '</p>\n' +
-                    '    </a>\n' +
-                    '</li>')
-            }
-            ;
+                $('#news-ul-' + type).append(`
+                        <li>
+                            <a target="_blank" href=${datas.rows[i].Origin}>
+                                <p class="date">
+                                    <span class="iconfont year">&#xe612;</span>
+                                    <span class="xian"></span>
+                                    <span class="month-day">${datas.rows[i].NewTime}</span>
+                                </p>
+                                <div class="news">
+                                    <h3>${datas.rows[i].Title}</h3>
+                                    <span class="desc">${datas.rows[i].Origin}</span>
+                                </div>
+                                <div class="clear"></div>
+                            </a>
+                        </li>
+`)};
             $('#news-ul-' + type).append('<li class="more"><a href="' + url + '">查看更多 ></a></li>');
         };
 

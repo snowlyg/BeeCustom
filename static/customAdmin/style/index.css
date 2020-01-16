@@ -249,8 +249,8 @@
 
 .news-ul li {
     background: rgba(252, 252, 252, 1);
-    padding: 20px 20px;
-    margin-bottom: 20px;
+    padding: 10px;
+    margin-bottom: 3px;
 }
 
 .news-ul li a {
@@ -290,10 +290,11 @@
 
 .news-ul li p.date {
     float: left;
-    width: 45px;
-    height: 45px;
+    width: 80px;
+    height: 80px;
     display: block;
-    margin-right: 30px;
+    margin-left: 15px;
+    margin-right: 15px;
     text-align: center;
 }
 
@@ -302,8 +303,8 @@
 }
 
 .news-ul li p.date span.year {
-    font-size: 16px;
-    color: #989898;
+    font-size: 53px;
+    /*color: #989898;*/
 }
 
 .news-ul li p.date span.month-day {
@@ -315,15 +316,21 @@
     height: 1px;
     background: rgb(233,233,233);
 }
+.news-ul li div.news {
+    float: left;
+    padding: 18px 0;
+}
 
-.news-ul li h3 {
+.news-ul li div.news h3 {
     font-size: 16px;
     color: #555555;
 }
 
-.news-ul li p.desc {
+.news-ul li div.news span.desc {
     font-size: 11px;
     color: #B3B3B3;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
 .layui-search-content {
