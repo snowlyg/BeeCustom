@@ -28,8 +28,8 @@ func (s *Article) GetValueEnd(v string) string {
 	value := []rune(html.UnescapeString(v))
 
 	valueEnd := string(value[:len(value)-1])
-	if len(value) > 45 {
-		valueEnd = string(value[:45]) + `...`
+	if len(value) > 40 {
+		valueEnd = string(value[:40]) + `...`
 	}
 
 	return valueEnd
