@@ -1,9 +1,11 @@
 package transforms
 
+import "html"
+
 type Article struct {
 	Id        int64
 	Type      string `gtf:"Func.GetTypeName()"`
-	Title     string
+	Title     string `gtf:"Func.GetValueEnd()"`
 	Content   string
 	Overview  string
 	Origin    string
@@ -20,4 +22,15 @@ func (s *Article) GetTypeName(v string) string {
 	}
 
 	return "新闻动态"
+}
+
+func (s *Article) GetValueEnd(v string) string {
+	value := []rune(html.UnescapeString(v))
+
+	valueEnd := string(value[:len(value)-1])
+	if len(value) > 45 {
+		valueEnd = string(value[:45]) + `...`
+	}
+
+	return valueEnd
 }
