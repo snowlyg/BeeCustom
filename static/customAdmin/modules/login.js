@@ -29,11 +29,10 @@ layui.define(function (exports) {
         }
 
         shownews = function (datas, type, url) {
-
             $('#news-ul-' + type).empty();
             for (var i = 0; i < datas.rows.length; i++) {
                 $('#news-ul-' + type).append('<li>\n' +
-                    '<a href="/index_lists/' + datas.rows[i].Id + '">\n' +
+                    '<a target="_blank" href=' + datas.rows[i].Origin + '>\n' +
                     '        <p class="date">\n' +
                     '            <span class="year">' + datas.rows[i].NewTime + '</span>\n' +
                     '            <span class="xian"></span>\n' +
@@ -68,7 +67,6 @@ layui.define(function (exports) {
             } else {
                 $(shownews(data_come_type1, 1, '/index_lists?type=1'));
             }
-
         });
 
         //搜索tab
