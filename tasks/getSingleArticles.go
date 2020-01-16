@@ -81,6 +81,11 @@ func getArticles() {
 		articles = append(articles, article)
 	})
 
+	// Set error handler
+	detailCollector.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+	})
+
 	// 下一页
 	//listCollector.OnHTML("a[href].page-link", func(e *colly.HTMLElement) {
 	//	_ = e.Request.Visit(e.Attr("href"))
