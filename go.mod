@@ -4,7 +4,6 @@ go 1.13
 
 require (
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
-	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.5.0
 	github.com/andybalholm/cascadia v1.1.0 // indirect
 	github.com/antchfx/htmlquery v1.2.2 // indirect
@@ -18,15 +17,11 @@ require (
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/gorilla/websocket v1.4.1
 	github.com/hooklift/gowsdl v0.3.1
-	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/lib/pq v1.3.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
-	github.com/silenceper/log v0.0.0-20171204144354-e5ac7fa8a76a // indirect
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/snowlyg/gotransformer v0.0.0-20200107031743-38a7dfd0c373
-	github.com/snowlyg/gowatch v0.0.0-20191210075755-18d2e275710b // indirect
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
 	google.golang.org/appengine v1.6.5 // indirect
-	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0 // indirect
 )

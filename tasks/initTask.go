@@ -45,7 +45,10 @@ func InitTask() {
 
 	//清单回执解释
 	annotationCReturnXmlParse := annotationCReturnXmlParse()
-	toolbox.AddTask("annotationCReturnXmlParse", annotationCReturnXmlParse)
+	toolbox.AddTask("annotationCReturnXmlParse", annotationCReturnXmlParse) //清单回执解释
+
+	getSingleArticles := getSingleArticles()
+	toolbox.AddTask("getSingleArticles", getSingleArticles)
 
 	toolbox.StartTask()
 	defer toolbox.StopTask()
