@@ -5,7 +5,6 @@ import (
 
 	"BeeCustom/enums"
 	"BeeCustom/transforms"
-	"BeeCustom/utils"
 	gtf "github.com/snowlyg/gotransformer"
 
 	"BeeCustom/models"
@@ -30,8 +29,6 @@ func (c *ArticleController) DataGrid() {
 	//直接获取参数 getDataGridData()
 	params := models.NewArticleQueryParam()
 	_ = json.Unmarshal(c.Ctx.Input.RequestBody, &params)
-
-	utils.LogDebug(params.Type)
 
 	//获取数据列表和总数
 	data, total := models.ArticlePageList(&params)
