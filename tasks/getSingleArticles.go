@@ -22,10 +22,8 @@ import (
 //}
 
 func getArticles() {
-	var aType int8
-
+	aType := int8(1)
 	articles := make([]*models.Article, 0, 200)
-
 	// 1.准备收集器实例
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"),

@@ -13,7 +13,7 @@ func (u *Article) TableName() string {
 type ArticleQueryParam struct {
 	BaseQueryParam
 
-	Type string //模糊查询
+	Type int //模糊查询
 }
 
 // Article 实体类
