@@ -21,8 +21,8 @@ layui.define(function (exports) {
 
         //新闻数据
         try {
-            var data_come_type1 = await admin.post(`/article/datagrid`, JSON.stringify({Type: 1}), true);
-            var data_come_type2 = await admin.post(`/article/datagrid`, JSON.stringify({Type: 2}), true);
+            var data_come_type1 = await admin.post(`/article/datagrid`, JSON.stringify({Type: 1,offset: 1, limit: 5,}), true);
+            var data_come_type2 = await admin.post(`/article/datagrid`, JSON.stringify({Type: 2,offset: 1, limit: 5,}), true);
         } catch (e) {
             console.log('新闻接口错误');
             console.log(e)
