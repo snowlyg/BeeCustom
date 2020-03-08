@@ -22,8 +22,11 @@ BeeCustom 是基于 `Beego` 开发的关务管理系统。前端框架基于 `La
 
 2. 安装 `BeeCustom`
 
-```
-git clone https://git.dev.tencent.com/Dreamfish/BeeCustom.git
+```shell script
+git clone https://e.coding.net/snowlyg/BeeCustom.git
+
+#或者
+git clone https://github.com/snowlyg/BeeCustom.git
 
 ```
  
