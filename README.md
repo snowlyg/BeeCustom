@@ -77,5 +77,10 @@ gulp
 [BeeCustom](http://112.74.61.105:8089)
 
 > 账号/密码: admin/123456
+>
+
+### 打包
+bee pack -be GOOS=linux
+
  
 
