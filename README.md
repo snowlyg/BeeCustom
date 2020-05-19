@@ -74,7 +74,7 @@ gulp
 [待处理BUG](BUG.md)
 
 ### 演示地址
-[BeeCustom](http://112.74.61.105:8089)
+[BeeCustom](https:bee.snowlyg.com)
 
 > 账号/密码: admin/123456
 >
