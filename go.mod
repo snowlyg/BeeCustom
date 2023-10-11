@@ -22,6 +22,6 @@ require (
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/snowlyg/gotransformer v0.0.0-20200107031743-38a7dfd0c373
-	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
+	golang.org/x/net v0.17.0 // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 )
